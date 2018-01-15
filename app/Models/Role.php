@@ -1,4 +1,10 @@
 <?php
+
+namespace App\Models;
+
+use DB;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+
 class Role extends Eloquent
 {
     protected $table = 'roles';
@@ -15,7 +21,8 @@ class Role extends Eloquent
         return $this->belongsToMany('User', 'users_roles');
     }
 
-    public static function getRoleByName($name){
+    public static function getRoleByName($name)
+    {
         $id = self::where('name', '=', $name)->pluck('id');
         return $id;
     }

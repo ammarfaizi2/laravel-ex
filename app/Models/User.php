@@ -1,55 +1,57 @@
 <?php
 
 use Zizaco\Confide\ConfideUser;
+use DB;
 
-class User extends ConfideUser{
+class User extends ConfideUser
+{
 
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'users';
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
 
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = array('password');
-	//protected $hidden = array('password', 'remember_token');
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = array('password');
+    //protected $hidden = array('password', 'remember_token');
 
-	/**
-	 * Get the unique identifier for the user.
-	 *
-	 * @return mixed
-	 */
-	public function getAuthIdentifier()
-	{
-		return $this->getKey();
-	}
+    /**
+     * Get the unique identifier for the user.
+     *
+     * @return mixed
+     */
+    public function getAuthIdentifier()
+    {
+        return $this->getKey();
+    }
 
-	/**
-	 * Get the password for the user.
-	 *
-	 * @return string
-	 */
-	public function getAuthPassword()
-	{
-		return $this->password;
-	}
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
 
-	/**
-	 * Get the e-mail address where password reminders are sent.
-	 *
-	 * @return string
-	 */
-	public function getReminderEmail()
-	{
-		return $this->email;
-	}
-	
-	public function profile()
+    /**
+     * Get the e-mail address where password reminders are sent.
+     *
+     * @return string
+     */
+    public function getReminderEmail()
+    {
+        return $this->email;
+    }
+    
+    public function profile()
     {
         return $this->hasOne('UserProfile');
     }
@@ -80,20 +82,20 @@ class User extends ConfideUser{
         $role_id = Role::getRoleByName($name);
         $this->roles()->attach($role_id);
     }
-	
-	/////////
-	public function getRememberToken()
-	{
-		return $this->remember_token;
-	}
+    
+    /////////
+    public function getRememberToken()
+    {
+        return $this->remember_token;
+    }
 
-	public function setRememberToken($value)
-	{
-		$this->remember_token = $value;
-	}
+    public function setRememberToken($value)
+    {
+        $this->remember_token = $value;
+    }
 
-	public function getRememberTokenName()
-	{
-		return 'remember_token';
-	}
+    public function getRememberTokenName()
+    {
+        return 'remember_token';
+    }
 }
