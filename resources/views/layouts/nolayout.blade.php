@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-
-
-
-
-
-
-
-
 		<!-- Set the viewport so this responsive site displays correctly on mobile devices -->
 		<meta name="viewport" content="width=device-width">
 		<link rel="shortcut icon" href="{{ asset('favicon.ico') }}">

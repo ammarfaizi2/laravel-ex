@@ -1,8 +1,5 @@
 @extends('layouts.nolayout')
 @section('content')
-
-
-
 <div class="row" id="page_login">
 	<div class="col-md-4 col-md-offset-4">
 		<div class="panel panel-default">
