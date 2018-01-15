@@ -103,7 +103,10 @@ class UserController extends Controller
         $data['recaptcha_publickey']=$recaptcha_publickey;
         $data['question1s'] = SecurityQuestion::where('type', '=', '1')->get();
         $data['question2s'] = SecurityQuestion::where('type', '=', '2')->get();
-        return view(Config::get('confide::signup_form'), $data);
+        return view(
+            /*Config::get('confide::signup_form')*/
+            'register'
+        ,$data);
     }
     /**
      * Stores new account
