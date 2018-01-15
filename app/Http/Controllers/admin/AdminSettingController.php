@@ -1,6 +1,10 @@
 <?php
 
-class Admin_SettingController extends BaseController
+namespace App\Http\Controllers\admin;
+
+use App\Http\Controllers\Controller;
+
+class Admin_SettingController extends Controller
 {
 
     /*

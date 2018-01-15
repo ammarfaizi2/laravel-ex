@@ -23,17 +23,17 @@
 			
 			
 				@else
-					<form class="form-horizontal" role="form" id="registerForm" method="POST" action="{{{ Confide::checkAction('UserController@do_login') ?: URL::to('/user/login') }}}" >
+					<form class="form-horizontal" role="form" id="registerForm" method="POST" action="{{{ Auth::check('UserController@do_login') ?: URL::to('/user/login') }}}" >
 				
 
-					<input type="hidden" name="_token" id="_token" value="{{{ Session::getToken() }}}">
+					<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
 			  
 					<fieldset>
 						
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-user fa-lg"></i></span>
-								<input type="text" class="form-control" tabindex="1" name="email" id="email" placeholder="{{{ Lang::get('confide::confide.username') }}}" value="{{{ Input::old('email') }}}" required/>
+								<input type="text" class="form-control" tabindex="1" name="email" id="email" placeholder="{{{ Lang::get('confide::confide.username') }}}" value="{{{ Request::old('email') }}}" required/>
 								
 							</div>
 						</div>
@@ -77,10 +77,10 @@
 			</div>
 			<div class="panel-footer">
 				<div class="sign_up">
-					<a href="{{{ Confide::checkAction('UserController@register') }}}">{{{ Lang::get('confide::confide.signup.desc') }}}</a>
+					<a href="{{{ Auth::check('UserController@register') }}}">{{{ Lang::get('confide::confide.signup.desc') }}}</a>
 				</div>
 				<div class="forgot_password">						
-					<a href="{{{ (Confide::checkAction('UserController@forgot_password')) ?: 'forgot' }}}">{{{ Lang::get('confide::confide.forgot.title') }}}</a>
+					<a href="{{{ (Auth::check('UserController@forgot_password')) ?: 'forgot' }}}">{{{ Lang::get('confide::confide.forgot.title') }}}</a>
 				</div>
 			
 			</div>

@@ -1,10 +1,15 @@
 <?php
 
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Zizaco\Confide\ConfideUser;
 use DB;
 
-class User extends ConfideUser
+class User extends Eloquent
 {
+
+    use ConfideUser;
 
     /**
      * The database table used by the model.

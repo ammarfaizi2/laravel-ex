@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Config;
+use Confide;
+use Request;
 use App\Models\News;
 use App\Models\Post;
 use App\Models\Role;
@@ -185,7 +187,10 @@ class UserController extends Controller
             //return Redirect::to('/',302, array(), true);
             return Redirect::to('/', 302, array(), true);
         } else {
-            return view(Config::get('confide::login_form'));
+
+            $a = Config::get('confide::login_form');
+            //var_dump($a);die;
+            return view('login');
         }
     }
 
@@ -277,10 +282,10 @@ class UserController extends Controller
     public function do_login()
     {
         $input = array(
-            'email'    => Input::get('email'), // May be the username too
-            'username' => Input::get('email'), // so we have to pass both
-            'password' => Input::get('password'),
-            'remember' => Input::get('remember'),
+            'email'    => Request::get('email'), // May be the username too
+            'username' => Request::get('email'), // so we have to pass both
+            'password' => Request::get('password'),
+            'remember' => Request::get('remember'),
         );
 
         

@@ -172,6 +172,9 @@ return [
 
         // HTML
         Collective\Html\HtmlServiceProvider::class,
+
+        Zizaco\Confide\ServiceProvider::class,
+
   
 
         /*
@@ -270,7 +273,10 @@ return [
         'Vote' => App\Models\Vote::class,
         'Wallet' => App\Models\Wallet::class,
         'WalletLimitTrade' => App\Models\WalletLimitTrade::class,
-        'Withdraw' => App\Models\Withdraw::class
+        'Withdraw' => App\Models\Withdraw::class,
+        'Confide'    => Zizaco\Confide\Facade::class
     ],
 
 ];
+
+var_dump(get_class_methods('Confide'));die;
