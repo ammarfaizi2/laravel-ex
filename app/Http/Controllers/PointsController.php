@@ -1,5 +1,5 @@
 <?php
-class PointsController extends BaseController {
+class PointsController extends Controller {
 	/*
 	**$amount_fee is fee of trade
 	** $wallet_id wallet of amount_fee (BTC or LTC)

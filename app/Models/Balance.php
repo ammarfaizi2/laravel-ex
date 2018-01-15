@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Models;
+
+use Auth;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+
 class Balance extends Eloquent
 {
     protected $table = 'balance';

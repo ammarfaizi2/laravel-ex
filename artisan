@@ -1,6 +1,9 @@
 #!/usr/bin/env php
 <?php
 
+/*1) SET sql_mode = ''; 
+2) SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));*/
+
 define('LARAVEL_START', microtime(true));
 
 /*

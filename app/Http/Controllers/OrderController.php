@@ -1,6 +1,6 @@
 <?php
 
-class OrderController extends BaseController {
+class OrderController extends Controller {
 	
 	public function doBuy(){
 		//if ( Auth::guest() ){

@@ -8,7 +8,7 @@
 | authentication. Feel free to change to your needs.
 |
 */
-class UserController extends BaseController {
+class UserController extends Controller {
     /**
      *Get ip of client
      */

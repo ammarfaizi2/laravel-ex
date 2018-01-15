@@ -1,6 +1,6 @@
 <?php
 
-class ClefController extends BaseController
+class ClefController extends Controller
 {
 
     /**

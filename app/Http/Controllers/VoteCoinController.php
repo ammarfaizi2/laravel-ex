@@ -4,7 +4,7 @@
  * A class for coin voting
  *
 */
-class VoteCoinController extends BaseController {
+class VoteCoinController extends Controller {
    public function doVoting(){
    		if ( Auth::guest() ){
 			echo json_encode(array('status'=>'error','message'=> Lang::get('texts.request_login')));

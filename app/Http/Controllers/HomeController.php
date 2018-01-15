@@ -6,12 +6,14 @@ use App\Models\Trade;
 use App\Models\Market;
 use App\Models\Wallet;
 use App\Models\Setting;
+use App\Models\Balance;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 
-class HomeController extends Controller /*BaseController*/ {
+class HomeController extends Controller
+{
 
 	/*
 	|--------------------------------------------------------------------------

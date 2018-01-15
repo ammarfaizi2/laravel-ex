@@ -80,6 +80,12 @@ return [
 
     'locale' => 'en',
 
+    'locales' => array(
+        'en', // English
+        'sv', // Swedish
+        'jp' // Japan
+        ),
+
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
@@ -232,7 +238,39 @@ return [
 
         // nan
         'Form' => Collective\Html\FormFacade::class,
-        'Html' => Collective\Html\HtmlFacade::class
+        'HTML' => Collective\Html\HtmlFacade::class,
+        'Html' => Collective\Html\HtmlFacade::class,
+
+
+
+        // models
+        'Authentication' => App\Models\Authentication::class,
+        'Balance' => App\Models\Balance::class,
+        'CoinVote' => App\Models\CoinVote::class,
+        'Deposit' => App\Models\Deposit::class,
+        'FeeTrade' => App\Models\FeeTrade::class,
+        'FeeWithdraw' => App\Models\FeeWithdraw::class,
+        'Giveawayclaims' => App\Models\Giveawayclaims::class,
+        'Giveaways' => App\Models\Giveaways::class,
+        'Limits' => App\Models\Limits::class,
+        'Market' => App\Models\Market::class,
+        'News' => App\Models\News::class,
+        'Notifications' => App\Models\Notifications::class,
+        'Order' => App\Models\Order::class,
+        'Post' => App\Models\Post::class,
+        'Role' => App\Models\Role::class,
+        'SecurityQuestion' => App\Models\SecurityQuestion::class,
+        'Setting' => App\Models\Setting::class,
+        'Trade' => App\Models\Trade::class,
+        'Trade' => App\Models\Trade::class,
+        'Transfer' => App\Models\Transfer::class,
+        'User' => App\Models\User::class,
+        'UserAddressDeposit' => App\Models\UserAddressDeposit::class,
+        'UserSecurityQuestion' => App\Models\UserSecurityQuestion::class,
+        'Vote' => App\Models\Vote::class,
+        'Wallet' => App\Models\Wallet::class,
+        'WalletLimitTrade' => App\Models\WalletLimitTrade::class,
+        'Withdraw' => App\Models\Withdraw::class
     ],
 
 ];

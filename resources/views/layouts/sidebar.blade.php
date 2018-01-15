@@ -121,7 +121,9 @@ $trade = new Trade();
 					<div class="btc_market coinmarket nano clear">
 			<?php
 			//var_dump($btc_datainfo);
-			//var_dump($btc_markets);
+			//var_dump($btc_markets); 
+			$btc_markets = [];
+			$ltc_markets = [];
 			?>
 			
 					<ul class="market well nano-content">

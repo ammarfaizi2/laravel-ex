@@ -1,4 +1,4 @@
 <?php
-class WithdrawController extends BaseController {
+class WithdrawController extends Controller {
        
 }
