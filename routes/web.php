@@ -132,7 +132,7 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin'), funct
 // Confide routes
 Route::get( 'referral/{referral}',                 'UserController@create');
 Route::get( 'user/register',                 'UserController@create');
-Route::get( 'user/register',                 'UserController@register');
+Route::get( 'user/register',                 'UserController@register')->name('register');
 Route::post('user',                        'UserController@store');
 Route::get( 'login',                        'UserController@login');
 Route::post('user/login',                  'UserController@do_login');

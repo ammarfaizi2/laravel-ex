@@ -74,7 +74,7 @@
 			</div>
 			<div class="panel-footer">
 				<div class="sign_up">
-					<a href="{{{ Auth::check('UserController@register') }}}">{{{ Lang::get('confide::confide.signup.desc') }}}</a>
+					<a href="{{{ route('register') }}}">{{{ Lang::get('confide::confide.signup.desc') }}}</a>
 				</div>
 				<div class="forgot_password">						
 					<a href="{{{ (Auth::check('UserController@forgot_password')) ?: 'forgot' }}}">{{{ Lang::get('confide::confide.forgot.title') }}}</a>
