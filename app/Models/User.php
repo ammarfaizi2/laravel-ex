@@ -103,4 +103,9 @@ class User extends Eloquent
     {
         return 'remember_token';
     }
+
+    public function checkUserExists($input)
+    {
+        // var_dump($input);
+    }
 }

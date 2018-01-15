@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Lang;
 use Config;
 use Confide;
 use Request;
+use Redirect;
 use App\Models\News;
 use App\Models\Post;
 use App\Models\Role;
@@ -118,16 +120,16 @@ class UserController extends Controller
     {
         $user = new User;
 
-        //$user->fullname = Input::get( 'fullname' );
-        $user->username = Input::get('username');
-        $user->email = Input::get('email');
-        $user->password = Input::get('password');
-        $user->referral = Input::get('referral');
+        //$user->fullname = Request::get( 'fullname' );
+        $user->username = Request::get('username');
+        $user->email = Request::get('email');
+        $user->password = Request::get('password');
+        $user->referral = Request::get('referral');
         $user->banned = 0;
         // The password confirmation will be removed from model
         // before saving. This field will be used in Ardent's
         // auto validation.
-        $user->password_confirmation = Input::get('password_confirmation');
+        $user->password_confirmation = Request::get('password_confirmation');
         $trade_key = md5($user->username.$user->email.time());
         $user->trade_key = $trade_key;
         $user->ip_lastlogin=$this->get_client_ip();
@@ -151,10 +153,10 @@ class UserController extends Controller
             
             //add question
             /*
-			$question1 = Input::get('question1');
-            $question2 = Input::get('question2');
-            $answer1 = Input::get('answer1');
-            $answer2 = Input::get('answer2');
+			$question1 = Request::get('question1');
+            $question2 = Request::get('question2');
+            $answer1 = Request::get('answer1');
+            $answer2 = Request::get('answer2');
             UserSecurityQuestion::insert(array('user_id' => $user->id, 'question_id' => $question1, 'answer'=>$answer1));
             UserSecurityQuestion::insert(array('user_id' => $user->id, 'question_id' => $question2, 'answer'=>$answer2));
 			*/
@@ -166,12 +168,12 @@ class UserController extends Controller
         } else {
             // Get validation errors (see Ardent package)
             $error = $user->errors()->all(':message');
-            return Redirect::to('user/register')->withInput(Input::except('password'))->with('error', $error);
-            /*$referral = Input::get( 'referral' );
+            return Redirect::to('user/register')->withInput(Request::except('password'))->with('error', $error);
+            /*$referral = Request::get( 'referral' );
             if(!empty(trim($referral)))
-                return Redirect::to('referral/'.$referral)->withInput(Input::except('password'))->with( 'error', $error );
+                return Redirect::to('referral/'.$referral)->withInput(Request::except('password'))->with( 'error', $error );
             else
-               return Redirect::action('UserController@create')->withInput(Input::except('password'))->with( 'error', $error );*/
+               return Redirect::action('UserController@create')->withInput(Request::except('password'))->with( 'error', $error );*/
         }
     }
 
@@ -202,10 +204,10 @@ class UserController extends Controller
     {
         if (count($input) != 4) {
             $input = array(
-                        'email'    => Input::get('email'), // May be the username too
-                        'username' => Input::get('email'), // so we have to pass both
-                        'password' => Input::get('password'),
-                        'remember' => Input::get('remember'),
+                        'email'    => Request::get('email'), // May be the username too
+                        'username' => Request::get('email'), // so we have to pass both
+                        'password' => Request::get('password'),
+                        'remember' => Request::get('remember'),
                     );
         }
         $user = User::where('email', '=', $input['email'])->orwhere('username', '=', $input['email'])->first();
@@ -289,9 +291,9 @@ class UserController extends Controller
         );
 
         
-        $user = User::where('email', '=', Input::get('email'))->orwhere('username', '=', Input::get('email'))->first();
+        $user = User::where('email', '=', Request::get('email'))->orwhere('username', '=', Request::get('email'))->first();
 
-        if (isset($user->password) && Hash::check(Input::get('password'), $user->password)) {
+        if (isset($user->password) && Hash::check(Request::get('password'), $user->password)) {
                 //Two factor authentication
             if (!empty($user->two_factor_auth)) {
                 $err_msg = trans('messages.two_factor_auth') . ' - ' .trans('messages.two_factor_auth');
@@ -314,7 +316,7 @@ class UserController extends Controller
             $ip=$this->get_client_ip();
             $this->sendMailIPUser($user, $ip);
             User::where('id', $user->id)->update(array('lastest_login' => date("Y-m-d H:i:s"), 'ip_lastlogin'=>$ip));
-            if (Input::get('isAjax')) {
+            if (Request::get('isAjax')) {
                 echo 1;
                 exit;
             } else {
@@ -335,12 +337,12 @@ class UserController extends Controller
             } else {
                 $err_msg = Lang::get('confide::confide.alerts.wrong_credentials');
             }
-            if (Input::get('isAjax')) {
+            if (Request::get('isAjax')) {
                 echo $err_msg;
                 exit;
             } else {
                 return Redirect::action('UserController@login')
-                            ->withInput(Input::except('password'))
+                            ->withInput(Request::except('password'))
                 ->with('error', $err_msg);
             }
         }
@@ -384,7 +386,7 @@ class UserController extends Controller
         $error_msg = '';
         $error_msg_type = '';
         $error_msg_control = '';
-        $token = Input::get('_token');
+        $token = Request::get('_token');
         
         
         // create the validation rules ------------------------
@@ -394,7 +396,7 @@ class UserController extends Controller
 
         // do the validation ----------------------------------
         // validate against the inputs from our form
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(Request::all(), $rules);
 
 // check if the validator failed -----------------------
         if ($validator->fails()) {
@@ -423,7 +425,7 @@ class UserController extends Controller
                 
 
                 
-        if (Confide::forgotPassword(Input::get('email'))) {
+        if (Confide::forgotPassword(Request::get('email'))) {
             $error_msg = Lang::get('confide::confide.alerts.password_forgot');
             $error_msg_type = 'notice';
             $error_msg_control = 'login';
@@ -439,7 +441,7 @@ class UserController extends Controller
                 ->with( 'error', $error_msg );
 				*/
         }
-        if (Input::get('isAjax')) {
+        if (Request::get('isAjax')) {
                 echo $error_msg;
                 exit;
         } else {
@@ -466,9 +468,9 @@ class UserController extends Controller
     {
 
         $input = array(
-            'token'=>Input::get('token'),
-            'password'=>Input::get('password'),
-            'password_confirmation'=>Input::get('password_confirmation'),
+            'token'=>Request::get('token'),
+            'password'=>Request::get('password'),
+            'password_confirmation'=>Request::get('password_confirmation'),
         );
 
         // By passing an array with the token, password and confirmation
@@ -479,7 +481,7 @@ class UserController extends Controller
                         return Redirect::action('UserController@login')
                             ->with('notice', $notice_msg);
         } else {
-                    //echo 'Test 2, token: '.Input::get( 'token' ) .' , token__: '.Input::get( '_token' );
+                    //echo 'Test 2, token: '.Request::get( 'token' ) .' , token__: '.Request::get( '_token' );
                     //exit;
             $error_msg = Lang::get('confide::confide.alerts.wrong_password_reset');
             
@@ -538,10 +540,10 @@ class UserController extends Controller
 
     public function updateSetting()
     {
-        $update= array('timeout'=>Input::get('timeout'),'updated_at'=>date("Y-m-d H:i:s"));
-        $fullname = Input::get('fullname');
-        $password = Input::get('password');
-        //$password2 = Input::get('password2');
+        $update= array('timeout'=>Request::get('timeout'),'updated_at'=>date("Y-m-d H:i:s"));
+        $fullname = Request::get('fullname');
+        $password = Request::get('password');
+        //$password2 = Request::get('password2');
         $user = User::find((int)Confide::user()->id);
         if ($password!='' && !Hash::check($password, Confide::user()->password)) {
             $update['password'] = Hash::make($password);
@@ -1091,10 +1093,10 @@ class UserController extends Controller
     }
     public function doWithdraw_bakup()
     {
-        $amount = Input::get('amount');
-        $address = Input::get('address');
-        $wallet_id =(int)Input::get('wallet_id');
-        $password = Input::get('password');
+        $amount = Request::get('amount');
+        $address = Request::get('address');
+        $wallet_id =(int)Request::get('wallet_id');
+        $password = Request::get('password');
         $wallet = Wallet::find($wallet_id);
 
         $setting = new Setting();
@@ -1145,10 +1147,10 @@ class UserController extends Controller
 
     public function doWithdraw()
     {
-        $amount = Input::get('amount');
-        $address = Input::get('address');
-        $wallet_id = (int)Input::get('wallet_id');
-        $password = Input::get('password');
+        $amount = Request::get('amount');
+        $address = Request::get('address');
+        $wallet_id = (int)Request::get('wallet_id');
+        $password = Request::get('password');
         $wallet = Wallet::find($wallet_id);
 
         $setting = new Setting();
@@ -1313,7 +1315,7 @@ class UserController extends Controller
     public function referreredTradeKey()
     {
         $user = Confide::user();
-        $trade_key = Input::get('trade_key');
+        $trade_key = Request::get('trade_key');
         $user_referred = User::where('trade_key', $trade_key)->first();
         if (isset($user_referred->username) && $user_referred->id!=$user->id) {
             User::where('id', $user->id)->update(array('referral' => $user_referred->username));
@@ -1354,10 +1356,10 @@ class UserController extends Controller
 
     public function doTransfer()
     {
-        $trade_key = Input::get('trade_key');
-        $amount = Input::get('amount');
-        $wallet_id = (int)Input::get('wallet_id');
-        $password = Input::get('password');
+        $trade_key = Request::get('trade_key');
+        $amount = Request::get('amount');
+        $wallet_id = (int)Request::get('wallet_id');
+        $password = Request::get('password');
         $wallet = Wallet::find($wallet_id);
         $balance = new Balance();
 
