@@ -77,7 +77,7 @@
 					<a href="{{{ route('register') }}}">{{{ Lang::get('confide::confide.signup.desc') }}}</a>
 				</div>
 				<div class="forgot_password">						
-					<a href="{{{ (Auth::check('UserController@forgot_password')) ?: 'forgot' }}}">{{{ Lang::get('confide::confide.forgot.title') }}}</a>
+					<a href="{{{ route('forgot_password') }}}">{{{ Lang::get('confide::confide.forgot.title') }}}</a>
 				</div>
 			
 			</div>

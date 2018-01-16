@@ -6,25 +6,13 @@ $trade = new Trade();
 
 ?>
 <!-- Sidebar -->
-
 	<div class="sidebar">
-		
 		<div class="list-group">
-			
-
-			
-
-
-
 			<div class="panel-group" id="accordion">
-
-
 				<div class="sidebar_search" >
 					<i class="fa fa-search fa-lg" id="sidebar_search_icon"></i>
 					<input type="search" class="form-control" placeholder="{{ trans('texts.search_market')}}" id="sidebar_search_market" />
 				</div>
-
-				
 				<div class="panel-collapse collapse in" id="onlineUsers">
 				  <div class="panel-body">
 						
@@ -36,10 +24,7 @@ $trade = new Trade();
 						
 				  </div>
 				</div>
-				
-				
-				
-				  @if(isset($available_balances))
+				@if(isset($available_balances))
 				  <div class="panel panel-default">
 					<div class="panel-heading">
 					  
@@ -104,9 +89,6 @@ $trade = new Trade();
 					</div>
 				  </div>
 				  @endif
-				  
-
-				  
 			  <div class="panel panel-default">
 				<div class="panel-heading">
 				  <a data-toggle="collapse" href="#collapseBTCMarket">
@@ -122,8 +104,8 @@ $trade = new Trade();
 			<?php
 			//var_dump($btc_datainfo);
 			//var_dump($btc_markets); 
-			$btc_markets = [];
-			$ltc_markets = [];
+			//$btc_markets = [];
+			//$ltc_markets = [];
 			?>
 			
 					<ul class="market well nano-content">

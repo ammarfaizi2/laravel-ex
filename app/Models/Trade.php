@@ -142,7 +142,7 @@ class Trade extends Eloquent
                 return ( $created_at_time >= strtotime($old_date) && $created_at_time <= strtotime($new_date));
             });
             //echo "<pre>filtered 1: "; print_r($data_chart_this_time); echo "</pre>";
-            if (count($data_chart_this_time>0)) {
+            if (count($data_chart_this_time) > 0) {
                 $data_chart_this_time = array_values($data_chart_this_time);
                 
                 //get high & low ($data_chart_this_time is sort with price desc)
