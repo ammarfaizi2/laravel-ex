@@ -11,10 +11,10 @@
 			
 				<hr class="colorgraph">
 				
-					<form class="form-horizontal" role="form" id="forgotForm" method="POST" class="login clearfix" action="{{ (Confide::checkAction('UserController@do_forgot_password')) ?: URL::to('/user/forgot') }}" accept-charset="UTF-8">
+					<form class="form-horizontal" role="form" id="forgotForm" method="POST" class="login clearfix" action="{{ (Auth::check('UserController@do_forgot_password')) ?: URL::to('/user/forgot') }}" accept-charset="UTF-8">
 				
 
-					<input type="hidden" name="_token" id="_token" value="{{{ Session::getToken() }}}">
+					<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
 			  
 					<fieldset>
 						
@@ -22,7 +22,7 @@
 						<div class="form-group">
 							<div class="input-group">
 									<span class="input-group-addon"><i class="fa fa-lock fa-lg"></i></span>
-									<input type="text" class="form-control" tabindex="1" name="email" id="email" placeholder="{{{ Lang::get('confide::confide.e_mail') }}}" value="{{{ Input::old('email') }}}" required>
+									<input type="text" class="form-control" tabindex="1" name="email" id="email" placeholder="{{{ Lang::get('confide::confide.e_mail') }}}" value="{{{ Request::old('email') }}}" required>
 							</div>
 						</div>
 						

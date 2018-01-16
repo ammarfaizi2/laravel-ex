@@ -372,7 +372,7 @@ class UserController extends Controller
      */
     public function forgot_password()
     {
-        return view(Config::get('confide::forgot_password_form'));
+        return view('forgotpass');
     }
 
     /**
