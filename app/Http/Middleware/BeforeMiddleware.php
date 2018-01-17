@@ -7,6 +7,7 @@ use App;
 use View;
 use Auth;
 use Post;
+use User;
 use Trade;
 use Route;
 use Config;
@@ -16,6 +17,7 @@ use Confide;
 use Setting;
 use Closure;
 use Request;
+use Balance;
 use Redirect;
 
 class BeforeMiddleware

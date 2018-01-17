@@ -293,6 +293,15 @@ class UserController extends Controller
 
         
         $user = User::where('email', '=', Request::get('email'))->orwhere('username', '=', Request::get('email'))->first();
+        
+        /*var_dump($user->password);
+
+        var_dump($input['password']);
+
+        var_dump(password_verify($input['password'], $user->password));
+
+        die;*/
+
         if (isset($user->password) && password_verify(Request::get('password'), $user->password)) {
                 //Two factor authentication
             if (!empty($user->two_factor_auth)) {
