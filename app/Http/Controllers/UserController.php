@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Lang;
+use Mail;
 use Config;
 use Confide;
 use Request;
@@ -292,8 +293,7 @@ class UserController extends Controller
 
         
         $user = User::where('email', '=', Request::get('email'))->orwhere('username', '=', Request::get('email'))->first();
-
-        if (isset($user->password) && Hash::check(Request::get('password'), $user->password)) {
+        if (isset($user->password) && password_verify(Request::get('password'), $user->password)) {
                 //Two factor authentication
             if (!empty($user->two_factor_auth)) {
                 $err_msg = trans('messages.two_factor_auth') . ' - ' .trans('messages.two_factor_auth');
@@ -302,7 +302,8 @@ class UserController extends Controller
                 
             }
         }
-                
+    
+        
         // If you wish to only allow login from confirmed users, call logAttempt
         // with the second parameter as true.
         // logAttempt will check if the 'email' perhaps is the username.

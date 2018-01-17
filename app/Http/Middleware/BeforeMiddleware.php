@@ -12,9 +12,11 @@ use Route;
 use Config;
 use Wallet;
 use Market;
+use Confide;
 use Setting;
 use Closure;
 use Request;
+use Redirect;
 
 class BeforeMiddleware
 {

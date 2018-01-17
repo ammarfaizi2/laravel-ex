@@ -171,7 +171,7 @@ class Trade extends Eloquent
                 $datas_chart[] = array('date'=>$date_temp_time,'low'=>$close_previous,'open'=>$close_previous,'close'=>$close_previous,'high'=>$close_previous, 'exchange_volume'=>0,'temp'=>'','close_previous'=>$close_previous);
             }
             $temp_time = $temp_time_new;
-            $close_previous = $ha_data['ha_close'];
+            $close_previous = isset($ha_data['ha_close']) ? $ha_data['ha_close'] : null;
             $temp++;
         }
        //echo $str;

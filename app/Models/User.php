@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+//use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Confide\ConfideUser;
 use DB;
 
-class User extends Eloquent
+class User extends Authenticatable //Eloquent implements Authenticatable
 {
 
     use ConfideUser;
