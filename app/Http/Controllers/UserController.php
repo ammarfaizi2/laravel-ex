@@ -331,9 +331,9 @@ class UserController extends Controller
                 exit;
             } else {
                 if (User::find($user->id)->hasRole('admin')) {
-                    return Redirect::to('/', 302, array(), true);
+                    return Redirect::to('/', 302, array(), false);
                 } else {
-                    return Redirect::to('/', 302, array(), true); // change it to '/admin', '/dashboard' or something
+                    return Redirect::to('/', 302, array(), false); // change it to '/admin', '/dashboard' or something
                 }
             }
         } else {
