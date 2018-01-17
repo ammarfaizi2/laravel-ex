@@ -14,7 +14,7 @@
 			<h2>{{{ trans('texts.orders_history')}}} @if(isset($current_coin)) {{' - '.$current_coin}} @endif</h2>
 
 			<form class="form-inline" method="GET" action="{{Request::url()}}">
-				<input type="hidden" name="_token" value="{{{ Session::getToken() }}}">
+				<input type="hidden" name="_token" value="{{{ Session::token() }}}">
 				@if($filter=='')
 					<label>{{{ trans('texts.market')}}}</label>        
 					<select id="pair" style="margin-right: 20px;" name="market" class="form-control">

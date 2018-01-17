@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Lang;
 use Mail;
 use Config;
@@ -121,7 +122,7 @@ class UserController extends Controller
     {
         $user = new User;
 
-        //$user->fullname = Request::get( 'fullname' );
+        $user->fullname = '';//Request::get( 'fullname' );
         $user->username = Request::get('username');
         $user->email = Request::get('email');
         $user->password = Request::get('password');
@@ -131,6 +132,10 @@ class UserController extends Controller
         // before saving. This field will be used in Ardent's
         // auto validation.
         $user->password_confirmation = Request::get('password_confirmation');
+        $user->confirmation_code = '';
+        $user->authy = '';
+        $user->two_factor_auth = '';
+        $user->timeout = '';
         $trade_key = md5($user->username.$user->email.time());
         $user->trade_key = $trade_key;
         $user->ip_lastlogin=$this->get_client_ip();

@@ -22,7 +22,7 @@
 				<div class="alert">{{ Session::get('notice') }}</div>
 			@endif
 			<form class="form-inline" method="POST" action="{{Request::url()}}">
-				<input type="hidden" name="_token" id="_token" value="{{{ Session::getToken() }}}">
+				<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
 				@if($filter=='')
 					<label>{{{ trans('texts.coin')}}}</label>        
 					<select id="pair" style="margin-right: 20px;" name="wallet" class="form-control">

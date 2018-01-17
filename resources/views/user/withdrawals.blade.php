@@ -26,7 +26,7 @@
 			<span class="text-high">To make a new withdrawal, please visit the {{ HTML::link('user/profile/balances', trans('user_texts.balance')) }} page and select the Withdraw option under the actions menu for the coin.</span>
 			<br><br>
 			<form class="form-inline" method="POST" action="{{Request::url()}}">
-				<input type="hidden" name="_token" id="_token" value="{{{ Session::getToken() }}}">
+				<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
 				@if($filter=='')
 					<label>{{{ trans('texts.coin')}}}</label>        
 					<select id="pair" style="margin-right: 20px;" name="wallet" class="form-control">

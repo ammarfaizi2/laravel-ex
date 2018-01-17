@@ -12,8 +12,8 @@
 		<div class="inner">
 								
 			<h2 >{{trans('user_texts.register_account')}}</h2>
-			<form id="registerForm" method="POST" action="{{{ (Confide::checkAction('UserController@store')) ?: URL::to('user')  }}}" accept-charset="UTF-8">
-				<input type="hidden" name="_token" id="_token" value="{{{ Session::getToken() }}}">
+			<form id="registerForm" method="POST" action="{{{ (Auth::check('UserController@store')) ?: URL::to('user')  }}}" accept-charset="UTF-8">
+				<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
 				<h3>{{trans('user_texts.your_details')}}</h3>
 				<table class="table register">
 					<tbody>
@@ -21,20 +21,20 @@
 						/*
 						<tr>
 							<th style="width:180px;">{{trans('user_texts.fullname')}}</th>
-							<td><input minlength="2" type="text" required="" name="fullname" id="fullname" value="{{{ Input::old('fullname') }}}"></td>
+							<td><input minlength="2" type="text" required="" name="fullname" id="fullname" value="{{{ Request::old('fullname') }}}"></td>
 						</tr>
 						*/
 						?>
 						<tr>
 							<th style="width:180px;">{{{ Lang::get('confide::confide.username') }}}</th>
 							<td>
-								<input minlength="2" type="text" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.username') }}}" name="username" id="username" value="{{{ Input::old('username') }}}">
+								<input minlength="2" type="text" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.username') }}}" name="username" id="username" value="{{{ Request::old('username') }}}">
 								<span>This will be your used for your login and confirming withdrawals.</span>
 							</td>
 						</tr>
 						<tr>
 							<th>{{{ Lang::get('confide::confide.e_mail') }}} <small>{{ Lang::get('confide::confide.signup.confirmation_required') }}</small></th>
-							<td><input type="text" name="email" id="email" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.e_mail') }}}" value="{{{ Input::old('email') }}}"><br>
+							<td><input type="text" name="email" id="email" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.e_mail') }}}" value="{{{ Request::old('email') }}}"><br>
 								<span>This will be your used for your login and confirming withdrawals.</span>
 							</td>
 						</tr>
@@ -63,7 +63,7 @@
 							<td>
 								<select name="question1" class="form-control">
 									@foreach($question1s as $question1)
-										<option value="{{$question1->id}}" @if(Input::old('question1')==$question1->id) selected @endif>{{$question1->questions}}</option>
+										<option value="{{$question1->id}}" @if(Request::old('question1')==$question1->id) selected @endif>{{$question1->questions}}</option>
 									@endforeach
 									<!-- <option value="1">What was the name of your first school?</option>
 									<option value="2">In what city or town was your first job?</option>
@@ -73,7 +73,7 @@
 									<option value="6">Where were you when you had your first kiss?</option>
 									<option value="7">Where did you meet your significant other?</option> -->
 								</select>
-								<input type="text" name="answer1" value="{{{ Input::old('answer1') }}}">
+								<input type="text" name="answer1" value="{{{ Request::old('answer1') }}}">
 							</td>
 						</tr>
 					<tr>
@@ -81,7 +81,7 @@
 							<td>
 								<select name="question2" class="form-control">
 									@foreach($question2s as $question2)
-										<option value="{{$question2->id}}" @if(Input::old('question2')==$question2->id) selected @endif>{{$question2->questions}}</option>
+										<option value="{{$question2->id}}" @if(Request::old('question2')==$question2->id) selected @endif>{{$question2->questions}}</option>
 									@endforeach
 									<!-- <option value="1">What is the name of your first pet?</option>
 									<option value="2">What street did you grow up on?</option>
@@ -91,7 +91,7 @@
 									<option value="6">What was the make and model of your first car?</option>
 									<option value="7">What is your mother's maiden name?</option> -->
 								</select>
-							<input type="text" name="answer2" value="{{{ Input::old('answer2') }}}">
+							<input type="text" name="answer2" value="{{{ Request::old('answer2') }}}">
 						</td>
 					</tr>
 					</tbody>
@@ -128,7 +128,7 @@
 					<div class="alert alert-info">{{ Session::get('notice') }}</div>
 				@endif
 				<div align="center">
-					<input type="hidden" value="@if(isset($referral)){{$referral}}@else{{{Input::old('referral')}}}@endif" name="referral">
+					<input type="hidden" value="@if(isset($referral)){{$referral}}@else{{{Request::old('referral')}}}@endif" name="referral">
 					<button type="submit" class="btn btn-primary">{{{ Lang::get('confide::confide.signup.submit') }}}</button>
 				</div>
 			   
