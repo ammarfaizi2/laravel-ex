@@ -175,6 +175,10 @@ return [
 
         Zizaco\Confide\ServiceProvider::class,
 
+        Thiagof\LaravelRPC\RpcServiceProvider::class,
+
+        Thiagof\LaravelRPC\RpcClientFacade::class,
+        Thiagof\LaravelRPC\RpcServerFacade::class,
   
 
         /*
