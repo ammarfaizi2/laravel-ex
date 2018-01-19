@@ -387,7 +387,7 @@ class HomeController extends Controller
                             'num_vote' => $num_vote + $num_payment,
                         );
                     }
-                    usort($_coinvotes, function($a, $b) {
+                    usort($coinvotes->toArray(), function($a, $b) {
                         if ($a->num_vote == $b->num_vote) return 0; return ($a->num_vote > $b->num_vote) ? -1 : 1;
                     });
                 } catch (Exception $e) {
