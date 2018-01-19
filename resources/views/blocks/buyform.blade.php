@@ -218,9 +218,9 @@ function doPostTradeOrder(tradeArray){
 		var ajax_trade_url;
 		
 		if(type == 'buy'){
-			ajax_trade_url = '<?php echo route('OrderController@doBuy')?>';
+			ajax_trade_url = '<?php echo route('order.do.buy')?>';
 		}else if(type == 'sell'){
-			ajax_trade_url = '<?php echo route('OrderController@doSell')?>';
+			ajax_trade_url = '<?php echo route('order.do.sell')?>';
 		}
 		
 	$.ajax({
