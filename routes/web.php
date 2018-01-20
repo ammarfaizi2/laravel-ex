@@ -74,8 +74,8 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin'), funct
     Route::post('edit-wallet', 'admin\\AdminSettingController@doEditWallet');
     Route::post('delete-wallet', 'admin\\AdminSettingController@deleteWallet');
 
-    Route::post('delete-wallet', 'admin\\AdminSettingController@deleteUser');
-    Route::post('delete-wallet', 'admin\\AdminSettingController@banUser');
+    Route::post('delete-user', 'admin\\AdminSettingController@deleteUser');
+    Route::post('ban-user', 'admin\\AdminSettingController@banUser');
 
     //market
     Route::post('add-market', 'admin\\AdminSettingController@addNewMarket');

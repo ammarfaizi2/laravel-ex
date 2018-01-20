@@ -116,7 +116,7 @@
 {{ HTML::script('assets/js/jquery.validate.min.js') }}
 <script type="text/javascript">
 function deleteUser(user_id){
-	$.post('<?php echo action('admin\\AdminSettingController@deleteUser')?>', {isAjax: 1, user_id: user_id }, function(response){
+	$.post('/delete-user', {isAjax: 1, user_id: user_id }, function(response){
        	var obj = $.parseJSON(response);
 	    console.log('obj: ',obj);
 	    if(obj.status == 'success'){
@@ -132,7 +132,7 @@ function deleteUser(user_id){
     return false;
 }
 function banUser(user_id){
-	$.post('<?php echo action('admin\\AdminSettingController@banUser')?>', {isAjax: 1, user_id: user_id }, function(response){
+	$.post('/ban-user', {isAjax: 1, user_id: user_id }, function(response){
        	var obj = $.parseJSON(response);
 	    console.log('obj: ',obj);
 	    if(obj.status == 'success'){
