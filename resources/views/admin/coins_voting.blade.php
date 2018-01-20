@@ -22,7 +22,7 @@
 	    <label for="inputEmail3" class="col-sm-2 control-label">{{trans('texts.coin_code')}}</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
-			  <input type="text" class="form-control" name="code" id="code" value="{{{ Input::old('code') }}}">
+			  <input type="text" class="form-control" name="code" id="code" value="{{{ Request::old('code') }}}">
 			</div>	      	      
 	    </div>
 	</div>	
@@ -30,7 +30,7 @@
 	    <label for="inputPassword3" class="col-sm-2 control-label">{{trans('texts.coin_name')}}</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
-			  <input type="text" class="form-control" id="name" name="name" value="{{{ Input::old('name') }}}">
+			  <input type="text" class="form-control" id="name" name="name" value="{{{ Request::old('name') }}}">
 			</div>	      
 	    </div>
 	</div>
@@ -38,7 +38,7 @@
 	    <label for="inputPassword3" class="col-sm-2 control-label">{{trans('texts.btc_payment_address')}}</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
-			  <input type="text" class="form-control" id="btc_address" name="btc_address" value="{{{ Input::old('btc_address') }}}">			  
+			  <input type="text" class="form-control" id="btc_address" name="btc_address" value="{{{ Request::old('btc_address') }}}">			  
 			</div>	      
 			<br><em>Please enter a address is dedicated to this coin to check vote by payment</em>
 	    </div>

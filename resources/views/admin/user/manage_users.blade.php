@@ -22,7 +22,7 @@
 	    <label for="inputEmail3" class="col-sm-2 control-label">{{trans('user_texts.fullname')}}</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
-			  <input type="text" class="form-control" name="fullname" id="fullname" value="{{{ Input::old('fullname') }}}">
+			  <input type="text" class="form-control" name="fullname" id="fullname" value="{{{ Request::old('fullname') }}}">
 			</div>	      	      
 	    </div>
 	</div>	
@@ -30,7 +30,7 @@
 	    <label for="inputPassword3" class="col-sm-2 control-label">{{{ Lang::get('confide::confide.e_mail') }}}</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
-			  <input type="text" name="email" id="email" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.e_mail') }}}" value="{{{ Input::old('email') }}}">
+			  <input type="text" name="email" id="email" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.e_mail') }}}" value="{{{ Request::old('email') }}}">
 			</div>	      
 	    </div>
 	</div>
@@ -38,7 +38,7 @@
 	    <label for="inputPassword3" class="col-sm-2 control-label">{{{ Lang::get('confide::confide.username') }}}</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
-			  <input minlength="2" type="text" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.username') }}}" name="username" id="username" value="{{{ Input::old('username') }}}">			  
+			  <input minlength="2" type="text" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.username') }}}" name="username" id="username" value="{{{ Request::old('username') }}}">			  
 			</div>
 	    </div>
 	</div>
