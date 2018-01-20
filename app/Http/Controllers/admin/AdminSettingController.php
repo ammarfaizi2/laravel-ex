@@ -36,7 +36,7 @@ use App\Models\UserSecurityQuestion;
 use App\Http\Controllers\Controller;
 
 
-class Admin_SettingController extends Controller
+class AdminSettingController extends Controller
 {
 
     /*
