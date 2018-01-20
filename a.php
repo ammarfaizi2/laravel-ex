@@ -40,4 +40,20 @@ function scanner($dir)
 
 
 $q = scanner(__DIR__.'/resources/views');
-var_dump($q);
+array_walk($q, function ($q) {
+	file_put_contents($q,str_replace(
+		[
+			'Admin_SettingController',
+			'Session::getToken()',
+			'Confide::checkAction'
+		],
+		[
+			'admin\\\\AdminSettingController',
+			'Session::token()',
+			'Auth::check'
+		],
+		file_get_contents($q),
+		$n
+	));
+	print $q . ' => ' . $n . PHP_EOL;
+});
