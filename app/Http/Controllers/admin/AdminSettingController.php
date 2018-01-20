@@ -35,6 +35,10 @@ use App\Models\UserAddressDeposit;
 use App\Models\UserSecurityQuestion;
 use App\Http\Controllers\Controller;
 
+$a = DB::connection()->getPdo();
+$a->exec("SET sql_mode = ''; ");
+$a->exec("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+
 
 class AdminSettingController extends Controller
 {
