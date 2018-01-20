@@ -132,7 +132,7 @@ function deleteUser(user_id){
     return false;
 }
 function banUser(user_id){
-	$.post('<?php echo action('admin\\AdminSettingController@banUSer')?>', {isAjax: 1, user_id: user_id }, function(response){
+	$.post('<?php echo action('admin\\AdminSettingController@banUser')?>', {isAjax: 1, user_id: user_id }, function(response){
        	var obj = $.parseJSON(response);
 	    console.log('obj: ',obj);
 	    if(obj.status == 'success'){
