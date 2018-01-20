@@ -116,7 +116,7 @@
 {{ HTML::script('assets/js/jquery.validate.min.js') }}
 <script type="text/javascript">
 function deleteUser(user_id){
-	$.post('<?php echo action('admin\\AdminSettingController@deleteUSer')?>', {isAjax: 1, user_id: user_id }, function(response){
+	$.post('<?php echo action('admin\\AdminSettingController@deleteUser')?>', {isAjax: 1, user_id: user_id }, function(response){
        	var obj = $.parseJSON(response);
 	    console.log('obj: ',obj);
 	    if(obj.status == 'success'){
