@@ -52,82 +52,82 @@ Route::get('post/{post}', 'HomeController@viewPost');
 #################################################################################
 Route::group(array('before' => array('auth','admin'),'prefix' => 'admin'), function()
 {
-    Route::get('/', 'Admin_SettingController@routePage');
-    Route::get('setting', 'Admin_SettingController@routePage');
-    Route::get('setting/{page}', 'Admin_SettingController@routePage');
-    Route::get('setting/{page}/{pager_page}', 'Admin_SettingController@routePage');
+    Route::get('/', 'admin\\AdminSettingController@routePage');
+    Route::get('setting', 'admin\\AdminSettingController@routePage');
+    Route::get('setting/{page}', 'admin\\AdminSettingController@routePage');
+    Route::get('setting/{page}/{pager_page}', 'admin\\AdminSettingController@routePage');
 
-    Route::get('statistic/{page}', 'Admin_SettingController@routePage');
+    Route::get('statistic/{page}', 'admin\\AdminSettingController@routePage');
 
     //content
-    Route::get('content/{page}', 'Admin_SettingController@routePage');
-    Route::get('content/{page}/{pager_page}', 'Admin_SettingController@routePage');
+    Route::get('content/{page}', 'admin\\AdminSettingController@routePage');
+    Route::get('content/{page}/{pager_page}', 'admin\\AdminSettingController@routePage');
 
     //manage
-    Route::get('manage/{page}', 'Admin_SettingController@routePage');
-    Route::post('manage/{page}', 'Admin_SettingController@routePage');
-    Route::post('manage/{page}/{pager_page}', 'Admin_SettingController@routePage');
-    Route::get('manage/{page}/{pager_page}', 'Admin_SettingController@routePage');
+    Route::get('manage/{page}', 'admin\\AdminSettingController@routePage');
+    Route::post('manage/{page}', 'admin\\AdminSettingController@routePage');
+    Route::post('manage/{page}/{pager_page}', 'admin\\AdminSettingController@routePage');
+    Route::get('manage/{page}/{pager_page}', 'admin\\AdminSettingController@routePage');
 
-    Route::post('update-setting', 'Admin_SettingController@updateSetting');
-    Route::post('set-fee-trade', 'Admin_SettingController@setFeeTrade');
-    Route::post('set-fee-withdraw', 'Admin_SettingController@setFeeWithdraw');
+    Route::post('update-setting', 'admin\\AdminSettingController@updateSetting');
+    Route::post('set-fee-trade', 'admin\\AdminSettingController@setFeeTrade');
+    Route::post('set-fee-withdraw', 'admin\\AdminSettingController@setFeeWithdraw');
 
-    Route::post('add-coin-vote', 'Admin_SettingController@addNewCoinVote');
-    Route::post('delete-coin-vote', 'Admin_SettingController@deleteCoinVote');
+    Route::post('add-coin-vote', 'admin\\AdminSettingController@addNewCoinVote');
+    Route::post('delete-coin-vote', 'admin\\AdminSettingController@deleteCoinVote');
     //user
-    Route::post('add-user', 'Admin_SettingController@addNewUser');
-    Route::get('edit-user/{user}', 'Admin_SettingController@editUSer');
-    Route::post('edit-user', 'Admin_SettingController@doEditUSer');
-    Route::post('delete-user', 'Admin_SettingController@deleteUSer');
-    Route::post('ban-user', 'Admin_SettingController@banUSer');
+    Route::post('add-user', 'admin\\AdminSettingController@addNewUser');
+    Route::get('edit-user/{user}', 'admin\\AdminSettingController@editUSer');
+    Route::post('edit-user', 'admin\\AdminSettingController@doEditUSer');
+    Route::post('delete-user', 'admin\\AdminSettingController@deleteUSer');
+    Route::post('ban-user', 'admin\\AdminSettingController@banUSer');
 
     //wallet
-    Route::post('add-wallet', 'Admin_SettingController@addNewWallet');
-    Route::get('edit-wallet/{wallet}', 'Admin_SettingController@editWallet');
-    Route::post('edit-wallet', 'Admin_SettingController@doEditWallet');
-    Route::post('delete-wallet', 'Admin_SettingController@deleteWallet');
+    Route::post('add-wallet', 'admin\\AdminSettingController@addNewWallet');
+    Route::get('edit-wallet/{wallet}', 'admin\\AdminSettingController@editWallet');
+    Route::post('edit-wallet', 'admin\\AdminSettingController@doEditWallet');
+    Route::post('delete-wallet', 'admin\\AdminSettingController@deleteWallet');
 
     //market
-    Route::post('add-market', 'Admin_SettingController@addNewMarket');
-    Route::post('delete-market', 'Admin_SettingController@deleteMarket');
+    Route::post('add-market', 'admin\\AdminSettingController@addNewMarket');
+    Route::post('delete-market', 'admin\\AdminSettingController@deleteMarket');
 
     //pages , news
-    Route::post('add-post', 'Admin_SettingController@addNewPost');
-    Route::get('edit-post/{post}', 'Admin_SettingController@editPost');
-    Route::post('edit-post', 'Admin_SettingController@doEditPost');
-    Route::post('delete-post', 'Admin_SettingController@deletePost');
+    Route::post('add-post', 'admin\\AdminSettingController@addNewPost');
+    Route::get('edit-post/{post}', 'admin\\AdminSettingController@editPost');
+    Route::post('edit-post', 'admin\\AdminSettingController@doEditPost');
+    Route::post('delete-post', 'admin\\AdminSettingController@deletePost');
 
     //coin news
-    Route::post('add-coin-news', 'Admin_SettingController@addCoinNews');
-    Route::get('edit-coin-news/{post}', 'Admin_SettingController@editCoinNews');
-    Route::post('edit-coin-news', 'Admin_SettingController@doEditCoinNews');
-    Route::post('delete-coin-news', 'Admin_SettingController@deleteCoinNews');
+    Route::post('add-coin-news', 'admin\\AdminSettingController@addCoinNews');
+    Route::get('edit-coin-news/{post}', 'admin\\AdminSettingController@editCoinNews');
+    Route::post('edit-coin-news', 'admin\\AdminSettingController@doEditCoinNews');
+    Route::post('delete-coin-news', 'admin\\AdminSettingController@deleteCoinNews');
 
     //withdraw limits
-    Route::post('add-withdraw-limit', 'Admin_SettingController@addWithdrawLimit');
-    Route::get('edit-withdraw-limit/{post}', 'Admin_SettingController@editWithdrawLimit');
-    Route::post('edit-withdraw-limit', 'Admin_SettingController@doEditWithdrawLimit');
-    Route::post('delete-withdraw-limit', 'Admin_SettingController@deleteWithdrawLimit');
+    Route::post('add-withdraw-limit', 'admin\\AdminSettingController@addWithdrawLimit');
+    Route::get('edit-withdraw-limit/{post}', 'admin\\AdminSettingController@editWithdrawLimit');
+    Route::post('edit-withdraw-limit', 'admin\\AdminSettingController@doEditWithdrawLimit');
+    Route::post('delete-withdraw-limit', 'admin\\AdminSettingController@deleteWithdrawLimit');
 	
     //coin giveaways
-    Route::post('add-coin-giveaway', 'Admin_SettingController@addCoinGiveaway');
-    Route::get('edit-coin-giveaway/{post}', 'Admin_SettingController@editCoinGiveaway');
-    Route::post('edit-coin-giveaway', 'Admin_SettingController@doEditCoinGiveaway');
-    Route::post('delete-coin-giveaway', 'Admin_SettingController@deleteCoinGiveaway');
+    Route::post('add-coin-giveaway', 'admin\\AdminSettingController@addCoinGiveaway');
+    Route::get('edit-coin-giveaway/{post}', 'admin\\AdminSettingController@editCoinGiveaway');
+    Route::post('edit-coin-giveaway', 'admin\\AdminSettingController@doEditCoinGiveaway');
+    Route::post('delete-coin-giveaway', 'admin\\AdminSettingController@deleteCoinGiveaway');
 	
-    Route::post('send-coin', 'Admin_SettingController@doSendCoin');
+    Route::post('send-coin', 'admin\\AdminSettingController@doSendCoin');
 
-    Route::get('backup', 'Admin_SettingController@formBackup');
-    Route::post('restore', 'Admin_SettingController@doBackup');
-    Route::get('restore', 'Admin_SettingController@formRestore');
-    Route::post('restore', 'Admin_SettingController@doRestore');
+    Route::get('backup', 'admin\\AdminSettingController@formBackup');
+    Route::post('restore', 'admin\\AdminSettingController@doBackup');
+    Route::get('restore', 'admin\\AdminSettingController@formRestore');
+    Route::post('restore', 'admin\\AdminSettingController@doRestore');
 
     //limit trade
-    Route::post('add-limit-trade', 'Admin_SettingController@addNewLimitTrade');
-    Route::get('edit-limit-trade/{wallet}', 'Admin_SettingController@editLimitTrade');
-    Route::post('edit-limit-trade', 'Admin_SettingController@doEditLimitTrade');
-    Route::post('delete-limit-trade', 'Admin_SettingController@deleteLimitTrade');
+    Route::post('add-limit-trade', 'admin\\AdminSettingController@addNewLimitTrade');
+    Route::get('edit-limit-trade/{wallet}', 'admin\\AdminSettingController@editLimitTrade');
+    Route::post('edit-limit-trade', 'admin\\AdminSettingController@doEditLimitTrade');
+    Route::post('delete-limit-trade', 'admin\\AdminSettingController@deleteLimitTrade');
 });
 // Confide routes
 Route::get( 'referral/{referral}',                 'UserController@create');
