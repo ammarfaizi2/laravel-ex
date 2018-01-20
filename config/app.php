@@ -272,7 +272,7 @@ return [
         'Wallet' => App\Models\Wallet::class,
         'WalletLimitTrade' => App\Models\WalletLimitTrade::class,
         'Withdraw' => App\Models\Withdraw::class,
-        'Confide'    => Zizaco\Confide\Facade::class
+        'Confide'    => Zizaco\Confide\Facade::class,
 
         // controller
         'App\\Http\\Controllers\\Admin_SettingController' => App\Http\Controllers\admin\Admin_SettingController::class
