@@ -78,7 +78,7 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin'), funct
     Route::post('ban-user', 'admin\\AdminSettingController@banUSer');
 
     Route::get('edit-user/{user_id}', 'admin\\AdminSettingController@editUser');
-    Route::post('edit-user/{user_id}', 'admin\\AdminSettingController@doEditUser');
+    Route::post('edit-user', 'admin\\AdminSettingController@doEditUser');
     // Route::post('')
 
     //market

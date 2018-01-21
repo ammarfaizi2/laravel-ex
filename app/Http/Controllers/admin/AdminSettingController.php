@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use DB;
+use Hash;
 use Lang;
 use Config;
 use Request;
