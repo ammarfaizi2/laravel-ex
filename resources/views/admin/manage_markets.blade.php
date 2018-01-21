@@ -16,7 +16,7 @@
 	@endif
 <a href="#" id="add_market_link">{{trans('admin_texts.add_market')}}</a>
 
-<form class="form-horizontal" role="form" id="add_new_market" method="POST" action="{{{ Auth::check('admin\\AdminSettingController@addNewMarket') ?: URL::to('/admin/add-market') }}}">
+<form class="form-horizontal" role="form" id="add_new_market" method="POST" action="/admin/add-market">
 	<input type="hidden" name="_token" value="{{{ Session::token() }}}">
 	<div class="form-group">
 	    <label for="inputEmail3" class="col-sm-2 control-label">{{trans('admin_texts.from')}}</label>
@@ -60,7 +60,9 @@
 	 	<th>{{trans('admin_texts.action')}}</th>
 	</tr> 	
 	@foreach($markets as $market)
-	<tr id="market_id_{{$market->id}}"><td>{{$market->id}}</td><td>{{$wallets[$market->wallet_from]->type}}</td><td>{{$wallets[$market->wallet_to]->type}}</td><td><a href="#" onclick="deleteMarket({{$market->id}})" class="delete_market">{{trans('admin_texts.delete')}}</a></td></tr>
+	@if(isset($wallets[$market->wallet_from]->type))
+		<tr id="market_id_{{$market->id}}"><td>{{$market->id}}</td><td>{{$wallets[$market->wallet_from]->type}}</td><td>{{$wallets[$market->wallet_to]->type}}</td><td><a href="#" onclick="deleteMarket({{$market->id}})" class="delete_market">{{trans('admin_texts.delete')}}</a></td></tr>
+	@endif
 	@endforeach
 	
 </table>

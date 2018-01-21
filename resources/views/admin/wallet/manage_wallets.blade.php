@@ -17,7 +17,7 @@
 	@endif
 <a href="#" id="add_wallet_link">{{trans('admin_texts.add_wallet')}}</a>
 
-<form class="form-horizontal" role="form" id="add_new_wallet" method="POST" action="{{{ Auth::check('admin\\AdminSettingController@addNewWallet') ?: URL::to('/admin/add-wallet') }}}" enctype="multipart/form-data">
+<form class="form-horizontal" role="form" id="add_new_wallet" method="POST" action="/admin/add-wallet" enctype="multipart/form-data">
 	<input type="hidden" name="_token" value="{{{ Session::token() }}}">
 	<div class="form-group">
 	    <label for="inputEmail3" class="col-sm-2 control-label">{{trans('admin_texts.coin_code')}}</label>
