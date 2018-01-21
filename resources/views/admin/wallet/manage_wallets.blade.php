@@ -157,7 +157,7 @@
 
 		
 function deleteWallet(wallet_id){
-	$.post('<?php echo action('admin\\AdminSettingController@deleteWallet')?>', {isAjax: 1, wallet_id: wallet_id }, function(response){
+	$.post('/admin/delete-wallet', {isAjax: 1, wallet_id: wallet_id }, function(response){
        	var obj = $.parseJSON(response);
 		var title ='Wallet removal';
 		var msg ='';
@@ -221,7 +221,7 @@ function deleteWallet(wallet_id){
         totalPages: <?php echo $total_pages ?>,
         alignment:'right',
         pageUrl: function(type, page, current){
-        	return "<?php echo URL::to('admin/manage/wallets'); ?>"+'/'+page; 
+        	return "<?php echo '/admin/manage/wallets'; ?>"+'/'+page; 
         }
     }
     $('#pager').bootstrapPaginator(options);
