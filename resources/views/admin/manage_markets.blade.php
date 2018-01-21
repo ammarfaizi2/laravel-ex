@@ -71,7 +71,7 @@
 {{ HTML::script('assets/js/jquery.validate.min.js') }}
 <script type="text/javascript">
 function deleteMarket(market_id){
-	$.post('<?php echo action('admin\\AdminSettingController@deleteMarket')?>', {isAjax: 1, market_id: market_id }, function(response){
+	$.post('/admin/delete-market', {isAjax: 1, market_id: market_id }, function(response){
        	var obj = $.parseJSON(response);
 		var title = 'Market removal';
 		var msg ='';
