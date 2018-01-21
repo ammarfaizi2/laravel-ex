@@ -3,7 +3,7 @@
 <!-- {{HTML::style('assets/css/bootstrap-combined.min.css')}} -->
 {{ HTML::script('assets/js/bootstrap-paginator.js') }}
 <h2>{{trans('admin_texts.manage_users')}}</h2>
-<a href="javascript:void()" id="add_user_link">{{trans('admin_texts.add_user')}}</a>
+<a href="#" id="add_user_link">{{trans('admin_texts.add_user')}}</a>
 	@if ( is_array(Session::get('error')) )
         <div class="alert alert-error">{{ head(Session::get('error')) }}</div>
 	@elseif ( Session::get('error') )
@@ -100,7 +100,7 @@
 				<?php $i++; ?>
 			@endforeach
 		</td>
-		<td><a href="{{URL::to('admin/edit-user')}}/{{$user['id']}}" class="edit_page">{{trans('admin_texts.edit')}}</a>  | <a href="javascript:void()" onclick="deleteUser({{$user['id']}})" class="delete_page">{{trans('admin_texts.delete')}}</a>  | <a href="javascript:void()" onclick="banUser({{$user['id']}})" class="ban_user">{{trans('admin_texts.ban_user')}}</a></td>
+		<td><a href="{{URL::to('admin/edit-user')}}/{{$user['id']}}" class="edit_page">{{trans('admin_texts.edit')}}</a>  | <a href="javascript:void(0);" onclick="deleteUser({{$user['id']}})" class="delete_page">{{trans('admin_texts.delete')}}</a>  | <a href="javascript:void(0);" onclick="banUser({{$user['id']}})" class="ban_user">{{trans('admin_texts.ban_user')}}</a></td>
 	</tr>
 	@endforeach
 	
