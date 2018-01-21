@@ -122,6 +122,9 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin'), funct
     Route::post('edit-limit-trade', 'admin\\AdminSettingController@doEditLimitTrade');
     Route::post('delete-limit-trade', 'admin\\AdminSettingController@deleteLimitTrade');
     Route::post('update-setting', 'admin\\AdminSettingController@updateSetting');
+
+    Route::post('set-fee-trade', 'admin\\AdminSettingController@setFeeTrade');
+    Route::post('set-fee-withdraw', 'admin\\AdminSettingController@setFeeWithdraw');
 });
 // Confide routes
 Route::get( 'referral/{referral}',                 'UserController@create');
