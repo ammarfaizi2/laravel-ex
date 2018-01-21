@@ -127,7 +127,7 @@ function deleteMarket(market_id){
         totalPages: <?php echo $total_pages ?>,
         alignment:'right',
         pageUrl: function(type, page, current){
-        	return "<?php echo URL::to('admin/manage/markets'); ?>"+'/'+page; 
+        	return "<?php echo '/admin/manage/markets'; ?>"+'/'+page; 
         }
     }
     $('#pager').bootstrapPaginator(options);
