@@ -16,7 +16,7 @@
 <div class="alert alert-error">{{{ $error_message }}}</div>
 @endif
 @if(!isset($not_wallet))
-<form class="form-horizontal" role="form" id="add_new_coin_vote" method="POST" action="{{{ Auth::check('admin\\AdminSettingController@addNewCoinVote') ?: URL::to('/admin/add-coin-vote') }}}">
+<form class="form-horizontal" role="form" id="add_new_coin_vote" method="POST" action="/admin/add-coin-vote">
 	<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
 	<div class="form-group">
 	    <label for="inputEmail3" class="col-sm-2 control-label">{{trans('texts.coin_code')}}</label>
@@ -88,7 +88,7 @@ function deleteCoin(coinvote_id){
       
 	$.ajax({
 		type: 'post',
-		url: '<?php echo action('admin\\AdminSettingController@deleteCoinVote')?>',
+		url: '/admin/delete-coin-vote',
 		datatype: 'json',
 		data: {isAjax: 1, coinvote_id: coinvote_id },
 		beforeSend: function(request) {
