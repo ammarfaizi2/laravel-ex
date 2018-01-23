@@ -32,9 +32,7 @@ class BeforeMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-            $this->app['url']->forceScheme('https');
-        }
+        
         if ($request->getMethod() === 'POST') {
             //exit ('asas');
             //Route::callRouteFilter('csrf', [], '', $request);
