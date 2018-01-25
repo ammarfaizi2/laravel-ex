@@ -165,7 +165,7 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => 'App\
     Route::get('deposit/{wallet_id}', 'UserController@formDeposit');
     
     Route::get('withdraw/{wallet_id}', 'UserController@formWithdraw');
-    Route::post('withdraw', 'UserController@doWithdraw');
+    Route::post('withdraw', 'UserController@doWithdraw')->name('user.withdraw');
     Route::get('withdraw-confirm/{withdraw_id}/{confirmation_code}', 'UserController@confirmWithdraw');
     Route::post('referrer-tradekey', 'UserController@referreredTradeKey');
     Route::post('cancel-withdraw', 'UserController@cancelWithdraw');
