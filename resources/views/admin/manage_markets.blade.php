@@ -3,7 +3,7 @@
 {{ HTML::script('assets/js/bootstrap-paginator.js') }}
 <h2>{{trans('admin_texts.markets')}}</h2>
 @if ( is_array(Session::get('error')) )
-        <div class="alert alert-error">{{ head(Session::get('error')) }}</div>
+	<div class="alert alert-error">{{ head(Session::get('error')) }}</div>
 	@elseif ( Session::get('error') )
       <div class="alert alert-error">{{{ Session::get('error') }}}</div>
 	@endif

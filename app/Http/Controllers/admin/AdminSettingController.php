@@ -1723,6 +1723,63 @@ class AdminSettingController extends Controller
 
     public function featuredMarket()
     {
-        return view('admin.featured_market');
+        if (isset($_GET['delete'])) {
+            DB::table('featured_market')->where('id', '=', $_GET['delete'])->update(
+                [
+                    'deleted_at' => date('Y-m-d H:i:s')
+                ]
+            );
+            return Redirect::to(route('admin.featured_market'))->with('success', 'Success!');
+        }
+        return view('admin.featured_market', ['that' => $this]);
+    }
+
+    public function addFeaturedMarket()
+    {
+        $field = ['link', 'message', 'coin-name', 'start-day', 'end-day'];
+        $cond = true;
+        foreach ($field as $val) {
+            $cond = $cond && isset($_POST[$val]) && $_POST[$val] != "";
+        }
+        if ($cond) {
+            if (DB::table('featured_market')->insert(
+                [
+                    'link' => $_POST['link'],
+                    'message' => $_POST['message'],
+                    'coin' => $_POST['coin-name'],
+                    'start_date' => $_POST['start-day'],
+                    'end_date' => $_POST['end-day'],
+                    'created_at' => date('Y-m-d H:i:s')
+                ]
+            )) {
+                return Redirect::to(route('admin.featured_market'))->with('success', 'Success!');    
+            } else {
+                return Redirect::to(route('admin.featured_market'))->with('error', 'Error');    
+            }
+        } else {
+            return Redirect::to(route('admin.featured_market'))->with('error', 'Please fill the form!');
+        }
+    }
+
+    public function featuredMarketPaginator()
+    {
+        return DB::table('featured_market')->where('deleted_at', '=', null)->count('id');
+    }
+
+    public function getFeaturedMarket($offset)
+    {
+        return DB::table('featured_market')->select('*')->where('deleted_at', '=', null)->limit(15)->offset($offset)->orderBy('created_at')->get();
+    }
+
+    public function generateDateForm($name, $tm = 0, $t = '')
+    {
+        $r = '<select style="width:200px;" name="'.$name.'-day">';
+        $cur = time() + $tm;
+        for ($i=0; $i < 1000; $i++) { 
+            $r .= '<option value="'.date("Y-m-d", $cur).'">'. date('d F Y', $cur).($i === 0 ? $t : '').'</option>';
+            $cur += 3600 * 24;
+        }
+        $r .= '</select>';
+        return $r;
     }
 }
