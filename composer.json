@@ -18,6 +18,7 @@
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "~1.0",
         "phpunit/phpunit": "~6.0",
+        "xethron/migrations-generator": "^2.0",
         "zizaco/confide": "5.0.x-dev"
     },
     "autoload": {
