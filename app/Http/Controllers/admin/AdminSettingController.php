@@ -1720,4 +1720,9 @@ class AdminSettingController extends Controller
         }
         return Redirect::to('/admin/setting/fee')->with('success', 'Success');
     }
+
+    public function featuredMarket()
+    {
+        return view('admin.featured_market');
+    }
 }

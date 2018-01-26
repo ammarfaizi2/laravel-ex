@@ -141,5 +141,5 @@ return array(
 	"additional_coin_info"	=> "Additional Market Info",
 	"permalink"	=> "Permalink",
 	"coin_giveaway"	=> "Coin Giveaway",
-	
+	"featured_market" => "Featured Market"
 );

@@ -134,6 +134,8 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middl
     Route::post('add-post', 'admin\\AdminSettingController@addNewPost');
 
     Route::post('add-fee', 'admin\\AdminSettingController@addFee');
+
+    Route::get('featured_market', 'admin\\AdminSettingController@featuredMarket')->name('admin.featured_market');
 });
 // Confide routes
 Route::get( 'referral/{referral}',                 'UserController@create');

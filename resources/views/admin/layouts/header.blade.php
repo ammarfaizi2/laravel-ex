@@ -20,6 +20,9 @@
 						<li>{{ HTML::link('admin/setting/fee-withdraw', trans('admin_texts.fee_withdraw')) }}</li>
 					</ul>
 				</li>
+				<li>
+					{{ HTML::link(route('admin.featured_market'), trans('admin_texts.featured_market')) }}
+				</li>
 			</ul>
 		</li>
 		<li>
