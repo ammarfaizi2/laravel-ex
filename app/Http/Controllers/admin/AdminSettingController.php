@@ -1734,6 +1734,20 @@ class AdminSettingController extends Controller
         return view('admin.featured_market', ['that' => $this]);
     }
 
+    public function editFeaturedMarket()
+    {
+        if (! isset($_GET['id'])) {
+            return Redirect::to(route('admin.featured_market'));
+        }
+        if (! $q = DB::table('featured_market')->where('id', '=', $_GET['id'])->first()) {
+            return Redirect::to(route('admin.featured_market'));
+        }
+        return view('admin.edit_featured_market', [
+            'q' => $q,
+            'that' => $this
+        ]);
+    }
+
     public function addFeaturedMarket()
     {
         $field = ['link', 'message', 'coin-name', 'start-day', 'end-day'];
@@ -1743,6 +1757,34 @@ class AdminSettingController extends Controller
         }
         if ($cond) {
             if (DB::table('featured_market')->insert(
+                [
+                    'link' => $_POST['link'],
+                    'message' => $_POST['message'],
+                    'coin' => $_POST['coin-name'],
+                    'start_date' => $_POST['start-day'],
+                    'end_date' => $_POST['end-day'],
+                    'created_at' => date('Y-m-d H:i:s')
+                ]
+            )) {
+                return Redirect::to(route('admin.featured_market'))->with('success', 'Success!');    
+            } else {
+                return Redirect::to(route('admin.featured_market'))->with('error', 'Error');    
+            }
+        } else {
+            return Redirect::to(route('admin.featured_market'))->with('error', 'Please fill the form!');
+        }
+    }
+
+    public function editFeaturedMarketPost()
+    {
+        $field = ['link', 'message', 'coin-name', 'start-day', 'end-day'];
+        $cond = true;
+        foreach ($field as $val) {
+            $cond = $cond && isset($_POST[$val]) && $_POST[$val] != "";
+        }
+        var_dump($_POST);
+        if ($cond) {
+            if (DB::table('featured_market')->where('id', '=', $_GET['id'])->update(
                 [
                     'link' => $_POST['link'],
                     'message' => $_POST['message'],
@@ -1771,12 +1813,13 @@ class AdminSettingController extends Controller
         return DB::table('featured_market')->select('*')->where('deleted_at', '=', null)->limit(15)->offset($offset)->orderBy('created_at')->get();
     }
 
-    public function generateDateForm($name, $tm = 0, $t = '')
+    public function generateDateForm($name, $tm = 0, $t = '', $startAt = null, $selected = null)
     {
         $r = '<select style="width:200px;" name="'.$name.'-day">';
-        $cur = time() + $tm;
+        $cur =  isset($startAt) ? $startAt : time() + $tm;
         for ($i=0; $i < 1000; $i++) { 
-            $r .= '<option value="'.date("Y-m-d", $cur).'">'. date('d F Y', $cur).($i === 0 ? $t : '').'</option>';
+            $val = date("Y-m-d", $cur);
+            $r .= '<option value="'.$val.'" '.($val === $selected ? 'selected' : '').'>'. date('d F Y', $cur).($val === date('Y-m-d') ? $t : '').'</option>';
             $cur += 3600 * 24;
         }
         $r .= '</select>';

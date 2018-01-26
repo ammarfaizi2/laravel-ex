@@ -138,6 +138,7 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middl
     Route::get('featured_market', 'admin\\AdminSettingController@featuredMarket')->name('admin.featured_market');
     Route::post('add_featured_market', 'admin\\AdminSettingController@addFeaturedMarket')->name('admin.add_featured_market');
     Route::get('edit_featured_market', 'admin\\AdminSettingController@editFeaturedMarket')->name('admin.edit_featured_market');
+    Route::post('edit_featured_market', 'admin\\AdminSettingController@editFeaturedMarketPost')->name('admin.edit_featured_market');
 });
 // Confide routes
 Route::get( 'referral/{referral}',                 'UserController@create');
