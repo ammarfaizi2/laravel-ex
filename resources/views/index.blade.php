@@ -87,7 +87,9 @@
 				</div>
 			</div>
 			
-			
+			@if($that->hasFeaturedMarket())
+				{!! $that->showFeaturedMarket() !!}
+			@endif
 			<!-- Startpage Markets -->
 			@if(isset($show_all_markets) && $show_all_markets === true)
 				@include('blocks.startmarkets')

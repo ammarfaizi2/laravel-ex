@@ -1721,6 +1721,16 @@ class AdminSettingController extends Controller
         return Redirect::to('/admin/setting/fee')->with('success', 'Success');
     }
 
+    public function getAllCoinNameInDropDown()
+    {
+        $get = DB::table('wallets')->select(['id', 'type', 'name'])->get() or $get = [];
+        $r = '<select name="coin-name">';
+        foreach ($get as $val) {
+            $r .= '<option value="'.$val->id.'">'.e($val->type).' - '.e($val->name).'</option>';
+        }
+        return $r.'</select>';
+    }
+
     public function featuredMarket()
     {
         if (isset($_GET['delete'])) {
@@ -1729,7 +1739,7 @@ class AdminSettingController extends Controller
                     'deleted_at' => date('Y-m-d H:i:s')
                 ]
             );
-            return Redirect::to(route('admin.featured_market'))->with('success', 'Success!');
+            return Redirect::to(route('admin.featured_market'))->with('success', 'Delete success!');
         }
         return view('admin.featured_market', ['that' => $this]);
     }
@@ -1775,6 +1785,12 @@ class AdminSettingController extends Controller
         }
     }
 
+    public function editFeaturedCoinName($id)
+    {
+        $a = DB::table('wallets')->where('id', '=', $id)->select(['type', 'name'])->first();
+        return '<input type="text" readonly style="height:40px;width:400px;" value="'.$a->type.' - '.$a->name.'"><input type="hidden" name="coin-name" value="'.$id.'">';
+    }
+
     public function editFeaturedMarketPost()
     {
         $field = ['link', 'message', 'coin-name', 'start-day', 'end-day'];
@@ -1810,7 +1826,7 @@ class AdminSettingController extends Controller
 
     public function getFeaturedMarket($offset)
     {
-        return DB::table('featured_market')->select('*')->where('deleted_at', '=', null)->limit(15)->offset($offset)->orderBy('created_at')->get();
+        return DB::table('featured_market')->select(['featured_market.*', 'wallets.type', 'wallets.name'])->join('wallets', 'wallets.id', '=', 'featured_market.coin', 'inner')->where('deleted_at', '=', null)->limit(15)->offset($offset)->orderBy('created_at')->get();
     }
 
     public function generateDateForm($name, $tm = 0, $t = '', $startAt = null, $selected = null)

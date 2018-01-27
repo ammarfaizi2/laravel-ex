@@ -21,18 +21,18 @@
 <form class="form-horizontal" role="form" id="edit_user" method="POST" action="{{ route('admin.edit_featured_market') }}?id={{$_GET['id']}}" autocomplete=off>
 	<input type="hidden" name="_token" value="{{ csrf_token() }}">
 	<div class="form-group">
-	    <label for="inputEmail3" class="col-sm-2 control-label">Link</label>
+	    <label for="inputEmail3" class="col-sm-2 control-label">Coin Name</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
-			  <input type="text" required  class="form-control" style="height:40px;width:400px;" name="link" value="{{$q->link}}">
+			 {!! $that->editFeaturedCoinName($q->coin) !!}
 			</div>	      	      
 	    </div>
 	</div>
 	<div class="form-group">
-	    <label for="inputEmail3" class="col-sm-2 control-label">Coin Name</label>
+	    <label for="inputEmail3" class="col-sm-2 control-label">Link</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
-			  <input type="text" required  class="form-control" style="height:40px;width:400px;" name="coin-name" value="{{$q->coin}}">
+			  <input type="text" required  class="form-control" style="height:40px;width:400px;" name="link" value="{{$q->link}}">
 			</div>	      	      
 	    </div>
 	</div>

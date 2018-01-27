@@ -34,21 +34,21 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 	<form style="display:none;" class="form-horizontal" role="form" id="add_new_market" method="POST" action="{{ route('admin.add_featured_market') }}">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}">
 	<div class="form-group">
+	    <label class="col-sm-2 control-label">Coin Name</label>
+	    <div class="col-sm-10">
+	    	<div class="input-append">
+			  {!! $that->getAllCoinNameInDropDown() !!}
+			</div>	      	      
+	    </div>
+	</div>
+	<div class="form-group">
 	    <label class="col-sm-2 control-label">Link</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
 			  <input type="text" class="form-control" style="height:40px;width:400px;" name="link">
 			</div>	      	      
 	    </div>
-	</div>	
-	<div class="form-group">
-	    <label class="col-sm-2 control-label">Coin Name</label>
-	    <div class="col-sm-10">
-	    	<div class="input-append">
-			  <input type="text" class="form-control" style="height:40px;width:400px;" name="coin-name">
-			</div>	      	      
-	    </div>
-	</div>	
+	</div>
 	<div class="form-group">
 	    <label class="col-sm-2 control-label">Message</label>
 	    <div class="col-sm-10">
@@ -93,10 +93,11 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 	</tr> 	
 	@foreach($that->getFeaturedMarket($page === 1 ? 0 : $page + 13) as $q)
 		@php
-			$q->coin = strlen($q->coin) > 10 ? substr($q->coin, 0, 10). '...' : $q->coin;
-			$q->message = strlen($q->message) > 10 ? substr($q->message, 0, 10). '...' : $q->message;
+			$q->coin = strlen($q->coin) > 20 ? substr($q->coin, 0, 20). '...' : $q->coin;
+			$q->message = strlen($q->message) > 20 ? substr($q->message, 0, 20). '...' : $q->message;
+			$q->link = strlen($q->link) > 20 ? substr($q->link, 0, 20). '...' : $q->link;
 		@endphp
-		<tr><td>{{$q->id}}</td><td>{{$q->link}}</td><td>{{$q->coin}}</td><td>{{$q->message}}</td><td>{{date('d F Y', strtotime($q->start_date))}}</td><td>{{date('d F Y', strtotime($q->end_date))}}</td><td><a href="{{ route('admin.edit_featured_market') }}?id={{$q->id}}" class="edit_page">Edit</a>  | <a href="?page={{$page}}&amp;delete={{$q->id}}">Delete</a></td></tr>
+		<tr><td>{{$q->id}}</td><td>{{$q->link}}</td><td>{{$q->type.' - '.$q->name}}</td><td>{{$q->message}}</td><td>{{date('d F Y', strtotime($q->start_date))}}</td><td>{{date('d F Y', strtotime($q->end_date))}}</td><td><a href="{{ route('admin.edit_featured_market') }}?id={{$q->id}}" class="edit_page">Edit</a>  | <a href="?page={{$page}}&amp;delete={{$q->id}}">Delete</a></td></tr>
 	@endforeach
 </table>
 <div id="pager"></div>
