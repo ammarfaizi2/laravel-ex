@@ -268,8 +268,14 @@ class HomeController extends Controller
         if ($data['show_all_markets'] === true) {
             //$data['main_news'] = News::where('market_id',intval($market_id))->orderBy('created_at','desc')->first();
         }
-
+        $data['that'] = $this;
         return view('index', $data);
+    }
+
+    public function hasFeaturedMarket()
+    {
+        $now = date('Y-m-d 00:00:00');
+        return DB::table('featured_market')->select(['featured_market.*','wallets.type','wallets.name'])->join('wallets', 'wallets.id', '=', 'featured_market.coin', 'inner')->where('featured_market.deleted_at', '=', null)->where('featured_market.start_date', '<=', $now)->where('featured_market.end_date', '>=', $now)->get();
     }
 
     public function sendEmail()

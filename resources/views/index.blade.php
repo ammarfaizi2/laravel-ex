@@ -87,8 +87,21 @@
 				</div>
 			</div>
 			
-			@if($that->hasFeaturedMarket())
-				{!! $that->showFeaturedMarket() !!}
+			@if($stq = $that->hasFeaturedMarket())
+				<?php $i = 1; ?>
+				<div style="margin-left:15px;padding-bottom:10px;">
+					<h2>Featured Market</h2>
+					<table style="border-collapse: collapse;" border="1">
+						<tr>
+					@foreach(['No.', 'Coin', 'Link', 'Message', 'Start Date', 'End Date'] as $q)
+						<th><center>{{$q}}</center></th>
+					@endforeach
+						</tr>
+					@foreach($stq as $q)
+						<tr><td>{{$i++}}.</td><td>{{$q->type.' - '.$q->name}}</td><td>{{$q->link}}</td><td>{{$q->message}}</td><td>{{date("d F Y", strtotime($q->start_date))}}</td><td>{{date("d F Y", strtotime($q->end_date))}}</td></tr>
+					@endforeach
+					</table>
+				</div>
 			@endif
 			<!-- Startpage Markets -->
 			@if(isset($show_all_markets) && $show_all_markets === true)
