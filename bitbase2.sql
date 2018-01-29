@@ -199,7 +199,7 @@ CREATE TABLE `featured_market` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `link` varchar(255) NOT NULL,
   `message` text NOT NULL,
-  `coin` varchar(255) NOT NULL,
+  `coin` int(11) NOT NULL,
   `start_date` datetime NOT NULL,
   `end_date` datetime NOT NULL,
   `created_at` datetime NOT NULL,
@@ -208,6 +208,9 @@ CREATE TABLE `featured_market` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+INSERT INTO `featured_market` (`id`, `link`, `message`, `coin`, `start_date`, `end_date`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'asdfasd fqwer qwer 1234 1234 ',  'asdfasdfasdfasdf', 13, '2018-01-27 00:00:00',  '2018-01-28 00:00:00',  '2018-01-27 13:32:34',  NULL, '2018-01-27 13:35:33'),
+(2, '123123', '1234123412341',  47, '2018-01-27 00:00:00',  '2018-02-01 00:00:00',  '2018-01-29 05:32:56',  NULL, NULL);
 
 DROP TABLE IF EXISTS `fee_trade`;
 CREATE TABLE `fee_trade` (
@@ -1760,7 +1763,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `fullname`, `username`, `email`, `password`, `confirmation_code`, `confirmed`, `banned`, `authy`, `two_factor_auth`, `created_at`, `updated_at`, `lastest_login`, `timeout`, `referral`, `trade_key`, `ip_lastlogin`, `remember_token`) VALUES
 (100, 'giveaway', 'giveaway', 'bitbase.me@gmail.com', 'bea802d27f2353047f5c4a595c721b16', '', 1,  0,  '', '', '0000-00-00 00:00:00',  '0000-00-00 00:00:00',  '0000-00-00 00:00:00',  '', NULL, '', '', NULL),
-(194, 'Sweedx', 'admino', 'bitbase.me@gmail.com', '$2y$10$9XKVSmByaMll3nl.KLdoy.O4GfROVnQzQJFC/KVuTvnL92hMfa3Nu', 'b42df0ecaa87cb86bdbbf3da11211bb8', 1,  0,  '', '', '2014-10-02 06:23:57',  '2018-01-26 11:13:37',  '2018-01-26 11:13:37',  '45 minutes', '', 'e7f4661830db86812861f59c263a1c55', '33.149.247.202', 'IQBAOX63zNFnACYBb2fkUCQDMHEhUjNfxyjFRVFdFbPTC0ntnUowVVdzgddj'),
+(194, 'Sweedx', 'admino', 'bitbase.me@gmail.com', '$2y$10$9XKVSmByaMll3nl.KLdoy.O4GfROVnQzQJFC/KVuTvnL92hMfa3Nu', 'b42df0ecaa87cb86bdbbf3da11211bb8', 1,  0,  '', '', '2014-10-02 06:23:57',  '2018-01-28 22:32:11',  '2018-01-28 22:32:11',  '45 minutes', '', 'e7f4661830db86812861f59c263a1c55', '127.0.0.1',  'YxW5mgBnr1xIt5uJi5jfiQzzGbxObrnr7tXdUrS1155iV0S0yE4MlgWsc7fN'),
 (195, 'Anoxxxyyy',  'Anoxxxyyy',  'bitbase.me@gmail.com', '$2y$10$NegLKUTtZdxCdUCJqPAu6.IH7psHP//73d132nX2ifgF3dSmYJEa.', '73a86552293e33156adb4e03e1b3753d', 1,  0,  '', '', '2014-10-02 06:26:31',  '2014-10-02 06:26:31',  '0000-00-00 00:00:00',  '', '', 'd6c1b34290ab84fb84fffcdbadc6752a', '83.172.65.211',  NULL),
 (196, 'mcnamara.jeremy',  'PhatJ',  'bitbase.me@gmail.com', '$2y$10$j87sgAesfSMcpmBMXDFQjuXTqkh7Ug1Pwigq8m9DqNPMVecanc2Pe', '70b92423cb4a5f0ff0be3cfdcd582b4c', 1,  0,  '', '', '2014-10-03 04:03:44',  '2014-11-12 17:32:43',  '2014-11-12 17:32:43',  '24 hours', '', 'd20ad7f36c52d069ffdc35b02f15cf06', '75.129.114.100', NULL),
 (197, '', 'admin',  'bitbase.me@gmail.com', '$2y$10$7r2C6/11CeNFN/dThSTHzuHD0jOZ.KRwuibiMVszgZSPm3mJMqZK2', '58832b2f2f8b9efc807363b6f92c5372', 0,  0,  '', '', '2014-10-21 22:51:07',  '2014-10-21 22:51:07',  '0000-00-00 00:00:00',  '', '', '6971534338ef501f74d481ff4cee2686', '83.172.65.211',  NULL),
@@ -1934,4 +1937,4 @@ CREATE TABLE `withdraws` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
--- 2018-01-26 18:52:39
+-- 2018-01-29 07:14:38
