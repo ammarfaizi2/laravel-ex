@@ -16,7 +16,7 @@
 	@if ( Session::get('notice') )
 	      <div class="alert">{{{ Session::get('notice') }}}</div>
 	@endif
-<form class="form-horizontal" role="form" id="add_new_user" method="POST" action="{{{ Auth::check('admin\\AdminSettingController@addNewUser') ?: URL::to('/admin/add-user') }}}">
+<form class="form-horizontal" role="form" id="add_new_user" method="POST" action="{{ route('admin.addNewUser') }}">
 	<input type="hidden" name="_token" value="{{{ Session::token() }}}">
 	<div class="form-group">
 	    <label for="inputEmail3" class="col-sm-2 control-label">{{trans('user_texts.fullname')}}</label>

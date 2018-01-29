@@ -64,7 +64,7 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middl
     Route::get('content/{page}/{pager_page}', 'admin\\AdminSettingController@routePage');
 
     //manage
-    Route::get('manage/{page}', 'admin\\AdminSettingController@routePage');
+    Route::get('manage/{page}', 'admin\\AdminSettingController@routePage')->name('admin.manage');
     Route::post('manage/{page}', 'admin\\AdminSettingController@routePage');
     Route::post('manage/{page}/{pager_page}', 'admin\\AdminSettingController@routePage');
     Route::get('manage/{page}/{pager_page}', 'admin\\AdminSettingController@routePage');
@@ -77,6 +77,8 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middl
     Route::post('delete-user', 'admin\\AdminSettingController@deleteUser');
     Route::post('ban-user', 'admin\\AdminSettingController@banUSer');
 
+
+    Route::post('add-new-user', 'admin\\AdminSettingController@addNewUser')->name('admin.addNewUser');
     Route::get('edit-user/{user_id}', 'admin\\AdminSettingController@editUser');
     Route::post('edit-user/{user_id}', 'admin\\AdminSettingController@doEditUser');
     Route::post('edit-user', 'admin\\AdminSettingController@doEditUser');

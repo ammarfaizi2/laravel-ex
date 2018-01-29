@@ -1002,11 +1002,11 @@ class AdminSettingController extends Controller
         $user->password_confirmation = Request::get('password_confirmation');
         $user_email = User::where('email', $user->email)->first();
         if (isset($user_email->id)) {
-            return Redirect::to('admin/manage/users')->with('error', Lang::get('messages.email_exist'));
+            return Redirect::to(route('admin.manage', 'users'))->with('error', Lang::get('messages.email_exist'));
         }
         $user_username = User::where('username', $user->username)->first();
         if (isset($user_username->id)) {
-            return Redirect::to('admin/manage/users')->with('error', Lang::get('messages.username_exist'));
+            return Redirect::to(route('admin.manage', 'users'))->with('error', Lang::get('messages.username_exist'));
         }
         // Save if valid. Password field will be hashed before save
         $user->save();
@@ -1023,22 +1023,22 @@ class AdminSettingController extends Controller
             
             $notice = Lang::get('confide::confide.alerts.account_created');
             // Redirect with success message, You may replace "Lang::get(..." for your custom message.
-            return Redirect::to('admin/manage/users')->with('success', $notice);
+            return Redirect::to(route('admin.manage', 'users'))->with('success', $notice);
         } else {
             // Get validation errors (see Ardent package)
             $error = $user->errors()->all(':message');
-            return Redirect::to('admin/manage/users')->withInput(Request::except('password'))->with('error', $error);
+            return Redirect::to(route('admin.manage', 'users'))->withInput(Request::except('password'))->with('error', $error);
         }
     }
 
     public function editUSer($user_id = '')
     {
         if ($user_id=='') {
-            return Redirect::to('admin/manage/users');
+            return Redirect::to(route('admin.manage', 'users'));
         }
         $user = User::find($user_id);
         if (!isset($user->id)) {
-            return Redirect::to('admin/manage/users')->with('error', Lang::get('messages.user_not_exist'));
+            return Redirect::to(route('admin.manage', 'users'))->with('error', Lang::get('messages.user_not_exist'));
         }
         $data['user_roles'] = $user->roles->toArray();
         $data['user'] = $user;
@@ -1078,7 +1078,7 @@ class AdminSettingController extends Controller
             $user->addRole($role);
         }
         //echo "confirmed: ".var_dump($confirmed);
-        return Redirect::to('admin/manage/users')->with('success', $user->username." ".Lang::get('messages.update_success'));
+        return Redirect::to(route('admin.manage', 'users'))->with('success', $user->username." ".Lang::get('messages.update_success'));
     }
 
     public function deleteUSer()
@@ -1093,7 +1093,7 @@ class AdminSettingController extends Controller
                 echo json_encode(array('status'=>'success', 'message'=>$message ));
                 exit;
             } else {
-                return Redirect::to('admin/manage/users')->with('success', $message);
+                return Redirect::to(route('admin.manage', 'users'))->with('success', $message);
             }
         } else {
             $message = Lang::get('messages.user_not_exist');
@@ -1101,7 +1101,7 @@ class AdminSettingController extends Controller
                 echo json_encode(array('status'=>'error', 'message'=>$message ));
                 exit;
             } else {
-                return Redirect::to('admin/manage/users')->with('error', $message);
+                return Redirect::to(route('admin.manage', 'users'))->with('error', $message);
             }
         }
         
@@ -1117,7 +1117,7 @@ class AdminSettingController extends Controller
                 echo json_encode(array('status'=>'success', 'message'=>$message ));
                 exit;
             } else {
-                return Redirect::to('admin/manage/users')->with('success', $message);
+                return Redirect::to(route('admin.manage', 'users'))->with('success', $message);
             }
         } else {
             $message = Lang::get('messages.user_not_exist');
@@ -1125,7 +1125,7 @@ class AdminSettingController extends Controller
                 echo json_encode(array('status'=>'error', 'message'=>$message ));
                 exit;
             } else {
-                return Redirect::to('admin/manage/users')->with('error', $message);
+                return Redirect::to(route('admin.manage', 'users'))->with('error', $message);
             }
         }
         
