@@ -87,18 +87,14 @@
 				</div>
 			</div>
 			
-			@if($stq = $that->hasFeaturedMarket())
+			@if($stq = $that->hasFeaturedMarket()->toArray())
 				<?php $i = 1; ?>
 				<div style="margin-left:15px;padding-bottom:10px;">
 					<h2>Featured Market</h2>
 					<table style="border-collapse: collapse;" border="1">
-						<tr>
-					@foreach(['No.', 'Coin', 'Link', 'Message', 'Start Date', 'End Date'] as $q)
-						<th><center>{{$q}}</center></th>
-					@endforeach
-						</tr>
+						<tr>@foreach(['No.', 'Coin', 'Link', 'Message', 'Start Date', 'End Date'] as $q)<th><center>{{$q}}</center></th>@endforeach</tr>
 					@foreach($stq as $q)
-						<tr><td>{{$i++}}.</td><td>{{$q->type.' - '.$q->name}}</td><td>{{$q->link}}</td><td>{{$q->message}}</td><td>{{date("d F Y", strtotime($q->start_date))}}</td><td>{{date("d F Y", strtotime($q->end_date))}}</td></tr>
+						<tr><td style="padding:5px;" align="center">{{$i++}}.</td><td style="padding:5px;" align="center">{{$q->type.' - '.$q->name}}</td><td style="padding:5px;" align="center">{{$q->link}}</td><td style="padding:5px;" align="center">{{$q->message}}</td><td style="padding:5px;" align="center">{{date("d F Y", strtotime($q->start_date))}}</td><td style="padding:5px;" align="center">{{date("d F Y", strtotime($q->end_date))}}</td></tr>
 					@endforeach
 					</table>
 				</div>
