@@ -9,7 +9,7 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 <!-- Main Content -->
 <div id="container" class="clear">
 <div class="main-contain">
-<h2>Featured Market</h2>
+<h2>Custom Fields Market</h2>
 @if ( is_array(Session::get('error')) )
 <div class="alert alert-error">{{ head(Session::get('error')) }}</div>
 @elseif ( Session::get('error') )
