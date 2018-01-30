@@ -177,6 +177,28 @@ CREATE TABLE `coin_votes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+DROP TABLE IF EXISTS `custom_fields`;
+CREATE TABLE `custom_fields` (
+  `id` int(5) NOT NULL AUTO_INCREMENT,
+  `coin` int(5) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `type` enum('text','link','number') NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `coin` (`coin`),
+  CONSTRAINT `custom_fields_ibfk_1` FOREIGN KEY (`coin`) REFERENCES `wallets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `custom_fields` (`id`, `coin`, `name`, `value`, `type`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 13, 'test', '123123', 'text', '2018-01-30 14:36:20',  NULL, '2018-01-30 07:36:20'),
+(3, 13, 'wqer', '12341',  'link', '2018-01-30 14:36:45',  NULL, '2018-01-30 07:36:45'),
+(4, 23, '123123', 'qweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqweqwe',  'link', '2018-01-30 14:43:23',  '2018-01-30 07:43:20',  '2018-01-30 07:43:23'),
+(5, 13, 'qweqw ', 'asd ase q',  'link', '2018-01-30 07:43:29',  NULL, NULL),
+(6, 32, 'qweqwe', '123123 123', 'text', '2018-01-30 07:53:44',  NULL, NULL);
+
 DROP TABLE IF EXISTS `deposits`;
 CREATE TABLE `deposits` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -210,7 +232,8 @@ CREATE TABLE `featured_market` (
 
 INSERT INTO `featured_market` (`id`, `link`, `message`, `coin`, `start_date`, `end_date`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'asdfasd fqwer qwer 1234 1234 ',  'asdfasdfasdfasdf', 13, '2018-01-27 00:00:00',  '2018-01-28 00:00:00',  '2018-01-27 13:32:34',  NULL, '2018-01-27 13:35:33'),
-(2, '123123', '1234123412341',  47, '2018-01-27 00:00:00',  '2018-02-01 00:00:00',  '2018-01-29 05:32:56',  NULL, NULL);
+(2, '123123', '1234123412341',  47, '2018-01-27 00:00:00',  '2018-01-29 00:00:00',  '2018-01-29 08:19:52',  NULL, NULL),
+(3, 'Http://bitbay.market', 'Decentralized markets with Smart contracts ',  50, '2018-01-29 00:00:00',  '2018-02-07 00:00:00',  '2018-01-29 07:36:45',  NULL, NULL);
 
 DROP TABLE IF EXISTS `fee_trade`;
 CREATE TABLE `fee_trade` (
@@ -331,7 +354,77 @@ INSERT INTO `migrations` (`migration`, `batch`) VALUES
 ('2014_03_18_013822_confide_setup_users_table', 1),
 ('2014_07_25_115118_notify_create_table_notifications', 2),
 ('2014_07_25_115119_add_context_field', 2),
-('2014_07_25_131739_drop_job_field',  2);
+('2014_07_25_131739_drop_job_field',  2),
+('2018_01_29_075419_create_authentications_table',  1),
+('2018_01_29_075419_create_balance_table',  1),
+('2018_01_29_075419_create_coin_votes_table', 1),
+('2018_01_29_075419_create_deposits_table', 1),
+('2018_01_29_075419_create_featured_market_table',  1),
+('2018_01_29_075419_create_fee_trade_table',  1),
+('2018_01_29_075419_create_fee_withdraw_table', 1),
+('2018_01_29_075419_create_giveaway_claims_table',  1),
+('2018_01_29_075419_create_giveaways_table',  1),
+('2018_01_29_075419_create_limits_table', 1),
+('2018_01_29_075419_create_market_table', 1),
+('2018_01_29_075419_create_news_table', 1),
+('2018_01_29_075419_create_notification_activities_table',  1),
+('2018_01_29_075419_create_notifications_table',  1),
+('2018_01_29_075419_create_orders_table', 1),
+('2018_01_29_075419_create_password_reminders_table', 1),
+('2018_01_29_075419_create_phpmysqlautobackup_table', 1),
+('2018_01_29_075419_create_phpmysqlautobackup_log_table', 1),
+('2018_01_29_075419_create_pools_table',  1),
+('2018_01_29_075419_create_posts_table',  1),
+('2018_01_29_075419_create_roles_table',  1),
+('2018_01_29_075419_create_security_questions_table', 1),
+('2018_01_29_075419_create_settings_table', 1),
+('2018_01_29_075419_create_trade_history_table',  1),
+('2018_01_29_075419_create_trade_history_recent_table', 1),
+('2018_01_29_075419_create_transfer_history_table', 1),
+('2018_01_29_075419_create_user_address_deposit_table', 1),
+('2018_01_29_075419_create_user_security_questions_table',  1),
+('2018_01_29_075419_create_users_table',  1),
+('2018_01_29_075419_create_users_roles_table',  1),
+('2018_01_29_075419_create_votes_table',  1),
+('2018_01_29_075419_create_wallet_limittrade_table',  1),
+('2018_01_29_075419_create_wallets_table',  1),
+('2018_01_29_075419_create_withdraws_table',  1),
+('2018_01_29_075420_add_foreign_keys_to_notification_activities_table', 1),
+('2018_01_29_075538_create_authentications_table',  0),
+('2018_01_29_075538_create_balance_table',  0),
+('2018_01_29_075538_create_coin_votes_table', 0),
+('2018_01_29_075538_create_deposits_table', 0),
+('2018_01_29_075538_create_featured_market_table',  0),
+('2018_01_29_075538_create_fee_trade_table',  0),
+('2018_01_29_075538_create_fee_withdraw_table', 0),
+('2018_01_29_075538_create_giveaway_claims_table',  0),
+('2018_01_29_075538_create_giveaways_table',  0),
+('2018_01_29_075538_create_limits_table', 0),
+('2018_01_29_075538_create_market_table', 0),
+('2018_01_29_075538_create_news_table', 0),
+('2018_01_29_075538_create_notification_activities_table',  0),
+('2018_01_29_075538_create_notifications_table',  0),
+('2018_01_29_075538_create_orders_table', 0),
+('2018_01_29_075538_create_password_reminders_table', 0),
+('2018_01_29_075538_create_phpmysqlautobackup_table', 0),
+('2018_01_29_075538_create_phpmysqlautobackup_log_table', 0),
+('2018_01_29_075538_create_pools_table',  0),
+('2018_01_29_075538_create_posts_table',  0),
+('2018_01_29_075538_create_roles_table',  0),
+('2018_01_29_075538_create_security_questions_table', 0),
+('2018_01_29_075538_create_settings_table', 0),
+('2018_01_29_075538_create_trade_history_table',  0),
+('2018_01_29_075538_create_trade_history_recent_table', 0),
+('2018_01_29_075538_create_transfer_history_table', 0),
+('2018_01_29_075538_create_user_address_deposit_table', 0),
+('2018_01_29_075538_create_user_security_questions_table',  0),
+('2018_01_29_075538_create_users_table',  0),
+('2018_01_29_075538_create_users_roles_table',  0),
+('2018_01_29_075538_create_votes_table',  0),
+('2018_01_29_075538_create_wallet_limittrade_table',  0),
+('2018_01_29_075538_create_wallets_table',  0),
+('2018_01_29_075538_create_withdraws_table',  0),
+('2018_01_29_075539_add_foreign_keys_to_notification_activities_table', 0);
 
 DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news` (
@@ -1763,7 +1856,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `fullname`, `username`, `email`, `password`, `confirmation_code`, `confirmed`, `banned`, `authy`, `two_factor_auth`, `created_at`, `updated_at`, `lastest_login`, `timeout`, `referral`, `trade_key`, `ip_lastlogin`, `remember_token`) VALUES
 (100, 'giveaway', 'giveaway', 'bitbase.me@gmail.com', 'bea802d27f2353047f5c4a595c721b16', '', 1,  0,  '', '', '0000-00-00 00:00:00',  '0000-00-00 00:00:00',  '0000-00-00 00:00:00',  '', NULL, '', '', NULL),
-(194, 'Sweedx', 'admino', 'bitbase.me@gmail.com', '$2y$10$9XKVSmByaMll3nl.KLdoy.O4GfROVnQzQJFC/KVuTvnL92hMfa3Nu', 'b42df0ecaa87cb86bdbbf3da11211bb8', 1,  0,  '', '', '2014-10-02 06:23:57',  '2018-01-28 22:32:11',  '2018-01-28 22:32:11',  '45 minutes', '', 'e7f4661830db86812861f59c263a1c55', '127.0.0.1',  'YxW5mgBnr1xIt5uJi5jfiQzzGbxObrnr7tXdUrS1155iV0S0yE4MlgWsc7fN'),
+(194, 'Sweedx', 'admino', 'bitbase.me@gmail.com', '$2y$10$9XKVSmByaMll3nl.KLdoy.O4GfROVnQzQJFC/KVuTvnL92hMfa3Nu', 'b42df0ecaa87cb86bdbbf3da11211bb8', 1,  0,  '', '', '2014-10-02 06:23:57',  '2018-01-30 08:07:50',  '2018-01-30 08:07:50',  '45 minutes', '', 'e7f4661830db86812861f59c263a1c55', '114.124.228.25', '0eE1G80FP8IHvMvzFaF4ZEqwbXinNsq6Ln9sB8M5LtGENAYU3mcGUN060tJ2'),
 (195, 'Anoxxxyyy',  'Anoxxxyyy',  'bitbase.me@gmail.com', '$2y$10$NegLKUTtZdxCdUCJqPAu6.IH7psHP//73d132nX2ifgF3dSmYJEa.', '73a86552293e33156adb4e03e1b3753d', 1,  0,  '', '', '2014-10-02 06:26:31',  '2014-10-02 06:26:31',  '0000-00-00 00:00:00',  '', '', 'd6c1b34290ab84fb84fffcdbadc6752a', '83.172.65.211',  NULL),
 (196, 'mcnamara.jeremy',  'PhatJ',  'bitbase.me@gmail.com', '$2y$10$j87sgAesfSMcpmBMXDFQjuXTqkh7Ug1Pwigq8m9DqNPMVecanc2Pe', '70b92423cb4a5f0ff0be3cfdcd582b4c', 1,  0,  '', '', '2014-10-03 04:03:44',  '2014-11-12 17:32:43',  '2014-11-12 17:32:43',  '24 hours', '', 'd20ad7f36c52d069ffdc35b02f15cf06', '75.129.114.100', NULL),
 (197, '', 'admin',  'bitbase.me@gmail.com', '$2y$10$7r2C6/11CeNFN/dThSTHzuHD0jOZ.KRwuibiMVszgZSPm3mJMqZK2', '58832b2f2f8b9efc807363b6f92c5372', 0,  0,  '', '', '2014-10-21 22:51:07',  '2014-10-21 22:51:07',  '0000-00-00 00:00:00',  '', '', '6971534338ef501f74d481ff4cee2686', '83.172.65.211',  NULL),
@@ -1779,7 +1872,7 @@ INSERT INTO `users` (`id`, `fullname`, `username`, `email`, `password`, `confirm
 (207, '', 'jbar', 'bitbase.me@gmail.com', '$2y$10$NIAZzJRzECG4o.l404q/qeIRdivtQHBlI0IkOxkswxg/YWlYGJanW', 'e6a4ba61673ccca76cb5a432455dac23', 1,  0,  '', '', '2015-07-27 04:13:18',  '2015-07-27 04:13:59',  '2015-07-27 04:13:59',  '', '', 'f18aef6dd48e231745cd836b778df925', '94.15.198.215',  NULL),
 (208, '', 'wosch',  'bitbase.me@gmail.com', '$2y$10$YQwgPZSqRhvsdWrrgUyO1u0LGaQkFw4iKJs/N4X6/lkEN1x9ugevO', 'd62e9bfb8a94adf151fc90b28770d7c6', 0,  0,  '', '', '2015-07-31 17:23:19',  '2015-07-31 17:23:19',  '0000-00-00 00:00:00',  '', '', '95b19c14b56315974e234c3af3ed9053', '91.49.3.190',  NULL),
 (209, '', 'wosch76',  'bitbase.me@gmail.com', '$2y$10$0Q4vBGK.DM342mdWVWOc8e87DZ./hfX8Q9Gvj7vgaikVSiAywWD/.', 'da726d0a672c7586f263a23ccabf6651', 0,  0,  '', '', '2015-07-31 17:28:14',  '2015-07-31 17:28:14',  '0000-00-00 00:00:00',  '', '', '0706b077d0ddb53477c9f5f619e48527', '91.49.3.190',  NULL),
-(210, '', 'Bukan',  'bitbase.me@gmail.com', '$2y$10$P92PQnOC5/Jp9kMLVd9Qr.apE.dtEDW5AnlyTt0Q1D7vfHpGm5FUy', 'cfb1dd9468ff9e99499d0089201f559e', 1,  0,  '', '', '2015-07-31 17:35:57',  '2015-07-31 17:37:12',  '2015-07-31 17:37:12',  '', '', 'd1ec747bc2730cb300988f90445740a1', '176.193.189.55', 'GiEQbXHU0lp2vGJ5t6DOsKRzd1cDYipGqMimhsNPueFWSuxmFPtTJwj1Sk1K'),
+(210, '', 'Bukan',  'bitbase.me@gmail.com', '$2y$10$P92PQnOC5/Jp9kMLVd9Qr.apE.dtEDW5AnlyTt0Q1D7vfHpGm5FUy', 'cfb1dd9468ff9e99499d0089201f559e', 1,  0,  '', '', '2015-07-31 17:35:57',  '2018-01-29 00:17:24',  '2018-01-29 00:17:24',  '', '', 'd1ec747bc2730cb300988f90445740a1', '114.124.166.138',  'SNbCoR7lNoJ0YjA2fjAPfk3SGcFhOJK8n1IN80euqjOVWB2JD6qVImPeGOdD'),
 (211, '', 'drizzle2405',  'bitbase.me@gmail.com', '$2y$10$DM4ui.FabK2qAjdCmECNceoGn3MaYkDpS4H8E4Cst3Ga14iMUFccm', '04d5254dad54e358ebf73216c7395d4c', 1,  0,  '', '', '2015-07-31 19:39:46',  '2015-07-31 19:48:19',  '2015-07-31 19:40:47',  '', '', '202ef29eaeac2bff84c91d9b51f493cd', '108.61.68.141',  'mxvZkpReU9LfHTbpTrYDvskV9mpNFF0IgVzRUtUb56NwrW4EoMCOoVAachAv'),
 (212, '', 'acaudill133',  'bitbase.me@gmail.com', '$2y$10$pa9gTYZFVQ1u7.8HJPPMRehxD/8YD9yKaM52MOybbYIb3GAaTBlp2', '4925f654f669f3e2125536acf585a84b', 1,  0,  '', '', '2015-08-02 23:18:24',  '2015-08-02 23:18:24',  '0000-00-00 00:00:00',  '', '', 'ebd9491532920b685e5cdab558efc322', '69.244.132.157', NULL);
 
@@ -1937,4 +2030,4 @@ CREATE TABLE `withdraws` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
--- 2018-01-29 07:14:38
+-- 2018-01-30 15:10:53
