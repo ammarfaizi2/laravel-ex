@@ -87,7 +87,7 @@
 				</div>
 			</div>
 			
-			@if($stq = $that->hasFeaturedMarket()->toArray())
+			@if(!$market_predefined && $stq = $that->hasFeaturedMarket()->toArray())
 				<?php $i = 1; ?>
 				<div style="margin-left:15px;padding-bottom:10px;">
 					<h2>Featured Market</h2>
