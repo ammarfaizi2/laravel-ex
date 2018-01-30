@@ -269,7 +269,13 @@ class HomeController extends Controller
             //$data['main_news'] = News::where('market_id',intval($market_id))->orderBy('created_at','desc')->first();
         }
         $data['that'] = $this;
+        $data['market_id'] = $market_id;
         return view('index', $data);
+    }
+
+    public function hasCustomFields($coinId)
+    {
+        return DB::table('custom_fields')->select(['custom_fields.*'])->join('wallets', 'wallets.id', '=', 'custom_fields.coin')->join('market', 'wallets.id', '=', 'market.wallet_from')->orderBy('custom_fields.created_at')->where('market.id', '=', $coinId)->where('custom_fields.deleted_at', '=', null)->get();
     }
 
     public function hasFeaturedMarket()

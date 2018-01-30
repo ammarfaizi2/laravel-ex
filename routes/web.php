@@ -141,6 +141,11 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middl
     Route::post('add_featured_market', 'admin\\AdminSettingController@addFeaturedMarket')->name('admin.add_featured_market');
     Route::get('edit_featured_market', 'admin\\AdminSettingController@editFeaturedMarket')->name('admin.edit_featured_market');
     Route::post('edit_featured_market', 'admin\\AdminSettingController@editFeaturedMarketPost')->name('admin.edit_featured_market');
+
+    Route::get('custom_fields', 'admin\\AdminSettingController@customFields')->name('admin.custom_fields');
+    Route::post('add_custom_fields', 'admin\\AdminSettingController@addCustomFields')->name('admin.add_custom_fields');
+    Route::get('edit_custom_fields', 'admin\\AdminSettingController@editCustomFields')->name('admin.edit_custom_fields');
+    Route::post('edit_custom_fields', 'admin\\AdminSettingController@editCustomFieldsPost');
 });
 // Confide routes
 Route::get( 'referral/{referral}',                 'UserController@create');
