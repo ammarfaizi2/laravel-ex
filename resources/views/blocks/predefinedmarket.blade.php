@@ -1,5 +1,17 @@
-
-
+@if($qwe = $that->hasCustomFields($market_id)->toArray())
+<div>@php $no = 1; @endphp
+	<table style="border-collapse: collapse;width:300px;" border="1">
+		<tr>
+			@foreach(['No.','Name','Value','Type'] as $qw)
+				<th align="center"><center>{{$qw}}</center></th>
+			@endforeach
+		</tr>
+		@foreach($qwe as $q)
+			<tr><td align="center">{{$no++}}.</td><td align="center">{{$q->name}}</td><td align="center">{{$q->value}}</td><td align="center">{{$q->type}}</td></tr>
+		@endforeach
+	</table>
+</div>
+@endif
 <div class="row">
 	<div class="market_info">
 		<div class="row">
