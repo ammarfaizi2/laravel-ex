@@ -96,10 +96,10 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 <script type='text/javascript'>
     var options = {
         currentPage: {{$page}},
-        totalPages: {{(int)ceil($that->customFieldsPaginator() / 15)}},
+        totalPages: {{(int)ceil($that->customFieldsPaginator($_GET['id']) / 15)}},
         alignment:'right',
         pageUrl: function(type, page, current){
-        	return "{{route('admin.featured_market').'?page='}}"+page;
+        	return "{!! route('admin.edit_custom_fields').'?id='.e($_GET['id']).'&page=' !!}"+page;
         }
     }
     $('#pager').bootstrapPaginator(options);

@@ -77,42 +77,6 @@
 		<button class="btn close-popup" data-dismiss="modal">Close</button>
 	</div>
 </div>
-<script src="http://bitbase2.dev/assets/js/jquery.validate.min.js"></script>
-
-<script type="text/javascript">
-    $(document).ready(function() {    	
-        $("#edit_user").validate({
-            rules: {
-                fullname: "required",                
-                password: {
-                    minlength: 8
-                },
-                password_confirmation: {
-                    minlength: 8,
-                    equalTo: "#password"
-                },
-                email: {
-                    required: true,
-                    email: true
-                },
-            },
-            messages: {
-                fullname: "Please enter your full name.",               
-                password: {
-                    required: "Please provide a password.",
-                    minlength: "Your password must be at least 8 characters long."
-                },
-                confirm_password: {
-                    required: "Please provide a password.",
-                    minlength: "Your password must be at least 8 characters long.",
-                    equalTo: "Please enter the same password as above."
-                },
-                email: "Please enter a valid email address.",
-            }
-	});
-
-   });
-</script>
-        </div>
-        <!-- Sidebar right -->
-            </div>
+</div>
+<!-- Sidebar right -->
+</div>

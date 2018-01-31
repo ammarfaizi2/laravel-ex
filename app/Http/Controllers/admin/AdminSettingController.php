@@ -691,10 +691,7 @@ class AdminSettingController extends Controller
         }
     }
 
-    public function customFieldsPaginator()
-    {
-        return DB::table('custom_fields')->where('deleted_at', '=', null)->count();
-    }
+    
 
     
     public function addWithdrawLimit()
@@ -1884,12 +1881,14 @@ class AdminSettingController extends Controller
                 ->get();
     }
 
-    public function getCustomFieldsSpecific()
+    public function getCustomFieldsSpecific($offset)
     {
         return DB::table('custom_fields')
                 ->select('*')
                 ->where('market_id', '=', $_GET['id'])
                 ->where('deleted_at', '=', null)
+                ->limit(15)
+                ->offset($offset)
                 ->get();
     }
 
@@ -1999,5 +1998,17 @@ class AdminSettingController extends Controller
             }
         }
         return Redirect::to(route('admin.custom_fields'))->with('error', 'Please fill the form!');
+    }
+
+    public function customFieldsPaginator($id = null)
+    {
+        $d = DB::table('custom_fields')
+            ->where('deleted_at', '=', null);
+        if ($id === null) {
+            $d = $d->groupBy('market_id');
+        } else {
+            $d = $d->where('market_id', '=', $id);
+        }
+        return $d->count();
     }
 }
