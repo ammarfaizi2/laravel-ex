@@ -108,7 +108,7 @@
         totalPages: <?php echo $total_pages ?>,
         alignment:'right',
         pageUrl: function(type, page, current){
-        	return "<?php echo URL::to('admin/setting/limit-trade'); ?>"+'/'+page; 
+            return "<?php echo URL::to('admin/setting/limit-trade'); ?>"+'/'+page; 
         }
     }
     $('#pager').bootstrapPaginator(options);

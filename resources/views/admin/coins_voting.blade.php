@@ -114,7 +114,7 @@ function deleteCoin(coinvote_id){
 	});
 	
 	  <?php
-	  /*
+      /*
 	  $.post('<?php echo action('admin\\AdminSettingController@deleteCoinVote')?>', {isAjax: 1, coinvote_id: coinvote_id}, function(response){
           var obj = $.parseJSON(response);
           console.log('obj: ',obj);
@@ -131,22 +131,22 @@ function deleteCoin(coinvote_id){
 		});
       });
 	  */
-	  ?>
+        ?>
       return false;
 }
 (function($){ 	
-	$(document).ready(function(){
-		$("#add_new_coin_vote").validate({
+    $(document).ready(function(){
+        $("#add_new_coin_vote").validate({
                 rules: {
-                	code: {
-				      required: true
-				    },
-				    name: {
-				      required: true
-				    },
-				    btc_address: {
-				      required: true
-				    }                   
+                    code: {
+                      required: true
+                    },
+                    name: {
+                      required: true
+                    },
+                    btc_address: {
+                      required: true
+                    }                   
                 },
                 messages: {
                     code: {
@@ -160,13 +160,13 @@ function deleteCoin(coinvote_id){
                     }                    
                 }
              });   
-		$('#add_new_coin_vote').hide();
-		$('.add_new').click(function(e) {
-			$('body,html').animate({scrollTop:0},800);
-			$('#add_new_coin_vote').show();
-			$(this).hide();
-		});
-	});
+        $('#add_new_coin_vote').hide();
+        $('.add_new').click(function(e) {
+            $('body,html').animate({scrollTop:0},800);
+            $('#add_new_coin_vote').show();
+            $(this).hide();
+        });
+    });
 })(jQuery);
 </script>
 @else

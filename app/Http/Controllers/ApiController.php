@@ -36,22 +36,22 @@ use Illuminate\Support\Facades\Session;
 class ApiController extends Controller
 {
     /*
-	|--------------------------------------------------------------------------
-	| API  Controller
-	|--------------------------------------------------------------------------
-	|
-	| You may wish to use controllers instead of, or in addition to, Closure
-	| based routes. That's great! Here is an example controller method to
-	| get you started. To route to this controller, just add the route:
-	|
-	|	Route::get('/', 'ApiController@function');
-	|
-	*/
-   /*
-   public function api($method=''){
+    |--------------------------------------------------------------------------
+    | API  Controller
+    |--------------------------------------------------------------------------
+    |
+    | You may wish to use controllers instead of, or in addition to, Closure
+    | based routes. That's great! Here is an example controller method to
+    | get you started. To route to this controller, just add the route:
+    |
+    |	Route::get('/', 'ApiController@function');
+    |
+    */
+    /*
+    public function api($method=''){
    		echo 'aaaaaaa';
-   }
-   */
+    }
+    */
    
     public static function api($method = '')
     {
@@ -157,14 +157,14 @@ class ApiController extends Controller
                 $market = DB::select($market_sql);
                 
                 /*
-				$market_sql_buy = 'select * from trade_history where market_id='.$market_id.' and type="buy"';
-				$market_buy = DB::select($market_sql_buy);
-				if(count($market_buy)==0)$buyorders = 'null';
+                $market_sql_buy = 'select * from trade_history where market_id='.$market_id.' and type="buy"';
+                $market_buy = DB::select($market_sql_buy);
+                if(count($market_buy)==0)$buyorders = 'null';
 				
-				$market_sql_sell = 'select * from trade_history where market_id='.$market_id.' and type="sell"';
-				$market_sell = DB::select($market_sql_sell);
-				if(count($market_sell)==0)$sellorders = 'null';
-				*/
+                $market_sql_sell = 'select * from trade_history where market_id='.$market_id.' and type="sell"';
+                $market_sell = DB::select($market_sql_sell);
+                if(count($market_sell)==0)$sellorders = 'null';
+                */
 
                 $recenttrades = 'null';
 
@@ -182,27 +182,27 @@ class ApiController extends Controller
                     }
 
                     /*
-					$recenttrades = array();
-					$sellorders = array();
-					$buyorders = array();
-					$j=0;
-					foreach($market as $m){
-						$recenttrades[$j] = array('id'=>$m->id,'time'=>$m->updated_at,'price'=>sprintf('%.8f',$m->price),'amount'=>$m->amount);						
-						$j++;
-					} 
-					if(count($market_buy)!=0){$j=0;
-						foreach($market_buy as $m){
-							$buyorders[$j] = array('price'=>sprintf('%.8f',$m->price),'amount'=>$m->amount);
-							$j++;
-						}
-					}
-					if(count($market_sell)!=0){$j=0;
-						foreach($market_sell as $m){
-							$sellorders[$j] = array('price'=>sprintf('%.8f',$m->price),'amount'=>$m->amount);
-							$j++;
-						}
-					}
-					*/
+                    $recenttrades = array();
+                    $sellorders = array();
+                    $buyorders = array();
+                    $j=0;
+                    foreach($market as $m){
+                    $recenttrades[$j] = array('id'=>$m->id,'time'=>$m->updated_at,'price'=>sprintf('%.8f',$m->price),'amount'=>$m->amount);						
+                    $j++;
+                    } 
+                    if(count($market_buy)!=0){$j=0;
+                    foreach($market_buy as $m){
+                    $buyorders[$j] = array('price'=>sprintf('%.8f',$m->price),'amount'=>$m->amount);
+                    $j++;
+                    }
+                    }
+                    if(count($market_sell)!=0){$j=0;
+                    foreach($market_sell as $m){
+                    $sellorders[$j] = array('price'=>sprintf('%.8f',$m->price),'amount'=>$m->amount);
+                    $j++;
+                    }
+                    }
+                    */
                 }
                 
                 $order = new Order();
@@ -301,47 +301,47 @@ class ApiController extends Controller
                 $market_id = $item->id;
 
                 /*
-				$market_sql = 'select * from orders where market_id='.$market_id;
-				$market = DB::select($market_sql);
+                $market_sql = 'select * from orders where market_id='.$market_id;
+                $market = DB::select($market_sql);
 				
-				$market_sql_buy = 'select * from orders where market_id='.$market_id.' and type="buy"';
-				$market_buy = DB::select($market_sql_buy);
-				if(count($market_buy)==0)$buyorders = 'null';
+                $market_sql_buy = 'select * from orders where market_id='.$market_id.' and type="buy"';
+                $market_buy = DB::select($market_sql_buy);
+                if(count($market_buy)==0)$buyorders = 'null';
 				
-				$market_sql_sell = 'select * from orders where market_id='.$market_id.' and type="sell"';
-				$market_sell = DB::select($market_sql_sell);
-				if(count($market_sell)==0)$sellorders = 'null';
+                $market_sql_sell = 'select * from orders where market_id='.$market_id.' and type="sell"';
+                $market_sell = DB::select($market_sql_sell);
+                if(count($market_sell)==0)$sellorders = 'null';
 	
-				if(count($market)==0){
-					$lasttradeprice = '0.00000000';
-					$lasttradetime = '0000-00-00 00:00:00';
-				}else{
-					//get last info
-					$market_last_sql = 'select max(updated_at) as updated_at, price  from orders where market_id='.$market_id;
-					$market_last = DB::select($market_last_sql);
-					foreach($market_last as $m){
-						$lasttradeprice = sprintf('%.8f',$m->price); 
-						$lasttradetime = $m->updated_at;
-					}
+                if(count($market)==0){
+                $lasttradeprice = '0.00000000';
+                $lasttradetime = '0000-00-00 00:00:00';
+                }else{
+                //get last info
+                $market_last_sql = 'select max(updated_at) as updated_at, price  from orders where market_id='.$market_id;
+                $market_last = DB::select($market_last_sql);
+                foreach($market_last as $m){
+                $lasttradeprice = sprintf('%.8f',$m->price); 
+                $lasttradetime = $m->updated_at;
+                }
 					
-					$sellorders = array();
-					$buyorders = array();
-					$j=0;
+                $sellorders = array();
+                $buyorders = array();
+                $j=0;
 					 
-					if(count($market_buy)!=0){$j=0;
-						foreach($market_buy as $m){
-							$buyorders[$j] = array('price'=>sprintf('%.8f',$m->price),'amount'=>sprintf('%.8f',$m->from_value));
-							$j++;
-						}
-					}
-					if(count($market_sell)!=0){$j=0;
-						foreach($market_sell as $m){
-							$sellorders[$j] = array('price'=>sprintf('%.8f',$m->price),'amount'=>sprintf('%.8f',$m->from_value));
-							$j++;
-						}
-					}
-				}
-				*/
+                if(count($market_buy)!=0){$j=0;
+                foreach($market_buy as $m){
+                $buyorders[$j] = array('price'=>sprintf('%.8f',$m->price),'amount'=>sprintf('%.8f',$m->from_value));
+                $j++;
+                }
+                }
+                if(count($market_sell)!=0){$j=0;
+                foreach($market_sell as $m){
+                $sellorders[$j] = array('price'=>sprintf('%.8f',$m->price),'amount'=>sprintf('%.8f',$m->from_value));
+                $j++;
+                }
+                }
+                }
+                */
 
                 $order = new Order();
                 $_sellorders = $order->getOrders($market_id, 'sell', $num_transaction_display);
@@ -398,9 +398,11 @@ class ApiController extends Controller
                 $trade = new Trade();
                 $data_price = $trade->getBlockPrice($market_id);
 
-                echo json_encode(array(
+                echo json_encode(
+                    array(
                     'latest_price' => sprintf('%.8f', $data_price['latest_price']),
-                ));
+                    )
+                );
                 exit();
             } else {
                 $output = json_encode(array('success' => 0,'error'=>Lang::get('messages.link_not_correct')));
@@ -442,14 +444,14 @@ class ApiController extends Controller
                     $market = DB::select($market_sql);
                     
                     /*
-					$market_sql_buy = 'select * from trade_history where market_id='.$market_id.' and type="buy"';
-					$market_buy = DB::select($market_sql_buy);
-					if(count($market_buy)==0)$buyorders = 'null';
+                    $market_sql_buy = 'select * from trade_history where market_id='.$market_id.' and type="buy"';
+                    $market_buy = DB::select($market_sql_buy);
+                    if(count($market_buy)==0)$buyorders = 'null';
 					
-					$market_sql_sell = 'select * from trade_history where market_id='.$market_id.' and type="sell"';
-					$market_sell = DB::select($market_sql_sell);
-					if(count($market_sell)==0)$sellorders = 'null';
-					*/
+                    $market_sql_sell = 'select * from trade_history where market_id='.$market_id.' and type="sell"';
+                    $market_sell = DB::select($market_sql_sell);
+                    if(count($market_sell)==0)$sellorders = 'null';
+                    */
                     if (count($market)==0) {
                         $lasttradeprice = '0.00000000';
                         $lasttradetime = '0000-00-00 00:00:00';
@@ -602,7 +604,6 @@ class ApiController extends Controller
         }
         if ($method=='mydeposits') {
             if (isset($_REQUEST['key']) && !empty($_REQUEST['key']) && isset($_REQUEST['sign']) && !empty($_REQUEST['sign'])) {
-                
                 //check user account
                 $sign = $_REQUEST['sign'];
                 $password = $_REQUEST['key'];
@@ -614,7 +615,6 @@ class ApiController extends Controller
                         $u_id=$a->id;
                     }
                     if (Hash::check($password, $u_pass)) {
-                    
                         $deposit_sql = 'select * from deposits d, wallets w where d.wallet_id=w.id and d.user_id="'.$u_id.'"';
                         $deposit = DB::select($deposit_sql);
                         //print_r($market);
@@ -631,8 +631,6 @@ class ApiController extends Controller
                         } else {
                             $output = json_encode(array('success' => 1,'return' => $getarray));
                         }
-                    
-                    
                     } else {
                         $output = json_encode(array('success' => 0,'error'=>Lang::get('messages.api_cannot_authorize_check_key')));
                         echo $output;
@@ -653,7 +651,6 @@ class ApiController extends Controller
         }
         if ($method=='mywithdraws') {
             if (isset($_REQUEST['key']) && !empty($_REQUEST['key']) && isset($_REQUEST['sign']) && !empty($_REQUEST['sign'])) {
-                
                 //check user account
                 $sign = $_REQUEST['sign'];
                 $password = $_REQUEST['key'];
@@ -665,7 +662,6 @@ class ApiController extends Controller
                         $u_id=$a->id;
                     }
                     if (Hash::check($password, $u_pass)) {
-                    
                         $deposit_sql = 'select * from withdraws d, wallets w where d.wallet_id=w.id and d.user_id="'.$u_id.'"';
                         $deposit = DB::select($deposit_sql);
                         //print_r($market);
@@ -702,7 +698,6 @@ class ApiController extends Controller
         }
         if ($method=='mytransfers') {
             if (isset($_REQUEST['key']) && !empty($_REQUEST['key']) && isset($_REQUEST['sign']) && !empty($_REQUEST['sign'])) {
-                
                 //check user account
                 $sign = $_REQUEST['sign'];
                 $password = $_REQUEST['key'];
@@ -714,7 +709,6 @@ class ApiController extends Controller
                         $u_id=$a->id;
                     }
                     if (Hash::check($password, $u_pass)) {
-                    
                         $deposit_sql = 'select * from transfer_history where sender='.$u_id.' or receiver='.$u_id;
                         $deposit = DB::select($deposit_sql);
                         //print_r($market);
@@ -773,7 +767,6 @@ class ApiController extends Controller
         }
         if ($method=='getmydepositaddresses') {
             if (isset($_REQUEST['key']) && !empty($_REQUEST['key']) && isset($_REQUEST['sign']) && !empty($_REQUEST['sign'])) {
-                
                 //check user account
                 $sign = $_REQUEST['sign'];
                 $password = $_REQUEST['key'];
@@ -785,7 +778,6 @@ class ApiController extends Controller
                         $u_id=$a->id;
                     }
                     if (Hash::check($password, $u_pass)) {
-                    
                         $deposit_sql = 'select * from user_address_deposit u, wallets w where u.wallet_id=w.id and u.user_id='.$u_id;
                         $deposit = DB::select($deposit_sql);
                         
@@ -793,7 +785,6 @@ class ApiController extends Controller
                         $i=0;
                         
                         foreach ($deposit as $item) {
-                            
                             $getarray[$i] = array('coincode'=>$item->type,'despositaddress'=>$item->addr_deposit);
                             $i++;
                         }
@@ -822,7 +813,6 @@ class ApiController extends Controller
         }
         if ($method=='allmyorders') {
             if (isset($_REQUEST['key']) && !empty($_REQUEST['key']) && isset($_REQUEST['sign']) && !empty($_REQUEST['sign'])) {
-                
                 //check user account
                 $sign = $_REQUEST['sign'];
                 $password = $_REQUEST['key'];
@@ -834,7 +824,6 @@ class ApiController extends Controller
                         $u_id=$a->id;
                     }
                     if (Hash::check($password, $u_pass)) {
-                    
                         $deposit_sql = 'select * from orders where user_id='.$u_id;
                         $deposit = DB::select($deposit_sql);
                         
@@ -842,7 +831,6 @@ class ApiController extends Controller
                         $i=0;
                         
                         foreach ($deposit as $item) {
-                            
                             $getarray[$i] = array('orderid'=>$item->id,'marketid'=>$item->market_id,'created'=>$item->created_at,'ordertype'=>$item->type,
                             'price'=>$item->price,'fromvalue'=>$item->from_value,'tovalue'=>$item->to_value);
                             $i++;
@@ -872,7 +860,6 @@ class ApiController extends Controller
         }
         if ($method=='myorders') {
             if (isset($_REQUEST['key']) && !empty($_REQUEST['key']) && isset($_REQUEST['sign']) && !empty($_REQUEST['sign']) && isset($_REQUEST['marketid']) && !empty($_REQUEST['marketid'])) {
-                
                 //check user account
                 $sign = $_REQUEST['sign'];
                 $password = $_REQUEST['key'];
@@ -885,7 +872,6 @@ class ApiController extends Controller
                         $u_id=$a->id;
                     }
                     if (Hash::check($password, $u_pass)) {
-                    
                         $deposit_sql = 'select * from orders where market_id="'.$marketid.'" and user_id='.$u_id;
                         $deposit = DB::select($deposit_sql);
                         
@@ -893,7 +879,6 @@ class ApiController extends Controller
                         $i=0;
                         
                         foreach ($deposit as $item) {
-                            
                             $getarray[$i] = array('orderid'=>$item->id,'created'=>$item->created_at,'ordertype'=>$item->type,
                             'price'=>$item->price,'fromvalue'=>$item->from_value,'tovalue'=>$item->to_value);
                             $i++;
@@ -921,6 +906,5 @@ class ApiController extends Controller
                 exit;
             }
         }
-        
     }
 }

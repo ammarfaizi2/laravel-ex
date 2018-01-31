@@ -108,7 +108,7 @@
 		</div>
 	</div>
 	<?php
-	/*
+    /*
 	<h3>App Credentials of Pusher</h3>
 	<div class="form-group">
 		<label class="col-sm-2 control-label">{{trans('admin_texts.app_id')}}</label>
@@ -129,36 +129,36 @@
 		</div>
 	</div>
 	*/
-	?>
-	
-	<div class="form-group">
-	    <div class="col-sm-offset-2 col-sm-10">
-	      <button type="submit" class="btn btn-primary">{{trans('admin_texts.save_settings')}}</button>
-	    </div>
-	</div>
-	
+    ?>
+    
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-primary">{{trans('admin_texts.save_settings')}}</button>
+        </div>
+    </div>
+    
 </form>
 {{ HTML::script('assets/js/jquery.validate.min.js') }}
 <script type="text/javascript">
 (function($){ 
-	$(document).ready(function(){
-		$("#setting_general").validate({
+    $(document).ready(function(){
+        $("#setting_general").validate({
             rules: {
-            	amount_btc_per_vote: {			      
-			      number: true
-			    },
-			    point_per_btc: {
-			      required: true,
-			      number: true
-			    },
-			    percent_point_reward_trade: {
-			      required: true,
-			      number: true
-			    },
-			    percent_point_reward_referred_trade: {
-			      required: true,
-			      number: true
-			    }                   
+                amount_btc_per_vote: {                
+                  number: true
+                },
+                point_per_btc: {
+                  required: true,
+                  number: true
+                },
+                percent_point_reward_trade: {
+                  required: true,
+                  number: true
+                },
+                percent_point_reward_referred_trade: {
+                  required: true,
+                  number: true
+                }                   
             },
             messages: {
                 amount_btc_per_vote: {                    
@@ -178,7 +178,7 @@
                 } 
             }
         });
-	});
+    });
 })(jQuery);
 </script>
 @stop

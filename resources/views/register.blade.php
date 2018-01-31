@@ -18,42 +18,42 @@
 				<table class="table register">
 					<tbody>
 						<?php
-						/*
+                        /*
 						<tr>
 							<th style="width:180px;">{{trans('user_texts.fullname')}}</th>
 							<td><input minlength="2" type="text" required="" name="fullname" id="fullname" value="{{{ Request::old('fullname') }}}"></td>
 						</tr>
 						*/
-						?>
-						<tr>
-							<th style="width:180px;">{{{ Lang::get('confide::confide.username') }}}</th>
-							<td>
-								<input minlength="2" type="text" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.username') }}}" name="username" id="username" value="{{{ Request::old('username') }}}">
-								<span>This will be your used for your login and confirming withdrawals.</span>
-							</td>
-						</tr>
-						<tr>
-							<th>{{{ Lang::get('confide::confide.e_mail') }}} <small>{{ Lang::get('confide::confide.signup.confirmation_required') }}</small></th>
-							<td><input type="text" name="email" id="email" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.e_mail') }}}" value="{{{ Request::old('email') }}}"><br>
-								<span>This will be your used for your login and confirming withdrawals.</span>
-							</td>
-						</tr>
-						<tr>
-							<th>{{{ Lang::get('confide::confide.password') }}}</th>
-							<td><input type="password" name="password" id="password" class="form-control" placeholder="{{{ Lang::get('confide::confide.password') }}}"><br>
-								<span>Please enter 8 characters minimum, including 1 or more digits.</span>
-							</td>
-						</tr>
-						<tr>
-							<th>{{{ Lang::get('confide::confide.password_confirmation') }}}</th>
-							<td><input class="form-control" placeholder="{{{ Lang::get('confide::confide.password_confirmation') }}}" type="password" name="password_confirmation" id="password_confirmation"><br>
-								<span>Please type your password again.</span>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				<?php
-				/*
+                        ?>
+                        <tr>
+                            <th style="width:180px;">{{{ Lang::get('confide::confide.username') }}}</th>
+                            <td>
+                                <input minlength="2" type="text" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.username') }}}" name="username" id="username" value="{{{ Request::old('username') }}}">
+                                <span>This will be your used for your login and confirming withdrawals.</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{{ Lang::get('confide::confide.e_mail') }}} <small>{{ Lang::get('confide::confide.signup.confirmation_required') }}</small></th>
+                            <td><input type="text" name="email" id="email" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.e_mail') }}}" value="{{{ Request::old('email') }}}"><br>
+                                <span>This will be your used for your login and confirming withdrawals.</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{{ Lang::get('confide::confide.password') }}}</th>
+                            <td><input type="password" name="password" id="password" class="form-control" placeholder="{{{ Lang::get('confide::confide.password') }}}"><br>
+                                <span>Please enter 8 characters minimum, including 1 or more digits.</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{{ Lang::get('confide::confide.password_confirmation') }}}</th>
+                            <td><input class="form-control" placeholder="{{{ Lang::get('confide::confide.password_confirmation') }}}" type="password" name="password_confirmation" id="password_confirmation"><br>
+                                <span>Please type your password again.</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <?php
+                /*
 				<h3>Security Questions</h3>
 				Please answer two security questions below, these will be used if you ever lose access to your account.<br>Be aware that these answers cannot be changed once you have set up your account.<br><br>
 				<table class="table register">
@@ -97,44 +97,44 @@
 					</tbody>
 				</table>
 				*/
-				?>
-				<h3>Verification</h3>
-				<div align="center">
-					<script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?k={{$recaptcha_publickey}}"></script>
-					<script type="text/javascript" src="https://www.google.com/recaptcha/api/js/recaptcha.js"></script>
-					<noscript>
-					&lt;iframe src="https://www.google.com/recaptcha/api/noscript?k={{$recaptcha_publickey}}" height="300" width="500" frameborder="0"&gt;&lt;/iframe&gt;&lt;br/&gt;
-					&lt;textarea name="recaptcha_challenge_field" rows="3" cols="40"&gt;&lt;/textarea&gt;
-					&lt;input type="hidden" name="recaptcha_response_field" value="manual_challenge"/&gt;
-					</noscript>
-					<div id="captchaStatus"></div>
-					<br>
-					
-					
-					<input type="checkbox" name="termsofservice" id="termsofservice"><label for="termsofservice">&nbsp; {{trans('user_texts.i_agree_terms')}}</label> {{ HTML::link('post/terms', trans('user_texts.term_service')) }}<a href="/terms/"></a>.
-					
-							  
-					<br><br>
-				</div>
-				@if ( Session::get('error') )
-					<div class="alert alert-error alert-danger">
-						@if ( is_array(Session::get('error')) )
-							{{ head(Session::get('error')) }}
-						@endif
-					</div>
-				@endif
+                ?>
+                <h3>Verification</h3>
+                <div align="center">
+                    <script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?k={{$recaptcha_publickey}}"></script>
+                    <script type="text/javascript" src="https://www.google.com/recaptcha/api/js/recaptcha.js"></script>
+                    <noscript>
+                    &lt;iframe src="https://www.google.com/recaptcha/api/noscript?k={{$recaptcha_publickey}}" height="300" width="500" frameborder="0"&gt;&lt;/iframe&gt;&lt;br/&gt;
+                    &lt;textarea name="recaptcha_challenge_field" rows="3" cols="40"&gt;&lt;/textarea&gt;
+                    &lt;input type="hidden" name="recaptcha_response_field" value="manual_challenge"/&gt;
+                    </noscript>
+                    <div id="captchaStatus"></div>
+                    <br>
+                    
+                    
+                    <input type="checkbox" name="termsofservice" id="termsofservice"><label for="termsofservice">&nbsp; {{trans('user_texts.i_agree_terms')}}</label> {{ HTML::link('post/terms', trans('user_texts.term_service')) }}<a href="/terms/"></a>.
+                    
+                              
+                    <br><br>
+                </div>
+                @if ( Session::get('error') )
+                    <div class="alert alert-error alert-danger">
+                        @if ( is_array(Session::get('error')) )
+                            {{ head(Session::get('error')) }}
+                        @endif
+                    </div>
+                @endif
 
-				@if ( Session::get('notice') )
-					<div class="alert alert-info">{{ Session::get('notice') }}</div>
-				@endif
-				<div align="center">
-					<input type="hidden" value="@if(isset($referral)){{$referral}}@else{{{Request::old('referral')}}}@endif" name="referral">
-					<button type="submit" class="btn btn-primary">{{{ Lang::get('confide::confide.signup.submit') }}}</button>
-				</div>
-			   
-			</form>
-		</div>
-	</div>
+                @if ( Session::get('notice') )
+                    <div class="alert alert-info">{{ Session::get('notice') }}</div>
+                @endif
+                <div align="center">
+                    <input type="hidden" value="@if(isset($referral)){{$referral}}@else{{{Request::old('referral')}}}@endif" name="referral">
+                    <button type="submit" class="btn btn-primary">{{{ Lang::get('confide::confide.signup.submit') }}}</button>
+                </div>
+               
+            </form>
+        </div>
+    </div>
 </div>
 </div>
 {{ HTML::script('assets/js/jquery.validate.min.js') }}
@@ -146,7 +146,7 @@
 
         $("#registerForm").validate({
             rules: {
-				/*
+                /*
                 fullname: {
                     CharNumsOnly: false,
                     required: true,
@@ -160,8 +160,8 @@
                     required: true,
                     minlength: 2
                 },
-				*/
-				password: {
+                */
+                password: {
                     required: true,
                     minlength: 8
                 },
@@ -183,14 +183,14 @@
             },
             messages: {
                 /*
-				fullname: {
+                fullname: {
                     required: "Please enter a username.",
                     CharNumsOnly: "Full Name must contain only letters, numbers, or dashes.",
                 },
                 answer1: "Please answer the security question.",
                 answer2: "Please answer the security question.",
-				*/
-				password: {
+                */
+                password: {
                     required: "Please provide a password.",
                     minlength: "Your password must be at least 8 characters long."
                 },
@@ -209,7 +209,7 @@
                 },
                 termsofservice: "Please accept our TOS.<span><span></span></span>"
             }
-	});
+    });
 
        
         $("#registerForm").submit(function(event) {
@@ -217,32 +217,32 @@
             var challengeField = $("input#recaptcha_challenge_field").val();
             var responseField = $("input#recaptcha_response_field").val(); 
             console.log('responseField',responseField);         
-			
-			$.ajax({
-				type: 'post',
-				url: '<?php echo action('UserController@checkCaptcha')?>',
-				datatype: 'json',
-				data: {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField },
-				beforeSend: function(request) {
-					return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
-				},
-				success:function(response) {
-					if(response == 1){   
-						document.getElementById("registerForm").submit();                  
-						return true;
-					}else{
-						$("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");
-						Recaptcha.reload();
-						return false;
-					}
-				}, error:function(response) {
-					showMessageSingle('{{{ trans('texts.error') }}}', 'error');
-				}
-			});
-			
+            
+            $.ajax({
+                type: 'post',
+                url: '<?php echo action('UserController@checkCaptcha')?>',
+                datatype: 'json',
+                data: {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField },
+                beforeSend: function(request) {
+                    return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
+                },
+                success:function(response) {
+                    if(response == 1){   
+                        document.getElementById("registerForm").submit();                  
+                        return true;
+                    }else{
+                        $("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");
+                        Recaptcha.reload();
+                        return false;
+                    }
+                }, error:function(response) {
+                    showMessageSingle('{{{ trans('texts.error') }}}', 'error');
+                }
+            });
+            
             <?
-			/*
-			$.post('<?php echo action('UserController@checkCaptcha')?>', {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField }, function(response){
+            /*
+            $.post('<?php echo action('UserController@checkCaptcha')?>', {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField }, function(response){
                 if(response == 1){   
                     document.getElementById("registerForm").submit();                  
                     return true;
@@ -252,8 +252,8 @@
                     return false;
                 }
             });
-			*/
-			?>
+            */
+            ?>
         });
    });
 </script>

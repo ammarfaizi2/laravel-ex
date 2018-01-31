@@ -49,33 +49,33 @@
 	    <div class="col-sm-10">
 	    	<div class="input-append">
 	    		<?php $tm = strtotime($q->start_date); ?>
-	    		{!! $that->generateDateForm('start', 0, ' (Today)', $tm - 3600 * 24 * 5, date('Y-m-d', $tm)) !!}
-			</div>
-	    </div>
-	</div>
-	<div class="form-group">
-	    <label class="col-sm-2 control-label">End Date</label>
-	    <div class="col-sm-10">
-	    	<div class="input-append">
-	    		<?php $tm = strtotime($q->end_date); ?>
-	    		{!! $that->generateDateForm('end', -3600*24*100, ' (Today)', null, date('Y-m-d', $tm)) !!}
-			</div>
-	    </div>
-	</div>
-	<div class="form-group">
-		<input type="hidden" class="form-control" id="user_id" value="100" name="user_id">
-	    <div class="col-sm-offset-2 col-sm-10">
-	      <button type="submit" class="btn btn-primary" id="do_edit">Save</button>
-	    </div>
-	</div>
+                {!! $that->generateDateForm('start', 0, ' (Today)', $tm - 3600 * 24 * 5, date('Y-m-d', $tm)) !!}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">End Date</label>
+        <div class="col-sm-10">
+            <div class="input-append">
+                <?php $tm = strtotime($q->end_date); ?>
+                {!! $that->generateDateForm('end', -3600*24*100, ' (Today)', null, date('Y-m-d', $tm)) !!}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="hidden" class="form-control" id="user_id" value="100" name="user_id">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-primary" id="do_edit">Save</button>
+        </div>
+    </div>
 </form>
 <div id="messages"></div>
 <div id="messageModal" class="modal hide fade" tabindex="-1" role="dialog">		
-	<div class="modal-body">		
-	</div>
-	<div class="modal-footer">
-		<button class="btn close-popup" data-dismiss="modal">Close</button>
-	</div>
+    <div class="modal-body">        
+    </div>
+    <div class="modal-footer">
+        <button class="btn close-popup" data-dismiss="modal">Close</button>
+    </div>
 </div>
 </div>
 <!-- Sidebar right -->

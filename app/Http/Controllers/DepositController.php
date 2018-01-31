@@ -188,7 +188,6 @@ class DepositController extends BaseController
                             //Log::info( "\n".$amount." ".$wallet->type." was credited to your account");
                         }
                     } else {
-                      
                         //Log::info( "\n".$amount." ".$wallet->type." was already credited to your account. contact support if you need further assistance.");
                     }
                 } else {
@@ -204,12 +203,10 @@ class DepositController extends BaseController
                             //Log::info( "\n"."This Deposit is unconfirmed. Current confirmations:" . $confirms .". Required : 6.");
                         }
                     } else {
-                        
                         //Log::info( "\n"."transaction is not a deposit or account is invalid.");
                     }
                 }
             } else {
-                     
                 //Log::info("\n"."We can't find any information about this deposit. contact support.");
             }//trans
         } else {
@@ -300,7 +297,6 @@ class DepositController extends BaseController
                                             //Log::info( "\n"."This Deposit is unconfirmed. Current confirmations:" . $confirms .". Required : 3.");
                                         }
                                     }
-                                    
                                 } else {
                                     //Log::info( "\n"."transaction is not a deposit or account is invalid.");
                                 }
@@ -315,7 +311,6 @@ class DepositController extends BaseController
                     }
                 }
             }
-            
         } else {
             //Log::info('------------------- Error: not param blockhash or wallet_type from _GET');
         }

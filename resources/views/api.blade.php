@@ -225,7 +225,7 @@
     </div>
   </div>
   <?php
-	/*
+    /*
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4 class="panel-title">
@@ -330,25 +330,25 @@
     </div>
   </div>
   */
-  ?>
+    ?>
   
-				</div>
+                </div>
 
-			</div> 
-		</div>
-	</div>
+            </div> 
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
-	//$('.collapse').collapse()
-	
-	$(document).ready(function() {
+    //$('.collapse').collapse()
+    
+    $(document).ready(function() {
         
-		$('.collapse').on('shown.bs.collapse', function(){
-			$(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
-		}).on('hidden.bs.collapse', function(){
-			$(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
-		});
+        $('.collapse').on('shown.bs.collapse', function(){
+            $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+        }).on('hidden.bs.collapse', function(){
+            $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+        });
         
-	});
+    });
 </script>
 @stop

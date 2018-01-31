@@ -46,17 +46,17 @@ class AdminSettingController extends Controller
 {
 
     /*
-	|--------------------------------------------------------------------------
-	| Default Home Controller
-	|--------------------------------------------------------------------------
-	|
-	| You may wish to use controllers instead of, or in addition to, Closure
-	| based routes. That's great! Here is an example controller method to
-	| get you started. To route to this controller, just add the route:
-	|
-	|	Route::get('/', 'HomeController@showWelcome');
-	|
-	*/
+    |--------------------------------------------------------------------------
+    | Default Home Controller
+    |--------------------------------------------------------------------------
+    |
+    | You may wish to use controllers instead of, or in addition to, Closure
+    | based routes. That's great! Here is an example controller method to
+    | get you started. To route to this controller, just add the route:
+    |
+    |	Route::get('/', 'HomeController@showWelcome');
+    |
+    */
 
     public function routePage($page = '', $pager_page = '')
     {
@@ -67,626 +67,618 @@ class AdminSettingController extends Controller
         }
         $data['markets'] = $market_wallet;
         switch ($page) {
-            case 'news':
-                break;
-            case 'fee':
-                $markets = Market::get();
+        case 'news':
+            break;
+        case 'fee':
+            $markets = Market::get();
 
-                $wallets = Wallet::orderby('type')->get();
-                $market_list = array();
-                foreach ($markets as $market) {
-                    $from = $to = "";
-                    foreach ($wallets as $wallet) {
-                        if ($market->wallet_from == $wallet->id) {
-                            $from = $wallet->type;
-                        }
-                        if ($market->wallet_to == $wallet->id) {
-                            $to = $wallet->type;
-                        }
+            $wallets = Wallet::orderby('type')->get();
+            $market_list = array();
+            foreach ($markets as $market) {
+                $from = $to = "";
+                foreach ($wallets as $wallet) {
+                    if ($market->wallet_from == $wallet->id) {
+                        $from = $wallet->type;
                     }
-                    $market_list[$market->id] = "{$from}/{$to}";
-                }
-                $data['market_list'] = $market_list;
-                
-                $data['fee_trades'] = FeeTrade::leftJoin('market', 'fee_trade.market_id', '=', 'market.id')
-                    ->leftJoin('wallets', 'market.wallet_from', '=', 'wallets.id')
-                    ->select('fee_trade.*', 'market.wallet_from', 'wallets.name', 'wallets.type')->orderby('wallets.name', 'asc')->get();
-                //echo "<pre>fee_trades: "; print_r($fee_trades); echo "</pre>";
-                //echo "<pre>markets: "; print_r($markets); echo "</pre>";exit;
-                return view('admin.setting_fee', $data);
-                break;
-            case 'fee-withdraw':
-                $data['fee_withdraws'] = FeeWithdraw::leftjoin('wallets', 'fee_withdraw.wallet_id', '=', 'wallets.id')->select('fee_withdraw.*', 'wallets.type', 'wallets.name')->orderby('wallets.type')->get();
-                return view('admin.setting_fee_withdraw', $data);
-                break;
-            case 'limit-trade':
-                $record_per_page = 15;
-                $total = WalletLimitTrade::count();
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['total_pages'] = ceil($total/$record_per_page);//15 user per page
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
-                $data['wallets'] = Wallet::orderby('type')->get();
-                $data['limit_trades'] = WalletLimitTrade::leftjoin('wallets', 'wallet_limittrade.wallet_id', '=', 'wallets.id')->select('wallet_limittrade.*', 'wallets.type as wallet_type', 'wallets.name as wallet_name')->skip($offset_start)->take($record_per_page)->orderby('wallet_type')->get();
-                return view('admin.limittrade.setting_limittrade', $data);
-                break;
-            case 'statistic-coin-exchanged':
-                $select = "SELECT mk.wallet_from, mk.wallet_to, sum(amount) as total_amount from trade_history a left join market mk on a.market_id=mk.id";
-                $select_maincoin = "SELECT mk.wallet_from, mk.wallet_to, sum(amount*price) as total_amount from trade_history a left join market mk on a.market_id=mk.id";
-                $where = '';
-                if (isset($_GET['filter_time']) && $_GET['filter_time']!='') {
-                    switch ($_GET['filter_time']) {
-                        case 'hourly':
-                            $hourly=date('Y-m-d H:i:s', strtotime('-1 hour'));
-                            $where = $where==''? " Where a.created_at>='".$hourly."'": $where." Where a.created_at>='".$hourly."'";
-                            break;
-                        case 'daily':
-                            $daily=date('Y-m-d H:i:s', strtotime('-24 hour'));
-                            $where = $where==''? " Where a.created_at>='".$daily."'": $where." Where a.created_at>='".$daily."'";
-                            break;
-                        case 'weekly':
-                            $thisweek=date('Y-m-d', strtotime('-7 day'));
-                            $where = $where==''? " Where a.created_at>='".$thisweek."'": $where." Where a.created_at>='".$thisweek."'";
-                            break;
-                        case 'monthly':
-                            $thismonth=date('Y-m-1', strtotime('-1 month'));
-                            $where = $where==''? " Where a.created_at>='".$thismonth."'": $where." Where a.created_at>='".$thismonth."'";
-                            break;
+                    if ($market->wallet_to == $wallet->id) {
+                        $to = $wallet->type;
                     }
                 }
+                $market_list[$market->id] = "{$from}/{$to}";
+            }
+            $data['market_list'] = $market_list;
                 
-                $where = (empty($where)) ? ' WHERE mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL' : $where . ' AND mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL';
-                
-                $select .= " ".$where."  group by mk.wallet_from";
-                
-                $coins_exchanged = DB::select($select);
-                $data['coins_exchanged'] = $coins_exchanged;
-                $select_maincoin .= " ".$where." group by mk.wallet_to";
-                $maincoins_exchanged = DB::select($select_maincoin);
-                $data['maincoins_exchanged'] = $maincoins_exchanged;
-                // echo "<pre>"; print_r($fees); echo "</pre>";
-                 $wallets_temp = Wallet::get();
-                $wallets = array();
-                foreach ($wallets_temp as $wallet) {
-                    $wallets[$wallet->id] = $wallet;
-                }
-                $data['wallets'] = $wallets;
-                return view('admin.statistics.statistic_coin_exchanged', $data);
+            $data['fee_trades'] = FeeTrade::leftJoin('market', 'fee_trade.market_id', '=', 'market.id')
+                ->leftJoin('wallets', 'market.wallet_from', '=', 'wallets.id')
+                ->select('fee_trade.*', 'market.wallet_from', 'wallets.name', 'wallets.type')->orderby('wallets.name', 'asc')->get();
+            //echo "<pre>fee_trades: "; print_r($fee_trades); echo "</pre>";
+            //echo "<pre>markets: "; print_r($markets); echo "</pre>";exit;
+            return view('admin.setting_fee', $data);
                 break;
-            case 'statistic-fees':
-                $select = "SELECT mk.wallet_from, mk.wallet_to, sum(fee_sell) as fee_sell, sum(fee_buy) as fee_buy from trade_history a left join market mk on a.market_id=mk.id";
-                $select_maincoin =  "SELECT mk.wallet_from, mk.wallet_to, sum(fee_sell) as fee_sell, sum(fee_buy) as fee_buy from trade_history a left join market mk on a.market_id=mk.id";
-                $where = '';
-                if (isset($_GET['filter_time']) && $_GET['filter_time']!='') {
-                    switch ($_GET['filter_time']) {
-                        case 'hourly':
-                            $hourly=date('Y-m-d H:i:s', strtotime('-1 hour'));
-                            $where = $where==''? " Where a.created_at>='".$hourly."'": $where." Where a.created_at>='".$hourly."'";
-                            break;
-                        case 'daily':
-                            $daily=date('Y-m-d H:i:s', strtotime('-24 hour'));
-                            $where = $where==''? " Where a.created_at>='".$daily."'": $where." Where a.created_at>='".$daily."'";
-                            break;
-                        case 'weekly':
-                            $thisweek=date('Y-m-d', strtotime('-7 day'));
-                            $where = $where==''? " Where a.created_at>='".$thisweek."'": $where." Where a.created_at>='".$thisweek."'";
-                            break;
-                        case 'monthly':
-                            $thismonth=date('Y-m-1', strtotime('-1 month'));
-                            $where = $where==''? " Where a.created_at>='".$thismonth."'": $where." Where a.created_at>='".$thismonth."'";
-                            break;
-                    }
-                }
-
-                $where = (empty($where)) ? ' WHERE mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL' : $where . ' AND mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL';
-                
-                $select .= " ".$where." group by mk.wallet_from order by `created_at` desc";
-                
-                $fees = DB::select($select);
-                $data['fees'] = $fees;
-
-                $where = (empty($where)) ? ' WHERE mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL' : $where . ' AND mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL';
-
-                $select_maincoin .= " ".$where." group by mk.wallet_to order by `created_at` desc";
-                $fees_maincoin = DB::select($select_maincoin);
-                $data['fees_maincoin'] = $fees_maincoin;
-                // echo "<pre>"; print_r($fees); echo "</pre>";
-                 $wallets_temp = Wallet::get();
-                $wallets = array();
-                foreach ($wallets_temp as $wallet) {
-                    $wallets[$wallet->id] = $wallet;
-                }
-                $data['wallets'] = $wallets;
-                return view('admin.statistics.statistic_fees', $data);
+        case 'fee-withdraw':
+            $data['fee_withdraws'] = FeeWithdraw::leftjoin('wallets', 'fee_withdraw.wallet_id', '=', 'wallets.id')->select('fee_withdraw.*', 'wallets.type', 'wallets.name')->orderby('wallets.type')->get();
+            return view('admin.setting_fee_withdraw', $data);
                 break;
-            case 'statistic-fee-withdraw':
-                $select = "SELECT w.type, w.name, sum(fee_amount) as total_fee from withdraws a left join wallets w on a.wallet_id=w.id";
-                $where = '';
-                if (isset($_GET['filter_time']) && $_GET['filter_time']!='') {
-                    switch ($_GET['filter_time']) {
-                        case 'hourly':
-                            $hourly=date('Y-m-d H:i:s', strtotime('-1 hour'));
-                            $where = $where==''? " Where a.created_at>='".$hourly."'": $where." Where a.created_at>='".$hourly."'";
-                            break;
-                        case 'daily':
-                            $daily=date('Y-m-d H:i:s', strtotime('-24 hour'));
-                            $where = $where==''? " Where a.created_at>='".$daily."'": $where." Where a.created_at>='".$daily."'";
-                            break;
-                        case 'weekly':
-                            $thisweek=date('Y-m-d', strtotime('-7 day'));
-                            $where = $where==''? " Where a.created_at>='".$thisweek."'": $where." Where a.created_at>='".$thisweek."'";
-                            break;
-                        case 'monthly':
-                            $thismonth=date('Y-m-1', strtotime('-1 month'));
-                            $where = $where==''? " Where a.created_at>='".$thismonth."'": $where." Where a.created_at>='".$thismonth."'";
-                            break;
-                    }
+        case 'limit-trade':
+            $record_per_page = 15;
+            $total = WalletLimitTrade::count();
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['total_pages'] = ceil($total/$record_per_page);//15 user per page
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
+            $data['wallets'] = Wallet::orderby('type')->get();
+            $data['limit_trades'] = WalletLimitTrade::leftjoin('wallets', 'wallet_limittrade.wallet_id', '=', 'wallets.id')->select('wallet_limittrade.*', 'wallets.type as wallet_type', 'wallets.name as wallet_name')->skip($offset_start)->take($record_per_page)->orderby('wallet_type')->get();
+            return view('admin.limittrade.setting_limittrade', $data);
+                break;
+        case 'statistic-coin-exchanged':
+            $select = "SELECT mk.wallet_from, mk.wallet_to, sum(amount) as total_amount from trade_history a left join market mk on a.market_id=mk.id";
+            $select_maincoin = "SELECT mk.wallet_from, mk.wallet_to, sum(amount*price) as total_amount from trade_history a left join market mk on a.market_id=mk.id";
+            $where = '';
+            if (isset($_GET['filter_time']) && $_GET['filter_time']!='') {
+                switch ($_GET['filter_time']) {
+                case 'hourly':
+                    $hourly=date('Y-m-d H:i:s', strtotime('-1 hour'));
+                    $where = $where==''? " Where a.created_at>='".$hourly."'": $where." Where a.created_at>='".$hourly."'";
+                    break;
+                case 'daily':
+                    $daily=date('Y-m-d H:i:s', strtotime('-24 hour'));
+                    $where = $where==''? " Where a.created_at>='".$daily."'": $where." Where a.created_at>='".$daily."'";
+                    break;
+                case 'weekly':
+                    $thisweek=date('Y-m-d', strtotime('-7 day'));
+                    $where = $where==''? " Where a.created_at>='".$thisweek."'": $where." Where a.created_at>='".$thisweek."'";
+                    break;
+                case 'monthly':
+                    $thismonth=date('Y-m-1', strtotime('-1 month'));
+                    $where = $where==''? " Where a.created_at>='".$thismonth."'": $where." Where a.created_at>='".$thismonth."'";
+                    break;
                 }
+            }
+                
+            $where = (empty($where)) ? ' WHERE mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL' : $where . ' AND mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL';
+                
+            $select .= " ".$where."  group by mk.wallet_from";
+                
+            $coins_exchanged = DB::select($select);
+            $data['coins_exchanged'] = $coins_exchanged;
+            $select_maincoin .= " ".$where." group by mk.wallet_to";
+            $maincoins_exchanged = DB::select($select_maincoin);
+            $data['maincoins_exchanged'] = $maincoins_exchanged;
+            // echo "<pre>"; print_r($fees); echo "</pre>";
+             $wallets_temp = Wallet::get();
+            $wallets = array();
+            foreach ($wallets_temp as $wallet) {
+                $wallets[$wallet->id] = $wallet;
+            }
+            $data['wallets'] = $wallets;
+            return view('admin.statistics.statistic_coin_exchanged', $data);
+                break;
+        case 'statistic-fees':
+            $select = "SELECT mk.wallet_from, mk.wallet_to, sum(fee_sell) as fee_sell, sum(fee_buy) as fee_buy from trade_history a left join market mk on a.market_id=mk.id";
+            $select_maincoin =  "SELECT mk.wallet_from, mk.wallet_to, sum(fee_sell) as fee_sell, sum(fee_buy) as fee_buy from trade_history a left join market mk on a.market_id=mk.id";
+            $where = '';
+            if (isset($_GET['filter_time']) && $_GET['filter_time']!='') {
+                switch ($_GET['filter_time']) {
+                case 'hourly':
+                    $hourly=date('Y-m-d H:i:s', strtotime('-1 hour'));
+                    $where = $where==''? " Where a.created_at>='".$hourly."'": $where." Where a.created_at>='".$hourly."'";
+                    break;
+                case 'daily':
+                    $daily=date('Y-m-d H:i:s', strtotime('-24 hour'));
+                    $where = $where==''? " Where a.created_at>='".$daily."'": $where." Where a.created_at>='".$daily."'";
+                    break;
+                case 'weekly':
+                    $thisweek=date('Y-m-d', strtotime('-7 day'));
+                    $where = $where==''? " Where a.created_at>='".$thisweek."'": $where." Where a.created_at>='".$thisweek."'";
+                    break;
+                case 'monthly':
+                    $thismonth=date('Y-m-1', strtotime('-1 month'));
+                    $where = $where==''? " Where a.created_at>='".$thismonth."'": $where." Where a.created_at>='".$thismonth."'";
+                    break;
+                }
+            }
+
+            $where = (empty($where)) ? ' WHERE mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL' : $where . ' AND mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL';
+                
+            $select .= " ".$where." group by mk.wallet_from order by `created_at` desc";
+                
+            $fees = DB::select($select);
+            $data['fees'] = $fees;
+
+            $where = (empty($where)) ? ' WHERE mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL' : $where . ' AND mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL';
+
+            $select_maincoin .= " ".$where." group by mk.wallet_to order by `created_at` desc";
+            $fees_maincoin = DB::select($select_maincoin);
+            $data['fees_maincoin'] = $fees_maincoin;
+            // echo "<pre>"; print_r($fees); echo "</pre>";
+             $wallets_temp = Wallet::get();
+            $wallets = array();
+            foreach ($wallets_temp as $wallet) {
+                $wallets[$wallet->id] = $wallet;
+            }
+            $data['wallets'] = $wallets;
+            return view('admin.statistics.statistic_fees', $data);
+                break;
+        case 'statistic-fee-withdraw':
+            $select = "SELECT w.type, w.name, sum(fee_amount) as total_fee from withdraws a left join wallets w on a.wallet_id=w.id";
+            $where = '';
+            if (isset($_GET['filter_time']) && $_GET['filter_time']!='') {
+                switch ($_GET['filter_time']) {
+                case 'hourly':
+                    $hourly=date('Y-m-d H:i:s', strtotime('-1 hour'));
+                    $where = $where==''? " Where a.created_at>='".$hourly."'": $where." Where a.created_at>='".$hourly."'";
+                    break;
+                case 'daily':
+                    $daily=date('Y-m-d H:i:s', strtotime('-24 hour'));
+                    $where = $where==''? " Where a.created_at>='".$daily."'": $where." Where a.created_at>='".$daily."'";
+                    break;
+                case 'weekly':
+                    $thisweek=date('Y-m-d', strtotime('-7 day'));
+                    $where = $where==''? " Where a.created_at>='".$thisweek."'": $where." Where a.created_at>='".$thisweek."'";
+                    break;
+                case 'monthly':
+                    $thismonth=date('Y-m-1', strtotime('-1 month'));
+                    $where = $where==''? " Where a.created_at>='".$thismonth."'": $where." Where a.created_at>='".$thismonth."'";
+                    break;
+                }
+            }
                    
-                $select .= " ".$where." group by a.wallet_id";
-                $withdraw_fees = DB::select($select);
-                $data['withdraw_fees'] = $withdraw_fees;
-                return view('admin.statistics.statistic_fee_withdraw', $data);
+            $select .= " ".$where." group by a.wallet_id";
+            $withdraw_fees = DB::select($select);
+            $data['withdraw_fees'] = $withdraw_fees;
+            return view('admin.statistics.statistic_fee_withdraw', $data);
                 break;
-            case 'add-page':
-                $data['type'] = 'page';
-                return view('admin.pages.add_post', $data);
+        case 'add-page':
+            $data['type'] = 'page';
+            return view('admin.pages.add_post', $data);
                 break;
-            case 'add-news':
-                $data['type'] = 'news';
-                return view('admin.pages.add_post', $data);
+        case 'add-news':
+            $data['type'] = 'news';
+            return view('admin.pages.add_post', $data);
                 break;
-            case 'all-page':
-                $data['type'] = 'page';
-                $record_per_page = 15;
-                $total = Post::where('type', $data['type'])->count();
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['total_pages'] = ceil($total/$record_per_page);//15 user per page
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
-                $posts = Post::where('type', $data['type'])->skip($offset_start)->take($record_per_page)->get();
-                $data['posts'] = $posts;
-                return view('admin.pages.all_posts', $data);
+        case 'all-page':
+            $data['type'] = 'page';
+            $record_per_page = 15;
+            $total = Post::where('type', $data['type'])->count();
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['total_pages'] = ceil($total/$record_per_page);//15 user per page
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
+            $posts = Post::where('type', $data['type'])->skip($offset_start)->take($record_per_page)->get();
+            $data['posts'] = $posts;
+            return view('admin.pages.all_posts', $data);
                 break;
-            case 'all-news':
-                $data['type'] = 'news';
-                $record_per_page = 15;
-                $total = Post::where('type', $data['type'])->count();
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['total_pages'] = ceil($total/$record_per_page);//15 user per page
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
-                $posts = Post::where('type', $data['type'])->skip($offset_start)->take($record_per_page)->get();
-                $data['posts'] = $posts;
-                return view('admin.pages.all_posts', $data);
+        case 'all-news':
+            $data['type'] = 'news';
+            $record_per_page = 15;
+            $total = Post::where('type', $data['type'])->count();
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['total_pages'] = ceil($total/$record_per_page);//15 user per page
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
+            $posts = Post::where('type', $data['type'])->skip($offset_start)->take($record_per_page)->get();
+            $data['posts'] = $posts;
+            return view('admin.pages.all_posts', $data);
                 break;
 
-            case 'add-coin-news':
-                $markets = Market::get();
+        case 'add-coin-news':
+            $markets = Market::get();
 
-                $wallets = Wallet::orderby('type')->get();
-                $market_list = array();
-                foreach ($markets as $market) {
-                    $from = $to = "";
-                    foreach ($wallets as $wallet) {
-                        if ($market->wallet_from == $wallet->id) {
-                            $from = $wallet->type;
-                        }
-                        if ($market->wallet_to == $wallet->id) {
-                            $to = $wallet->type;
-                        }
-                    }
-                    $market_list[$market->id] = "{$from}/{$to}";
-                }
-                $data['market_list'] = $market_list;
-
-                return view('admin.pages.add_coin_news', $data);
-                break;
-            case 'all-coin-news':
-                $record_per_page = 15;
-                $total = News::count();
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['total_pages'] = ceil($total/$record_per_page);//15 user per page
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
-                $news = News::skip($offset_start)->take($record_per_page)->get();
-                $data['news'] = $news;
-                return view('admin.pages.all_coin_news', $data);
-                break;
-            case 'withdraw-limits':
-                $record_per_page = 50;
-                $total_limits = Limits::count();
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['total_pages'] = ceil($total_limits/$record_per_page);
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
-                //$offset_end = ($pager_page*$record_per_page)-1;
-
-                $limits = Limits::skip($offset_start)->take($record_per_page)->get();
-
-                foreach ($limits as $key => $value) {
-
-                }
-
-                $data['limits'] = $limits;
-
-                return view('admin.limits.all_limits', $data);
-                break;
-            case 'add-withdraw-limit':
-                $wallets = Wallet::orderby('type')->get();
-                $wallet_list = array();
+            $wallets = Wallet::orderby('type')->get();
+            $market_list = array();
+            foreach ($markets as $market) {
+                $from = $to = "";
                 foreach ($wallets as $wallet) {
-                    $wallet_list[$wallet->id] = $wallet->type;
+                    if ($market->wallet_from == $wallet->id) {
+                        $from = $wallet->type;
+                    }
+                    if ($market->wallet_to == $wallet->id) {
+                        $to = $wallet->type;
+                    }
                 }
-                $data['wallet_list'] = $wallet_list;
+                $market_list[$market->id] = "{$from}/{$to}";
+            }
+            $data['market_list'] = $market_list;
 
-                return view('admin.limits.add_withdraw_limit', $data);
+            return view('admin.pages.add_coin_news', $data);
+                break;
+        case 'all-coin-news':
+            $record_per_page = 15;
+            $total = News::count();
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['total_pages'] = ceil($total/$record_per_page);//15 user per page
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
+            $news = News::skip($offset_start)->take($record_per_page)->get();
+            $data['news'] = $news;
+            return view('admin.pages.all_coin_news', $data);
+                break;
+        case 'withdraw-limits':
+            $record_per_page = 50;
+            $total_limits = Limits::count();
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['total_pages'] = ceil($total_limits/$record_per_page);
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
+            //$offset_end = ($pager_page*$record_per_page)-1;
+
+            $limits = Limits::skip($offset_start)->take($record_per_page)->get();
+
+            foreach ($limits as $key => $value) {
+            }
+
+            $data['limits'] = $limits;
+
+            return view('admin.limits.all_limits', $data);
+                break;
+        case 'add-withdraw-limit':
+            $wallets = Wallet::orderby('type')->get();
+            $wallet_list = array();
+            foreach ($wallets as $wallet) {
+                $wallet_list[$wallet->id] = $wallet->type;
+            }
+            $data['wallet_list'] = $wallet_list;
+
+            return view('admin.limits.add_withdraw_limit', $data);
                 break;
 
-            case 'coin-giveaways':
-                $record_per_page = 50;
-                $total_giveaways = Giveaways::count();
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['total_pages'] = ceil($total_giveaways/$record_per_page);
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
-                //$offset_end = ($pager_page*$record_per_page)-1;
+        case 'coin-giveaways':
+            $record_per_page = 50;
+            $total_giveaways = Giveaways::count();
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['total_pages'] = ceil($total_giveaways/$record_per_page);
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
+            //$offset_end = ($pager_page*$record_per_page)-1;
 
-                $giveaways = Giveaways::skip($offset_start)->take($record_per_page)->get();
+            $giveaways = Giveaways::skip($offset_start)->take($record_per_page)->get();
 
-                foreach ($giveaways as $key => $value) {
+            foreach ($giveaways as $key => $value) {
+            }
 
-                }
+            $data['giveaways'] = $giveaways;
 
-                $data['giveaways'] = $giveaways;
-
-                return view('admin.giveaways.all_giveaways', $data);
+            return view('admin.giveaways.all_giveaways', $data);
                 break;
-            case 'add-coin-giveaway':
-                $wallets = Wallet::orderby('type')->get();
-                $wallet_list = array();
-                foreach ($wallets as $wallet) {
-                    $wallet_list[$wallet->id] = $wallet->type;
-                }
-                $data['wallet_list'] = $wallet_list;
+        case 'add-coin-giveaway':
+            $wallets = Wallet::orderby('type')->get();
+            $wallet_list = array();
+            foreach ($wallets as $wallet) {
+                $wallet_list[$wallet->id] = $wallet->type;
+            }
+            $data['wallet_list'] = $wallet_list;
 
-                return view('admin.giveaways.add_coin_giveaway', $data);
+            return view('admin.giveaways.add_coin_giveaway', $data);
                 break;
 
-            case 'users':
-                $record_per_page = 15;
-                $total_users = User::count();
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['total_pages'] = ceil($total_users/$record_per_page);//15 user per page
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
-                //$offset_end = ($pager_page*$record_per_page)-1;
+        case 'users':
+            $record_per_page = 15;
+            $total_users = User::count();
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['total_pages'] = ceil($total_users/$record_per_page);//15 user per page
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
+            //$offset_end = ($pager_page*$record_per_page)-1;
 
-                $users = User::skip($offset_start)->take($record_per_page)->get()->toArray();
+            $users = User::skip($offset_start)->take($record_per_page)->get()->toArray();
 
-                foreach ($users as $key => $value) {
-                    
-                    $user = USer::find($value['id']);
-                    $users[$key]['roles'] = $user->roles->toArray();
-                    //echo "<pre>roles:"; print_r($user->roles->toArray()); echo "</pre>";
-                }
-                //echo "<pre>"; print_r($users); echo "</pre>";
-                $roles = Role::get();
-                $data['users'] = $users;
-                $data['roles'] = $roles;
-                return view('admin.user.manage_users', $data);
+            foreach ($users as $key => $value) {
+                $user = USer::find($value['id']);
+                $users[$key]['roles'] = $user->roles->toArray();
+                //echo "<pre>roles:"; print_r($user->roles->toArray()); echo "</pre>";
+            }
+            //echo "<pre>"; print_r($users); echo "</pre>";
+            $roles = Role::get();
+            $data['users'] = $users;
+            $data['roles'] = $roles;
+            return view('admin.user.manage_users', $data);
                 break;
-            case 'orders':
-                $record_per_page = 15;
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
-                //$offset_end = ($pager_page*$record_per_page)-1;
+        case 'orders':
+            $record_per_page = 15;
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
+            //$offset_end = ($pager_page*$record_per_page)-1;
                 
-                $select = "select a.*, b.wallet_from as `from`, b.wallet_to as `to`, c.username from orders a left join market b on a.market_id=b.id left join users c on a.user_id=c.id";
-                $select_count = "select count(*) as total from orders a";
-                $where = '';
-                if (isset($_GET['do_filter'])) {
-                    if ($where=='') {
-                        if (!empty($_GET['market'])) {
-                            $where = $where==''? " Where a.market_id='".$_GET['market']."'": $where." AND a.market_id='".$_GET['market']."'";
-                        }
+            $select = "select a.*, b.wallet_from as `from`, b.wallet_to as `to`, c.username from orders a left join market b on a.market_id=b.id left join users c on a.user_id=c.id";
+            $select_count = "select count(*) as total from orders a";
+            $where = '';
+            if (isset($_GET['do_filter'])) {
+                if ($where=='') {
+                    if (!empty($_GET['market'])) {
+                        $where = $where==''? " Where a.market_id='".$_GET['market']."'": $where." AND a.market_id='".$_GET['market']."'";
                     }
-                    if ($_GET['status']!='') {
-                        $where = $where==''? " Where a.status='".$_GET['status']."'": $where." AND a.status='".$_GET['status']."'";
-                    }
-                    if ($_GET['type']!='') {
-                        $where = $where==''? " Where a.type='".$_GET['type']."'": $where." AND a.type='".$_GET['type']."'";
-                    }
-
                 }
-                $select_count = $select_count." ".$where." order by `created_at` desc";
-                $total_records = DB::select($select_count);
-                //echo "<pre>total_records: "; print_r($total_records); echo "</pre>"; exit;
+                if ($_GET['status']!='') {
+                    $where = $where==''? " Where a.status='".$_GET['status']."'": $where." AND a.status='".$_GET['status']."'";
+                }
+                if ($_GET['type']!='') {
+                    $where = $where==''? " Where a.type='".$_GET['type']."'": $where." AND a.type='".$_GET['type']."'";
+                }
+            }
+            $select_count = $select_count." ".$where." order by `created_at` desc";
+            $total_records = DB::select($select_count);
+            //echo "<pre>total_records: "; print_r($total_records); echo "</pre>"; exit;
                
-                $data['total_pages'] = ceil($total_records[0]->total/$record_per_page);
+            $data['total_pages'] = ceil($total_records[0]->total/$record_per_page);
                 
-                $select .= " ".$where." order by `created_at` desc limit ".$offset_start.",".$record_per_page;
-                $ordershistory = DB::select($select);
-                $data['ordershistories'] = $ordershistory;
+            $select .= " ".$where." order by `created_at` desc limit ".$offset_start.",".$record_per_page;
+            $ordershistory = DB::select($select);
+            $data['ordershistories'] = $ordershistory;
                 
-                return view('admin.orders', $data);
+            return view('admin.orders', $data);
                 break;
-            case 'trade-histories':
-                $record_per_page = 15;
-                if ($pager_page=='') {
-                    $pager_page = 1;
+        case 'trade-histories':
+            $record_per_page = 15;
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
+            $select = "select a.*, b.wallet_from as `from`, b.wallet_to as `to`,c.username as seller, d.username as buyer from trade_history a left join market b on a.market_id=b.id left join users c on a.seller_id=c.id left join users d on a.buyer_id=d.id";
+            $select_count = "select count(*) as total from trade_history a";
+            $where = '';
+            if (isset($_GET['do_filter'])) {
+                if ($where=='') {
+                    if (!empty($_GET['market'])) {
+                        $where = $where==''? " Where a.market_id='".$_GET['market']."'": $where." AND a.market_id='".$_GET['market']."'";
+                    }
                 }
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
-                $select = "select a.*, b.wallet_from as `from`, b.wallet_to as `to`,c.username as seller, d.username as buyer from trade_history a left join market b on a.market_id=b.id left join users c on a.seller_id=c.id left join users d on a.buyer_id=d.id";
-                $select_count = "select count(*) as total from trade_history a";
-                $where = '';
-                if (isset($_GET['do_filter'])) {
-                    if ($where=='') {
-                        if (!empty($_GET['market'])) {
-                            $where = $where==''? " Where a.market_id='".$_GET['market']."'": $where." AND a.market_id='".$_GET['market']."'";
-                        }
-                    }
-                    if ($_GET['type']!='') {
-                        $where = $where==''? " Where a.type='".$_GET['type']."'": $where." AND a.type='".$_GET['type']."'";
-                    }
-                    if ($_GET['time']!='') {
-                        switch ($_GET['time']) {
-                            case 'today':
-                                $where = $where==''? " Where a.created_at>='".date("Y-m-d")."'": $where." Where a.created_at>='".date("Y-m-d")."'";
-                                break;
-                            case 'thisweek':
-                                $thisweek=date('Y-m-d', strtotime('this week'));
-                                $where = $where==''? " Where a.created_at>='".$thisweek."'": $where." Where a.created_at>='".$thisweek."'";
-                                break;
-                            case 'thismonth':
-                                $thismonth=date('Y-m-1', strtotime('this month'));
-                                $where = $where==''? " Where a.created_at>='".$thismonth."'": $where." Where a.created_at>='".$thismonth."'";
-                                break;
-                        }
-                    }
-
+                if ($_GET['type']!='') {
+                    $where = $where==''? " Where a.type='".$_GET['type']."'": $where." AND a.type='".$_GET['type']."'";
                 }
-                $select_count = $select_count." ".$where." order by `created_at` desc";
-                $total_records = DB::select($select_count);
-                //echo "<pre>total_records: "; print_r($total_records); echo "</pre>"; exit;
+                if ($_GET['time']!='') {
+                    switch ($_GET['time']) {
+                    case 'today':
+                        $where = $where==''? " Where a.created_at>='".date("Y-m-d")."'": $where." Where a.created_at>='".date("Y-m-d")."'";
+                        break;
+                    case 'thisweek':
+                        $thisweek=date('Y-m-d', strtotime('this week'));
+                        $where = $where==''? " Where a.created_at>='".$thisweek."'": $where." Where a.created_at>='".$thisweek."'";
+                        break;
+                    case 'thismonth':
+                        $thismonth=date('Y-m-1', strtotime('this month'));
+                        $where = $where==''? " Where a.created_at>='".$thismonth."'": $where." Where a.created_at>='".$thismonth."'";
+                        break;
+                    }
+                }
+            }
+            $select_count = $select_count." ".$where." order by `created_at` desc";
+            $total_records = DB::select($select_count);
+            //echo "<pre>total_records: "; print_r($total_records); echo "</pre>"; exit;
                
-                $data['total_pages'] = ceil($total_records[0]->total/$record_per_page);
+            $data['total_pages'] = ceil($total_records[0]->total/$record_per_page);
                 
-                $select .= " ".$where." order by `created_at` desc limit ".$offset_start.",".$record_per_page;
-                $trades = DB::select($select);
-                $data['tradehistories'] = $trades;
-                return view('admin.trade_histories', $data);
+            $select .= " ".$where." order by `created_at` desc limit ".$offset_start.",".$record_per_page;
+            $trades = DB::select($select);
+            $data['tradehistories'] = $trades;
+            return view('admin.trade_histories', $data);
                 break;
-            case 'coins-voting':
-                $coinvotes = DB::table('coin_votes')->get();
-                $wallet = Wallet::where('type', 'BTC')->first();
-                if (isset($wallet->id)) {
-                    try {
-                        $wallet->connectJsonRPCclient($wallet->wallet_username, $wallet->wallet_password, $wallet->wallet_ip, $wallet->port);
-                        foreach ($coinvotes as $key => $value) {
-                            $num_vote = Vote::where('coinvote_id', '=', $value->id)->count();
-                            //echo "<pre>getreceivedbyaccount"; print_r($wallet->getReceivedByAddress($value->btc_address)); echo "</pre>";//$value->label_address
-                            $btc_payment = $wallet->getReceivedByAddress($value->btc_address);//'12X9jVe4S8pAqJ7EoKN7B4YwMQpzfgArtX'
-                            $num_payment = floor($btc_payment/0.0001);
-                            //echo "btc_payment: ".$btc_payment;
-                            //echo "<br>num_payment: ".$num_payment;
-                            $coinvotes[$key]->balance = $num_payment;
-                            $coinvotes[$key]->num_vote = $num_vote + $num_payment;
-                        }
-                    } catch (Exception $e) {
-                        //$data['error_message']= "Caught exception 1 - ASC";
-                        //'Caught exception: '.$e->getMessage()."\n";  //
+        case 'coins-voting':
+            $coinvotes = DB::table('coin_votes')->get();
+            $wallet = Wallet::where('type', 'BTC')->first();
+            if (isset($wallet->id)) {
+                try {
+                    $wallet->connectJsonRPCclient($wallet->wallet_username, $wallet->wallet_password, $wallet->wallet_ip, $wallet->port);
+                    foreach ($coinvotes as $key => $value) {
+                        $num_vote = Vote::where('coinvote_id', '=', $value->id)->count();
+                        //echo "<pre>getreceivedbyaccount"; print_r($wallet->getReceivedByAddress($value->btc_address)); echo "</pre>";//$value->label_address
+                        $btc_payment = $wallet->getReceivedByAddress($value->btc_address);//'12X9jVe4S8pAqJ7EoKN7B4YwMQpzfgArtX'
+                        $num_payment = floor($btc_payment/0.0001);
+                        //echo "btc_payment: ".$btc_payment;
+                        //echo "<br>num_payment: ".$num_payment;
+                        $coinvotes[$key]->balance = $num_payment;
+                        $coinvotes[$key]->num_vote = $num_vote + $num_payment;
                     }
+                } catch (Exception $e) {
+                    //$data['error_message']= "Caught exception 1 - ASC";
+                    //'Caught exception: '.$e->getMessage()."\n";  //
+                }
                      
-                     //echo "<pre>coinvotes"; print_r($coinvotes); echo "</pre>";
-                    $data['coinvotes'] = $coinvotes;
-                } else {
-                    $data['not_wallet'] = "Please add BTC wallet before add the vote coin.";
-                }
-                return view('admin.coins_voting', $data);
+                 //echo "<pre>coinvotes"; print_r($coinvotes); echo "</pre>";
+                $data['coinvotes'] = $coinvotes;
+            } else {
+                $data['not_wallet'] = "Please add BTC wallet before add the vote coin.";
+            }
+            return view('admin.coins_voting', $data);
                 break;
-            case 'funds':
-                $wallets = Wallet::leftjoin('fee_withdraw', 'fee_withdraw.wallet_id', '=', 'wallets.id')->orderby('type')->get();
-                //$wallets = Wallet::orderby('type')->get();
-                $balances = array();
-                $fee_withdraws = array();
+        case 'funds':
+            $wallets = Wallet::leftjoin('fee_withdraw', 'fee_withdraw.wallet_id', '=', 'wallets.id')->orderby('type')->get();
+            //$wallets = Wallet::orderby('type')->get();
+            $balances = array();
+            $fee_withdraws = array();
                 
-                $check_wallet_id = 0;
-                foreach ($wallets as $wallet) {
-                    try {
-                        if ($check_wallet_id != $wallet->id) {
-                            $check_wallet_id = $wallet->id;
-                            try {
-
-                                $wallet->connectJsonRPCclient($wallet->wallet_username, $wallet->wallet_password, $wallet->wallet_ip, $wallet->port);
-                                $balances[$wallet->id] = $wallet->getBalance();
-                                $fee_withdraws[$wallet->id] = $wallet->getTxFee();
-                                UserAddressDeposit::insert(array('user_id' => $user->id, 'wallet_id' => $wallet->id, 'addr_deposit'=>$address));        
-                            } catch (Exception $e) {
-                                $data['error_'] = "Unable to connect";
-                            }
+            $check_wallet_id = 0;
+            foreach ($wallets as $wallet) {
+                try {
+                    if ($check_wallet_id != $wallet->id) {
+                        $check_wallet_id = $wallet->id;
+                        try {
+                            $wallet->connectJsonRPCclient($wallet->wallet_username, $wallet->wallet_password, $wallet->wallet_ip, $wallet->port);
+                            $balances[$wallet->id] = $wallet->getBalance();
+                            $fee_withdraws[$wallet->id] = $wallet->getTxFee();
+                            UserAddressDeposit::insert(array('user_id' => $user->id, 'wallet_id' => $wallet->id, 'addr_deposit'=>$address));
+                        } catch (Exception $e) {
+                            $data['error_'] = "Unable to connect";
                         }
-                        throw new Exception("Error Processing Request", 1);
-                        
-                    } catch (Exception $e) {
-                        //"Not connect to this wallet";//'Caught exception: '.$e->getMessage()."\n";
                     }
+                    throw new Exception("Error Processing Request", 1);
+                } catch (Exception $e) {
+                    //"Not connect to this wallet";//'Caught exception: '.$e->getMessage()."\n";
                 }
-                $data['wallets'] = $wallets;
-                $data['balances'] = $balances;
-                $data['fee_withdraws'] = $fee_withdraws;
-                //echo "<pre>fee_withdraws"; print_r($fee_withdraws); echo "</pre>";
-                return view('admin.funds', $data);
+            }
+            $data['wallets'] = $wallets;
+            $data['balances'] = $balances;
+            $data['fee_withdraws'] = $fee_withdraws;
+            //echo "<pre>fee_withdraws"; print_r($fee_withdraws); echo "</pre>";
+            return view('admin.funds', $data);
                 break;
-            case 'withdraws-queue':
-                $record_per_page = 20;
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
+        case 'withdraws-queue':
+            $record_per_page = 20;
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
 
-                if (isset($_GET['do_filter']) && $_GET['wallet_id']!='') {
-                    $withdraws = Withdraw::leftjoin('users', 'users.id', '=', 'withdraws.user_id')->where('wallet_id', $_GET['wallet_id'])->select('withdraws.*', 'users.username');
-                } else {
-                    $withdraws = Withdraw::leftjoin('users', 'users.id', '=', 'withdraws.user_id')->select('withdraws.*', 'users.username');
-                }
-                $total_records = $withdraws->get();
-                //echo "<br>total_records: ".count($total_records);
-                $data['total_pages'] = ceil(count($total_records)/$record_per_page);
-                //echo "<br>total_records: ".$data['total_pages'];
-                $withdraws= $withdraws->skip($offset_start)->take($record_per_page)->orderby("created_at", "desc")->get();
-                $wallets = Wallet::orderby('type')->get()->toArray();
-                $new_wallet = array();
-                foreach ($wallets as $key => $value) {
-                    $new_wallet[$value['id']] = $value;
-                }
-                $data['wallets'] = $new_wallet;
-                $data['withdraws'] = $withdraws;
-                return view('admin.withdraws_queue', $data);
+            if (isset($_GET['do_filter']) && $_GET['wallet_id']!='') {
+                $withdraws = Withdraw::leftjoin('users', 'users.id', '=', 'withdraws.user_id')->where('wallet_id', $_GET['wallet_id'])->select('withdraws.*', 'users.username');
+            } else {
+                $withdraws = Withdraw::leftjoin('users', 'users.id', '=', 'withdraws.user_id')->select('withdraws.*', 'users.username');
+            }
+            $total_records = $withdraws->get();
+            //echo "<br>total_records: ".count($total_records);
+            $data['total_pages'] = ceil(count($total_records)/$record_per_page);
+            //echo "<br>total_records: ".$data['total_pages'];
+            $withdraws= $withdraws->skip($offset_start)->take($record_per_page)->orderby("created_at", "desc")->get();
+            $wallets = Wallet::orderby('type')->get()->toArray();
+            $new_wallet = array();
+            foreach ($wallets as $key => $value) {
+                $new_wallet[$value['id']] = $value;
+            }
+            $data['wallets'] = $new_wallet;
+            $data['withdraws'] = $withdraws;
+            return view('admin.withdraws_queue', $data);
                 break;
-            case 'deposits-queue':
-                $record_per_page = 20;
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
+        case 'deposits-queue':
+            $record_per_page = 20;
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
 
-                if (isset($_GET['do_filter']) && $_GET['wallet_id']!='') {
-                    $deposits = Deposit::leftjoin('users', 'users.id', '=', 'deposits.user_id')->where('wallet_id', $_GET['wallet_id'])->select('deposits.*', 'users.username');
-                } else {
-                    $deposits = Deposit::leftjoin('users', 'users.id', '=', 'deposits.user_id')->select('deposits.*', 'users.username');
-                }
-                $total_records = $deposits->get();
-                //echo "<br>total_records: ".count($total_records);
-                $data['total_pages'] = ceil(count($total_records)/$record_per_page);
-                //echo "<br>total_records: ".$data['total_pages'];
-                $deposits= $deposits->skip($offset_start)->take($record_per_page)->orderby("created_at", "desc")->get();
-                $wallets = Wallet::orderby('type')->get()->toArray();
-                $new_wallet = array();
-                foreach ($wallets as $key => $value) {
-                    $new_wallet[$value['id']] = $value;
-                }
-                $data['wallets'] = $new_wallet;
-                $data['deposits'] = $deposits;
-                return view('admin.deposits_queue', $data);
+            if (isset($_GET['do_filter']) && $_GET['wallet_id']!='') {
+                $deposits = Deposit::leftjoin('users', 'users.id', '=', 'deposits.user_id')->where('wallet_id', $_GET['wallet_id'])->select('deposits.*', 'users.username');
+            } else {
+                $deposits = Deposit::leftjoin('users', 'users.id', '=', 'deposits.user_id')->select('deposits.*', 'users.username');
+            }
+            $total_records = $deposits->get();
+            //echo "<br>total_records: ".count($total_records);
+            $data['total_pages'] = ceil(count($total_records)/$record_per_page);
+            //echo "<br>total_records: ".$data['total_pages'];
+            $deposits= $deposits->skip($offset_start)->take($record_per_page)->orderby("created_at", "desc")->get();
+            $wallets = Wallet::orderby('type')->get()->toArray();
+            $new_wallet = array();
+            foreach ($wallets as $key => $value) {
+                $new_wallet[$value['id']] = $value;
+            }
+            $data['wallets'] = $new_wallet;
+            $data['deposits'] = $deposits;
+            return view('admin.deposits_queue', $data);
                 break;
-            case 'wallets':
-                $record_per_page = 15;
-                $total_users = Wallet::count();
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['total_pages'] = ceil($total_users/$record_per_page);//15 user per page
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
+        case 'wallets':
+            $record_per_page = 15;
+            $total_users = Wallet::count();
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['total_pages'] = ceil($total_users/$record_per_page);//15 user per page
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
 
-                $wallets = Wallet::skip($offset_start)->take($record_per_page)->orderby('name')->get();
-                $data['wallets'] = $wallets;
-                return view('admin.wallet.manage_wallets', $data);
+            $wallets = Wallet::skip($offset_start)->take($record_per_page)->orderby('name')->get();
+            $data['wallets'] = $wallets;
+            return view('admin.wallet.manage_wallets', $data);
                 break;
-            case 'markets':
-                $record_per_page = 15;
-                $total_users = Market::count();
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['total_pages'] = ceil($total_users/$record_per_page);//15 user per page
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
+        case 'markets':
+            $record_per_page = 15;
+            $total_users = Market::count();
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['total_pages'] = ceil($total_users/$record_per_page);//15 user per page
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
 
-                $markets = Market::skip($offset_start)->take($record_per_page)->get();
-                $data['markets'] = $markets;
-                $wallets_temp = Wallet::get();
-                $wallets = array();
-                foreach ($wallets_temp as $wallet) {
-                    $wallets[$wallet->id] = $wallet;
-                }
-                $data['wallets'] = $wallets;
+            $markets = Market::skip($offset_start)->take($record_per_page)->get();
+            $data['markets'] = $markets;
+            $wallets_temp = Wallet::get();
+            $wallets = array();
+            foreach ($wallets_temp as $wallet) {
+                $wallets[$wallet->id] = $wallet;
+            }
+            $data['wallets'] = $wallets;
                 
-                return view('admin.manage_markets', $data);
+            return view('admin.manage_markets', $data);
                 break;
-            case 'balance-wallets':
-                $record_per_page = 15;
-                $total_users = Wallet::count();
-                if ($pager_page=='') {
-                    $pager_page = 1;
-                }
-                $data['total_pages'] = ceil($total_users/$record_per_page);//15 user per page
-                $data['cur_page'] = $pager_page;
-                $offset_start = ($pager_page-1)*$record_per_page;
+        case 'balance-wallets':
+            $record_per_page = 15;
+            $total_users = Wallet::count();
+            if ($pager_page=='') {
+                $pager_page = 1;
+            }
+            $data['total_pages'] = ceil($total_users/$record_per_page);//15 user per page
+            $data['cur_page'] = $pager_page;
+            $offset_start = ($pager_page-1)*$record_per_page;
 
-                $wallets = Wallet::skip($offset_start)->take($record_per_page)->orderby('name')->get();
-                $amount_transaction=array();
-                $balances=array();
-                foreach ($wallets as $wallet) {
-                    //get total deposit
-                    $total_deposit=Deposit::where('wallet_id', $wallet->id)->where('paid', 1)->sum('amount');
-                    $total_withdraw=Withdraw::where('wallet_id', $wallet->id)->where('status', 1)->sum('receive_amount');
-                    $amount_transaction[$wallet->id]=array(
-                        'total_amount_deposit' => $total_deposit,
-                        'total_amount_withdraw' => $total_withdraw
-                        );
-                    try {
-                        $wallet->connectJsonRPCclient($wallet->wallet_username, $wallet->wallet_password, $wallet->wallet_ip, $wallet->port);
-                        $balances[$wallet->id]=$wallet->getBalance();
-                    } catch (Exception $e) {
-                        $balances[$wallet->id]= Lang::get('messages.cannot_connect');
-                        
-                    }
+            $wallets = Wallet::skip($offset_start)->take($record_per_page)->orderby('name')->get();
+            $amount_transaction=array();
+            $balances=array();
+            foreach ($wallets as $wallet) {
+                //get total deposit
+                $total_deposit=Deposit::where('wallet_id', $wallet->id)->where('paid', 1)->sum('amount');
+                $total_withdraw=Withdraw::where('wallet_id', $wallet->id)->where('status', 1)->sum('receive_amount');
+                $amount_transaction[$wallet->id]=array(
+                    'total_amount_deposit' => $total_deposit,
+                    'total_amount_withdraw' => $total_withdraw
+                    );
+                try {
+                    $wallet->connectJsonRPCclient($wallet->wallet_username, $wallet->wallet_password, $wallet->wallet_ip, $wallet->port);
+                    $balances[$wallet->id]=$wallet->getBalance();
+                } catch (Exception $e) {
+                    $balances[$wallet->id]= Lang::get('messages.cannot_connect');
                 }
-                $data['wallets'] = $wallets;
-                $data['amount_transaction']=$amount_transaction;
-                $data['balances']=$balances;
+            }
+            $data['wallets'] = $wallets;
+            $data['amount_transaction']=$amount_transaction;
+            $data['balances']=$balances;
                 
-                return view('admin.wallet.manage_wallets_balance', $data);
+            return view('admin.wallet.manage_wallets_balance', $data);
                 break;
-            default:
-                $setting = new Setting();
-                //$data['bg_color']=$setting->getSetting('bg_color','');
-                $data['site_mode']=$setting->getSetting('site_mode', 0);
-                //$data['bg_file']=$setting->getSetting('bg_file','');
-                $data['disable_withdraw']=$setting->getSetting('disable_withdraw', 0);
-                $data['recaptcha_publickey']=$setting->getSetting('recaptcha_publickey', '');
-                $data['recaptcha_privatekey']=$setting->getSetting('recaptcha_privatekey', '');
-                $data['amount_btc_per_vote']=$setting->getSetting('amount_btc_per_vote', 0.0001);
+        default:
+            $setting = new Setting();
+            //$data['bg_color']=$setting->getSetting('bg_color','');
+            $data['site_mode']=$setting->getSetting('site_mode', 0);
+            //$data['bg_file']=$setting->getSetting('bg_file','');
+            $data['disable_withdraw']=$setting->getSetting('disable_withdraw', 0);
+            $data['recaptcha_publickey']=$setting->getSetting('recaptcha_publickey', '');
+            $data['recaptcha_privatekey']=$setting->getSetting('recaptcha_privatekey', '');
+            $data['amount_btc_per_vote']=$setting->getSetting('amount_btc_per_vote', 0.0001);
 
-                //pusher app
-                $data['pusher_app_id']=$setting->getSetting('pusher_app_id', '');
-                $data['pusher_app_key']=$setting->getSetting('pusher_app_key', '');
-                $data['pusher_app_secret']=$setting->getSetting('pusher_app_secret', '');
+            //pusher app
+            $data['pusher_app_id']=$setting->getSetting('pusher_app_id', '');
+            $data['pusher_app_key']=$setting->getSetting('pusher_app_key', '');
+            $data['pusher_app_secret']=$setting->getSetting('pusher_app_secret', '');
 
-                //default_market
-                $m_default = Market::orderBy('id')->first();
-                $data['default_market']=$setting->getSetting('default_market', $m_default);
+            //default_market
+            $m_default = Market::orderBy('id')->first();
+            $data['default_market']=$setting->getSetting('default_market', $m_default);
 
-                //setting points
-                $data['disable_points']=$setting->getSetting('disable_points', 0);
-                $data['point_per_btc']=$setting->getSetting('point_per_btc', 1);
-                $data['percent_point_reward_trade']=$setting->getSetting('percent_point_reward_trade', 0);
-                $data['percent_point_reward_referred_trade']=$setting->getSetting('percent_point_reward_referred_trade', 0);
+            //setting points
+            $data['disable_points']=$setting->getSetting('disable_points', 0);
+            $data['point_per_btc']=$setting->getSetting('point_per_btc', 1);
+            $data['percent_point_reward_trade']=$setting->getSetting('percent_point_reward_trade', 0);
+            $data['percent_point_reward_referred_trade']=$setting->getSetting('percent_point_reward_referred_trade', 0);
 
-                //echo "<pre>data: "; print_r($data); echo "</pre>"; exit;
-                return view('admin.setting', $data);
+            //echo "<pre>data: "; print_r($data); echo "</pre>"; exit;
+            return view('admin.setting', $data);
                 break;
         }
     }
@@ -1106,7 +1098,6 @@ class AdminSettingController extends Controller
                 return Redirect::to(route('admin.manage', 'users'))->with('error', $message);
             }
         }
-        
     }
     public function banUSer()
     {
@@ -1130,7 +1121,6 @@ class AdminSettingController extends Controller
                 return Redirect::to(route('admin.manage', 'users'))->with('error', $message);
             }
         }
-        
     }
 
     public function addNewWallet()
@@ -1299,7 +1289,6 @@ class AdminSettingController extends Controller
                 return Redirect::to('admin/manage/wallets')->with('error', $message);
             }
         }
-        
     }
 
     public function addNewMarket()
@@ -1353,7 +1342,6 @@ class AdminSettingController extends Controller
                 return Redirect::to('admin/manage/markets')->with('error', $message);
             }
         }
-        
     }
 
     public function addNewPost()
@@ -1584,7 +1572,6 @@ class AdminSettingController extends Controller
                     return Redirect::to('admin/manage/funds')
                         ->with('notice', "Can not ".$wallet->type.".");
                 }
-                
             } catch (Exception $e) {
                 return Redirect::to('admin/manage/funds')
                         ->with('notice', 'Caught exception 4 - ASC: '); //"Not connect to this wallet."
@@ -1595,7 +1582,7 @@ class AdminSettingController extends Controller
 
     public function formRestore()
     {
-        require app_path().'/libraries/bigdump.php';
+        include app_path().'/libraries/bigdump.php';
         $data['version'] = '0.35b';
         $error = false;
         $file  = false;
@@ -1630,7 +1617,7 @@ class AdminSettingController extends Controller
 
             $charset = DB::select("SHOW VARIABLES LIKE 'character_set_connection'");
             $data['charset'] = $charset[0]->Value;
-          //echo "<pre>charset: "; print_r($charset); echo "</pre>";
+            //echo "<pre>charset: "; print_r($charset); echo "</pre>";
         }
         return view('admin.backup_restore.form_restore', $data);
     }
@@ -1641,14 +1628,13 @@ class AdminSettingController extends Controller
 
     public function formBackup()
     {
-        require app_path().'/libraries/bigdump.php';
+        include app_path().'/libraries/bigdump.php';
         $data['version'] = '0.35b';
         return view('admin.backup_restore.backup', $data);
     }
 
     public function doBackup()
     {
-        
     }
 
     public function addNewLimitTrade()
@@ -1754,10 +1740,12 @@ class AdminSettingController extends Controller
         if (! $q = DB::table('featured_market')->where('id', '=', $_GET['id'])->first()) {
             return Redirect::to(route('admin.featured_market'));
         }
-        return view('admin.edit_featured_market', [
+        return view(
+            'admin.edit_featured_market', [
             'q' => $q,
             'that' => $this
-        ]);
+            ]
+        );
     }
 
     public function addFeaturedMarket()
@@ -1777,10 +1765,11 @@ class AdminSettingController extends Controller
                     'end_date' => $_POST['end-day'],
                     'created_at' => date('Y-m-d H:i:s')
                 ]
-            )) {
-                return Redirect::to(route('admin.featured_market'))->with('success', 'Success!');    
+            )
+            ) {
+                return Redirect::to(route('admin.featured_market'))->with('success', 'Success!');
             } else {
-                return Redirect::to(route('admin.featured_market'))->with('error', 'Error');    
+                return Redirect::to(route('admin.featured_market'))->with('error', 'Error');
             }
         } else {
             return Redirect::to(route('admin.featured_market'))->with('error', 'Please fill the form!');
@@ -1825,10 +1814,11 @@ class AdminSettingController extends Controller
                     'end_date' => $_POST['end-day'],
                     'created_at' => date('Y-m-d H:i:s')
                 ]
-            )) {
-                return Redirect::to(route('admin.featured_market'))->with('success', 'Success!');    
+            )
+            ) {
+                return Redirect::to(route('admin.featured_market'))->with('success', 'Success!');
             } else {
-                return Redirect::to(route('admin.featured_market'))->with('error', 'Error');    
+                return Redirect::to(route('admin.featured_market'))->with('error', 'Error');
             }
         } else {
             return Redirect::to(route('admin.featured_market'))->with('error', 'Please fill the form!');
@@ -1849,7 +1839,7 @@ class AdminSettingController extends Controller
     {
         $r = '<select style="width:200px;" name="'.$name.'-day">';
         $cur =  isset($startAt) ? $startAt : time() + $tm;
-        for ($i=0; $i < 1000; $i++) { 
+        for ($i=0; $i < 1000; $i++) {
             $val = date("Y-m-d", $cur);
             $r .= '<option value="'.$val.'" '.($val === $selected ? 'selected' : '').'>'. date('d F Y', $cur).($val === date('Y-m-d') ? $t : '').'</option>';
             $cur += 3600 * 24;
@@ -1868,7 +1858,7 @@ class AdminSettingController extends Controller
         return DB::table('custom_fields')
                 ->select(
                     [
-                        DB::raw('count(custom_fields.market_id) as total_custom_fields'), 
+                        DB::raw('count(custom_fields.market_id) as total_custom_fields'),
                         DB::raw('concat(wallets.type,\' - \',wallets.name) as name'),
                         DB::raw('market.id as id')
                     ]
@@ -1920,16 +1910,16 @@ class AdminSettingController extends Controller
                 $c = $c && isset($_POST[$f]);
             }
             if ($c) {
-                if (DB::table('custom_fields')
-                    ->insert(
-                        [
+                if (DB::table('custom_fields')->insert(
+                    [
                             'market_id' => $_POST['coin-name'],
                             'name'  => $_POST['name'],
                             'value' => $_POST['value'],
                             'type' => strtolower($_POST['type']),
                             'created_at' => date('Y-m-d H:i:s')
                         ]
-                    )) {
+                )
+                ) {
                     return Redirect::to(route('admin.custom_fields'))->with('success', 'Success!');
                 } else {
                     return Redirect::to(route('admin.custom_fields'))->with('error', 'Internal error!');
@@ -1947,13 +1937,12 @@ class AdminSettingController extends Controller
             }
             return view('admin.custom_fields_edit', ['that' => $this]);
         } elseif (isset($_GET['delete'])) {
-            if (DB::table('custom_fields')
-                ->where('id', '=', $_GET['delete'])
-                ->update(
-                    [
+            if (DB::table('custom_fields')->where('id', '=', $_GET['delete'])->update(
+                [
                         'deleted_at' => date('Y-m-d H:i:s')
                     ]
-                )) {
+            )
+            ) {
                 return Redirect::to(route('admin.edit_custom_fields').'?id='.e($_GET['prgc']))->with('success', 'Delete success!');
             }
         }
@@ -1981,16 +1970,15 @@ class AdminSettingController extends Controller
                 $c = $c && isset($_POST[$f]);
             }
             if ($c) {
-                if (DB::table('custom_fields')
-                    ->where('id', '=', $_GET['id'])
-                    ->update(
-                        [
+                if (DB::table('custom_fields')->where('id', '=', $_GET['id'])->update(
+                    [
                             'name'  => $_POST['name'],
                             'value' => $_POST['value'],
                             'type' => strtolower($_POST['type']),
                             'updated_at' => date('Y-m-d H:i:s')
                         ]
-                    )) {
+                )
+                ) {
                     return Redirect::to(route('admin.edit_custom_fields').'?id='.e($_GET['prgc']))->with('success', 'Success!');
                 } else {
                     return Redirect::to(route('admin.custom_fields'))->with('error', 'Internal error!');

@@ -94,17 +94,17 @@ function deletePost(giveaway_id){
         }
         //$('#messageModal').modal({show:true, keyboard:false}); 
     });
-	*/
-	
+    */
+    
     return false;
-	
+    
 }
     var options = {
         currentPage: <?php echo $cur_page ?>,
         totalPages: <?php echo $total_pages ?>,
         alignment:'right',
         pageUrl: function(type, page, current){
-        	return "/admin/content/all-news/"+page; 
+            return "/admin/content/all-news/"+page; 
         }
     }
     $('#pager').bootstrapPaginator(options);

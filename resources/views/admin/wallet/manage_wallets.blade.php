@@ -221,7 +221,7 @@ function deleteWallet(wallet_id){
         totalPages: <?php echo $total_pages ?>,
         alignment:'right',
         pageUrl: function(type, page, current){
-        	return "<?php echo '/admin/manage/wallets'; ?>"+'/'+page; 
+            return "<?php echo '/admin/manage/wallets'; ?>"+'/'+page; 
         }
     }
     $('#pager').bootstrapPaginator(options);

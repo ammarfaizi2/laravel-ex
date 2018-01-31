@@ -135,27 +135,27 @@ class Order extends Eloquent
     public function getBuyOrdersMatching($market_id, $price)
     {
         /*
-		$buy_orders = Order::where('market_id', '=', $market_id)
+        $buy_orders = Order::where('market_id', '=', $market_id)
             ->where('price', '>=', $price)
             ->where('type', '=', 'buy')
             ->whereIn('status', $this->status_active)
             ->groupBy('price')
-			->orderBy(DB::raw('sum(from_value) AS from_value_total'))
-			->orderBy('price', 'desc')
+        ->orderBy(DB::raw('sum(from_value) AS from_value_total'))
+        ->orderBy('price', 'desc')
             ->orderBy('created_at','asc')
             ->get();
 		
-$buy_orders = DB::table('orders')
-			->select(DB::raw('sum(from_value) AS from_value_total'))
-			->where('market_id', '=', $market_id)
+        $buy_orders = DB::table('orders')
+        ->select(DB::raw('sum(from_value) AS from_value_total'))
+        ->where('market_id', '=', $market_id)
             ->where('price', '>=', $price)
             ->where('type', '=', 'buy')
             ->whereIn('status', $this->status_active)
             ->groupBy('price')
-			->orderBy('price', 'desc')
+        ->orderBy('price', 'desc')
             ->orderBy('created_at','asc')
             ->get();
-		*/
+        */
         
         $buy_orders = Order::where('market_id', '=', $market_id)
             ->where('price', '>=', $price)
@@ -166,15 +166,15 @@ $buy_orders = DB::table('orders')
             ->get();
             
             /*
- $mRows = DB:query( "SELECT *, sum(from_value) as from_value_total FROM `orders` WHERE `market_id` ='".$market_id."' AND price >= '".$price."' AND `type` = 'buy' AND `status` IN ( '".$this->status_active."' ) group by `price` ORDER BY `price` DESC, created_at ASC" );
-    // Convert results to a user::Eloquent model
-    $buy_orders = array();
-    foreach( $mRows as $mRow )
-    {
-      $mR = ( array ) $mRow;
-      $buy_orders[] = new user( $mR, true );
-    }
-    */
+        $mRows = DB:query( "SELECT *, sum(from_value) as from_value_total FROM `orders` WHERE `market_id` ='".$market_id."' AND price >= '".$price."' AND `type` = 'buy' AND `status` IN ( '".$this->status_active."' ) group by `price` ORDER BY `price` DESC, created_at ASC" );
+        // Convert results to a user::Eloquent model
+        $buy_orders = array();
+        foreach( $mRows as $mRow )
+        {
+        $mR = ( array ) $mRow;
+        $buy_orders[] = new user( $mR, true );
+        }
+        */
     
 
         //$buy_orders_sql = "SELECT *, sum(from_value) as from_value_total FROM `orders` WHERE `market_id` ='".$market_id."' AND price >= '".$price."' AND `type` = 'buy' AND `status` IN ( '".$this->status_active."' ) group by `price` ORDER BY `price` DESC, created_at ASC";
@@ -187,47 +187,46 @@ $buy_orders = DB::table('orders')
         //echo "<pre>getQueryLog: ".dd(DB::getQueryLog())."</pre>";
         return $buy_orders;
                 /*
-		 { ["query"]=> string(106) "select * from `orders` where `market_id` = ? and `user_id` = ? and `status` in (?, ?) order by `price` asc" 
+        { ["query"]=> string(106) "select * from `orders` where `market_id` = ? and `user_id` = ? and `status` in (?, ?) order by `price` asc" 
 		 
-		 ["bindings"]=> array(4) { [0]=> string(2) "59" [1]=> string(3) "194" [2]=> string(6) "active" [3]=> string(13) "partly filled" } ["time"]=> float(2.19) } [20]=> array(3)
+        ["bindings"]=> array(4) { [0]=> string(2) "59" [1]=> string(3) "194" [2]=> string(6) "active" [3]=> string(13) "partly filled" } ["time"]=> float(2.19) } [20]=> array(3)
 		 
-		 select * from `orders` where `market_id` = 59 and `user_id` = 194 and `status` in ("active", "partly filled") order by `price` asc;
+        select * from `orders` where `market_id` = 59 and `user_id` = 194 and `status` in ("active", "partly filled") order by `price` asc;
 		 
-		 select sum(from_value) as from_value_total, * from `orders` where `market_id` = 59 and price >= '0.00000009' and `type` = 'buy' and `user_id` = 194 and `status` in ("active", "partly filled") order by `price` asc;select * from `orders` where `market_id` = 59 and price >= '0.00000009' and `user_id` = 194 and `status` in ("active", "partly filled") group by `price` order by `price` asc;
+        select sum(from_value) as from_value_total, * from `orders` where `market_id` = 59 and price >= '0.00000009' and `type` = 'buy' and `user_id` = 194 and `status` in ("active", "partly filled") order by `price` asc;select * from `orders` where `market_id` = 59 and price >= '0.00000009' and `user_id` = 194 and `status` in ("active", "partly filled") group by `price` order by `price` asc;
 		 
-			/////////////// normal
-SELECT *
-FROM `orders`
-WHERE `market_id` =59
-AND price >= '0.00000009'
-AND `user_id` =194
-AND `type` = 'buy'
-AND `status`
-IN (
-"active", "partly filled"
-)
-ORDER BY `price` ASC
-*****************
-SELECT *, sum(from_value) as from_value_total
-FROM `orders`
-WHERE `market_id` =59
-AND price >= '0.00000004'
-AND `user_id` =194
-AND `type` = 'buy'
-AND `status`
-IN (
-"active", "partly filled"
-)
-group by `price`
-ORDER BY `price` ASC
+        /////////////// normal
+        SELECT *
+        FROM `orders`
+        WHERE `market_id` =59
+        AND price >= '0.00000009'
+        AND `user_id` =194
+        AND `type` = 'buy'
+        AND `status`
+        IN (
+        "active", "partly filled"
+        )
+        ORDER BY `price` ASC
+        *****************
+        SELECT *, sum(from_value) as from_value_total
+        FROM `orders`
+        WHERE `market_id` =59
+        AND price >= '0.00000004'
+        AND `user_id` =194
+        AND `type` = 'buy'
+        AND `status`
+        IN (
+        "active", "partly filled"
+        )
+        group by `price`
+        ORDER BY `price` ASC
 
-SELECT *, sum(from_value) as from_value_total FROM `orders` WHERE `market_id` =59 AND price >= '0.00000004' AND `user_id` =194 AND `type` = 'buy' AND `status` IN ( "active", "partly filled" ) group by `price` ORDER BY `price` ASC
+        SELECT *, sum(from_value) as from_value_total FROM `orders` WHERE `market_id` =59 AND price >= '0.00000004' AND `user_id` =194 AND `type` = 'buy' AND `status` IN ( "active", "partly filled" ) group by `price` ORDER BY `price` ASC
 
-||-> works
+        ||-> works
 
 
-	select *, sum(from_value) as from_value_total from `orders` where `market_id` = 59 and price >= '0.00000004' and `type` = 'buy' and `user_id` = 194 and `status` in ("active", "partly filled") order by `price` asc;
-		*/
-        
+        select *, sum(from_value) as from_value_total from `orders` where `market_id` = 59 and price >= '0.00000004' and `type` = 'buy' and `user_id` = 194 and `status` in ("active", "partly filled") order by `price` asc;
+        */
     }
 }

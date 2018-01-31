@@ -51,10 +51,10 @@ class ClefController extends Controller
         $error = '';
         if (!isset($response)) {
             $error = 'Error';
-        // error
+            // error
         } elseif (isset($response['error'])) {
             $error = $response['error'];
-        // success
+            // success
         } elseif (isset($response['success'])) {
             // verif if exists account in Authentication table
                 $verif = Authentication::whereprovider("clef")->whereprovider_uid($response['info']['id'])->first();
@@ -66,7 +66,6 @@ class ClefController extends Controller
                 
                 // no account, register the account
             if (empty($verif)) {
-                    
                 //$error = 'There is no user account related to this Clef account';
                     
                 //Add Clef account to the users 2fa column:
@@ -131,20 +130,18 @@ class ClefController extends Controller
                     
                 //$error = 'Account is already connected with Clef';
                 $error = 'Two Factor Authentication enabled successfully.';
-
             }
-        // error
+            // error
         } else {
             $error = 'Clef Connect Unknown error';
         }
         /*
-		echo 'first_auth';
-		var_dump($response);
-		exit('..........'.$error);
-		*/
+        echo 'first_auth';
+        var_dump($response);
+        exit('..........'.$error);
+        */
         //return Redirect::to("login")->withErrors($error);
         return Redirect::to("user/profile/two-factor-auth")->with('notice', $error);
-    
     }
     
     /**
@@ -167,44 +164,44 @@ class ClefController extends Controller
 
         
         /*
-		var_dump($response);
-		echo '<br />';
-		//$response['info']['email'];
-		if (isset($response['success']))
-			echo ' success: '.$response['success'];
+        var_dump($response);
+        echo '<br />';
+        //$response['info']['email'];
+        if (isset($response['success']))
+        echo ' success: '.$response['success'];
 		
-		echo '<hr />';
-		*/
+        echo '<hr />';
+        */
 
         /*
-		if ($response) {
+        if ($response) {
 			
-			if (isset($response['error'])) 
-			{
-				// error
-				$error = $response['error'];
-			}elseif (isset($response['success'])) {
-				// success
+        if (isset($response['error'])) 
+        {
+        // error
+        $error = $response['error'];
+        }elseif (isset($response['success'])) {
+        // success
 				
 				
-			}else{
-				// error
-				$error = 'Unknown Error';
-			}
-		}else{
-			// error
-			$error = 'Clef Error';
-		}
-		*/
+        }else{
+        // error
+        $error = 'Unknown Error';
+        }
+        }else{
+        // error
+        $error = 'Clef Error';
+        }
+        */
         
         // error
         $error = '';
         if (!isset($response)) {
             $error = 'Error';
-        // error
+            // error
         } elseif (isset($response['error'])) {
             $error = $response['error'];
-        // success
+            // success
         } elseif (isset($response['success'])) {
             // verif if exists account in Authentication table
                 //$verif = Authentication::whereprovider("clef")->whereprovider_uid($response['info']['id'])->first();
@@ -221,9 +218,6 @@ class ClefController extends Controller
                 $error = 'There is no user account related to this Clef account';
                 // Find account
             } else {
-                    
-                    
-                    
                 // Find the user using the user id
                     
                     
@@ -288,20 +282,17 @@ class ClefController extends Controller
                 //Auth::loginUsingId($user->id);
                 //return Redirect::intended('/home');
                 //return Redirect::to('/',302, array(), true);
-                    
-
-                    
             }
-        // error
+            // error
         } else {
             $error = 'Clef Login Unknown error';
         }
         /*
-		echo $error;
-		echo 'clefcontroler';
-		var_dump($response);
-		exit();
-		*/
+        echo $error;
+        echo 'clefcontroler';
+        var_dump($response);
+        exit();
+        */
         
         //return Redirect::to("login")->withErrors($error);
         return Redirect::to("login")->with('error', $error);

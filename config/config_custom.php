@@ -2,7 +2,7 @@
 
 return array(
 
-	/*
+    /*
 	|--------------------------------------------------------------------------
 	| Application URL
 	|--------------------------------------------------------------------------
@@ -13,11 +13,11 @@ return array(
 	|
 	*/
 
-	'company_name' => 'Bitbase',
-	'company_name_domain' => 'Bitbase.me',
-	'company_slogan' => 'Bitbase - Crypto Digital eXchange',
-	'company_support_mail' => 'bitbase.me@gmail.com',
-	'company_support_mail2' => 'bitbase.me@gmail.com',
-	'company_support_mail_name' => 'Bitbase Support',
+    'company_name' => 'Bitbase',
+    'company_name_domain' => 'Bitbase.me',
+    'company_slogan' => 'Bitbase - Crypto Digital eXchange',
+    'company_support_mail' => 'bitbase.me@gmail.com',
+    'company_support_mail2' => 'bitbase.me@gmail.com',
+    'company_support_mail_name' => 'Bitbase Support',
 
 );

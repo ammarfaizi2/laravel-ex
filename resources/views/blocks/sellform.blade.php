@@ -152,7 +152,7 @@ $(function(){
 		
 		
 		<?php
-		/*
+        /*
         $.post('<?php echo action('OrderController@doSell')?>', {isAjax: 1, price: price, amount: amount, market_id:market_id }, function(response){
           var obj = $.parseJSON(response);           
           //app.BrainSocket.message('doTrade',obj.message_socket);
@@ -174,7 +174,7 @@ $(function(){
 		  
         });
 		*/
-		?>
+        ?>
       }
   });
 });

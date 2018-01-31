@@ -19,8 +19,8 @@
     <!-- Scripts are placed here -->
 
 	<?php
-	/* {{ HTML::script('https://code.jquery.com/jquery-2.1.1.min.js') }} */
-	?>
+    /* {{ HTML::script('https://code.jquery.com/jquery-2.1.1.min.js') }} */
+    ?>
     {{ HTML::script('assets/js/jquery-1.10.2.min.js') }} 
     {{ HTML::script('assets/js/bootstrap.min.js') }}
     {{ HTML::script('assets/js/bootstrap-dialog.min.js') }}
@@ -42,7 +42,7 @@
             @yield('content')
         </div>
         <!-- Sidebar right -->
-        <?php if(isset($issidebar) && $issidebar){ ?>
+        <?php if (isset($issidebar) && $issidebar) { ?>
         <div class="sidebarright">
             @yield('sidebarright')
         </div>

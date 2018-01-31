@@ -110,27 +110,27 @@
           var obj = $.parseJSON(response);
           console.log('ajVerifyToken: ',obj);
           if(obj.status == 'success'){
-				var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
-				var msg = 'Logging in... please wait';
-				
-				BootstrapDialog.show({
-					title: title,
-					message: msg
-				});
-				
+                var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
+                var msg = 'Logging in... please wait';
+                
+                BootstrapDialog.show({
+                    title: title,
+                    message: msg
+                });
+                
             $("#registerForm").submit();
           }else {
-		  
+          
             var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
-			var msg = obj.message;
-			//alert(obj.message);
-			
-			BootstrapDialog.show({
-				title: title,
-				message: msg
-			});
-			
-			
+            var msg = obj.message;
+            //alert(obj.message);
+            
+            BootstrapDialog.show({
+                title: title,
+                message: msg
+            });
+            
+            
           }
       });
       return false;
@@ -144,30 +144,30 @@
             console.log('Obj: ',obj);
             if(obj.status == 'one_login_success'){                  
               var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
-				var msg = 'Logging in... please wait';
-				
-				BootstrapDialog.show({
-					title: title,
-					message: msg
-				});
-				
-			  $("#registerForm").submit();
+                var msg = 'Logging in... please wait';
+                
+                BootstrapDialog.show({
+                    title: title,
+                    message: msg
+                });
+                
+              $("#registerForm").submit();
               //return true;              
             }else if(obj.status == 'two_login'){
-				$('#registerForm').hide();
-				$('#login_verify_1').show();
-				$('#login_verify_1 #authy_id').val(obj.authy_id);
+                $('#registerForm').hide();
+                $('#login_verify_1').show();
+                $('#login_verify_1 #authy_id').val(obj.authy_id);
             }else {
-				var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
-				var msg = obj.message;
-				//alert(obj.message);
-				
-				BootstrapDialog.show({
-					title: title,
-					message: msg
-				});
-				
-				
+                var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
+                var msg = obj.message;
+                //alert(obj.message);
+                
+                BootstrapDialog.show({
+                    title: title,
+                    message: msg
+                });
+                
+                
             }
         });
         return false;

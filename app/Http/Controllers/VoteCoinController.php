@@ -47,16 +47,16 @@ class VoteCoinController extends Controller
         $coinvote_id = $_POST['coinvote_id'];
         $user_vote = Vote::where('user_id', $user_id)->where('coinvote_id', $coinvote_id)->first();
         /*
-		if(isset($user_vote->user_id)){
-			echo json_encode(array('status'=>'error','message'=> Lang::get('texts.you_voted')));
-			exit;
-		}else{
-		*/
+        if(isset($user_vote->user_id)){
+        echo json_encode(array('status'=>'error','message'=> Lang::get('texts.you_voted')));
+        exit;
+        }else{
+        */
             /*$trade = Trade::where('seller_id',$user_id)->orwhere('buyer_id',$user_id)->first();
-			if(!isset($trade->id)){
-				echo json_encode(array('status'=>'error','message'=> Lang::get('texts.must_have_trade')));
-				exit; 
-			}*/
+        if(!isset($trade->id)){
+        echo json_encode(array('status'=>'error','message'=> Lang::get('texts.must_have_trade')));
+        exit; 
+        }*/
             $date = date("Y-m-d");
             $times_vote = Vote::where('created_at', '>=', $date)->where('user_id', $user_id)->orderby('created_at', 'desc')->get()->toArray();
             $count = count($times_vote);

@@ -124,43 +124,43 @@ These rules apply to both paid and free listings<BR>
 			$.ajax({
 				type: 'post',
 				url: '<?php echo action('UserController@checkCaptcha')?>',
-				datatype: 'json',
-				data: {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField  },
-				beforeSend: function(request) {
-					return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
-				},
-				success:function(response) {
-					if(response == 1){   
-						document.getElementById("contactForm").submit();                  
-						return true;
-					}else{
-						$('#contactForm').fadeIn();
-						$("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");
-						Recaptcha.reload();
-						return false;
-					}
-				}, error:function(response) {
-					showMessageSingle('{{{ trans('texts.error') }}}', 'error');
-				}
-			});
-			
-			/*
-			$.post('<?php echo action('UserController@checkCaptcha')?>', {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField }, function(response){
-				if(response == 1)
-				{   
-					document.getElementById("contactForm").submit();                  
-					return true;
-				}
-				else
-				{
-					$('#contactForm').fadeIn();
-					$("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");
-					Recaptcha.reload();
-					return false;
-				}
-			});
-			*/
-		});
+                datatype: 'json',
+                data: {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField  },
+                beforeSend: function(request) {
+                    return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
+                },
+                success:function(response) {
+                    if(response == 1){   
+                        document.getElementById("contactForm").submit();                  
+                        return true;
+                    }else{
+                        $('#contactForm').fadeIn();
+                        $("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");
+                        Recaptcha.reload();
+                        return false;
+                    }
+                }, error:function(response) {
+                    showMessageSingle('{{{ trans('texts.error') }}}', 'error');
+                }
+            });
+            
+            /*
+            $.post('<?php echo action('UserController@checkCaptcha')?>', {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField }, function(response){
+                if(response == 1)
+                {   
+                    document.getElementById("contactForm").submit();                  
+                    return true;
+                }
+                else
+                {
+                    $('#contactForm').fadeIn();
+                    $("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");
+                    Recaptcha.reload();
+                    return false;
+                }
+            });
+            */
+        });
    });
 </script>
 @stop

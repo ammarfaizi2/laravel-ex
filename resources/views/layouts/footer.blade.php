@@ -1,7 +1,7 @@
 <div class="row">
 		<div id="footer">
 			Copyright &copy; <?php echo date('Y')?> <strong>{{{ Config::get('config_custom.company_name') }}}</strong>. All Rights Reserved. {{{ Config::get('config_custom.company_slogan') }}}.
-		</div>
+        </div>
 </div>
 
 <?php

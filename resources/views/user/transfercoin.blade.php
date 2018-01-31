@@ -114,22 +114,22 @@
 						var responseField = $("input#recaptcha_response_field").val(); 
 						console.log('responseField',responseField);         
 						$.post('<?php echo action('UserController@checkCaptcha')?>', {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField }, function(response){
-							if(response == 1)
-							{   
-								document.getElementById("transferForm").submit();                  
-								return true;
-							}
-							else
-							{
-								$("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");
-								Recaptcha.reload();
-								return false;
-							}
-						});
-					});
-			   }); 
-				
-		</script>
-		</div>
-	</div>
+                            if(response == 1)
+                            {   
+                                document.getElementById("transferForm").submit();                  
+                                return true;
+                            }
+                            else
+                            {
+                                $("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");
+                                Recaptcha.reload();
+                                return false;
+                            }
+                        });
+                    });
+               }); 
+                
+        </script>
+        </div>
+    </div>
 </div>

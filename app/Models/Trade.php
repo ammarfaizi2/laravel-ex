@@ -23,7 +23,7 @@ class Trade extends Eloquent
         $this->save();
 
         if ($this->id) {
-            require_once app_path().'/libraries/Pusher.php';
+            include_once app_path().'/libraries/Pusher.php';
             $setting = new Setting();
             $pusher_app_id=$setting->getSetting('pusher_app_id', '');
             $pusher_app_key=$setting->getSetting('pusher_app_key', '');
@@ -64,8 +64,6 @@ class Trade extends Eloquent
                 }
             }
         }
-        
-        
     }
 
     /*
@@ -89,7 +87,7 @@ class Trade extends Eloquent
         //$open_previous = isset($price_open_variable['open_previous']) ? $price_open_variable['open_previous']:0;
         //$close_previous = isset($price_open_variable['close_previous']) ? $price_open_variable['close_previous']:0;
         //$price_open_start_chart_time = isset($price_open_variable['time']) ? $price_open_variable['time']:0;
-//echo "<pre>price_open_variable: "; print_r($price_open_variable); echo "</pre>";  
+        //echo "<pre>price_open_variable: "; print_r($price_open_variable); echo "</pre>";  
 
         //else get new data for chart
         $get_date = $this->getStartTimeChart($time_frame, $timeSpan);
@@ -100,14 +98,14 @@ class Trade extends Eloquent
         //$open_previous = $prior_perior['open_price'];
         $close_previous = $closeprice;
         //echo "date: ".date("Y-m-d H:i:s")."<br>";
-//echo "<pre>get_date: "; print_r($get_date); echo "</pre>";  
+        //echo "<pre>get_date: "; print_r($get_date); echo "</pre>";  
         //echo "<pre>start_date: "; print_r($start_date); echo "</pre>";
         $trade_history = Trade::where('market_id', '=', $market_id)
             ->where('created_at', '>=', $start_date)
             ->orderBy('price', 'desc')
             ->get();
         $data = $trade_history->toArray();
-//echo "<pre>trade_history: "; print_r($data); echo "</pre>"; 
+        //echo "<pre>trade_history: "; print_r($data); echo "</pre>"; 
         $temp_time = 0;
         $temp = 0;
         $datas_chart = array();
@@ -137,10 +135,12 @@ class Trade extends Eloquent
             // echo "<br>new_date + 30minutes: ".$new_date;
 
             //lay du lieu chart trong khung gio hien tai, du lieu nay dc sap xep theo gia tu cao den thap
-            $data_chart_this_time = array_filter($data, function ($el) use ($old_date, $new_date) /*use ($temp_time, $temp_time_new)*/ {
-                 $created_at_time = strtotime($el['created_at']);
-                return ( $created_at_time >= strtotime($old_date) && $created_at_time <= strtotime($new_date));
-            });
+            $data_chart_this_time = array_filter(
+                $data, function ($el) use ($old_date, $new_date) /*use ($temp_time, $temp_time_new)*/ {
+                    $created_at_time = strtotime($el['created_at']);
+                    return ( $created_at_time >= strtotime($old_date) && $created_at_time <= strtotime($new_date));
+                }
+            );
             //echo "<pre>filtered 1: "; print_r($data_chart_this_time); echo "</pre>";
             if (count($data_chart_this_time) > 0) {
                 $data_chart_this_time = array_values($data_chart_this_time);
@@ -153,7 +153,6 @@ class Trade extends Eloquent
                 //get close_price, open_price (sort array with created desc)
                 $cmp = function ($a, $b) {
                     return $b['created_at'] > $a['created_at'];
-
                 };
                 usort($data_chart_this_time, $cmp);
 
@@ -174,7 +173,7 @@ class Trade extends Eloquent
             $close_previous = isset($ha_data['ha_close']) ? $ha_data['ha_close'] : null;
             $temp++;
         }
-       //echo $str;
+        //echo $str;
         $datas_chart[] = array('date'=>date("Y-m-d H:i"),'low'=>$close_previous,'open'=>$close_previous,'close'=>$close_previous,'high'=>$close_previous, 'exchange_volume'=>0,'temp'=>$str);
         $result_data = json_encode($datas_chart);
         //$setting->putSetting('datachart_market_'.$market_id,serialize($datas_chart));
@@ -254,18 +253,18 @@ class Trade extends Eloquent
             }
             
             /*
-			print_r($oldest_trade);
+            print_r($oldest_trade);
 			
 			
             if(isset($oldest_trade->id)) {
-				$previous_day = strtotime($oldest_trade->created_at);
-				echo '$previous_day1 '.$previous_day;
+            $previous_day = strtotime($oldest_trade->created_at);
+            echo '$previous_day1 '.$previous_day;
             }else {
-				$previous_day = strtotime(date('Y-m-d H:i:s'));
-				echo '$previous_day2 '.$previous_day;
-			}
-			exit('MAX - app/models/Trade.php');
-			*/
+            $previous_day = strtotime(date('Y-m-d H:i:s'));
+            echo '$previous_day2 '.$previous_day;
+            }
+            exit('MAX - app/models/Trade.php');
+            */
         } else {
             $previous_day = strtotime(date('Y-m-d H:i:s') . " -".$timeSpan);
         }
@@ -312,26 +311,26 @@ class Trade extends Eloquent
         
 
         /*
-SELECT max( price ) AS 24h_high, price as previous_day_price, min( price ) AS 24h_low, sum( amount * price ) AS base_volume, sum(amount) as volume, created_at
-FROM trade_history
-WHERE market_id = '80'
-AND created_at >= '2015-08-01 23:37:53'
+        SELECT max( price ) AS 24h_high, price as previous_day_price, min( price ) AS 24h_low, sum( amount * price ) AS base_volume, sum(amount) as volume, created_at
+        FROM trade_history
+        WHERE market_id = '80'
+        AND created_at >= '2015-08-01 23:37:53'
 		
-/////////////
-SELECT max( price ) AS 24h_high, price AS previous_day_price, min( price ) AS 24h_low, sum( amount * price ) AS base_volume, sum( amount ) AS volume, created_at, 
-SUBSTRING_INDEX( GROUP_CONCAT( price ORDER BY created_at DESC ) , ',', 1 ) AS last_price
-FROM trade_history
-WHERE market_id = '80'
-AND created_at >= '2015-08-01 23:37:53'		
-/////////////		
-		$price_high = $max;
-		$price_low = $min;
-		$price_opening = $opening_price;
-		$base_volume = $volume;
-		$coin_volume = $coin_volume;
+        /////////////
+        SELECT max( price ) AS 24h_high, price AS previous_day_price, min( price ) AS 24h_low, sum( amount * price ) AS base_volume, sum( amount ) AS volume, created_at, 
+        SUBSTRING_INDEX( GROUP_CONCAT( price ORDER BY created_at DESC ) , ',', 1 ) AS last_price
+        FROM trade_history
+        WHERE market_id = '80'
+        AND created_at >= '2015-08-01 23:37:53'		
+        /////////////		
+        $price_high = $max;
+        $price_low = $min;
+        $price_opening = $opening_price;
+        $base_volume = $volume;
+        $coin_volume = $coin_volume;
 		
-		$change = ($previous_day_price!=0)? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100):0;
-		*/
+        $change = ($previous_day_price!=0)? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100):0;
+        */
         
         $select = "SELECT max(price) as max, min(price) as min, price as opening_price, sum(amount*price) as volume, sum(amount) as coin_volume, created_at from trade_history where market_id='".$market_id."' AND created_at>='".$previous_day."' GROUP BY id";
         //exit ($select);
@@ -340,33 +339,31 @@ AND created_at >= '2015-08-01 23:37:53'
         
         $get_price = DB::select($select);
         /*
-		icee- a lot of changes here recently, 20171213
-		*/
+        icee- a lot of changes here recently, 20171213
+        */
 
 
         
         $data = new ArrayObject();
         if (isset($get_price)) {
             if (empty($get_price)) {
-            
                 //$data['arr'] = 'array data';
                 //https://secure.php.net/manual/en/class.arrayobject.php
                 $data->min = 0;
                 $data->max = 0;
                 $data['latest_price'] = isset($latest->price)? $latest->price:0;
                 $data["get_prices"] = 0;
-            
             }
         }
 
         /*
-		echo "<pre>"; print_r($get_price); echo "</pre>";
+        echo "<pre>"; print_r($get_price); echo "</pre>";
 		
-		echo '<pre> '.print_r($latest).'</pre>';		
+        echo '<pre> '.print_r($latest).'</pre>';		
 		
-		echo '<hr />';
-		echo '<pre> '.print_r($get_price).'</pre>';
-		*/
+        echo '<hr />';
+        echo '<pre> '.print_r($get_price).'</pre>';
+        */
 
         return $data;
     }
@@ -378,39 +375,37 @@ AND created_at >= '2015-08-01 23:37:53'
         return $change+0;
     }
     /*
-	 @ Check Previous date price
-	 @ arg: $trading date
-	 return previous date price
-	*/
+    @ Check Previous date price
+    @ arg: $trading date
+    return previous date price
+    */
     
     public function getChangeDayPrevPrice($created_at, $pre_price)
     {
         
         if (isset($created_at)) {
             /*
-			echo strtotime($data_trade[1]['created_at']);
-			echo '<br />';
-			echo strtotime('yesterday');
-			*/
+            echo strtotime($data_trade[1]['created_at']);
+            echo '<br />';
+            echo strtotime('yesterday');
+            */
             
             //Check previous trade date and compare to the previous day
             if (strtotime($created_at) < strtotime('yesterday')) {
                 $pre_price = 0;
             }
-            
         }
         return $pre_price;
 
         /*
-		echo '<pre>';
-		print_r($data_trade);
-		echo '</pre>';
-		*/
-        
+        echo '<pre>';
+        print_r($data_trade);
+        echo '</pre>';
+        */
     }
     /*
-	 @ get the price change for the day
-	*/
+    @ get the price change for the day
+    */
     //public function getChangeDayPrice($pre_price, $curr_price, $pre_price){
     public function getChangeDayPrice($pre_price, $curr_price)
     {
@@ -422,24 +417,24 @@ AND created_at >= '2015-08-01 23:37:53'
     {
         //icee $data_trade = Trade::where('market_id',$market_id)->orderby('created_at','desc')->take(2)->get()->toArray();
         /*
-		$previous_day = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s') . " -1 day")); 
+        $previous_day = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s') . " -1 day")); 
         $data_trade = Trade::where('market_id',$market_id)->where('created_at','>=',$previous_day)->orderby('id','desc')->take(2)->get()->toArray();
 
-		$curr_price = isset($data_trade[0]['price'])? $data_trade[0]['price']:0;
+        $curr_price = isset($data_trade[0]['price'])? $data_trade[0]['price']:0;
         $pre_price = isset($data_trade[1]['price'])? $data_trade[1]['price']:0;
         $change = ($pre_price!=0)? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100) :  0;
-		*/
+        */
         /*
         $data_trade = Trade::where('market_id',$market_id)->orderby('created_at','desc')->take(2)->get()->toArray();
         $curr_price = isset($data_trade[0]['price'])? $data_trade[0]['price']:0;
         $pre_price = isset($data_trade[1]['price'])? $data_trade[1]['price']:0;
         $change = 0;
 		
-		if(isset($data_trade[1]['created_at']))
-			$pre_price = $this->getChangeDayPrevPrice($data_trade[1]['created_at'], $pre_price);
+        if(isset($data_trade[1]['created_at']))
+        $pre_price = $this->getChangeDayPrevPrice($data_trade[1]['created_at'], $pre_price);
 		
-		$change = $this->getChangeDayPrice($pre_price, $curr_price, $pre_price);
-		*/
+        $change = $this->getChangeDayPrice($pre_price, $curr_price, $pre_price);
+        */
         
         $previous_day = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . " -1 day"));
         $data_trade = Trade::where('market_id', $market_id)->where('created_at', '>=', $previous_day)->orderby('id', 'desc')->take(2)->get()->toArray();
@@ -457,11 +452,11 @@ AND created_at >= '2015-08-01 23:37:53'
         }
         
         /*
-		if ($market_id == 69){
-		echo "<pre>"; print_r($data_trade); echo "</pre>";
-		exit;
-		}
-		*/
+        if ($market_id == 69){
+        echo "<pre>"; print_r($data_trade); echo "</pre>";
+        exit;
+        }
+        */
         return array('curr_price'=>$curr_price,'pre_price'=>$pre_price,'change'=>$change,'total_volume'=>$total_volume);
     }
     
@@ -472,26 +467,26 @@ AND created_at >= '2015-08-01 23:37:53'
         
 
         /*
-SELECT max( price ) AS 24h_high, price as previous_day_price, min( price ) AS 24h_low, sum( amount * price ) AS base_volume, sum(amount) as volume, created_at
-FROM trade_history
-WHERE market_id = '80'
-AND created_at >= '2015-08-01 23:37:53'
+        SELECT max( price ) AS 24h_high, price as previous_day_price, min( price ) AS 24h_low, sum( amount * price ) AS base_volume, sum(amount) as volume, created_at
+        FROM trade_history
+        WHERE market_id = '80'
+        AND created_at >= '2015-08-01 23:37:53'
 		
-/////////////
-SELECT max( price ) AS 24h_high, price AS previous_day_price, min( price ) AS 24h_low, sum( amount * price ) AS base_volume, sum( amount ) AS volume, created_at, 
-SUBSTRING_INDEX( GROUP_CONCAT( price ORDER BY created_at DESC ) , ',', 1 ) AS last_price
-FROM trade_history
-WHERE market_id = '80'
-AND created_at >= '2015-08-01 23:37:53'		
-/////////////		
-		$price_high = $max;
-		$price_low = $min;
-		$price_opening = $opening_price;
-		$base_volume = $volume;
-		$coin_volume = $coin_volume;
+        /////////////
+        SELECT max( price ) AS 24h_high, price AS previous_day_price, min( price ) AS 24h_low, sum( amount * price ) AS base_volume, sum( amount ) AS volume, created_at, 
+        SUBSTRING_INDEX( GROUP_CONCAT( price ORDER BY created_at DESC ) , ',', 1 ) AS last_price
+        FROM trade_history
+        WHERE market_id = '80'
+        AND created_at >= '2015-08-01 23:37:53'		
+        /////////////		
+        $price_high = $max;
+        $price_low = $min;
+        $price_opening = $opening_price;
+        $base_volume = $volume;
+        $coin_volume = $coin_volume;
 		
-		$change = ($previous_day_price!=0)? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100):0;
-		*/
+        $change = ($previous_day_price!=0)? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100):0;
+        */
         
         $select = "
 		SELECT 

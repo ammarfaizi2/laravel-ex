@@ -79,42 +79,42 @@ $(document).ready(function() {
 		$.ajax({
 			type: 'post',
 			url: '<?php echo action('UserController@forgot_password')?>',
-			datatype: 'json',
-			data: {isAjax: 1, email: email },
-			beforeSend: function(request) {
-				return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
-			},
-			success:function(response) {
+            datatype: 'json',
+            data: {isAjax: 1, email: email },
+            beforeSend: function(request) {
+                return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
+            },
+            success:function(response) {
               var title = '{{{ Lang::get('confide::confide.forgot.title') }}}';
-				var msg = response;
-				
-				$('#email').val('');
-				BootstrapDialog.show({
-					title: title,
-					message: msg
-				});
-			}, error:function(response) {
-				showMessageSingle('{{{ trans('texts.error') }}}', response);
-			}
-		});
-	
-		/*
-		$.post('<?php echo action('UserController@forgot_password')?>', {isAjax: 1, email: email}, function(response){
+                var msg = response;
+                
+                $('#email').val('');
+                BootstrapDialog.show({
+                    title: title,
+                    message: msg
+                });
+            }, error:function(response) {
+                showMessageSingle('{{{ trans('texts.error') }}}', response);
+            }
+        });
+    
+        /*
+        $.post('<?php echo action('UserController@forgot_password')?>', {isAjax: 1, email: email}, function(response){
 
               var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
-				var msg = response;
-				
-				BootstrapDialog.show({
-					title: title,
-					message: msg
-				});
+                var msg = response;
+                
+                BootstrapDialog.show({
+                    title: title,
+                    message: msg
+                });
 
         });
-		*/
+        */
         return false;
     }
-	
-	$('#email').keypress(function(e) {
+    
+    $('#email').keypress(function(e) {
       if (e.keyCode == '13') {
           _tryForgotPassword();
       }

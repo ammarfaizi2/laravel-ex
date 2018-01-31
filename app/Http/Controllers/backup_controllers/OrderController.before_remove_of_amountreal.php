@@ -117,8 +117,6 @@ class OrderController extends Controller
                         $class_price = str_replace(".", "-", $price_sell);
                         $class_price = str_replace(",", "-", $price_sell);
                         if ($amount_buy == $amount_sell) {
-                            
-                            
                             $fee_buy = ($total_sell*$per_fee_buy)/100;
                             $fee_sell = ($total_sell*$per_fee_sell)/100;
                             //add coin for seller/buyer
@@ -148,10 +146,9 @@ class OrderController extends Controller
                                 $message_socket['message_socket'][$class_price]['order_s'] = array('action'=>"delete",'id'=>$sell_matching['id'], 'price'=>$price_sell, 'a_buy' => $amount_buy, 'a_sell' => $amount_sell, 'a_type' => 'buy',  'amount_real_trading' => $amount_real_trading, 'amount_real_trading_total' => $amount_real_trading_total);
                                 $history_trade[$sell_matching['id']] =array('id' => $sell_matching['id'], 'seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_buy, 'price' => $price_sell,'market_id'=>$market_id,'type'=>'buy','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell, "created_at"=>date("Y-m-d H:i:s"));
                             /*}else{
-								$message.= Lang::get('messages.balance_not_enought_for_fee');
-								$messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
-							}*/
-                            
+                            $message.= Lang::get('messages.balance_not_enought_for_fee');
+                            $messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
+                            }*/
                         } elseif ($amount_buy > $amount_sell) {
                             $fee_buy = ($total_sell*$per_fee_buy)/100;
                             $fee_sell = ($total_sell*$per_fee_sell)/100;
@@ -189,9 +186,9 @@ class OrderController extends Controller
                                 $history_trade[$sell_matching['id']] =array('id' => $sell_matching['id'], 'seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_sell, 'price' => $price_sell,'market_id'=>$market_id, 'type'=>'buy', "created_at"=>date("Y-m-d H:i:s"));
                                 
                             /*}else{
-								$message.= Lang::get('messages.balance_not_enought_for_fee');
-								$messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
-							}*/
+                            $message.= Lang::get('messages.balance_not_enought_for_fee');
+                            $messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
+                            }*/
                         } else {
                             $total_sell = $amount_buy*$price_sell;//sprintf('%.8f',$amount_buy*$price_sell);
                             $fee_buy = ($total_buy*$per_fee_buy)/100;
@@ -230,9 +227,9 @@ class OrderController extends Controller
                                 $message_socket['message_socket'][$class_price]['order_s'] = array("action"=>"update","id"=>$sell_matching['id'], "amount"=>$amount_bought, "price"=>$price_sell,'total'=>($amount_bought*$price_sell),"type"=>"buy", 'amount_real_trading' => $amount_real_trading, 'amount_real_trading_total' => $amount_real_trading_total);
                                 $history_trade[$sell_matching['id']] =array('id' => $sell_matching['id'],'seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_buy, 'price' => $price_sell,'market_id'=>$market_id, 'type'=>'buy', "created_at"=>date("Y-m-d H:i:s"));
                             /*}else{
-								$message.= Lang::get('messages.balance_not_enought_for_fee');
-								$messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
-							}	*/
+                            $message.= Lang::get('messages.balance_not_enought_for_fee');
+                            $messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
+                            }	*/
                         }
                         //refund money
                         if ($price_buy > $price_sell) {
@@ -254,11 +251,11 @@ class OrderController extends Controller
                     $message_socket_user['user_orders'][$orders_buy->id]['order_s'] = array('action'=>"insert","id"=>$orders_buy->id,"amount"=>$amount_buy,"price"=>$price_buy,"total"=>$total_rest,'type'=>'buy','created_at'=>$orders_buy->created_at);
                     $message_socket['message_socket'][$orders_buy->id]['order_s'] = array('action'=>"insert","id"=>$orders_buy->id,"amount"=>$amount_buy,"price"=>$price_buy,"total"=>$total_rest,'type'=>'buy','created_at'=>$orders_buy->created_at);
                     /*
-					//$message_socket_user['user_orders'][$orders_buy->id]['order_b'] = array('action'=>"insert","amount"=>$amount_buy,"price"=>$price_buy,"total"=>$total_rest,"type"=>"buy");
-					$message_socket['message_socket'][$orders_buy->id]['order_b'] = array('action'=>"insert","amount"=>$amount_buy,"price"=>$price_buy,"total"=>$total_rest,"type"=>"buy");
-					$message_socket['message_socket'][$orders_buy->id]['order_b']['id']=$orders_buy->id;
-					$message_socket['message_socket'][$orders_buy->id]['order_b']['created_at']=$orders_buy->created_at;
-					*/
+                    //$message_socket_user['user_orders'][$orders_buy->id]['order_b'] = array('action'=>"insert","amount"=>$amount_buy,"price"=>$price_buy,"total"=>$total_rest,"type"=>"buy");
+                    $message_socket['message_socket'][$orders_buy->id]['order_b'] = array('action'=>"insert","amount"=>$amount_buy,"price"=>$price_buy,"total"=>$total_rest,"type"=>"buy");
+                    $message_socket['message_socket'][$orders_buy->id]['order_b']['id']=$orders_buy->id;
+                    $message_socket['message_socket'][$orders_buy->id]['order_b']['created_at']=$orders_buy->created_at;
+                    */
                     
                     //$message_socket['message_socket'][$class_price]['order_b'] = array("action"=>"update","id"=>$buy_matching['id'], "amount"=>$amount_sold, "price"=>$price_buy,"total"=>($amount_sold*$price_buy),  'amount_real_trading' => $amount_real_trading, 'amount_real_trading_total' => $amount_real_trading_total);)
                 }
@@ -277,7 +274,6 @@ class OrderController extends Controller
                 $class_price = '';
                 foreach ($history_trade as $ht) {
                     if ($ht['price'] != $price_i) {
-                        
                         $amount_i += $ht['amount'];
                         
                         $class_price = str_replace(".", "-", $ht['price']);
@@ -294,37 +290,36 @@ class OrderController extends Controller
                 $message_socket['trade_live'] = $trade_live;
                 //$message_socket['history_trade1'] = $history_trade;
                 /*
-				$message_socket['history_trade1'] = $history_trade;
-				$sorted_history_trade = array();
-				$sorted_history_trade= $history_trade;
-				uasort($sorted_history_trade, function($a, $b) {
-					return $a['price'] - $b['price'];	//Price ASC, lower to higher
-				});
-				$message_socket['history_trade'] = $sorted_history_trade;
-				*/
+                $message_socket['history_trade1'] = $history_trade;
+                $sorted_history_trade = array();
+                $sorted_history_trade= $history_trade;
+                uasort($sorted_history_trade, function($a, $b) {
+                return $a['price'] - $b['price'];	//Price ASC, lower to higher
+                });
+                $message_socket['history_trade'] = $sorted_history_trade;
+                */
                 
                     ////icee SORT prices, buy => DESC
                 /*
-				uasort($message_socket['history_trade'], function($a, $b) {
-					return $a['price'] - $b['price'];	//Price ASC, lower to higher
-				});
+                uasort($message_socket['history_trade'], function($a, $b) {
+                return $a['price'] - $b['price'];	//Price ASC, lower to higher
+                });
 				
-				uasort($message_socket['history_trade1'], function($a, $b) {
-					return $b['price'] - $a['price'];	//Price DESC, higher to lower
-				});
-				*/
+                uasort($message_socket['history_trade1'], function($a, $b) {
+                return $b['price'] - $a['price'];	//Price DESC, higher to lower
+                });
+                */
                 
                 // Get all new orders
                 /*
-				$key = 'insert';
-				$new_orders = array();
-				$new_orders = $message_socket['message_socket'];
-				$message_socket_user = array();
-				$message_socket_user = array_map(function($item) use ($key) {
-					return $item[$key];
-				}, $message_socket['message_socket']);				
-				*/
-            
+                $key = 'insert';
+                $new_orders = array();
+                $new_orders = $message_socket['message_socket'];
+                $message_socket_user = array();
+                $message_socket_user = array_map(function($item) use ($key) {
+                return $item[$key];
+                }, $message_socket['message_socket']);				
+                */
             } else {
                 $orders_buy->save();
                 $status = 'success';
@@ -454,8 +449,6 @@ class OrderController extends Controller
                         
                         
                         if ($amount_buy == $amount_sell) {
-                            
-                            
                             $total_sell = $amount_sell*$price_buy;//sprintf('%.8f',$amount_sell*$price_buy);//really total sell;
                             $fee_buy = ($total_buy*$per_fee_buy)/100;
                             $fee_sell = ($total_sell*$per_fee_sell)/100;
@@ -484,10 +477,9 @@ class OrderController extends Controller
                                 $message_socket['message_socket'][$class_price]['order_b'] = array('action'=>"delete",'id'=>$buy_matching['id'], 'price'=>$price_buy, 'a_buy' => $amount_buy, 'a_sell' => $amount_sell, 'a_type' => 'sell', 'amount_real_trading' => $amount_real_trading, 'amount_real_trading_total' => $amount_real_trading_total);
                                 $history_trade[$buy_matching['id']] =array('id' => $buy_matching['id'], 'seller_id' => $user->id,'buyer_id' => $user_buy, 'amount' =>$amount_buy, 'price' => $price_buy,'market_id'=>$market_id,'type'=>'sell', "created_at"=>date("Y-m-d H:i:s"));
                             /*}else{
-								$message.= Lang::get('messages.balance_not_enought_for_fee');
-								$messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
-							}*/
-
+                            $message.= Lang::get('messages.balance_not_enought_for_fee');
+                            $messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
+                            }*/
                         } elseif ($amount_buy > $amount_sell) {
                             $total_sell = $amount_sell*$price_buy;//really total sell;
                             $fee_buy = ($total_sell*$per_fee_buy)/100;
@@ -528,9 +520,9 @@ class OrderController extends Controller
                                 $message_socket['message_socket'][$class_price]['order_b'] = array("action"=>"update","id"=>$buy_matching['id'], "amount"=>$amount_sold, "price"=>$price_buy,"total"=>($amount_sold*$price_buy), 'amount_real_trading' => $amount_real_trading, 'amount_real_trading_total' => $amount_real_trading_total);
                                 $history_trade[$buy_matching['id']] =array('id' => $buy_matching['id'], 'seller_id' => $user->id,'buyer_id' => $user_buy, 'amount' =>$amount_sell, 'price' => $price_buy,'market_id'=>$market_id, 'type'=>'sell', "created_at"=>date("Y-m-d H:i:s"));
                             /*}else{
-								$message.= Lang::get('messages.balance_not_enought_for_fee');
-								$messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
-							}*/
+                            $message.= Lang::get('messages.balance_not_enought_for_fee');
+                            $messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
+                            }*/
                         } else {
                             $total_sell = $amount_buy*$price_buy;//sprintf('%.8f',$amount_buy*$price_buy);//really total sell;
                             $fee_buy = ($total_sell*$per_fee_buy)/100;
@@ -570,17 +562,17 @@ class OrderController extends Controller
                                 $message_socket['message_socket'][$class_price]['order_b'] = array("action"=>"update","id"=>$buy_matching['id'], "amount"=>$amount_sold, "price"=>$price_buy,"total"=>($amount_sold*$price_buy),  'amount_real_trading' => $amount_real_trading, 'amount_real_trading_total' => $amount_real_trading_total);
                                 $history_trade[$buy_matching['id']] =array('id' => $buy_matching['id'], 'seller_id' => $user->id,'buyer_id' => $user_buy, 'amount' =>$amount_buy, 'price' => $price_buy,'market_id'=>$market_id, 'type'=> 'sell', "created_at"=>date("Y-m-d H:i:s"));
                             /*}else{
-								$message.= Lang::get('messages.balance_not_enought_for_fee');
-								$messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
-							}*/
+                            $message.= Lang::get('messages.balance_not_enought_for_fee');
+                            $messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
+                            }*/
                         }
 
                         //refund money
                         /*if($price_buy > $price_sell){
-							//Log::info('-------Refund: ');
-							$total_refunds = ($amount_real*$price_buy) - ($amount_real*$price_sell);
-							$balance->addMoney($total_refunds,$from,$user->id);
-						}*/
+                        //Log::info('-------Refund: ');
+                        $total_refunds = ($amount_real*$price_buy) - ($amount_real*$price_sell);
+                        $balance->addMoney($total_refunds,$from,$user->id);
+                        }*/
                         //update amount
                         $amount_sell= sprintf('%.8f', $amount_sell-$amount_real);
                     }
@@ -595,11 +587,11 @@ class OrderController extends Controller
                     $message_socket['message_socket'][$orders_buy->id]['order_b'] = array('action'=>"insert","id"=>$orders_sell->id,"amount"=>$amount_sell,"price"=>$price_sell,"total"=>$total_rest,'type'=>'buy','created_at'=>$orders_sell->created_at);
                     
                     /*
-					$message_socket_user['user_orders'][$orders_sell['id']]['order_s'] = array('action'=>"insert","amount"=>$amount_sell,"price"=>$price_sell,"total"=>$total_rest,"type"=>"sell");
-					$message_socket['message_socket'][$orders_sell['id']]['order_s'] = array('action'=>"insert","amount"=>$amount_sell,"price"=>$price_sell,"total"=>$total_rest,"type"=>"sell");
-					$message_socket['message_socket'][$orders_sell['id']]['order_s']['id']=$orders_sell->id;
-					$message_socket['message_socket'][$orders_sell['id']]['order_s']['created_at']=$orders_sell->created_at;
-					*/
+                    $message_socket_user['user_orders'][$orders_sell['id']]['order_s'] = array('action'=>"insert","amount"=>$amount_sell,"price"=>$price_sell,"total"=>$total_rest,"type"=>"sell");
+                    $message_socket['message_socket'][$orders_sell['id']]['order_s'] = array('action'=>"insert","amount"=>$amount_sell,"price"=>$price_sell,"total"=>$total_rest,"type"=>"sell");
+                    $message_socket['message_socket'][$orders_sell['id']]['order_s']['id']=$orders_sell->id;
+                    $message_socket['message_socket'][$orders_sell['id']]['order_s']['created_at']=$orders_sell->created_at;
+                    */
                     //$message_socket['message_socket'][$class_price]['order_b'] = array("action"=>"update","id"=>$buy_matching['id'], "amount"=>$amount_sold, "price"=>$price_buy,"total"=>($amount_sold*$price_buy),  'amount_real_trading' => $amount_real_trading, 'amount_real_trading_total' => $amount_real_trading_total);
                 }
                     
@@ -610,22 +602,21 @@ class OrderController extends Controller
                 $message_socket_user['data_price']['balance_coinmain'] = sprintf('%.8f', $balance->getBalance($wallet_from, 0));
                 $message_socket_user['data_price']['balance_coinsecond'] = sprintf('%.8f', $balance->getBalance($wallet_to, 0));
                 
-            //icee
+                //icee
                 $message_socket['history_trade'] = $history_trade;
                 //$message_socket['history_trade2'] = $history_trade;
                 /*
-				$message_socket['history_trade2'] = $history_trade;
+                $message_socket['history_trade2'] = $history_trade;
 				
-				$sorted_history_trade = array();
-				$sorted_history_trade= $history_trade;
-				uasort($sorted_history_trade, function($a, $b) {
-					return $b['price'] - $a['price'];	//Price ASC, lower to higher
-				});
-				$message_socket['history_trade'] = $sorted_history_trade;
-				*/
+                $sorted_history_trade = array();
+                $sorted_history_trade= $history_trade;
+                uasort($sorted_history_trade, function($a, $b) {
+                return $b['price'] - $a['price'];	//Price ASC, lower to higher
+                });
+                $message_socket['history_trade'] = $sorted_history_trade;
+                */
                 
                 // Get all new orders
-                
             } else {
                 $orders_sell->save();
                 $status = 'success';
@@ -636,7 +627,6 @@ class OrderController extends Controller
                 $balance = new Balance();
                 $message_socket_user['data_price']['balance_coinmain'] = sprintf('%.8f', $balance->getBalance($wallet_from, 0));
                 $message_socket_user['data_price']['balance_coinsecond'] = sprintf('%.8f', $balance->getBalance($wallet_to, 0));
-
             }
             //$this->triggerPusherTicket($market_id);
         } else {
@@ -696,8 +686,6 @@ class OrderController extends Controller
                     $type = 'buy';
                     $type_sub = 'cancel';       //means cancel buy
                     //$message_socket['order_b']['action']='buy_cancel';
-                    
-                    
                 } else {//if sell: refund from_value to from_type_money (eg. Market BTC-> USD => refund to BTC wallet)
                     $value_refund = $orders->from_value;
                     $type_money_refund = $wallet_from;
@@ -710,7 +698,6 @@ class OrderController extends Controller
                     $type_sub = 'cancel';       //means cancel sell
                     
                     //$message_socket['order_s']['action']='sell_cancel';
-                    
                 }
 
                 $balance->addMoney($value_refund, $type_money_refund, $user->id);
@@ -737,7 +724,7 @@ class OrderController extends Controller
 
     public function triggerPusherTicket($market_id)
     {
-        require_once app_path().'/libraries/Pusher.php';
+        include_once app_path().'/libraries/Pusher.php';
         $setting = new Setting();
         $pusher_app_id=$setting->getSetting('pusher_app_id', '');
         $pusher_app_key=$setting->getSetting('pusher_app_key', '');

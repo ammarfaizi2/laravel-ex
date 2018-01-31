@@ -54,7 +54,7 @@ class Wallet extends Eloquent
             return $this->jsonRPCclient->getreceivedbyaccount();
         }
         /*if($account!='') return $this->jsonRPCclient->listreceivedbyaccount($account);
-		else return $this->jsonRPCclient->listreceivedbyaccount();*/
+        else return $this->jsonRPCclient->listreceivedbyaccount();*/
     }
     public function getReceivedByAddress($address)
     {
@@ -119,10 +119,10 @@ class Wallet extends Eloquent
         } else {
             return $this->jsonRPCclient->getinfo();
             /*if(isUserAdmin($id_check)) {
-				return $this->jsonRPCclient->getinfo();
-			}else{
-				die("insufficient credentials");
-			}*/
+            return $this->jsonRPCclient->getinfo();
+            }else{
+            die("insufficient credentials");
+            }*/
         }
     }
     public function getInfo()

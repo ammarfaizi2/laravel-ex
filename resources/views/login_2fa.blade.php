@@ -98,23 +98,23 @@
           var obj = $.parseJSON(response);
           console.log('ajVerifyToken: ',obj);
           if(obj.status == 'success'){
-				var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
-				var msg = 'Logging in... please wait';
-				
+                var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
+                var msg = 'Logging in... please wait';
+                
 
-				
+                
             $("#registerForm").submit();
           }else {
-		  
+          
             var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
-			var msg = obj.message;
-			//alert(obj.message);
-			$('#do_try').prop("disabled", false); // Element(s) are now enabled.
+            var msg = obj.message;
+            //alert(obj.message);
+            $('#do_try').prop("disabled", false); // Element(s) are now enabled.
           }
-		BootstrapDialog.show({
-			title: title,
-			message: msg
-		});
+        BootstrapDialog.show({
+            title: title,
+            message: msg
+        });
       });
       return false;
     }
@@ -122,32 +122,32 @@
         var email = $('#registerForm #email').val();
         var _token = $('#registerForm #_token').val();
         var password = $('#registerForm #password').val();            
-		$('#do_try').attr("disabled", "disabled");
-		
+        $('#do_try').attr("disabled", "disabled");
+        
         $.post('<?php echo action('UserController@firstAuth')?>', {isAjax: 1, email: email, password: password, _token : _token }, function(response){
             console.log('before Obj: ',obj);
             var obj = $.parseJSON(response);
             console.log('Obj: ',obj);
             if(obj.status == 'one_login_success'){                  
               var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
-			  var msg = 'Logging in... please wait';
-				
-			  $("#registerForm").submit();
+              var msg = 'Logging in... please wait';
+                
+              $("#registerForm").submit();
               //return true;              
             }else if(obj.status == 'two_login'){
-				$('#registerForm').hide();
-				$('#login_verify_1').show();
-				$('#login_verify_1 #authy_id').val(obj.authy_id);
+                $('#registerForm').hide();
+                $('#login_verify_1').show();
+                $('#login_verify_1 #authy_id').val(obj.authy_id);
             }else {
-				var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
-				var msg = obj.message;
-				//alert(obj.message);				
-				$('#do_try').prop("disabled", false); // Element(s) are now enabled.
+                var title = '{{{ Lang::get('confide::confide.login.submit') }}}';
+                var msg = obj.message;
+                //alert(obj.message);               
+                $('#do_try').prop("disabled", false); // Element(s) are now enabled.
             }
-			BootstrapDialog.show({
-				title: title,
-				message: msg
-			});
+            BootstrapDialog.show({
+                title: title,
+                message: msg
+            });
         });
         return false;
     }

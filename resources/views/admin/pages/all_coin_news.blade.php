@@ -71,7 +71,7 @@ function deletePost(news_id){
         totalPages: <?php echo $total_pages ?>,
         alignment:'right',
         pageUrl: function(type, page, current){
-        	return "<?php echo '/admin/content/all-news'; ?>"+'/'+page; 
+            return "<?php echo '/admin/content/all-news'; ?>"+'/'+page; 
         }
     }
     $('#pager').bootstrapPaginator(options);

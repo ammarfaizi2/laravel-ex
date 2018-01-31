@@ -57,78 +57,78 @@
 						<th>{{{ trans('texts.action')}}}</th>	            
 					</tr>
 					<?php
-					//var_dump($withdrawals);
-					?>
-					
-					@foreach($withdrawals as $withdrawal)
-						<tr id="withdraw_{{{$withdrawal->id}}}">
-							<td>{{$withdrawal->created_at}}</td>
-							<td>{{$withdrawal->type}}</td>
-							<td>{{sprintf('%.8f',$withdrawal->amount)}}</td>
-							<td>{{sprintf('%.8f',$withdrawal->fee_amount)}}</td>
-							<td>{{$withdrawal->to_address}}</td>
-							<!-- <td>{{$withdrawal->confirmations}}</td> -->
-							@if($withdrawal->status)          
-								<td><b style="color:green">{{ ucwords(trans('texts.complete')) }}</b></td>  
-							@else  
-								<td><b style="color:red">{{ ucwords(trans('texts.pending')) }}</b></td> 
-							@endif	 
-							<td>@if(!$withdrawal->status)<a href="javascript:cancelWithdraw({{{$withdrawal->id}}});">{{trans('texts.cancel')}}</a>@endif</td>       		
-						</tr>
-					@endforeach
-				</tbody>
-			</table>
+                    //var_dump($withdrawals);
+                    ?>
+                    
+                    @foreach($withdrawals as $withdrawal)
+                        <tr id="withdraw_{{{$withdrawal->id}}}">
+                            <td>{{$withdrawal->created_at}}</td>
+                            <td>{{$withdrawal->type}}</td>
+                            <td>{{sprintf('%.8f',$withdrawal->amount)}}</td>
+                            <td>{{sprintf('%.8f',$withdrawal->fee_amount)}}</td>
+                            <td>{{$withdrawal->to_address}}</td>
+                            <!-- <td>{{$withdrawal->confirmations}}</td> -->
+                            @if($withdrawal->status)          
+                                <td><b style="color:green">{{ ucwords(trans('texts.complete')) }}</b></td>  
+                            @else  
+                                <td><b style="color:red">{{ ucwords(trans('texts.pending')) }}</b></td> 
+                            @endif   
+                            <td>@if(!$withdrawal->status)<a href="javascript:cancelWithdraw({{{$withdrawal->id}}});">{{trans('texts.cancel')}}</a>@endif</td>               
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
 
-			<script type="text/javascript">
-		  function cancelWithdraw(withdraw_id){
-				
-				$.ajax({
-					type: 'post',
-					url: '<?php echo action('UserController@cancelWithdraw')?>',
-					datatype: 'json',
-					data: {isAjax: 1, withdraw_id: withdraw_id },
-					beforeSend: function(request) {
-						return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
-					},
-					success:function(response) {
-						var obj = $.parseJSON(response); 
-						var title, msg;
-						
-						title= '{{{ trans('texts.coin_withdrawals')}}} {{trans('texts.cancel')}}';
-						if(obj.status == 'success'){               
-							msg = '<p style="color:#008B5D; font-weight:bold;text-align:center;">'+obj.message+'</p>';
-							$('#withdraw_'+withdraw_id).remove();
-						}else{
-							msg = '<p style="color:red; font-weight:bold;text-align:center;">'+obj.message+'</p>';
-						}              
-						
-						BootstrapDialog.show({
-							title: title,
-							message: msg
-						});
-						console.log('Obj: ',obj);
-					}, error:function(response) {
-						showMessageSingle('{{{ trans('texts.error') }}}', 'error');
-					}
-				});
-				
-				/*
-				$.post('<?php echo action('UserController@cancelWithdraw')?>', {isAjax: 1, withdraw_id: withdraw_id }, function(response){
-					  var obj = $.parseJSON(response); 
-					  if(obj.status == 'success'){               
-						$('#messageModal .modal-body').html('<p style="color:#008B5D; font-weight:bold;text-align:center;">'+obj.message+'</p>');            
-						$('#messageModal').on('hidden.bs.modal', function (e) {              
-						  location.reload();
-						});
-					  }else{
-						$('#messageModal .modal-body').html('<p style="color:red; font-weight:bold;text-align:center;">'+obj.message+'</p>');
-					  }              
-					  $('#messageModal').modal({show:true});  
-					  console.log('Obj: ',obj);
-					});
-				*/
-			  }
-		  </script>
-		</div>
-	</div>
+            <script type="text/javascript">
+          function cancelWithdraw(withdraw_id){
+                
+                $.ajax({
+                    type: 'post',
+                    url: '<?php echo action('UserController@cancelWithdraw')?>',
+                    datatype: 'json',
+                    data: {isAjax: 1, withdraw_id: withdraw_id },
+                    beforeSend: function(request) {
+                        return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
+                    },
+                    success:function(response) {
+                        var obj = $.parseJSON(response); 
+                        var title, msg;
+                        
+                        title= '{{{ trans('texts.coin_withdrawals')}}} {{trans('texts.cancel')}}';
+                        if(obj.status == 'success'){               
+                            msg = '<p style="color:#008B5D; font-weight:bold;text-align:center;">'+obj.message+'</p>';
+                            $('#withdraw_'+withdraw_id).remove();
+                        }else{
+                            msg = '<p style="color:red; font-weight:bold;text-align:center;">'+obj.message+'</p>';
+                        }              
+                        
+                        BootstrapDialog.show({
+                            title: title,
+                            message: msg
+                        });
+                        console.log('Obj: ',obj);
+                    }, error:function(response) {
+                        showMessageSingle('{{{ trans('texts.error') }}}', 'error');
+                    }
+                });
+                
+                /*
+                $.post('<?php echo action('UserController@cancelWithdraw')?>', {isAjax: 1, withdraw_id: withdraw_id }, function(response){
+                      var obj = $.parseJSON(response); 
+                      if(obj.status == 'success'){               
+                        $('#messageModal .modal-body').html('<p style="color:#008B5D; font-weight:bold;text-align:center;">'+obj.message+'</p>');            
+                        $('#messageModal').on('hidden.bs.modal', function (e) {              
+                          location.reload();
+                        });
+                      }else{
+                        $('#messageModal .modal-body').html('<p style="color:red; font-weight:bold;text-align:center;">'+obj.message+'</p>');
+                      }              
+                      $('#messageModal').modal({show:true});  
+                      console.log('Obj: ',obj);
+                    });
+                */
+              }
+          </script>
+        </div>
+    </div>
 </div>

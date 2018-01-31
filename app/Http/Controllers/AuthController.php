@@ -61,8 +61,8 @@ class AuthController extends Controller
     }
 
     /*
-	 @ Removes Two Factor Auth. 
-	*/
+    @ Removes Two Factor Auth. 
+    */
     public function removeTwoFactorAuth()
     {
         

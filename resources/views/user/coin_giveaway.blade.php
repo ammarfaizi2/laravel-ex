@@ -86,22 +86,22 @@
 				e.preventDefault();
 				$(this).attr('disabled','disabled');
 				$.post('<?php echo action('UserController@doCoinGiveaway')?>', {
-						isAjax: 1, 
-						giveaway_id: $(this).data('id') 
-					}, function(response){
-						var obj = $.parseJSON(response); 
-						if(obj.status == 'success'){               
-							$('#messageModal .modal-body').html('<p style="color:#008B5D; font-weight:bold;text-align:center;">'+obj.message+'</p>');            
-							$('#messageModal').on('hidden.bs.modal', function (e) {              
-								//location.reload();
-							});
-						} else {
-							$('#messageModal .modal-body').html('<p style="color:red; font-weight:bold;text-align:center;">'+obj.message+'</p>');
-						}              
-						$('#messageModal').modal({show:true});  
-				});
-			});
-		});
-		</script>
-	</div>
+                        isAjax: 1, 
+                        giveaway_id: $(this).data('id') 
+                    }, function(response){
+                        var obj = $.parseJSON(response); 
+                        if(obj.status == 'success'){               
+                            $('#messageModal .modal-body').html('<p style="color:#008B5D; font-weight:bold;text-align:center;">'+obj.message+'</p>');            
+                            $('#messageModal').on('hidden.bs.modal', function (e) {              
+                                //location.reload();
+                            });
+                        } else {
+                            $('#messageModal .modal-body').html('<p style="color:red; font-weight:bold;text-align:center;">'+obj.message+'</p>');
+                        }              
+                        $('#messageModal').modal({show:true});  
+                });
+            });
+        });
+        </script>
+    </div>
 </div>

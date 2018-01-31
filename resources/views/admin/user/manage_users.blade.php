@@ -91,35 +91,35 @@
 	<tr><td>{{$user['id']}}</td><td>{{$user['fullname']}}</td><td>{{$user['username']}}</td><td>{{$user['email']}}</td>
 		<td>
 			<?php $i=1; ?>
-			@foreach($user['roles'] as $role)
-				@if($i==1)
-				{{$role['name']}}
-				@else
-					, {{$role['name']}}
-				@endif
-				<?php $i++; ?>
-			@endforeach
-		</td>
-		<td><a href="{{URL::to('admin/edit-user')}}/{{$user['id']}}" class="edit_page">{{trans('admin_texts.edit')}}</a>  | <a href="javascript:void(0);" onclick="deleteUser({{$user['id']}})" class="delete_page">{{trans('admin_texts.delete')}}</a>  | <a href="javascript:void(0);" onclick="banUser({{$user['id']}})" class="ban_user">{{trans('admin_texts.ban_user')}}</a></td>
-	</tr>
-	@endforeach
-	
+            @foreach($user['roles'] as $role)
+                @if($i==1)
+                {{$role['name']}}
+                @else
+                    , {{$role['name']}}
+                @endif
+                <?php $i++; ?>
+            @endforeach
+        </td>
+        <td><a href="{{URL::to('admin/edit-user')}}/{{$user['id']}}" class="edit_page">{{trans('admin_texts.edit')}}</a>  | <a href="javascript:void(0);" onclick="deleteUser({{$user['id']}})" class="delete_page">{{trans('admin_texts.delete')}}</a>  | <a href="javascript:void(0);" onclick="banUser({{$user['id']}})" class="ban_user">{{trans('admin_texts.ban_user')}}</a></td>
+    </tr>
+    @endforeach
+    
 </table>
 <div id="pager"></div>
 <div id="messageModal" class="modal hide fade" tabindex="-1" role="dialog">		
-	<div class="modal-body">		
-	</div>
-	<div class="modal-footer">
-		<button class="btn close-popup" data-dismiss="modal">{{{ trans('texts.close')}}}</button>
-	</div>
+    <div class="modal-body">        
+    </div>
+    <div class="modal-footer">
+        <button class="btn close-popup" data-dismiss="modal">{{{ trans('texts.close')}}}</button>
+    </div>
 </div>
 {{ HTML::script('assets/js/jquery.validate.min.js') }}
 <script type="text/javascript">
 function deleteUser(user_id){
-	$.post('/admin/delete-user', {isAjax: 1, user_id: user_id }, function(response){
-       	var obj = $.parseJSON(response);
-	    console.log('obj: ',obj);
-	    if(obj.status == 'success'){
+    $.post('/admin/delete-user', {isAjax: 1, user_id: user_id }, function(response){
+        var obj = $.parseJSON(response);
+        console.log('obj: ',obj);
+        if(obj.status == 'success'){
             $('#messageModal .modal-body').html('<p style="color:#008B5D; font-weight:bold;text-align:center;">'+obj.message+'</p>');            
             $('#messageModal').on('hidden.bs.modal', function (e) {              
               location.reload();
@@ -132,30 +132,30 @@ function deleteUser(user_id){
     return false;
 }
 function banUser(user_id){
-	try {
-		$.post('/admin/ban-user', {isAjax: 1, user_id: user_id }, function(response){
-	       	var obj = $.parseJSON(response);
+    try {
+        $.post('/admin/ban-user', {isAjax: 1, user_id: user_id }, function(response){
+            var obj = $.parseJSON(response);
 
-		    console.log('obj: ',obj);
-		    if(obj.status == 'success'){
-	            $('#messageModal .modal-body').html('<p style="color:#008B5D; font-weight:bold;text-align:center;">'+obj.message+'</p>');            
-	            $('#messageModal').on('hidden.bs.modal', function (e) {              
-	              location.reload();
-	            });
-	        }else{
-	            $('#messageModal .modal-body').html('<p style="color:red; font-weight:bold;text-align:center;">'+obj.message+'</p>');
-	        }
-	        $('#messageModal').modal({show:true, keyboard:false}); 
-	    });
-	} catch (e) {
-		alert(e.message);
-	}
+            console.log('obj: ',obj);
+            if(obj.status == 'success'){
+                $('#messageModal .modal-body').html('<p style="color:#008B5D; font-weight:bold;text-align:center;">'+obj.message+'</p>');            
+                $('#messageModal').on('hidden.bs.modal', function (e) {              
+                  location.reload();
+                });
+            }else{
+                $('#messageModal .modal-body').html('<p style="color:red; font-weight:bold;text-align:center;">'+obj.message+'</p>');
+            }
+            $('#messageModal').modal({show:true, keyboard:false}); 
+        });
+    } catch (e) {
+        alert(e.message);
+    }
     return false;
 }
     $(document).ready(function() {
-    	$('#add_new_user').hide();
+        $('#add_new_user').hide();
         $('#add_user_link').click(function(event) {
-        	$('#add_new_user').toggle("slow");
+            $('#add_new_user').toggle("slow");
         });
         $("#add_new_user").validate({
             rules: {
@@ -187,7 +187,7 @@ function banUser(user_id){
                 },
                 email: "Please enter a valid email address.",
             }
-	});
+    });
 
    });
 </script>
@@ -197,7 +197,7 @@ function banUser(user_id){
         totalPages: <?php echo $total_pages ?>,
         alignment:'right',
         pageUrl: function(type, page, current){
-        	return "<?php echo URL::to('admin/manage/users'); ?>"+'/'+page;
+            return "<?php echo URL::to('admin/manage/users'); ?>"+'/'+page;
         }
     }
     $('#pager').bootstrapPaginator(options);

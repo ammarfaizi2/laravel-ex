@@ -1,7 +1,7 @@
 @extends('layouts.default')
 <?php
-	// Set individual Market title
-	if ($market_predefined) :?>
+    // Set individual Market title
+if ($market_predefined) :?>
 @section('title')
 <?php echo Config::get('config_custom.company_name_domain') . ' - ' . $market_from . ' / ' . $market_to . ' ' . trans('texts.market') ?>
 @stop
@@ -9,22 +9,22 @@
 <?php echo Config::get('config_custom.company_name_domain') . ' - '. Config::get('config_custom.company_slogan') ?>
 @stop
 <?php
-	/*
-		//@section('title', 'This is an individual page title')
-		//@section('description', 'This is a description')
-		*/
-	endif;
-	/*
+/*
+    //@section('title', 'This is an individual page title')
+    //@section('description', 'This is a description')
+    */
+endif;
+    /*
 	if(Auth::check()) {
 	echo "<h4>Logged in</h4>";
 	} else {
 	echo "<h4>Not logged in</h4>";
 	}
 	*/
-	?>
+    ?>
 @section('content')
 <?php
-	/*
+    /*
 	@if(isset($show_all_markets) && $show_all_markets === true)
 	
 		<h2 style="color: red;" >
@@ -54,7 +54,7 @@
 */
 ?>
 <?php
-	/*
+    /*
 	<div class="container">
 	  <div class="row">
 	    <div class="col-xs-4 col-md-4">1</div>
@@ -69,64 +69,64 @@
 	  </div>
 	</div>
 	*/
-	?>
+    ?>
 <div class="row">
-	<div id="market_place">
-		<div>
-			
-			<div class="col-12-xs col-sm-12 col-lg-12 news-panel">
-				<div >
-					<div class="bs-component">
-						<div class="alert alert-dismissible alert-info">
-							<button data-dismiss="alert" class="close" type="button">×</button>
-							<a href="#">
-								Testing
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			@if(!$market_predefined && $stq = $that->hasFeaturedMarket()->toArray())
-				<?php $i = 1; ?>
-				<div style="margin-left:15px;padding-bottom:10px;">
-					<h2>Featured Market</h2>
-					<table style="border-collapse: collapse;" border="1">
-						<tr>@foreach(['No.', 'Coin', 'Link', 'Message', 'Start Date', 'End Date'] as $q)<th><center>{{$q}}</center></th>@endforeach</tr>
-					@foreach($stq as $q)
-						<tr><td style="padding:5px;" align="center">{{$i++}}.</td><td style="padding:5px;" align="center">{{$q->type.' - '.$q->name}}</td><td style="padding:5px;" align="center">{{$q->link}}</td><td style="padding:5px;" align="center">{{$q->message}}</td><td style="padding:5px;" align="center">{{date("d F Y", strtotime($q->start_date))}}</td><td style="padding:5px;" align="center">{{date("d F Y", strtotime($q->end_date))}}</td></tr>
-					@endforeach
-					</table>
-				</div>
-			@endif
-			<!-- Startpage Markets -->
-			@if(isset($show_all_markets) && $show_all_markets === true)
-				@include('blocks.startmarkets')
-			@endif
-			<!-- Predefined Markets -->
-			@if($market_predefined)
-				@include('blocks.predefinedmarket')
-			@endif
-		</div>
-		
-		
-	</div>
+    <div id="market_place">
+        <div>
+            
+            <div class="col-12-xs col-sm-12 col-lg-12 news-panel">
+                <div >
+                    <div class="bs-component">
+                        <div class="alert alert-dismissible alert-info">
+                            <button data-dismiss="alert" class="close" type="button">×</button>
+                            <a href="#">
+                                Testing
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            @if(!$market_predefined && $stq = $that->hasFeaturedMarket()->toArray())
+                <?php $i = 1; ?>
+                <div style="margin-left:15px;padding-bottom:10px;">
+                    <h2>Featured Market</h2>
+                    <table style="border-collapse: collapse;" border="1">
+                        <tr>@foreach(['No.', 'Coin', 'Link', 'Message', 'Start Date', 'End Date'] as $q)<th><center>{{$q}}</center></th>@endforeach</tr>
+                    @foreach($stq as $q)
+                        <tr><td style="padding:5px;" align="center">{{$i++}}.</td><td style="padding:5px;" align="center">{{$q->type.' - '.$q->name}}</td><td style="padding:5px;" align="center">{{$q->link}}</td><td style="padding:5px;" align="center">{{$q->message}}</td><td style="padding:5px;" align="center">{{date("d F Y", strtotime($q->start_date))}}</td><td style="padding:5px;" align="center">{{date("d F Y", strtotime($q->end_date))}}</td></tr>
+                    @endforeach
+                    </table>
+                </div>
+            @endif
+            <!-- Startpage Markets -->
+            @if(isset($show_all_markets) && $show_all_markets === true)
+                @include('blocks.startmarkets')
+            @endif
+            <!-- Predefined Markets -->
+            @if($market_predefined)
+                @include('blocks.predefinedmarket')
+            @endif
+        </div>
+        
+        
+    </div>
 </div>
 {{ HTML::script('assets/js/jquery.tablesorter.js') }}
 {{ HTML::script('assets/js/jquery.tablesorter.widgets.js') }}
 {{ HTML::script('assets/js/jquery.tablesorter.widgets.columnSelector.js') }}
 <script type="text/javascript"></script>
 <!-- <div class="container-fluid">
-	<button onclick="testCal()">Test</button>
-	</div>  -->
+    <button onclick="testCal()">Test</button>
+    </div>  -->
 {{ HTML::script('https://cdn.socket.io/socket.io-1.2.0.js') }} 
 <?php
-	/*
+    /*
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js" ></script>
 	
 	{{ HTML::script('assets/websocket/socket.io.min.js') }}
 	*/
-	?>
+    ?>
 
 @stop
 

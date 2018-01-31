@@ -36,17 +36,17 @@ class HomeController extends Controller
 {
 
     /*
-	|--------------------------------------------------------------------------
-	| Default Home Controller
-	|--------------------------------------------------------------------------
-	|
-	| You may wish to use controllers instead of, or in addition to, Closure
-	| based routes. That's great! Here is an example controller method to
-	| get you started. To route to this controller, just add the route:
-	|
-	|	Route::get('/', 'HomeController@showWelcome');
-	|
-	*/
+    |--------------------------------------------------------------------------
+    | Default Home Controller
+    |--------------------------------------------------------------------------
+    |
+    | You may wish to use controllers instead of, or in addition to, Closure
+    | based routes. That's great! Here is an example controller method to
+    | get you started. To route to this controller, just add the route:
+    |
+    |	Route::get('/', 'HomeController@showWelcome');
+    |
+    */
 
     public function index($market_id = 0)
     {
@@ -116,8 +116,6 @@ class HomeController extends Controller
             //is start-market predefined in backend?
             $data['market_predefined']= $market_predefined;
         if (!is_null($market_default)) {
-        
-        
             $wallet_from = isset($market_default->wallet_from) ? $market_default->wallet_from : '';
             $wallet_to = isset($market_default->wallet_to) ? $market_default->wallet_to : '';
             $from = strtoupper($wallet->getType($wallet_from));
@@ -222,18 +220,17 @@ class HomeController extends Controller
         
         $all_markets = array();
         foreach ($_markets as $m) {
-            
             $market_prices = $trade->getBlockPrice($m->id);
             //$market_change = $trade->getChange($m->id);
             $market_current_price = (empty($market_prices['latest_price'])) ? sprintf('%.8f', 0) : sprintf('%.8f', $market_prices['latest_price']);
             
             /*
-			echo $market_prices->min;
-			echo $market_prices['latest_price'];
-			echo '<pre>';
-			var_dump($market_prices);
-			echo '</pre>';
-			*/
+            echo $market_prices->min;
+            echo $market_prices['latest_price'];
+            echo '<pre>';
+            var_dump($market_prices);
+            echo '</pre>';
+            */
 
             $market_prices_opening_price = (!isset($market_prices['get_prices']->opening_price) ? 0 : $market_prices['get_prices']->opening_price );
             $market_prices_volume = (!isset($market_prices['get_prices']->volume) ? 0 : $market_prices['get_prices']->volume );
@@ -258,10 +255,10 @@ class HomeController extends Controller
                     'enable_trading' => $wallets[$m->wallet_from]->enable_trading
                     
                     /*,
-    				'pool-url' => $wallets[$m->wallet_from]->url,
-    				'blockviewer' => $wallets[$m->wallet_from]->blockviewer,
-    				'forum' => $wallets[$m->wallet_from]->forum,
-    				*/
+                'pool-url' => $wallets[$m->wallet_from]->url,
+                'blockviewer' => $wallets[$m->wallet_from]->blockviewer,
+                'forum' => $wallets[$m->wallet_from]->forum,
+                */
                 );
             }
         }
@@ -269,13 +266,15 @@ class HomeController extends Controller
         //var_dump($all_markets);
         //exit;
         
-        usort($all_markets, function ($a, $b) {
- // sort market by volume
-            if ($a['volume'] == $b['volume']) {
-                return 0;
+        usort(
+            $all_markets, function ($a, $b) {
+                // sort market by volume
+                if ($a['volume'] == $b['volume']) {
+                    return 0;
+                }
+                return ($a['volume'] > $b['volume']) ? -1 : 1;
             }
-            return ($a['volume'] > $b['volume']) ? -1 : 1;
-        });
+        );
         //print_r($all_markets);
         $data['all_markets'] = $all_markets;
 
@@ -302,7 +301,7 @@ class HomeController extends Controller
             ->join('wallets', 'wallets.id', '=', 'market.wallet_from')
             ->where('market.id', '=', $marketId)
             ->first();
-        return isset($a->type) ? $a->type : ''; 
+        return isset($a->type) ? $a->type : '';
     }
 
     public function hasCustomFields($coinId)
@@ -334,7 +333,7 @@ class HomeController extends Controller
         $_message .= "IP Address: {$_SERVER['REMOTE_ADDR']}<br />";
         $_message .= "Message: ". nl2br(strip_tags($message)) . "<br />";
         
-        require_once(base_path()."/phpmailer/class.phpmailer.php");
+        include_once base_path()."/phpmailer/class.phpmailer.php";
         $mail = new PHPMailer();
         
         $mail->AddAddress(Config::get('config_custom.company_support_mail'), Config::get('config_custom.company_name'));
@@ -369,7 +368,7 @@ class HomeController extends Controller
 
         $_message .= "Comments: ". nl2br(strip_tags(Input::get('comments'))) . "<br />";
         
-        require_once(base_path()."/phpmailer/class.phpmailer.php");
+        include_once base_path()."/phpmailer/class.phpmailer.php";
         $mail = new PHPMailer();
         
         $mail->AddAddress(Config::get('config_custom.company_support_mail'), Config::get('config_custom.company_name'));
@@ -390,115 +389,119 @@ class HomeController extends Controller
     {
         //echo "<pre>user: "; print_r(Confide::user() ); echo "</pre>";
         switch ($page) {
-            case "fees":
-                $market = new Market();
-                $wallet = new Wallet();
-                $fees_trade = FeeTrade::get()->toArray();
-                //echo "<pre>list_buy_orders: "; print_r($list_buy_orders); echo "</pre>";
-                $fees_withdraw = FeeWithdraw::leftJoin('wallets', 'fee_withdraw.wallet_id', '=', 'wallets.id')
-                    ->select('fee_withdraw.*', 'wallets.type', 'wallets.name')->get();
+        case "fees":
+            $market = new Market();
+            $wallet = new Wallet();
+            $fees_trade = FeeTrade::get()->toArray();
+            //echo "<pre>list_buy_orders: "; print_r($list_buy_orders); echo "</pre>";
+            $fees_withdraw = FeeWithdraw::leftJoin('wallets', 'fee_withdraw.wallet_id', '=', 'wallets.id')
+                ->select('fee_withdraw.*', 'wallets.type', 'wallets.name')->get();
                 
-                foreach ($fees_trade as $key => $value) {
-                    $wallet_type=$market->getWalletType($value['market_id']);
-                    $fees_trade[$key]['wallet_from'] = $wallet_type['wallet_from'];
-                    $fees_trade[$key]['wallet_to'] = $wallet_type['wallet_to'];
-                }
+            foreach ($fees_trade as $key => $value) {
+                $wallet_type=$market->getWalletType($value['market_id']);
+                $fees_trade[$key]['wallet_from'] = $wallet_type['wallet_from'];
+                $fees_trade[$key]['wallet_to'] = $wallet_type['wallet_to'];
+            }
                 
-                $fee['fees_trade'] = $fees_trade;
-                $fee['fees_withdraw'] = $fees_withdraw;
-                return view('fees', $fee);
+            $fee['fees_trade'] = $fees_trade;
+            $fee['fees_withdraw'] = $fees_withdraw;
+            return view('fees', $fee);
                 break;
-            case "voting":
-                $setting=new Setting();
-                $coinvotes = DB::table('coin_votes')
-                 ->get();
-                try {
-                    $wallet = Wallet::where('type', 'BTC')->first();
-                    $wallet->connectJsonRPCclient($wallet->wallet_username, $wallet->wallet_password, $wallet->wallet_ip, $wallet->port);
-                    //var_dump($coinvotes);
-                    $_coinvoites = array();
-                    foreach ($coinvotes as $key => $value) {
-                        $num_vote = Vote::where('coinvote_id', '=', $value->id)->count();
+        case "voting":
+            $setting=new Setting();
+            $coinvotes = DB::table('coin_votes')
+             ->get();
+            try {
+                $wallet = Wallet::where('type', 'BTC')->first();
+                $wallet->connectJsonRPCclient($wallet->wallet_username, $wallet->wallet_password, $wallet->wallet_ip, $wallet->port);
+                //var_dump($coinvotes);
+                $_coinvoites = array();
+                foreach ($coinvotes as $key => $value) {
+                    $num_vote = Vote::where('coinvote_id', '=', $value->id)->count();
                         
-                        //echo "<pre>getreceivedbyaccount"; print_r($wallet->getReceivedByAddress($value->btc_address)); echo "</pre>";//$value->label_address
-                        $btc_payment = $wallet->getReceivedByAddress($value->btc_address);//'12X9jVe4S8pAqJ7EoKN7B4YwMQpzfgArtX'
-                        $amount_btc_per_vote=$setting->getSetting('amount_btc_per_vote', 0.0001);
-                        $num_payment = floor($btc_payment/$amount_btc_per_vote);
-                        //$num_payment = 0;
-                        //echo "btc_payment: ".$btc_payment;
-                        //echo "<br>num_payment: ".$num_payment;
-                        $coinvotes[$key]->num_vote = $num_vote + $num_payment;
-                        $_coinvoites[] = array(
-                            'id' => $value->id,
-                            'code' => $value->code,
-                            'name' => $value->name,
-                            'btc_address' => $value->btc_address,
-                            'label_address' => $value->label_address,
-                            'num_vote' => $num_vote + $num_payment,
-                        );
+                    //echo "<pre>getreceivedbyaccount"; print_r($wallet->getReceivedByAddress($value->btc_address)); echo "</pre>";//$value->label_address
+                    $btc_payment = $wallet->getReceivedByAddress($value->btc_address);//'12X9jVe4S8pAqJ7EoKN7B4YwMQpzfgArtX'
+                    $amount_btc_per_vote=$setting->getSetting('amount_btc_per_vote', 0.0001);
+                    $num_payment = floor($btc_payment/$amount_btc_per_vote);
+                    //$num_payment = 0;
+                    //echo "btc_payment: ".$btc_payment;
+                    //echo "<br>num_payment: ".$num_payment;
+                    $coinvotes[$key]->num_vote = $num_vote + $num_payment;
+                    $_coinvoites[] = array(
+                        'id' => $value->id,
+                        'code' => $value->code,
+                        'name' => $value->name,
+                        'btc_address' => $value->btc_address,
+                        'label_address' => $value->label_address,
+                        'num_vote' => $num_vote + $num_payment,
+                    );
+                }
+                $coinvotes = $coinvotes->toArray();
+                usort(
+                    $coinvotes, function ($a, $b) {
+                        if ($a->num_vote == $b->num_vote) {
+                            return 0;
+                        } return ($a->num_vote > $b->num_vote) ? -1 : 1;
                     }
-                    $coinvotes = $coinvotes->toArray();
-                    usort($coinvotes, function($a, $b) {
-                        if ($a->num_vote == $b->num_vote) return 0; return ($a->num_vote > $b->num_vote) ? -1 : 1;
-                    });
-                } catch (Exception $e) {
-                    //$data['error_message']= 'Caught exception: '.$e->getMessage()."\n";  //"Not connect to this
-                    die('Page is in maintenance mode');
-                }
+                );
+            } catch (Exception $e) {
+                //$data['error_message']= 'Caught exception: '.$e->getMessage()."\n";  //"Not connect to this
+                die('Page is in maintenance mode');
+            }
 
-                //echo "<pre>coinvotes"; print_r($coinvotes); echo "</pre>";
-                $data['coinvotes'] = $coinvotes;
-                return view('voting', $data);
+            //echo "<pre>coinvotes"; print_r($coinvotes); echo "</pre>";
+            $data['coinvotes'] = $coinvotes;
+            return view('voting', $data);
                 break;
-            case "about":
-                return view('about');
+        case "about":
+            return view('about');
                 break;
-            case "security":
-                return view('security');
+        case "security":
+            return view('security');
                 break;
-            case "terms":
-                return view('terms');
+        case "terms":
+            return view('terms');
                 break;
-            case "api":
-                if (isset($_REQUEST['method'])) {
-                    $method = $_REQUEST['method'];
-                    $value = $this->api($method);
-                } else {
-                    $setting=new Setting();
-                    $data['pusher_app_key']=$setting->getSetting('pusher_app_key', '');
-                    return view('api', $data);
-                }
-                print_r($value);
-                // $result = $this->api_query("getmarkets");
-                // echo "<pre>".print_r($result, true)."</pre>";
-                break;
-            case "apiprivate":
-                $value = $this->apiprivate();
-                break;
-            case "contact":
-                $user = Confide::user();
-                $data = array();
-                $setting = new Setting();
+        case "api":
+            if (isset($_REQUEST['method'])) {
+                $method = $_REQUEST['method'];
+                $value = $this->api($method);
+            } else {
+                $setting=new Setting();
+                $data['pusher_app_key']=$setting->getSetting('pusher_app_key', '');
+                return view('api', $data);
+            }
+            print_r($value);
+            // $result = $this->api_query("getmarkets");
+            // echo "<pre>".print_r($result, true)."</pre>";
+            break;
+        case "apiprivate":
+            $value = $this->apiprivate();
+            break;
+        case "contact":
+            $user = Confide::user();
+            $data = array();
+            $setting = new Setting();
 
-                $data['recaptcha_publickey'] = $setting->getSetting('recaptcha_publickey', '');
-                $data['email'] = ($user) ? $user->email : Input::get('email');
-                $data['name'] = ($user) ? $user->fullname : "Unregistered User";
+            $data['recaptcha_publickey'] = $setting->getSetting('recaptcha_publickey', '');
+            $data['email'] = ($user) ? $user->email : Input::get('email');
+            $data['name'] = ($user) ? $user->fullname : "Unregistered User";
 
-                return view('contact', $data);
+            return view('contact', $data);
                 break;
-            case "submit-coin":
-                $user = Confide::user();
-                $data = array();
-                $setting = new Setting();
+        case "submit-coin":
+            $user = Confide::user();
+            $data = array();
+            $setting = new Setting();
 
-                $data['recaptcha_publickey'] = $setting->getSetting('recaptcha_publickey', '');
-                $data['email'] = ($user) ? $user->email : Input::get('email');
-                $data['name'] = ($user) ? $user->fullname : "Unregistered User";
+            $data['recaptcha_publickey'] = $setting->getSetting('recaptcha_publickey', '');
+            $data['email'] = ($user) ? $user->email : Input::get('email');
+            $data['name'] = ($user) ? $user->fullname : "Unregistered User";
 
-                return view('submit-coin', $data);
+            return view('submit-coin', $data);
                 break;
-            default:
-                return view('index');
+        default:
+            return view('index');
                 break;
         }
     }
@@ -539,9 +542,9 @@ class HomeController extends Controller
        
         $api_response = ApiController::api($method);
         /*
-		$request = Request::create('api/items', 'GET', $params);
-		return Route::dispatch($request)->getContent();
-		*/
+        $request = Request::create('api/items', 'GET', $params);
+        return Route::dispatch($request)->getContent();
+        */
         return $api_response;
     }
     function apiprivate()
@@ -550,8 +553,8 @@ class HomeController extends Controller
         $val=array('success' => 'aaaaaa');
         return $val;
     }
-/*
-	function api_query($method, array $req = array()) {
+    /*
+    function api_query($method, array $req = array()) {
         // API settings
         $key = '22f9c4becc188e0aace65b0860d60efe21e36119'; // your API-key
         $secret = 'f0c1d1f0513c167a44d3bab6d18bac72abb0270f23c65d29ce19bba0348aa1db479876a0a968047e'; // your Secret-key
@@ -590,6 +593,6 @@ class HomeController extends Controller
         $dec = json_decode($res, true);
         if (!$dec) throw new Exception(Lang::get('messages.api_invalid_data_recieved'));
         return $dec;
-	}
-*/
+    }
+    */
 }

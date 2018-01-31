@@ -40,46 +40,46 @@
 			$.ajax({
 				type: 'post',
 				url: '<?php echo action('VoteCoinController@doVoting')?>',
-				datatype: 'json',
-				data: {isAjax: 1, coinvote_id: coinvote_id },
-				beforeSend: function(request) {
-					return request.setRequestHeader('X-CSRF-Token', $("meta[name='_token']").attr('content'));
-				},
-				success:function(response) {
-					var obj = $.parseJSON(response);
-					console.log('obj: ',obj);
-					var title = 'Coin voting';
-					var msg = obj.message;
-					
-					var coin_count = parseInt( $('#numvote_'+obj.coinvote_id).text() );
-					$('#numvote_'+obj.coinvote_id).text(coin_count+1);
-					
-					BootstrapDialog.show({
-						title: title,
-						message: msg
-					});
-				}, error:function(response) {
-					showMessageSingle('{{{ trans('texts.error') }}}', 'error');
-				}
-			});
-					
-			  /*
-			  $.post('<?php echo action('VoteCoinController@doVoting')?>', {isAjax: 1, coinvote_id: coinvote_id}, function(response){
-				  var obj = $.parseJSON(response);
-				  console.log('obj: ',obj);
-				  var title = 'Coin voting';
-				  var msg = '';
+                datatype: 'json',
+                data: {isAjax: 1, coinvote_id: coinvote_id },
+                beforeSend: function(request) {
+                    return request.setRequestHeader('X-CSRF-Token', $("meta[name='_token']").attr('content'));
+                },
+                success:function(response) {
+                    var obj = $.parseJSON(response);
+                    console.log('obj: ',obj);
+                    var title = 'Coin voting';
+                    var msg = obj.message;
+                    
+                    var coin_count = parseInt( $('#numvote_'+obj.coinvote_id).text() );
+                    $('#numvote_'+obj.coinvote_id).text(coin_count+1);
+                    
+                    BootstrapDialog.show({
+                        title: title,
+                        message: msg
+                    });
+                }, error:function(response) {
+                    showMessageSingle('{{{ trans('texts.error') }}}', 'error');
+                }
+            });
+                    
+              /*
+              $.post('<?php echo action('VoteCoinController@doVoting')?>', {isAjax: 1, coinvote_id: coinvote_id}, function(response){
+                  var obj = $.parseJSON(response);
+                  console.log('obj: ',obj);
+                  var title = 'Coin voting';
+                  var msg = '';
 
-				  msg = obj.message;
-					BootstrapDialog.show({
-						title: title,
-						message: msg
-					});
-			  });
-			  */
-			  return false;
-		}
-		</script>
-		@stop
-	</div>
+                  msg = obj.message;
+                    BootstrapDialog.show({
+                        title: title,
+                        message: msg
+                    });
+              });
+              */
+              return false;
+        }
+        </script>
+        @stop
+    </div>
 </div>

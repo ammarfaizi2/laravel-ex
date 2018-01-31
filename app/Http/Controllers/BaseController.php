@@ -58,9 +58,8 @@ class BaseController extends Controller
 
 
      /**
-     * Action used to set the application locale.
-     *
-     */
+      * Action used to set the application locale.
+      */
     public function setLocale()
     {
             $mLocale = Request::segment(2, Config::get('app.locale')); // Get parameter from URL.
@@ -78,7 +77,6 @@ class BaseController extends Controller
     /**
      * Detect and set application localization environment (language).
      * NOTE: Don't foreget to ADD/SET/UPDATE the locales array in app/config/app.php!
-     *
      */
     private function configureLocale()
     {
@@ -87,24 +85,24 @@ class BaseController extends Controller
 
         // Has a session locale already been set?
         if (!Session::has('locale')) {
-        // No, a session locale hasn't been set.
+            // No, a session locale hasn't been set.
             // Was there a cookie set from a previous visit?
             $mFromCookie = Cookie::get('locale', null);
             if ($mFromCookie != null && in_array($mFromCookie, Config::get('app.locales'))) {
-            // Cookie was previously set and it's a supported locale.
+                // Cookie was previously set and it's a supported locale.
                 $mLocale = $mFromCookie;
             } else {
                 // No cookie was set.
                 // Attempt to get local from current URI.
                 $mFromURI = Request::segment(1);
                 if ($mFromURI != null && in_array($mFromURI, Config::get('app.locales'))) {
-                // supported locale
+                    // supported locale
                     $mLocale = $mFromURI;
                 } else {
                     // attempt to detect locale from browser.
                     $mFromBrowser = substr(Request::server('http_accept_language'), 0, 2);
                     if ($mFromBrowser != null && in_array($mFromBrowser, Config::get('app.locales'))) {
-                    // browser lang is supported, use it.
+                        // browser lang is supported, use it.
                         $mLocale = $mFromBrowser;
                     } // $mFromBrowser
                 } // $mFromURI
@@ -120,7 +118,6 @@ class BaseController extends Controller
 
         // set application locale for current session.
         App::setLocale($mLocale);
-
     }
 
     public function testLocate()

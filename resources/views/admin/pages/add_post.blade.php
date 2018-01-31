@@ -31,25 +31,25 @@
 	       <script type="text/javascript"> 
 	       $(function() {	 
 	       	var editor = CKEDITOR.replace('body', { filebrowserBrowseUrl : '<?php echo asset("ckfinder/ckfinder.html"); ?>', filebrowserImageBrowseUrl : '<?php echo asset("ckfinder/ckfinder.html?Type=Images");?>', filebrowserFlashBrowseUrl : '<?php echo asset("ckfinder/ckfinder.html?Type=Flash"); ?>', filebrowserUploadUrl : '<?php echo asset("ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files");?>', filebrowserImageUploadUrl : '<?php echo asset("ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images");?>', filebrowserFlashUploadUrl : '<?php echo asset("ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash");?>', filebrowserWindowWidth : '800', filebrowserWindowHeight : '480' }); 
-	       	CKFinder.setupCKEditor( editor, "<?php echo asset('ckfinder/')?>" ); }) 
-	       </script>
-	    </div>
-	</div>
-	<div class="form-group">
-	    <div class="col-sm-offset-2 col-sm-10">
-		      <div class="checkbox">
-		        <label>
-		          <input type="checkbox" id="show_menu" name="show_menu" value="1"> Show on menu
-		        </label>
-		      </div>      
-	    </div>
-  	</div> 
-	<div class="form-group">
-	    <div class="col-sm-offset-2 col-sm-10">
-	    	<input type="hidden" class="form-control" name="type" id="type" value="{{$type}}">
-	      <button type="submit" class="btn btn-primary" id="add_new">{{trans('admin_texts.add')}}</button>
-	    </div>
-	</div>
+            CKFinder.setupCKEditor( editor, "<?php echo asset('ckfinder/')?>" ); }) 
+           </script>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" id="show_menu" name="show_menu" value="1"> Show on menu
+                </label>
+              </div>      
+        </div>
+    </div> 
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="hidden" class="form-control" name="type" id="type" value="{{$type}}">
+          <button type="submit" class="btn btn-primary" id="add_new">{{trans('admin_texts.add')}}</button>
+        </div>
+    </div>
 </form>
 {{ HTML::script('assets/js/jquery.validate.min.js') }}
 <script type="text/javascript">
@@ -63,7 +63,7 @@ $(document).ready(function() {
                 title: "Please provide a title for this article.", 
                 body: "Please provide a body for this article.", 
             }
-	});
+    });
 
    });
 </script>

@@ -7,7 +7,7 @@ $query_string = '';
 foreach (Request::query() as $key => $value) {
     $query_string .= $key."=".$value."&";
 }
-$query_string = trim($query_string,'&');
+$query_string = trim($query_string, '&');
 ?>
 <form class="form-inline" method="get" action="{{Request::url()}}">
     <label>{{{ trans('texts.market')}}}</label>        
@@ -17,39 +17,39 @@ $query_string = trim($query_string,'&');
             <option value="{{$market['id']}}" @if(isset($_GET['market']) && $_GET['market']==$market['id']) selected @endif>{{ strtoupper($market['wallet_from'].'/'.$market['wallet_to'])}}</option>
         @endforeach
     </select>
-	<label>{{{ trans('texts.type')}}}</label>
-	<select id="type" name="type" style="margin-right: 20px;">
-	    <option value="" @if(isset($_GET['type']) == '') selected @endif>{{trans('texts.all')}}</option>
-	    <option value="sell" @if(isset($_GET['type']) && $_GET['type'] == 'sell') selected @endif>{{trans('texts.sell')}}</option>
-	    <option value="buy" @if(isset($_GET['type']) && $_GET['type'] == 'buy') selected @endif>{{trans('texts.buy')}}</option>
-	</select>
-	<label>{{{ trans('texts.show')}}}</label>
-	<select id="view" name="status">
-	    <option value="" @if(isset($_GET['status']) == '') selected @endif>{{trans('texts.all')}}</option>
-	    <option value="active" @if(isset($_GET['status']) && $_GET['status'] == 'active') selected @endif>{{trans('texts.active')}}</option>
-	    <option value="filled" @if(isset($_GET['status']) && $_GET['status'] == 'filled') selected @endif>{{trans('texts.filled')}}</option>
-	    <option value="partly filled" @if(isset($_GET['status']) && $_GET['status'] == 'partly filled') selected @endif>{{trans('texts.partly_filled')}}</option>            
-	</select>
-	<button type="submit" class="btn btn-primary" name="do_filter">{{trans('texts.filter')}}</button>
+    <label>{{{ trans('texts.type')}}}</label>
+    <select id="type" name="type" style="margin-right: 20px;">
+        <option value="" @if(isset($_GET['type']) == '') selected @endif>{{trans('texts.all')}}</option>
+        <option value="sell" @if(isset($_GET['type']) && $_GET['type'] == 'sell') selected @endif>{{trans('texts.sell')}}</option>
+        <option value="buy" @if(isset($_GET['type']) && $_GET['type'] == 'buy') selected @endif>{{trans('texts.buy')}}</option>
+    </select>
+    <label>{{{ trans('texts.show')}}}</label>
+    <select id="view" name="status">
+        <option value="" @if(isset($_GET['status']) == '') selected @endif>{{trans('texts.all')}}</option>
+        <option value="active" @if(isset($_GET['status']) && $_GET['status'] == 'active') selected @endif>{{trans('texts.active')}}</option>
+        <option value="filled" @if(isset($_GET['status']) && $_GET['status'] == 'filled') selected @endif>{{trans('texts.filled')}}</option>
+        <option value="partly filled" @if(isset($_GET['status']) && $_GET['status'] == 'partly filled') selected @endif>{{trans('texts.partly_filled')}}</option>            
+    </select>
+    <button type="submit" class="btn btn-primary" name="do_filter">{{trans('texts.filter')}}</button>
 </form>
 <div id="messages"></div>
 <table class="table table-striped" id="list-fees">
-	<tr>
-	 	<th>{{trans('admin_texts.order_id')}}</th>
-	 	<th>{{trans('admin_texts.user_id')}}</th>
-	 	<th>{{{ trans('texts.market')}}}</th>
-	 	<th>{{trans('admin_texts.type')}}</th>	 	
-	 	<th>{{trans('admin_texts.date')}}</th>
-	 	<th>{{trans('admin_texts.price')}}</th>
-	 	<th>{{trans('admin_texts.amount')}}</th>
-	 	<th>{{trans('admin_texts.total')}}</th>
-	 	<th>{{{ trans('texts.status')}}}</th>
-	</tr> 
-	<?php $active = array('active','partly filled'); ?>
+    <tr>
+        <th>{{trans('admin_texts.order_id')}}</th>
+        <th>{{trans('admin_texts.user_id')}}</th>
+        <th>{{{ trans('texts.market')}}}</th>
+        <th>{{trans('admin_texts.type')}}</th>      
+        <th>{{trans('admin_texts.date')}}</th>
+        <th>{{trans('admin_texts.price')}}</th>
+        <th>{{trans('admin_texts.amount')}}</th>
+        <th>{{trans('admin_texts.total')}}</th>
+        <th>{{{ trans('texts.status')}}}</th>
+    </tr> 
+    <?php $active = array('active','partly filled'); ?>
         @foreach($ordershistories as $ordershistory)
             <tr>
-            	<td>{{$ordershistory->id}}</td>
-            	<td>{{$ordershistory->username}}</td>
+                <td>{{$ordershistory->id}}</td>
+                <td>{{$ordershistory->username}}</td>
                 <td>{{$markets[$ordershistory->market_id]['wallet_from'].'/'.$markets[$ordershistory->market_id]['wallet_to']}}</td>
                 @if($ordershistory->type == 'sell')          
                     <td><b style="color:red">{{ ucwords($ordershistory->type) }}</b></td>            
@@ -72,7 +72,7 @@ $query_string = trim($query_string,'&');
         totalPages: <?php echo $total_pages ?>,
         alignment:'right',
         pageUrl: function(type, page, current){
-        	return "<?php echo URL::to('admin/manage/orders'); ?>"+'/'+page+'<?php echo "?".$query_string ?>'; 
+            return "<?php echo URL::to('admin/manage/orders'); ?>"+'/'+page+'<?php echo "?".$query_string ?>'; 
         }
     }
     $('#pager').bootstrapPaginator(options);

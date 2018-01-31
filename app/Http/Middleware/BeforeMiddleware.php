@@ -26,8 +26,8 @@ class BeforeMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure                 $next
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -70,7 +70,6 @@ class BeforeMiddleware
             }
         }
         if (!Auth::guest()) {
-            
             $user = Confide::user();
             $timeout = trim($user->timeout);
             if (empty($timeout)) {
@@ -86,31 +85,32 @@ class BeforeMiddleware
             }
         }
 
-        View::composer('layouts.default', function ($view) {
+        View::composer(
+            'layouts.default', function ($view) {
         
-            //check for auto logout
-            if (!Auth::guest()) {
-                $markets = Market::get();
+                //check for auto logout
+                if (!Auth::guest()) {
+                    $markets = Market::get();
 
-                $wallets = Wallet::orderby('type')->get();
-                $balance = new Balance();
-                $available_balances = array();
-                foreach ($wallets as $wallet) {
-                    $market_id = 0;
-                    foreach ($markets as $m) {
-                        if ($m->wallet_from == $wallet->id) {
-                            $market_id = $m->id;
-                        } elseif ($m->wallet_to == $wallet->id) {
-                            $market_id = $m->id;
+                    $wallets = Wallet::orderby('type')->get();
+                    $balance = new Balance();
+                    $available_balances = array();
+                    foreach ($wallets as $wallet) {
+                        $market_id = 0;
+                        foreach ($markets as $m) {
+                            if ($m->wallet_from == $wallet->id) {
+                                $market_id = $m->id;
+                            } elseif ($m->wallet_to == $wallet->id) {
+                                $market_id = $m->id;
+                            }
                         }
-                    }
 
-                    $available_balances[$wallet->id]['balance'] = $balance->getBalance($wallet->id);
-                    $available_balances[$wallet->id]['type'] = $wallet->type;
-                    $available_balances[$wallet->id]['market_id'] = $market_id;
+                        $available_balances[$wallet->id]['balance'] = $balance->getBalance($wallet->id);
+                        $available_balances[$wallet->id]['type'] = $wallet->type;
+                        $available_balances[$wallet->id]['market_id'] = $market_id;
+                    }
+                    $view->with('available_balances', $available_balances);
                 }
-                $view->with('available_balances', $available_balances);
-            }
             
 
 
@@ -118,110 +118,110 @@ class BeforeMiddleware
 
 
 
-            $btc_wallet = Wallet::where('type', 'BTC')->first();
-            $ltc_wallet = Wallet::where('type', 'LTC')->first();
-            $btc_markets = array();
-            $ltc_markets = array();
-            //$previous_day = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s') . " -1 day"));
-            //$previous_day = date( "Y-m-d H:i:s", strtotime( " -24 hours" ));
-            $previous_day = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . " -1 day"));
+                $btc_wallet = Wallet::where('type', 'BTC')->first();
+                $ltc_wallet = Wallet::where('type', 'LTC')->first();
+                $btc_markets = array();
+                $ltc_markets = array();
+                //$previous_day = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s') . " -1 day"));
+                //$previous_day = date( "Y-m-d H:i:s", strtotime( " -24 hours" ));
+                $previous_day = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . " -1 day"));
 
-            //btc market on sidebar left
-            $all_market_btc = array();
-            if (isset($btc_wallet->id)) {
-                $btc_markets = Market::leftJoin('wallets', 'market.wallet_from', '=', 'wallets.id')
+                //btc market on sidebar left
+                $all_market_btc = array();
+                if (isset($btc_wallet->id)) {
+                    $btc_markets = Market::leftJoin('wallets', 'market.wallet_from', '=', 'wallets.id')
                             ->select('market.*', 'wallets.name', 'wallets.type', 'wallets.enable_trading')->where('wallet_to', $btc_wallet->id)->orderby('wallets.type')->get();
                             //->leftJoin('trade_history', 'market.wallet_from', '=', 'trade_history.market_id')
                             //->select('market.*', 'wallets.name', 'wallets.type')->where('wallet_to',$btc_wallet->id)->where('trade_history.created_at','>=',$previous_day)->orderby('wallets.type')->get();
-                $btc_datainfo = array();
+                    $btc_datainfo = array();
                 
                     
-                foreach ($btc_markets as $value) {
-                    $all_market_btc[]=$value->id;
-                    $btc_datainfo[$value->id] = Trade::where('market_id', $value->id)->orderby('id', 'desc')->take(2)->get()->toArray();
-                    $select="SELECT SUM( amount * price ) AS total FROM trade_history WHERE `market_id`='".$value->id."' AND `created_at` >= '".$previous_day."' GROUP BY market_id";
+                    foreach ($btc_markets as $value) {
+                        $all_market_btc[]=$value->id;
+                        $btc_datainfo[$value->id] = Trade::where('market_id', $value->id)->orderby('id', 'desc')->take(2)->get()->toArray();
+                        $select="SELECT SUM( amount * price ) AS total FROM trade_history WHERE `market_id`='".$value->id."' AND `created_at` >= '".$previous_day."' GROUP BY market_id";
                     
-                    $total_btc = DB::select($select);
+                        $total_btc = DB::select($select);
                     
-                    if (isset($total_btc[0])) {
-                        $btc_datainfo[$value->id]['total'] = $total_btc[0]->total;  ////Get the latest(not latest 24h) total volume,
-                    } else {
-                        $btc_datainfo[$value->id]['total'] = 0;
+                        if (isset($total_btc[0])) {
+                            $btc_datainfo[$value->id]['total'] = $total_btc[0]->total;  ////Get the latest(not latest 24h) total volume,
+                        } else {
+                            $btc_datainfo[$value->id]['total'] = 0;
+                        }
                     }
-                    
+                    /*
+                    echo 'Curr price';
+                    echo $btc_datainfo[67][0]['price'];
+                
+                    echo '<br />Pre price';
+                    echo $btc_datainfo[67][1]['price'];
+                    echo '<br />';
+                
+                    var_dump( $btc_datainfo);
+                    */
+                
+                    //exit();
+                    //echo "<pre>btc_datainfo: "; print_r($btc_datainfo); echo "</pre>";
+                     $view->with('btc_datainfo', $btc_datainfo);
                 }
-                /*
-                echo 'Curr price';
-                echo $btc_datainfo[67][0]['price'];
-                
-                echo '<br />Pre price';
-                echo $btc_datainfo[67][1]['price'];
-                echo '<br />';
-                
-                var_dump( $btc_datainfo);
-                */
-                
-                //exit();
-                //echo "<pre>btc_datainfo: "; print_r($btc_datainfo); echo "</pre>";
-                 $view->with('btc_datainfo', $btc_datainfo);
-            }
-            //ltc market on sidebar left
-            $all_market_ltc = array();
-            if (isset($ltc_wallet->id)) {
-                $ltc_markets = Market::leftJoin('wallets', 'market.wallet_from', '=', 'wallets.id')
+                //ltc market on sidebar left
+                $all_market_ltc = array();
+                if (isset($ltc_wallet->id)) {
+                    $ltc_markets = Market::leftJoin('wallets', 'market.wallet_from', '=', 'wallets.id')
                             ->select('market.*', 'wallets.name', 'wallets.type', 'wallets.enable_trading')->where('wallet_to', $ltc_wallet->id)->orderby('wallets.type')->get();
                             //->leftJoin('trade_history', 'market.wallet_from', '=', 'trade_history.market_id')
                             //->select('market.*', 'wallets.name', 'wallets.type')->where('wallet_to',$ltc_wallet->id)->where('trade_history.created_at','>=',$previous_day)->orderby('wallets.type')->get();
                             
-                $ltc_datainfo = array();
-                foreach ($ltc_markets as $value) {
-                    $all_market_ltc[]=$value->id;
-                    $ltc_datainfo[$value->id] = Trade::where('market_id', $value->id)->orderby('id', 'desc')->take(2)->get()->toArray();
-                    $select="SELECT SUM( amount * price ) AS total FROM trade_history Where `market_id`='".$value->id."' AND `created_at` >= '".$previous_day."' GROUP BY market_id";
-                    $total_ltc = DB::select($select);
-                    if (isset($total_ltc[0])) {
-                        $ltc_datainfo[$value->id]['total'] = $total_ltc[0]->total;
-                    } else {
-                        $ltc_datainfo[$value->id]['total'] = 0;
+                    $ltc_datainfo = array();
+                    foreach ($ltc_markets as $value) {
+                        $all_market_ltc[]=$value->id;
+                        $ltc_datainfo[$value->id] = Trade::where('market_id', $value->id)->orderby('id', 'desc')->take(2)->get()->toArray();
+                        $select="SELECT SUM( amount * price ) AS total FROM trade_history Where `market_id`='".$value->id."' AND `created_at` >= '".$previous_day."' GROUP BY market_id";
+                        $total_ltc = DB::select($select);
+                        if (isset($total_ltc[0])) {
+                            $ltc_datainfo[$value->id]['total'] = $total_ltc[0]->total;
+                        } else {
+                            $ltc_datainfo[$value->id]['total'] = 0;
+                        }
                     }
+                    //echo "<pre>ltc_datainfo: "; print_r($ltc_datainfo); echo "</pre>";
+                    $view->with('ltc_datainfo', $ltc_datainfo);
                 }
-                //echo "<pre>ltc_datainfo: "; print_r($ltc_datainfo); echo "</pre>";
-                $view->with('ltc_datainfo', $ltc_datainfo);
-            }
-            $view->with('btc_markets', $btc_markets);
-            $view->with('ltc_markets', $ltc_markets);
+                $view->with('btc_markets', $btc_markets);
+                $view->with('ltc_markets', $ltc_markets);
 
-            /*
-             @ BTC / LTC Total Volume
-             @ Total Trades
-            */
-            //24 Hour Statistics on sidebar left
+                /*
+                @ BTC / LTC Total Volume
+                @ Total Trades
+                */
+                //24 Hour Statistics on sidebar left
             
-            //echo "Date: ".date("Y-m-d H:i:s");
+                //echo "Date: ".date("Y-m-d H:i:s");
             
-            //echo "+24 hours: ".$previous_day;
-            if (!empty($all_market_btc)) {
-                $btcmarkets = "'".implode("','", $all_market_btc)."'";
-                $select="SELECT COUNT(*) as number_trade,SUM( amount * price ) AS total FROM trade_history WHERE `created_at` >= '".$previous_day."' AND `market_id` IN (".$btcmarkets.")";
+                //echo "+24 hours: ".$previous_day;
+                if (!empty($all_market_btc)) {
+                    $btcmarkets = "'".implode("','", $all_market_btc)."'";
+                    $select="SELECT COUNT(*) as number_trade,SUM( amount * price ) AS total FROM trade_history WHERE `created_at` >= '".$previous_day."' AND `market_id` IN (".$btcmarkets.")";
                 
-                $statistic_btc = DB::select($select);
-                //echo "<pre>statistic_btc: "; print_r($statistic_btc); echo "</pre>";
-                $view->with('statistic_btc', $statistic_btc[0]);
-            }
-            if (!empty($all_market_ltc)) {
-                $ltcmarkets = "'".implode("','", $all_market_ltc)."'";
-                $select="SELECT COUNT(*) as number_trade,SUM( amount * price ) AS total FROM trade_history Where `created_at` >= '".$previous_day."' AND `market_id` IN (".$ltcmarkets.")";
-                $statistic_ltc = DB::select($select);
-                //echo "<pre>statistic_ltc: "; print_r($statistic_ltc); echo "</pre>";
-                $view->with('statistic_ltc', $statistic_ltc[0]);
-            }
-            $menu_pages = Post::where('type', 'page')->where('show_menu', 1)->get();
+                    $statistic_btc = DB::select($select);
+                    //echo "<pre>statistic_btc: "; print_r($statistic_btc); echo "</pre>";
+                    $view->with('statistic_btc', $statistic_btc[0]);
+                }
+                if (!empty($all_market_ltc)) {
+                    $ltcmarkets = "'".implode("','", $all_market_ltc)."'";
+                    $select="SELECT COUNT(*) as number_trade,SUM( amount * price ) AS total FROM trade_history Where `created_at` >= '".$previous_day."' AND `market_id` IN (".$ltcmarkets.")";
+                    $statistic_ltc = DB::select($select);
+                    //echo "<pre>statistic_ltc: "; print_r($statistic_ltc); echo "</pre>";
+                    $view->with('statistic_ltc', $statistic_ltc[0]);
+                }
+                $menu_pages = Post::where('type', 'page')->where('show_menu', 1)->get();
                 //get locate
                 $locs= Config::get('app.locales');
                 $view->with('loc', $locs);
                 //end get locate
                 $view->with('menu_pages', $menu_pages);
-        });
+            }
+        );
 
 
 

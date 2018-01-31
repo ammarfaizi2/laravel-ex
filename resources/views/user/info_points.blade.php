@@ -35,29 +35,29 @@
 				So lets say you paid out 0.1 BTC in trade fees in a given day and you had 10 referred users which also paid 0.1 BTC in trade fees each on that day.
 				<br><br>
 				<table border="0">
-				  <?php 
-					$points_directly=(($percent_point_reward_trade*0.1)/100)/$point_per_btc;
-					$points_referrals=(($percent_point_reward_referred_trade*0.1*10)/100)/$point_per_btc;
-				  ?>
-				<tbody><tr><td>Points Earned Directly&nbsp;&nbsp;</td><td>{{$points_directly}} EP</td></tr>
-				<tr><td>Points Earned from Referrals&nbsp;&nbsp;</td><td>{{$points_referrals}} EP</td></tr>
-				<tr><td><strong>Total Points Earned that Day&nbsp;&nbsp;</strong></td><td><strong>{{($points_directly+$points_referrals)}} CP</strong></td></tr>
-				</tbody></table>
-						  
-				<br>                  
-				<h4>When Do I Get Paid My CoinPal Points?</h4>
-				The program which calculates payouts and makes disbursements runs after midnight EST every day.                  
-				<br><br>
-						
-				<h4>What Does It Cost To Enter The Drawing?</h4>
-				Each entry will cost 0.1 CoinPal Point.   Users may place up to 100 entries into any single drawing.
-				<br><br>
-						
-				<h4>What Kind of Prizes Will There Be?</h4>
-				It will vary.  Graphics Cards, iPads, Script Mining Blades, etc.    We will also allow for trading your prize for BTC instead (at a reasonable conversion rate determined by us) should you reside in an area that we can not easily ship to.
-				<br><br>               
-			</div>  
-		  </div>
-		</div>
-	</div>
+				  <?php
+                    $points_directly=(($percent_point_reward_trade*0.1)/100)/$point_per_btc;
+                    $points_referrals=(($percent_point_reward_referred_trade*0.1*10)/100)/$point_per_btc;
+                    ?>
+                <tbody><tr><td>Points Earned Directly&nbsp;&nbsp;</td><td>{{$points_directly}} EP</td></tr>
+                <tr><td>Points Earned from Referrals&nbsp;&nbsp;</td><td>{{$points_referrals}} EP</td></tr>
+                <tr><td><strong>Total Points Earned that Day&nbsp;&nbsp;</strong></td><td><strong>{{($points_directly+$points_referrals)}} CP</strong></td></tr>
+                </tbody></table>
+                          
+                <br>                  
+                <h4>When Do I Get Paid My CoinPal Points?</h4>
+                The program which calculates payouts and makes disbursements runs after midnight EST every day.                  
+                <br><br>
+                        
+                <h4>What Does It Cost To Enter The Drawing?</h4>
+                Each entry will cost 0.1 CoinPal Point.   Users may place up to 100 entries into any single drawing.
+                <br><br>
+                        
+                <h4>What Kind of Prizes Will There Be?</h4>
+                It will vary.  Graphics Cards, iPads, Script Mining Blades, etc.    We will also allow for trading your prize for BTC instead (at a reasonable conversion rate determined by us) should you reside in an area that we can not easily ship to.
+                <br><br>               
+            </div>  
+          </div>
+        </div>
+    </div>
 </div>

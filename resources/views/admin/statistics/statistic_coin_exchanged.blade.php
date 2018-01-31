@@ -31,31 +31,31 @@
 	 	<th>{{trans('admin_texts.total_exchanged')}}</th>
 	</tr>
 	<?php
-		
-		//var_dump($maincoins_exchanged);
-		//exit();
-		if (count($maincoins_exchanged) > 0){
-	?>
-				@foreach($maincoins_exchanged as $maincoin_exchanged)
-				@if(isset($wallets[$maincoin_exchanged->wallet_to]->type))
-					<tr><td><strong>{{$wallets[$maincoin_exchanged->wallet_to]->type}}</strong></td><td>{{$wallets[$maincoin_exchanged->wallet_to]->name}}</td><td><strong>{{$maincoin_exchanged->total_amount}} {{$wallets[$maincoin_exchanged->wallet_to]->type}}</strong></td></tr>
-				@endif
-				@endforeach
-	<?php
-		}
-	?>
+        
+        //var_dump($maincoins_exchanged);
+        //exit();
+    if (count($maincoins_exchanged) > 0) {
+    ?>
+            @foreach($maincoins_exchanged as $maincoin_exchanged)
+            @if(isset($wallets[$maincoin_exchanged->wallet_to]->type))
+                <tr><td><strong>{{$wallets[$maincoin_exchanged->wallet_to]->type}}</strong></td><td>{{$wallets[$maincoin_exchanged->wallet_to]->name}}</td><td><strong>{{$maincoin_exchanged->total_amount}} {{$wallets[$maincoin_exchanged->wallet_to]->type}}</strong></td></tr>
+            @endif
+            @endforeach
+    <?php
+    }
+    ?>
 </table>
 <h3>Other Coin</h3>
 <table class="table table-striped list-coin hourly-fees">
-	<tr>
-	 	<th>{{trans('admin_texts.coin_code')}}</th>
-	 	<th>{{trans('admin_texts.coin_name')}}</th>
-	 	<th>{{trans('admin_texts.total_exchanged')}}</th>
-	</tr> 		
-	@foreach($coins_exchanged as $coin_exchanged)
-	@if(isset($wallets[$coin_exchanged->wallet_from]->type))
-		<tr><td><strong>{{$wallets[$coin_exchanged->wallet_from]->type}}</strong></td><td >{{$wallets[$coin_exchanged->wallet_from]->name}}</td><td><strong>{{$coin_exchanged->total_amount}} {{$wallets[$coin_exchanged->wallet_from]->type}}</strong></td></tr>
-	@endif
-	@endforeach
+    <tr>
+        <th>{{trans('admin_texts.coin_code')}}</th>
+        <th>{{trans('admin_texts.coin_name')}}</th>
+        <th>{{trans('admin_texts.total_exchanged')}}</th>
+    </tr>       
+    @foreach($coins_exchanged as $coin_exchanged)
+    @if(isset($wallets[$coin_exchanged->wallet_from]->type))
+        <tr><td><strong>{{$wallets[$coin_exchanged->wallet_from]->type}}</strong></td><td >{{$wallets[$coin_exchanged->wallet_from]->name}}</td><td><strong>{{$coin_exchanged->total_amount}} {{$wallets[$coin_exchanged->wallet_from]->type}}</strong></td></tr>
+    @endif
+    @endforeach
 </table>
 @stop

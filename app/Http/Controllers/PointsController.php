@@ -32,9 +32,9 @@ use App\Models\UserSecurityQuestion;
 class PointsController extends Controller
 {
     /*
-	**$amount_fee is fee of trade
-	** $wallet_id wallet of amount_fee (BTC or LTC)
-	*/
+    **$amount_fee is fee of trade
+    ** $wallet_id wallet of amount_fee (BTC or LTC)
+    */
     public function addPointsTrade($user_id, $amount_fee, $trade_id, $wallet_init)
     {
         $logFile = 'points.log';
@@ -88,6 +88,5 @@ class PointsController extends Controller
         } else {
             //Log::info("\n".'No wallet POINTS');
         }
-        
     }
 }

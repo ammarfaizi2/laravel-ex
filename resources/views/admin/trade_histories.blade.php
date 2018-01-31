@@ -7,7 +7,7 @@ $query_string = '';
 foreach (Request::query() as $key => $value) {
     $query_string .= $key."=".$value."&";
 }
-$query_string = trim($query_string,'&');
+$query_string = trim($query_string, '&');
 ?>
 <form class="form-inline" method="get" action="{{Request::url()}}">        
     <label>{{{ trans('texts.market')}}}</label>        
@@ -35,23 +35,23 @@ $query_string = trim($query_string,'&');
 </form>
 <div id="messages"></div>
 <table class="table table-striped" id="list-fees">
-	<tr>
-	 	<th>{{trans('admin_texts.trade_id')}}</th>
-	 	<th>{{{ trans('texts.market')}}}</th>
-	 	<th>{{trans('admin_texts.seller_id')}}</th>
-	 	<th>{{trans('admin_texts.buyer_id')}}</th>
-	 	<th>{{trans('admin_texts.type')}}</th>	 	
-	 	<th>{{trans('admin_texts.date')}}</th>
-	 	<th>{{trans('admin_texts.price')}}</th>
-	 	<th>{{trans('admin_texts.amount')}}</th>
-	 	<th>{{trans('admin_texts.total')}}</th>
-	 	<th>{{trans('admin_texts.sell_fee')}}</th>
-	 	<th>{{trans('admin_texts.buy_fee')}}</th>
-	</tr> 	
+    <tr>
+        <th>{{trans('admin_texts.trade_id')}}</th>
+        <th>{{{ trans('texts.market')}}}</th>
+        <th>{{trans('admin_texts.seller_id')}}</th>
+        <th>{{trans('admin_texts.buyer_id')}}</th>
+        <th>{{trans('admin_texts.type')}}</th>      
+        <th>{{trans('admin_texts.date')}}</th>
+        <th>{{trans('admin_texts.price')}}</th>
+        <th>{{trans('admin_texts.amount')}}</th>
+        <th>{{trans('admin_texts.total')}}</th>
+        <th>{{trans('admin_texts.sell_fee')}}</th>
+        <th>{{trans('admin_texts.buy_fee')}}</th>
+    </tr>   
 
-	@foreach($tradehistories as $trade_history)
+    @foreach($tradehistories as $trade_history)
         <tr>
-        	<td>{{$trade_history->id}}</td>
+            <td>{{$trade_history->id}}</td>
             <td>{{$markets[$trade_history->market_id]['wallet_from'].'/'.$markets[$trade_history->market_id]['wallet_to']}}</td>
             <td>{{$trade_history->seller}}</td>
             <td>{{$trade_history->buyer}}</td>
