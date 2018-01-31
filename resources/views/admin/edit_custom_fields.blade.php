@@ -18,18 +18,18 @@
 	@if ( Session::get('notice') )
 	      <div class="alert">{{{ Session::get('notice') }}}</div>
 	@endif
-<form class="form-horizontal" role="form" id="edit_user" method="POST" action="{{ route('admin.edit_custom_fields') }}?id={{$_GET['id']}}" autocomplete=off>
+<form class="form-horizontal" role="form" id="edit_user" method="POST" action="{{ route('admin.edit_custom_fields') }}?id={{$_GET['id']}}&amp;prgc={{$_GET['prgc']}}" autocomplete=off>
 	<input type="hidden" name="_token" value="{{ csrf_token() }}">
 	<div class="form-group">
 	    <label for="inputEmail3" class="col-sm-2 control-label">Coin Name</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
-			 {!! $that->editCustomFieldsName($q->coin) !!}
+			 {!! $that->editCustomFieldsName($q->id) !!}
 			</div>	      	      
 	    </div>
 	</div>
 	<div class="form-group">
-	    <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+	    <label class="col-sm-2 control-label">Name</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
 			  <input type="text" required  class="form-control" style="height:40px;width:400px;" name="name" value="{{$q->name}}">
@@ -37,7 +37,7 @@
 	    </div>
 	</div>
 	<div class="form-group">
-	    <label for="inputEmail3" class="col-sm-2 control-label">Value</label>
+	    <label class="col-sm-2 control-label">Value</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
 			  <textarea required name="value" style="width: 401px; height: 91px; resize: none;">{{$q->value}}</textarea>
@@ -57,56 +57,11 @@
 	    </div>
 	</div>
 	<div class="form-group">
-		<input type="hidden" class="form-control" id="user_id" value="100" name="user_id">
 	    <div class="col-sm-offset-2 col-sm-10">
 	      <button type="submit" class="btn btn-primary" id="do_edit">Save</button>
 	    </div>
 	</div>
 </form>
-<div id="messages"></div>
-<div id="messageModal" class="modal hide fade" tabindex="-1" role="dialog">		
-	<div class="modal-body">		
-	</div>
-	<div class="modal-footer">
-		<button class="btn close-popup" data-dismiss="modal">Close</button>
-	</div>
 </div>
-<script src="http://bitbase2.dev/assets/js/jquery.validate.min.js"></script>
-
-<script type="text/javascript">
-    $(document).ready(function() {    	
-        $("#edit_user").validate({
-            rules: {
-                fullname: "required",                
-                password: {
-                    minlength: 8
-                },
-                password_confirmation: {
-                    minlength: 8,
-                    equalTo: "#password"
-                },
-                email: {
-                    required: true,
-                    email: true
-                },
-            },
-            messages: {
-                fullname: "Please enter your full name.",               
-                password: {
-                    required: "Please provide a password.",
-                    minlength: "Your password must be at least 8 characters long."
-                },
-                confirm_password: {
-                    required: "Please provide a password.",
-                    minlength: "Your password must be at least 8 characters long.",
-                    equalTo: "Please enter the same password as above."
-                },
-                email: "Please enter a valid email address.",
-            }
-	});
-
-   });
-</script>
-        </div>
-        <!-- Sidebar right -->
-            </div>
+<!-- Sidebar right -->
+</div>

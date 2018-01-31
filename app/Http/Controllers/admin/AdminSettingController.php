@@ -691,6 +691,11 @@ class AdminSettingController extends Controller
         }
     }
 
+    public function customFieldsPaginator()
+    {
+        return DB::table('custom_fields')->where('deleted_at', '=', null)->count();
+    }
+
     
     public function addWithdrawLimit()
     {
@@ -1791,10 +1796,19 @@ class AdminSettingController extends Controller
         return '<input type="text" readonly style="height:40px;width:400px;" value="'.$a->type.' - '.$a->name.'"><input type="hidden" name="coin-name" value="'.$id.'">';
     }
 
-    public function editCustomFieldsName($id)
+    public function editCustomFieldsName($id, $v = 1)
     {
-        $a = DB::table('wallets')->where('id', '=', $id)->select(['type', 'name'])->first();
-        return '<input type="text" readonly style="height:40px;width:400px;" value="'.$a->type.' - '.$a->name.'"><input type="hidden" name="coin-name" value="'.$id.'">';
+        if ($v === 1) {
+            $a = DB::table('wallets')->where('id', '=', $id)->select(['type', 'name'])->first();
+            return $a === null ? null : '<input type="text" readonly style="height:40px;width:400px;" value="'.$a->type.' - '.$a->name.'"><input type="hidden" name="coin-name" value="'.$_GET['id'].'">';
+        } else {
+            $a = DB::table('market')
+                ->join('wallets', 'market.wallet_from', '=', 'wallets.id')
+                ->where('market.id', '=', $id)
+                ->select(['wallets.type', 'wallets.name'])
+                ->first();
+            return $a === null ? null : '<input type="text" readonly style="height:40px;width:400px;" value="'.$a->type.' - '.$a->name.'"><input type="hidden" name="coin-name" value="'.$_GET['id'].'">';
+        }
     }
 
     public function editFeaturedMarketPost()
@@ -1804,7 +1818,6 @@ class AdminSettingController extends Controller
         foreach ($field as $val) {
             $cond = $cond && isset($_POST[$val]) && $_POST[$val] != "";
         }
-        var_dump($_POST);
         if ($cond) {
             if (DB::table('featured_market')->where('id', '=', $_GET['id'])->update(
                 [
@@ -1850,82 +1863,141 @@ class AdminSettingController extends Controller
 
     public function customFields()
     {
-         if (isset($_GET['delete'])) {
-            DB::table('custom_fields')->where('id', '=', $_GET['delete'])->update(
-                [
-                    'deleted_at' => date('Y-m-d H:i:s')
-                ]
-            );
-            return Redirect::to(route('admin.custom_fields'))->with('success', 'Delete success!');
-        }
         return view('admin.custom_fields', ['that' => $this]);
     }
 
-    public function getCustomField($offset)
+    public function getCustomFields($offset)
     {
-        return DB::table('custom_fields')->select(['custom_fields.*', 'wallets.name as wallet_name', 'wallets.type as wallet_type'])->join('wallets', 'wallets.id', '=', 'custom_fields.coin', 'inner')->where('custom_fields.deleted_at', '=', null)->offset($offset)->limit(15)->get();
+        return DB::table('custom_fields')
+                ->select(
+                    [
+                        DB::raw('count(custom_fields.market_id) as total_custom_fields'), 
+                        DB::raw('concat(wallets.type,\' - \',wallets.name) as name'),
+                        DB::raw('market.id as id')
+                    ]
+                )->join('market', 'market.id', '=', 'custom_fields.market_id', 'inner')
+                ->join('wallets', 'wallets.id', '=', 'market.wallet_from', 'inner')
+                ->where('custom_fields.deleted_at', '=', null)
+                ->groupBy('custom_fields.market_id')
+                ->limit(15)
+                ->offset($offset)
+                ->get();
+    }
+
+    public function getCustomFieldsSpecific()
+    {
+        return DB::table('custom_fields')
+                ->select('*')
+                ->where('market_id', '=', $_GET['id'])
+                ->where('deleted_at', '=', null)
+                ->get();
+    }
+
+    public function getCoinNameByMarketId($marketId)
+    {
+        $a = DB::table('market')->select(DB::raw('concat(wallets.type,\' - \',wallets.name) as name'))->join('wallets', 'market.wallet_from', '=', 'wallets.id')->where('market.id', '=', $_GET['id'])->first();
+        return isset($a->name) ? $a->name : null;
+    }
+
+    public function getAllCoinNameInDropDownCustomFields()
+    {
+        $r = '<select name="coin-name">';
+            $a = DB::table('market')
+                ->select(['market.id', DB::raw('concat(wallets.type,\' - \',wallets.name) as name')])
+                ->join('wallets', 'wallets.id', '=', 'market.wallet_from', 'inner')
+                ->get()
+                ->toArray();
+        foreach ($a as $val) {
+            $r .= '<option value="'.e($val->id).'">'.e($val->name).'</option>';
+        }
+        return $r.'</select>';
     }
 
     public function addCustomFields()
     {
-        
-        $s = isset($_POST['type']) && in_array($_POST['type'], ['Text', 'Number', 'Link']);
-        if ($s) {
-            $r = ['coin-name', 'name', 'value'];
-            foreach ($r as $key => $val) {
-                $s = $s && isset($_POST[$val]);
+        $c = isset($_POST['type']) and in_array($_POST['type'], ['Text', 'Number', 'Link']);
+        if ($c) {
+            foreach (['coin-name','name','value'] as $f) {
+                $c = $c && isset($_POST[$f]);
             }
-            if ($s and DB::table('custom_fields')->insert(
-                [
-                    'coin' => $_POST['coin-name'],
-                    'name' => $_POST['name'],
-                    'value' => $_POST['value'],
-                    'type' => strtolower($_POST['type']),
-                    'created_at' => date('Y-m-d H:i:s')
-                ]
-            )) {
-                return Redirect::to(route('admin.custom_fields'))->with('success', 'Success!'); 
-            } else {
-                return Redirect::to(route('admin.custom_fields'))->with('error', 'Error');  
+            if ($c) {
+                if (DB::table('custom_fields')
+                    ->insert(
+                        [
+                            'market_id' => $_POST['coin-name'],
+                            'name'  => $_POST['name'],
+                            'value' => $_POST['value'],
+                            'type' => strtolower($_POST['type']),
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]
+                    )) {
+                    return Redirect::to(route('admin.custom_fields'))->with('success', 'Success!');
+                } else {
+                    return Redirect::to(route('admin.custom_fields'))->with('error', 'Internal error!');
+                }
             }
-        } else {
-             return Redirect::to(route('admin.custom_fields'))->with('error', 'Please fill the form!');
         }
+        return Redirect::to(route('admin.custom_fields'))->with('error', 'Please fill the form!');
     }
 
     public function editCustomFields()
     {
-        if (! isset($_GET['id'])) {
+        if (isset($_GET['id'])) {
+            if (isset($_GET['prgc'])) {
+                return $this->editCustomField();
+            }
+            return view('admin.custom_fields_edit', ['that' => $this]);
+        } elseif (isset($_GET['delete'])) {
+            if (DB::table('custom_fields')
+                ->where('id', '=', $_GET['delete'])
+                ->update(
+                    [
+                        'deleted_at' => date('Y-m-d H:i:s')
+                    ]
+                )) {
+                return Redirect::to(route('admin.edit_custom_fields').'?id='.e($_GET['prgc']))->with('success', 'Delete success!');
+            }
+        }
+        return Redirect::to(route('admin.custom_fields'));
+    }
+
+    public function editCustomField()
+    {
+        $q = DB::table('custom_fields')
+        ->select(['custom_fields.*', 'market.wallet_from as id'])
+        ->join('market', 'market.id', '=', 'custom_fields.market_id')
+        ->where('custom_fields.id', '=', $_GET['id'])
+        ->first();
+        if (! $q) {
             return Redirect::to(route('admin.custom_fields'));
         }
-        if (! $q = DB::table('custom_fields')->select(['custom_fields.*', 'wallets.name as wallet_name', 'wallets.type as wallet_type'])->join('wallets', 'custom_fields.coin', '=', 'wallets.id')->where('custom_fields.id', '=', $_GET['id'])->first()) {
-            return Redirect::to(route('admin.custom_fields'));
-        }
-         return view('admin.edit_custom_fields', ['that' => $this, 'q' => $q]);
+        return view('admin.edit_custom_fields', ['that' => $this, 'q' => $q]);
     }
 
     public function editCustomFieldsPost()
     {
-        $s = isset($_POST['type']) && in_array($_POST['type'], ['Text', 'Number', 'Link']);
-        if ($s) {
-            $r = ['coin-name', 'name', 'value'];
-            foreach ($r as $key => $val) {
-                $s = $s && isset($_POST[$val]);
+        $c = isset($_POST['type']) and in_array($_POST['type'], ['Text', 'Number', 'Link']);
+        if ($c) {
+            foreach (['coin-name','name','value'] as $f) {
+                $c = $c && isset($_POST[$f]);
             }
-            if ($s and DB::table('custom_fields')->where('coin', '=', $_POST['coin-name'])->update(
-                [
-                    'name' => $_POST['name'],
-                    'value' => $_POST['value'],
-                    'type' => strtolower($_POST['type']),
-                    'updated_at' => date('Y-m-d H:i:s')
-                ]
-            )) {
-                return Redirect::to(route('admin.custom_fields'))->with('success', 'Success!'); 
-            } else {
-                return Redirect::to(route('admin.edit_custom_fields').'?id='.$_GET['id'])->with('error', 'Error');  
+            if ($c) {
+                if (DB::table('custom_fields')
+                    ->where('id', '=', $_GET['id'])
+                    ->update(
+                        [
+                            'name'  => $_POST['name'],
+                            'value' => $_POST['value'],
+                            'type' => strtolower($_POST['type']),
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]
+                    )) {
+                    return Redirect::to(route('admin.edit_custom_fields').'?id='.e($_GET['prgc']))->with('success', 'Success!');
+                } else {
+                    return Redirect::to(route('admin.custom_fields'))->with('error', 'Internal error!');
+                }
             }
-        } else {
-             return Redirect::to(route('admin.edit_custom_fields').'?id='.$_GET['id'])->with('error', 'Please fill the form!');
         }
+        return Redirect::to(route('admin.custom_fields'))->with('error', 'Please fill the form!');
     }
 }

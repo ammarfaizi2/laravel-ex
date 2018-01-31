@@ -1,4 +1,4 @@
-<?php 
+<?php
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1; 
 ?>
 @extends('admin.layouts.master')
@@ -9,7 +9,7 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 <!-- Main Content -->
 <div id="container" class="clear">
 <div class="main-contain">
-<h2>Custom Fields Market</h2>
+<h2>{{$coin = $that->getCoinNameByMarketId($_GET['id'])}} | Custom Fields</h2>
 @if ( is_array(Session::get('error')) )
 <div class="alert alert-error">{{ head(Session::get('error')) }}</div>
 @elseif ( Session::get('error') )
@@ -23,7 +23,7 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 @endif
 <script src="{{ asset('assets/js/jquery-1.10.2.min.js') }}"></script>
 <script src="{{ asset('assets/js/bootstrap-paginator.js') }}"></script>
-<a href="javascript:void(0);" id="add_market_link">Add new custom field</a>
+<a href="javascript:void(0);" id="add_market_link">Add new ({{$coin}}) custom field</a>
 <script type="text/javascript">
 	var q = document.getElementById('add_market_link');
 	q.addEventListener('click', function () {
@@ -37,7 +37,7 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 	    <label class="col-sm-2 control-label">Coin Name</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
-			  {!! $that->getAllCoinNameInDropDownCustomFields() !!}
+			  {!! $that->editCustomFieldsName($_GET['id'], 2) !!}
 			</div>	      	      
 	    </div>
 	</div>
@@ -80,15 +80,16 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 <table class="table table-striped" id="list-fees">
 	<tr>
 	 	<th>No.</th>
-	 	<th>Coin Name</th>
-	 	<th>Total Custom Fields</th>
+	 	<th>Name</th>
+	 	<th>Value</th>
+	 	<th>Type</th>
 	 	<th></th>
 	</tr>
 	@php
 		$no = $page === 1 ? 1 : $page + 15;
 	@endphp
-	@foreach($that->getCustomFields($page === 1 ? 0 : $page + 13) as $q)
-		<tr><td>{{$no++}}</td><td>{{$q->name}}</td><td>{{$q->total_custom_fields}}</td><td><a href="{{ route('admin.edit_custom_fields') }}?id={{$q->id}}" class="edit_page">Edit</a></td></tr>
+	@foreach($that->getCustomFieldsSpecific($page === 1 ? 0 : $page + 13) as $q)
+		<tr><td>{{$no++}}</td><td>{{$q->name}}</td><td>{{$q->value}}</td><td>{{$q->type}}</td><td><a href="{{ route('admin.edit_custom_fields') }}?id={{$q->id}}&amp;prgc={{$_GET['id']}}" class="edit_page">Edit</a> | <a href="?delete={{$q->id}}&amp;prgc={{$_GET['id']}}">Delete</a></td></tr>
 	@endforeach
 </table>
 <div id="pager"></div>
@@ -112,6 +113,6 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 </div>
         </div>
         <!-- Sidebar right -->
-            </div>
+	            </div>
     <!-- Footer -->
     <!-- Footer -->

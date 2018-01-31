@@ -275,7 +275,12 @@ class HomeController extends Controller
 
     public function hasCustomFields($coinId)
     {
-        return DB::table('custom_fields')->select(['custom_fields.*'])->join('wallets', 'wallets.id', '=', 'custom_fields.coin')->join('market', 'wallets.id', '=', 'market.wallet_from')->orderBy('custom_fields.created_at')->where('market.id', '=', $coinId)->where('custom_fields.deleted_at', '=', null)->get();
+        return DB::table('custom_fields')
+                ->select(['custom_fields.name', 'custom_fields.value', 'custom_fields.type'])
+                ->join('market', 'market.id', '=', 'custom_fields.market_id')
+                ->where('market.id', '=', $coinId)
+                ->where('custom_fields.deleted_at', '=', null)
+                ->get();
     }
 
     public function hasFeaturedMarket()
