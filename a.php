@@ -43,16 +43,10 @@ $q = scanner(__DIR__.'/resources/views');
 array_walk($q, function ($q) {
 	file_put_contents($q,str_replace(
 		[
-			'Admin_SettingController',
-			'Session::getToken()',
-			'Confide::checkAction',
-			'Input::'
+			'$that->buildMarketUrl'
 		],
 		[
-			'admin\\\\AdminSettingController',
-			'Session::token()',
-			'Auth::check',
-			'Request::'
+			'\App\Http\Controllers\HomeController::buildMarketUrl'
 		],
 		file_get_contents($q),
 		$n

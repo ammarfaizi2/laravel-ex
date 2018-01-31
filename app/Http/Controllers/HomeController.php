@@ -294,7 +294,7 @@ class HomeController extends Controller
         return view('index', $data);
     }
 
-    public function buildMarketUrl($marketId, $type = 1)
+    public static function buildMarketUrl($marketId, $type = 1)
     {
         $a = DB::table('market')
             ->select(['wallets.type', 'market.wallet_to'])

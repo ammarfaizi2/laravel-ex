@@ -31,7 +31,7 @@
                 <tr id="mainCoin-{{$am['market']->id}}">
                     <td class="from_name">
                         @if(!empty($am['logo']))                        
-                        <a href="{{$marketUrl = route('market', $that->buildMarketUrl($am['market']->id).'_BTC')}}"><img src="{{asset('')}}/{{$am['logo']}}" class="coin_icon_small" /></a>
+                        <a href="{{$marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($am['market']->id).'_BTC')}}"><img src="{{asset('')}}/{{$am['logo']}}" class="coin_icon_small" /></a>
                         @else
                         &nbsp;
                         @endif
@@ -110,7 +110,7 @@
                 <tr id="mainCoin-{{$am['market']->id}}">
                     <td class="from_name">
                         @if(!empty($am['logo']))                        
-                        <a  href="{{$marketUrl = route('market', $that->buildMarketUrl($am['market']->id).'_LTC')}}"><img class="coin_icon_small" src="{{asset('')}}/{{$am['logo']}}" /></a>
+                        <a  href="{{$marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($am['market']->id).'_LTC')}}"><img class="coin_icon_small" src="{{asset('')}}/{{$am['logo']}}" /></a>
                         @else
                         &nbsp;
                         @endif
