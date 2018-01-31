@@ -61,7 +61,7 @@ $trade = new Trade();
 
                                             <?php
                                             else :?>
-                                                <a href="{{{ URL::to('/market/') }}}/{{$available_balance['market_id']}}" >
+                                                <a href="{{$marketUrl = route('market', $that->buildMarketUrl($available_balance['market_id'], 2))}}" >
                                                     <span class="name">{{$available_balance['type']}}</span><span class="price" id="spanBalance-{{$key}}">{{sprintf('%.8f',$available_balance['balance'])}}</span>
                                                 </a>                    
                                             <?php

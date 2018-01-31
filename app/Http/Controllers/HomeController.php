@@ -294,14 +294,25 @@ class HomeController extends Controller
         return view('index', $data);
     }
 
-    public function buildMarketUrl($marketId)
+    public function buildMarketUrl($marketId, $type = 1)
     {
         $a = DB::table('market')
-            ->select(['wallets.type'])
+            ->select(['wallets.type', 'market.wallet_to'])
             ->join('wallets', 'wallets.id', '=', 'market.wallet_from')
             ->where('market.id', '=', $marketId)
             ->first();
-        return isset($a->type) ? $a->type : '';
+        if ($type === 1) {
+            return isset($a->type) ? $a->type : ''; 
+        } elseif ($type === 2) {
+            if (isset($a->wallet_to, $a->type)) {
+                $b = DB::table('wallets')
+                    ->select(['type'])
+                    ->where('id', '=', $a->wallet_to)
+                    ->first();
+                return isset($b->type) ? $a->type.'_'.$b->type : '';
+            }
+        }
+        return '';
     }
 
     public function hasCustomFields($coinId)
