@@ -57,15 +57,20 @@ class HomeController extends Controller
                 ->select(['market.id', 'market.wallet_to'])
                 ->join('market', 'market.wallet_from', '=', 'wallets.id')
                 ->where('wallets.type', '=', strtoupper($a[0]))
-                ->first();
-            if (isset($b->wallet_to)) {
-                $c = DB::table('wallets')
+                ->get();
+            if ($b) {
+                foreach ($b as $b) {
+                    $c = DB::table('wallets')
                     ->select(['type'])
                     ->where('id', '=', $b->wallet_to)
                     ->first();
-                if (isset($c->type) && strtoupper($a[1]) === $c->type) {
-                    $market_id = $b->id;
-                } else {
+                    if (isset($c->type) && strtoupper($a[1]) === $c->type) {
+                        $market_id = $b->id;
+                        $success = 1;
+                        break;
+                    }
+                }
+                if (! $success) {
                     abort(404);
                 }
             } else {
