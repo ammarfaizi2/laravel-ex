@@ -50,7 +50,29 @@ class HomeController extends Controller
 
     public function index($market_id = 0)
     {
-        $market_id = (int)$market_id;
+        $market_id = $market_id;
+        if (! is_numeric($market_id)) {
+            $a = explode('_', $market_id);
+            $b = DB::table('wallets')
+                ->select(['market.id', 'market.wallet_to'])
+                ->join('market', 'market.wallet_from', '=', 'wallets.id')
+                ->where('wallets.type', '=', strtoupper($a[0]))
+                ->first();
+            if (isset($b->wallet_to)) {
+                $c = DB::table('wallets')
+                    ->select(['type'])
+                    ->where('id', '=', $b->wallet_to)
+                    ->first();
+                if (isset($c->type) && strtoupper($a[1]) === $c->type) {
+                    $market_id = $b->id;
+                } else {
+                    abort(404);
+                }
+            } else {
+                abort(404);
+            }
+        }
+
         $data['show_all_markets'] = ($market_id == 0) ? true : false;
 
         
@@ -271,6 +293,16 @@ class HomeController extends Controller
         $data['that'] = $this;
         $data['market_id'] = $market_id;
         return view('index', $data);
+    }
+
+    public function buildMarketUrl($marketId)
+    {
+        $a = DB::table('market')
+            ->select(['wallets.type'])
+            ->join('wallets', 'wallets.id', '=', 'market.wallet_from')
+            ->where('market.id', '=', $marketId)
+            ->first();
+        return isset($a->type) ? $a->type : ''; 
     }
 
     public function hasCustomFields($coinId)

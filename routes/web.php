@@ -33,7 +33,7 @@ return View::make('test');
 Route::get('testLocate','BaseController@testLocate');
 
 Route::get('/', 'HomeController@index'); // call index page
-Route::get('market/{market}', 'HomeController@index');
+Route::get('market/{market}', 'HomeController@index')->name('market');
 Route::get('page/{page}', 'HomeController@routePage');
 Route::post('get-chart', 'HomeController@getChart');
 Route::post('voting', 'VoteCoinController@doVoting');

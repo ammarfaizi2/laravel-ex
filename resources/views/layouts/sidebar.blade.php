@@ -137,7 +137,7 @@ $trade = new Trade();
 								
 							?>
 								<li class="volume" id="volume-{{$btc_market->id}}" data-toggle="tooltip" data-placement="right" title="Vol: {{sprintf('%.8f',$total_btc)}} BTC">
-									<a href="{{{ URL::to('/market/') }}}/{{$btc_market->id}}">
+									<a href="{{$marketUrl = route('market', $that->buildMarketUrl($btc_market->id).'_BTC')}}">
 										<span class="name">
 											@if($btc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="tooltip" data-placement="bottom" title="{{$btc_market->type}} - {{ trans('texts.market_disabled') }}" ></i> @endif
 											{{$btc_market->type}}
@@ -214,7 +214,7 @@ $trade = new Trade();
 									*/
 								?>
 									<li class="volume" id="volume-{{$ltc_market->id}}" data-toggle="tooltip" data-placement="right" title="Vol: {{sprintf('%.8f',$total_ltc)}} LTC">
-										<a href="{{{ URL::to('/market') }}}/{{$ltc_market->id}}">
+										<a href="{{ $marketUrl = route('market', $that->buildMarketUrl($ltc_market->id).'_LTC')}}">
 										<span class="name">
 											@if($ltc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="tooltip" data-placement="bottom" title="{{$ltc_market->type}} - {{ trans('texts.market_disabled') }}" ></i> @endif
 											{{$ltc_market->type}}

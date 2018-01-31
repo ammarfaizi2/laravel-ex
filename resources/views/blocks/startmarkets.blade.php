@@ -31,19 +31,19 @@
 				<tr id="mainCoin-{{$am['market']->id}}">
 					<td class="from_name">
 						@if(!empty($am['logo']))                        
-						<a href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}"><img src="{{asset('')}}/{{$am['logo']}}" class="coin_icon_small" /></a>
+						<a href="{{$marketUrl = route('market', $that->buildMarketUrl($am['market']->id).'_BTC')}}"><img src="{{asset('')}}/{{$am['logo']}}" class="coin_icon_small" /></a>
 						@else
 						&nbsp;
 						@endif
-						<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}">{{$am['from_name']}}</a>
+						<a  href="{{$marketUrl}}">{{$am['from_name']}}</a>
 					</td>
 					<td>
-						<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}">
+						<a  href="{{$marketUrl}}">
 						@if($am['enable_trading'] == 0) <i class="fa fa-exclamation-triangle red" data-toggle="tooltip" data-placement="bottom" title="{{$am['from_name']}} - {{ trans('texts.market_disabled') }}" ></i> @endif
 						{{$am['from']}}/{{$am['to']}}
 						</a>
 					</td>
-					<td><a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}" class="nostrong" id="mainLastPrice-{{$am['market']->id}}">{{$am['latest_price']}}</a></td>
+					<td><a  href="{{$marketUrl}}" class="nostrong" id="mainLastPrice-{{$am['market']->id}}">{{$am['latest_price']}}</a></td>
 					<td class="market_change">
 						<?php
 							
@@ -76,13 +76,13 @@
 						@endif
 					</td>
 					<td>
-						<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}" class="nostrong" id="mainHighPrice-{{$am['market']->id}}">@if(empty($coin_max_)) - @else {{$coin_max_}} @endif</a>
+						<a  href="{{$marketUrl}}" class="nostrong" id="mainHighPrice-{{$am['market']->id}}">@if(empty($coin_max_)) - @else {{$coin_max_}} @endif</a>
 					</td>
 					<td>
-						<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}" class="nostrong" id="mainLowPrice-{{$am['market']->id}}">@if(empty($coin_min_)) - @else {{$coin_min_}} @endif</a>
+						<a  href="{{$marketUrl}}" class="nostrong" id="mainLowPrice-{{$am['market']->id}}">@if(empty($coin_min_)) - @else {{$coin_min_}} @endif</a>
 					</td>
 					<td>
-						<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}" class="nostrong" id="mainVolume-{{$am['market']->id}}">@if(empty($am['prices']->volume)) {{{sprintf('%.8f',0)}}} {{$am['to']}} @else {{sprintf('%.8f',$am['prices']->volume)}} {{$am['to']}} @endif</a>
+						<a  href="{{$marketUrl}}" class="nostrong" id="mainVolume-{{$am['market']->id}}">@if(empty($am['prices']->volume)) {{{sprintf('%.8f',0)}}} {{$am['to']}} @else {{sprintf('%.8f',$am['prices']->volume)}} {{$am['to']}} @endif</a>
 					</td>
 				</tr>
 				@endif
@@ -108,17 +108,17 @@
 				<tr id="mainCoin-{{$am['market']->id}}">
 					<td class="from_name">
 						@if(!empty($am['logo']))                        
-						<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}"><img class="coin_icon_small" src="{{asset('')}}/{{$am['logo']}}" /></a>
+						<a  href="{{$marketUrl = route('market', $that->buildMarketUrl($am['market']->id).'_LTC')}}"><img class="coin_icon_small" src="{{asset('')}}/{{$am['logo']}}" /></a>
 						@else
 						&nbsp;
 						@endif
-						<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}">{{$am['from_name']}}</a>
+						<a  href="{{$marketUrl}}">{{$am['from_name']}}</a>
 					</td>
 					<td>
 						@if($am['enable_trading'] == 0) <i class="fa fa-exclamation-triangle red" data-toggle="tooltip" data-placement="bottom" title="{{$am['from_name']}} - {{ trans('texts.market_disabled') }}" ></i> @endif
-						<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}">{{$am['from']}}/{{$am['to']}}</a>
+						<a  href="{{$marketUrl}}">{{$am['from']}}/{{$am['to']}}</a>
 					</td>
-					<td><a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}" class="nostrong" id="mainLastPrice-{{$am['market']->id}}"> {{$am['latest_price']}}</a></td>
+					<td><a  href="{{$marketUrl}}" class="nostrong" id="mainLastPrice-{{$am['market']->id}}"> {{$am['latest_price']}}</a></td>
 					<?php
 						
 						if ( sprintf('%.8f',$am['prices']->max)+0 == 0 )
@@ -153,13 +153,13 @@
 							?>
 					</td>
 					<td>
-						<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}" class="nostrong" id="mainHighPrice-{{$am['market']->id}}"> @if(empty($coin_max_)) - @else {{$coin_max_}} @endif</a>
+						<a  href="{{$marketUrl}}" class="nostrong" id="mainHighPrice-{{$am['market']->id}}"> @if(empty($coin_max_)) - @else {{$coin_max_}} @endif</a>
 					</td>
 					<td>
-						<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}" class="nostrong" id="mainLowPrice-{{$am['market']->id}}"> @if(empty($coin_min_)) - @else {{$coin_min_}} @endif</a>
+						<a  href="{{$marketUrl}}" class="nostrong" id="mainLowPrice-{{$am['market']->id}}"> @if(empty($coin_min_)) - @else {{$coin_min_}} @endif</a>
 					</td>
 					<td>
-						<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}" class="nostrong" id="mainVolume-{{$am['market']->id}}"> @if(empty($am['prices']->volume)) {{{sprintf('%.8f',0)}}} {{$am['to']}} @else {{sprintf('%.8f',$am['prices']->volume)}} {{$am['to']}} @endif</a>
+						<a  href="{{$marketUrl}}" class="nostrong" id="mainVolume-{{$am['market']->id}}"> @if(empty($am['prices']->volume)) {{{sprintf('%.8f',0)}}} {{$am['to']}} @else {{sprintf('%.8f',$am['prices']->volume)}} {{$am['to']}} @endif</a>
 					</td>
 				</tr>
 				@endif
