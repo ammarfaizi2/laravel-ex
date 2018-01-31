@@ -98,7 +98,7 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
         totalPages: {{(int)ceil($that->customFieldsPaginator() / 15)}},
         alignment:'right',
         pageUrl: function(type, page, current){
-        	return "{{route('admin.featured_market').'?page='}}"+page;
+        	return "{{route('admin.custom_fields').'?page='}}"+page;
         }
     }
     $('#pager').bootstrapPaginator(options);
