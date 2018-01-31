@@ -1897,7 +1897,16 @@ class AdminSettingController extends Controller
                 ->get()
                 ->toArray();
         foreach ($a as $val) {
-            $r .= '<option value="'.e($val->id).'">'.e($val->name).'</option>';
+            $r .= '<option value="'.e($val->id).'">'.e($val->name).' to '.(
+                function ($id) {
+                    $q = DB::table('market')
+                        ->select('wallets.type')
+                        ->join('wallets', 'wallets.id', '=', 'market.wallet_to')
+                        ->where('market.id', '=', $id)
+                        ->first();
+                    return isset($q->type) ? $q->type : '';
+                }
+            )($val->id).'</option>';
         }
         return $r.'</select>';
     }
@@ -1910,6 +1919,11 @@ class AdminSettingController extends Controller
                 $c = $c && isset($_POST[$f]);
             }
             if ($c) {
+                if (preg_match('/[^\d\w\.\-\_]/', $_POST['name'])) {
+                    return Redirect::to(route('admin.custom_fields'))->with('error', 
+                        "Invalid name!\nAllowed chars : [a-zA-Z0-9\-\_]"
+                    );
+                }
                 if (DB::table('custom_fields')->insert(
                     [
                             'market_id' => $_POST['coin-name'],
@@ -1970,6 +1984,11 @@ class AdminSettingController extends Controller
                 $c = $c && isset($_POST[$f]);
             }
             if ($c) {
+                if (preg_match('/[^\d\w\.\-\_]/', $_POST['name'])) {
+                    return Redirect::to(route('admin.custom_fields'))->with('error', 
+                        "Invalid name!\nAllowed chars : [a-zA-Z0-9\-\_]"
+                    );
+                }
                 if (DB::table('custom_fields')->where('id', '=', $_GET['id'])->update(
                     [
                             'name'  => $_POST['name'],
@@ -1986,6 +2005,16 @@ class AdminSettingController extends Controller
             }
         }
         return Redirect::to(route('admin.custom_fields'))->with('error', 'Please fill the form!');
+    }
+
+    public function walletTo($marketId)
+    {
+        $q = DB::table('market')
+                        ->select('wallets.type')
+                        ->join('wallets', 'wallets.id', '=', 'market.wallet_to')
+                        ->where('market.id', '=', $marketId)
+                        ->first();
+        return isset($q->type) ? $q->type : '';
     }
 
     public function customFieldsPaginator($id = null)

@@ -88,7 +88,7 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
         $no = $page === 1 ? 1 : $page + 15;
     @endphp
     @foreach($that->getCustomFields($page === 1 ? 0 : $page + 13) as $q)
-        <tr><td>{{$no++}}</td><td>{{$q->name}}</td><td>{{$q->total_custom_fields}}</td><td><a href="{{ route('admin.edit_custom_fields') }}?id={{$q->id}}" class="edit_page">Edit</a></td></tr>
+        <tr><td>{{$no++}}</td><td>{{$q->name.' to '.$that->walletTo($q->id)}}</td><td>{{$q->total_custom_fields}}</td><td><a href="{{ route('admin.edit_custom_fields') }}?id={{$q->id}}" class="edit_page">Edit</a></td></tr>
     @endforeach
 </table>
 <div id="pager"></div>
