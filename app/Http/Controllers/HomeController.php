@@ -48,6 +48,7 @@ class HomeController extends Controller
     |
     */
 
+
     public function index($market_id = 0)
     {
         $market_id = $market_id;

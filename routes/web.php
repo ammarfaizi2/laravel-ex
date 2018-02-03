@@ -50,7 +50,7 @@ Route::post('page/submit-coin', 'HomeController@submitCoin');
 //pages , news
 Route::get('post/{post}', 'HomeController@viewPost');
 #################################################################################
-Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middleware' => 'App\Http\Middleware\admin'), function()
+Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middleware' => ['App\Http\Middleware\admin']), function()
 {
     Route::get('/', 'admin\\AdminSettingController@routePage');
     Route::get('setting', 'admin\\AdminSettingController@routePage');
@@ -159,18 +159,36 @@ Route::get( 'user/forgot_password',        'UserController@forgot_password')->na
 Route::post('user/forgot_password',        'UserController@do_forgot_password');
 Route::get( 'user/reset_password/{token}', 'UserController@reset_password');
 Route::post('user/reset_password',         'UserController@do_reset_password');
-Route::get( 'user/logout',                 'UserController@logout');
+Route::get( 'user/logout',                 'UserController@logout')->name('logout');
 Route::post( 'check-captcha',               'UserController@checkCaptcha');
 Route::post( 'user/update-setting',         'UserController@updateSetting');
+
+Route::any('/2fa', function () {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            return redirect('/');
+        }
+})->name('2fa')->middleware('2fa');
 //user profile
-Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => 'App\Http\Middleware\user'), function () {
+Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
+    Route::get('/disable-two-factor-auth', function () {
+        $user = Confide::user();
+        DB::table('users')->where('id', '=', $user->id)->update(
+            [
+                'google2fa_secret' => null
+            ]
+        );
+        session(['google2fa' => null]);
+        return redirect(route('user.profile_page', 'two-factor-auth'));
+    })->name('user.disable_tfa');
+    Route::get('/complete-two-factor-auth', 'UserController@completeTwoFactorAuth')->name('user.complete_tfa');
+
     //Normal route
     Route::get('profile', 'UserController@viewProfile')->name('user.view_profile');
     
 	//Connect Clef to account. //Install 2fa
 	Route::get('profile/two-factor-auth/clef', 'ClefController@first_authentication');	
 
-    Route::get('profile/{page}', 'UserController@viewProfile');
+    Route::get('profile/{page}', 'UserController@viewProfile')->name('user.profile_page');
     Route::post('profile/{page}', 'UserController@viewProfile');
     Route::get('profile/{page}/{filter}', 'UserController@viewProfile');
     Route::post('profile/{page}/{filter}', 'UserController@viewProfile');
@@ -190,7 +208,6 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => 'App\
    
    /* Route::post('profile/notifications', 'UserController@viewProfile'); */
 });
-
 
 
 //trading
@@ -232,15 +249,7 @@ Route::filter('csrf', function()
 */
 
 
-/**
- * Clef related - 2fa
- * Clef.io logout
- */
-Route::post('logout/two-factor-auth/clef', 'ClefController@logout');
-/**
- * Login  with Clef.io
- */
-Route::get('two-factor-auth/login2fa', 'ClefController@authentication');
+
 //Connect Clef to account	(added in user group above)
 //Route::get('user/profile/two-factor-auth/clef', 'ClefController@first_authentication');	//Install 2fa
 

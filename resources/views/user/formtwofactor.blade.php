@@ -5,81 +5,68 @@
 		<div id="security">
 			<h2>{{{ trans('user_texts.security')}}}</h2>
 			
-			@if(empty(Auth::user()->two_factor_auth))
+			@if(! $user->google2fa_secret)
 			<?php
             /*	<h4 class="alert alert-danger">{{{ trans("user_texts.two_factor_auth")}}}: <span id="twofaStatus">{{{trans('user_texts.disabled')}}}</span></h4>
 				{{ Clef::button( 'register', 'https://sweedx.com/user/profile/two-factor-auth/clef' ,Session::token()  , 'blue|white', 'button|flat' ) }}*/
             ?>
+            <?php 
+
+            $request = $that->request;
+
+            // Initialise the 2FA class
+            $google2fa = app('pragmarx.google2fa');
+
+            // Save the registration data in an array
+            $registration_data = $request->all();
+
+            // Add the secret key to the registration data
+            $registration_data["google2fa_secret"] = $google2fa->generateSecretKey();
+
+            // Save the registration data to the user session for just the next request
+            $request->session()->flash('registration_data', $registration_data);
+
+            // Generate the QR image. This is the image the user will scan with their app
+            // to set up two factor authentication
+            $QR_Image = $google2fa->getQRCodeInline(
+                config('app.name'),
+                $user->email,
+                $registration_data['google2fa_secret']
+            );
+
+        // Pass the QR barcode image to our view
+            ?>
             <h4 class="alert alert-danger">Two-Factor Authentication: <span id="twofaStatus">Disabled</span></h4>
-                <script type="text/javascript" src="https://clef.io/v3/clef.js" data-type="register" class="clef-button" data-app-id="5459e328304d5260c44c4c3065103022" data-color="blue" data-style="button" data-redirect-url="https://sweedx.com/user/profile/two-factor-auth/clef" data-state="nLbXQcxSDf3dXvZ5c5Sxb2d5C6jekh5vwKouzFx6" ></script>
-            
-                            <!-- <p>
-                You can activate Two-Factor Authentication for free with <a href="https://getclef.com/" target="_blank">Clef</a>.<br />
-                After creating an account at <a href="https://getclef.com/" target="_blank">Clef</a> then just activate 2fa through the button below.<br />
-                </p> -->
-            
+              <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Set up Google Authenticator</div>
+
+                            <div class="panel-body" style="text-align: center;">
+                                <p>{{trans('user_texts.tfa_2')}} {{$registration_data['google2fa_secret'] }}</p>
+                                <div>
+                                    <img src="{{ $QR_Image }}">
+                                </div>
+                                @if (!@$reauthenticating) {{-- add this line --}}
+                                    <p>{{trans('user_texts.tfa_1')}}</p><br>
+                                    <div>
+                                        <a href="{{route('user.complete_tfa')}}?secret={{$registration_data['google2fa_secret']}}"><button class="btn-primary">Complete Registration</button></a>
+                                    </div>
+                                @endif {{-- and this line --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @else
                 <h4 class="alert alert-success">{{{ trans("user_texts.two_factor_auth")}}}: <span id="twofaStatus">{{{trans('user_texts.enabled')}}}</span></h4>
-                <button type="submit" id="disable-two-factor-auth" class="btn btn-danger">{{{ trans('user_texts.disable')}}} {{{ trans("user_texts.two_factor_auth")}}}</button>    
-            @endif
-                <p>
-                You can activate {{{ trans("user_texts.two_factor_auth")}}} for free with <a href="https://getclef.com/" target="_blank">Clef</a>.<br />
-                After creating an account at <a href="https://getclef.com/" target="_blank">Clef</a> then just activate 2fa through the button below.<br />
-                </p>
-                
-                      @if ( Session::get('notice') )
-                          
-                          <br /><br />
-                          <div class="alert alert-info">{{{ Session::get('notice') }}}</div>
-                      @endif
-                      
-                
-            
-            
-            
-            
-            
-            @if(!empty(Auth::user()->two_factor_auth))
-
-            <script type="text/javascript"> 
-                $(function(){ 
-                    $('#disable-two-factor-auth').click(function(e) {       
-                        
-                        
-                        $.ajax({
-                            type: 'post',
-                            url: '<?php echo action('AuthController@removeTwoFactorAuth')?>',
-                            datatype: 'json',
-                            data: {isAjax: 1},
-                            beforeSend: function(request) {
-                                return request.setRequestHeader('X-CSRF-Token', $("meta[name='_token']").attr('content'));
-                            },
-                            success:function(response) {
-                                var obj = $.parseJSON(response);
-
-                                if(obj.status == 'error')
-                                    showMessage(obj.messages,'error');
-                                else
-                                    location.reload();
-
-
-                            }, error:function(response) {
-                                //showMessageSingle('{{{ trans('texts.error') }}}', 'error');
-                            }
-                        });
-                        
-                        
-
-                        
-                        
-                    });
-                });
-                </script>
+                <a href="{{route('user.disable_tfa')}}"><button type="submit" id="disable-two-factor-auth" class="btn btn-danger">{{{ trans('user_texts.disable')}}} {{{ trans("user_texts.two_factor_auth")}}}</button></a> 
             @endif
         </div>
         {{HTML::style('assets/css/flags.authy.css')}}
         {{HTML::style('assets/css/form.authy.css')}}
-        {{ HTML::script('assets/js/form.authy.js') }}
+        {{HTML::script('assets/js/form.authy.js')}}
 
 
         </div>

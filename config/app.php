@@ -190,7 +190,7 @@ return [
         
         Way\Generators\GeneratorsServiceProvider::class,
         Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
-
+        PragmaRX\Google2FALaravel\ServiceProvider::class,
     ],
 
     /*
@@ -278,7 +278,8 @@ return [
         'Confide'    => Zizaco\Confide\Facade::class,
 
         // controller
-        'App\\Http\\Controllers\\Admin_SettingController' => App\Http\Controllers\admin\Admin_SettingController::class
+        'App\\Http\\Controllers\\Admin_SettingController' => App\Http\Controllers\admin\Admin_SettingController::class,
+        'Google2FA' => PragmaRX\Google2FALaravel\Facade::class,
     ],
 
 ];

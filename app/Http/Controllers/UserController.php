@@ -49,6 +49,16 @@ use App\Models\UserSecurityQuestion;
 */
 class UserController extends Controller
 {
+
+    public $request;
+
+    public function __construct(\Illuminate\Http\Request $request)
+    {   
+        parent::__construct();
+        $this->request = $request;
+        
+    }
+
     /**
      * Get ip of client
      */
@@ -195,10 +205,12 @@ class UserController extends Controller
      */
     public function login()
     {
-        if (Confide::user()) {
+        if ($u = Confide::user()) {
             // If user is logged, redirect to internal
             // page, change it to '/admin', '/dashboard' or something
             //return Redirect::to('/',302, array(), true);
+
+            
             return Redirect::to('/', 302, array(), true);
         } else {
             $a = Config::get('confide::login_form');
@@ -308,12 +320,7 @@ class UserController extends Controller
         die;*/
 
         if (isset($user->password) && password_verify(Request::get('password'), $user->password)) {
-                //Two factor authentication
-            if (!empty($user->two_factor_auth)) {
-                $err_msg = trans('messages.two_factor_auth') . ' - ' .trans('messages.two_factor_auth');
-                return Redirect::action('UserController@login')
-                            ->with('two_factor_authentication', $err_msg);
-            }
+            
         }
     
         
@@ -327,6 +334,7 @@ class UserController extends Controller
             // Otherwise fallback to '/'
             // Fix pull #145
             $user = Confide::user();
+
             $ip=$this->get_client_ip();
             $this->sendMailIPUser($user, $ip);
             User::where('id', $user->id)->update(array('lastest_login' => date("Y-m-d H:i:s"), 'ip_lastlogin'=>$ip));
@@ -334,6 +342,10 @@ class UserController extends Controller
                 echo 1;
                 exit;
             } else {
+                //Two factor authentication
+                if ($user->google2fa_secret !== null && session()->get('google2fa') === null) {
+                    return Redirect::to(route('user.view_profile'));
+                }
                 if (User::find($user->id)->hasRole('admin')) {
                     return Redirect::to('/', 302, array(), false);
                 } else {
@@ -509,6 +521,9 @@ class UserController extends Controller
     public function logout()
     {
         Confide::logout();
+        session([
+            'google2fa' => null
+        ]);
         return Redirect::to('/');
     }
 
@@ -947,6 +962,8 @@ class UserController extends Controller
                 
             break;
         }
+        $data["that"] = $this;
+
         return view('user.profile', $data);
     }
 
@@ -1400,4 +1417,22 @@ class UserController extends Controller
             return Redirect::to('user/transfer-coin/'.$wallet->id)->with('error', "Password invalid.");
         }
     }
+
+    public function completeTwoFactorAuth(\Illuminate\Http\Request $request)
+    {
+        $user = Confide::user();
+        if (isset($_GET['secret'])) {
+            DB::table('users')->where(
+                [
+                    ['id', '=', $user->id]
+                ]
+            )->update(
+                [
+                    'google2fa_secret' => $_GET['secret']
+                ]
+            );
+        }
+        return \Redirect::to(\URL::previous());
+    }
+
 }
