@@ -50,7 +50,7 @@ Route::post('page/submit-coin', 'HomeController@submitCoin');
 //pages , news
 Route::get('post/{post}', 'HomeController@viewPost');
 #################################################################################
-Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middleware' => ['App\Http\Middleware\admin']), function()
+Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middleware' => ['2fa', 'App\Http\Middleware\admin']), function()
 {
     Route::get('/', 'admin\\AdminSettingController@routePage');
     Route::get('setting', 'admin\\AdminSettingController@routePage');
@@ -159,18 +159,34 @@ Route::get( 'user/forgot_password',        'UserController@forgot_password')->na
 Route::post('user/forgot_password',        'UserController@do_forgot_password');
 Route::get( 'user/reset_password/{token}', 'UserController@reset_password');
 Route::post('user/reset_password',         'UserController@do_reset_password');
-Route::get( 'user/logout',                 'UserController@logout')->name('logout');
+Route::any( 'user/logout',                 'UserController@logout')->name('logout');
 Route::post( 'check-captcha',               'UserController@checkCaptcha');
 Route::post( 'user/update-setting',         'UserController@updateSetting');
 
 Route::any('/2fa', function () {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            return redirect('/');
+            $ses = session()->get('2fa_previous_url');
+            return redirect($ses ? $ses : '/');
         }
 })->name('2fa')->middleware('2fa');
 //user profile
 Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
+    
     Route::get('/disable-two-factor-auth', function () {
+        $ses = session(
+            [
+                '2fa_previous_url' => route('user.disable_tfa.exec'),
+                'google2fa' => null,
+                'disable_2fa' => true
+            ]
+        );
+        return view('google2fa.index');
+    })->name('user.disable_tfa');
+
+    Route::get('/disable-two-factor-auth/exec', function () {
+        if (session()->get('disable_2fa') !== true) {
+            return Redirect::to(route('user.disable_2fa'));
+        }
         $user = Confide::user();
         DB::table('users')->where('id', '=', $user->id)->update(
             [
@@ -179,7 +195,8 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa
         );
         session(['google2fa' => null]);
         return redirect(route('user.profile_page', 'two-factor-auth'));
-    })->name('user.disable_tfa');
+    })->name('user.disable_tfa.exec');
+
     Route::get('/complete-two-factor-auth', 'UserController@completeTwoFactorAuth')->name('user.complete_tfa');
 
     //Normal route
