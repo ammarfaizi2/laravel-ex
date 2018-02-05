@@ -124,7 +124,8 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middl
     Route::get('edit-limit-trade/{wallet}', 'admin\\AdminSettingController@editLimitTrade');
     Route::post('edit-limit-trade', 'admin\\AdminSettingController@doEditLimitTrade');
     Route::post('delete-limit-trade', 'admin\\AdminSettingController@deleteLimitTrade');
-    Route::post('update-setting', 'admin\\AdminSettingController@updateSetting');
+    
+    Route::get('update-setting', 'admin\\AdminSettingController@updateSetting');
 
     Route::post('set-fee-trade', 'admin\\AdminSettingController@setFeeTrade');
     Route::post('set-fee-withdraw', 'admin\\AdminSettingController@setFeeWithdraw');
@@ -161,7 +162,6 @@ Route::get( 'user/reset_password/{token}', 'UserController@reset_password');
 Route::post('user/reset_password',         'UserController@do_reset_password');
 Route::any( 'user/logout',                 'UserController@logout')->name('logout');
 Route::post( 'check-captcha',               'UserController@checkCaptcha');
-Route::post( 'user/update-setting',         'UserController@updateSetting');
 
 Route::any('/2fa', function () {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -201,9 +201,7 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa
 
     //Normal route
     Route::get('profile', 'UserController@viewProfile')->name('user.view_profile');
-    
-	//Connect Clef to account. //Install 2fa
-	Route::get('profile/two-factor-auth/clef', 'ClefController@first_authentication');	
+
 
     Route::get('profile/{page}', 'UserController@viewProfile')->name('user.profile_page');
     Route::post('profile/{page}', 'UserController@viewProfile');
@@ -221,6 +219,23 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa
     //transfer
     Route::get('transfer-coin/{wallet_id}', 'UserController@formTransfer');
     Route::post('transfer-coin', 'UserController@doTransfer');
+
+    Route::any('update-setting', function () {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            session(
+                [
+                    'update_setting' => $_POST,
+                    'google2fa' => null
+                ]
+            );
+            return Redirect::to(url()->current());
+        }
+        if (session()->get('update_setting')) {
+            session(['2fa_previous_url' => route('user.update_setting.exec')]);
+            return Redirect::to(route('user.update_setting.exec'));
+        }
+    });
+    Route::get('update-setting/exec', 'UserController@updateSetting')->name('user.update_setting.exec');
    /* Route::post('viewtranfer/{type}', 'UserController@viewTransferOut');*/
    
    /* Route::post('profile/notifications', 'UserController@viewProfile'); */

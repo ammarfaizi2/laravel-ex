@@ -560,10 +560,11 @@ class UserController extends Controller
 
     public function updateSetting()
     {
-        $update= array('timeout'=>Request::get('timeout'),'updated_at'=>date("Y-m-d H:i:s"));
-        $fullname = Request::get('fullname');
-        $password = Request::get('password');
-        //$password2 = Request::get('password2');
+        $se = session()->get('update_setting');
+        $update= array('timeout'=>$se['timeout'],'updated_at'=>date("Y-m-d H:i:s"));
+        $fullname = $se['fullname'];
+        $password = $se['password'];
+        //$password2 = $se->get('password2');
         $user = User::find((int)Confide::user()->id);
         if ($password!='' && !Hash::check($password, Confide::user()->password)) {
             $update['password'] = Hash::make($password);
@@ -573,6 +574,7 @@ class UserController extends Controller
         }
 
         User::where('id', $user->id)->update($update);
+        session(['update_setting' => null]);
         return Redirect::to(route('user.view_profile'))
                             ->with('notice', "Profile updated successfully.");
     }
@@ -1093,6 +1095,12 @@ class UserController extends Controller
     }
     public function formWithdraw($wallet_id = '')
     {
+        $ses = session();
+        $wdid = $ses->get('allow_withdraw');
+        if ($wdid !== $wallet_id) {
+            session(['google2fa' => null, 'allow_withdraw' => $wallet_id]);
+            return Redirect::to(url()->current());
+        }
         $user = Confide::user();
         $user_id = $user->id;
         $data = array();
