@@ -50,7 +50,7 @@ Route::post('page/submit-coin', 'HomeController@submitCoin');
 //pages , news
 Route::get('post/{post}', 'HomeController@viewPost');
 #################################################################################
-Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middleware' => ['App\Http\Middleware\admin']), function()
+Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middleware' => ['2fa', 'App\Http\Middleware\admin']), function()
 {
     Route::get('/', 'admin\\AdminSettingController@routePage');
     Route::get('setting', 'admin\\AdminSettingController@routePage');
@@ -159,18 +159,26 @@ Route::get( 'user/forgot_password',        'UserController@forgot_password')->na
 Route::post('user/forgot_password',        'UserController@do_forgot_password');
 Route::get( 'user/reset_password/{token}', 'UserController@reset_password');
 Route::post('user/reset_password',         'UserController@do_reset_password');
-Route::get( 'user/logout',                 'UserController@logout')->name('logout');
+Route::any( 'user/logout',                 'UserController@logout')->name('logout');
 Route::post( 'check-captcha',               'UserController@checkCaptcha');
 Route::post( 'user/update-setting',         'UserController@updateSetting');
 
+
+
 Route::any('/2fa', function () {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            return redirect('/');
+            return redirect(route('2fa'));    
         }
+        $r = session()->get('2fa_redirect');
+        return redirect($r ? $r : '/');
 })->name('2fa')->middleware('2fa');
 //user profile
 Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
+    Route::post('/2fa_check', 'Google2FAHandler@check')->name("2fa_check");
     Route::get('/disable-two-factor-auth', function () {
+        if (! session()->get("disable_2fa")) {
+            return redirect("/");
+        }
         $user = Confide::user();
         DB::table('users')->where('id', '=', $user->id)->update(
             [
@@ -195,7 +203,7 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa
     Route::get('deposit/{wallet_id}', 'UserController@formDeposit');
     
     Route::get('withdraw/{wallet_id}', 'UserController@formWithdraw');
-    Route::post('withdraw', 'UserController@doWithdraw')->name('user.withdraw');
+    Route::any('withdraw', 'UserController@doWithdraw')->name('user.withdraw');
     Route::get('withdraw-confirm/{withdraw_id}/{confirmation_code}', 'UserController@confirmWithdraw');
     Route::post('referrer-tradekey', 'UserController@referreredTradeKey');
     Route::post('cancel-withdraw', 'UserController@cancelWithdraw');

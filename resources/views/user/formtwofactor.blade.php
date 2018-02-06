@@ -61,7 +61,36 @@
             </div>
             @else
                 <h4 class="alert alert-success">{{{ trans("user_texts.two_factor_auth")}}}: <span id="twofaStatus">{{{trans('user_texts.enabled')}}}</span></h4>
-                <a href="{{route('user.disable_tfa')}}"><button type="submit" id="disable-two-factor-auth" class="btn btn-danger">{{{ trans('user_texts.disable')}}} {{{ trans("user_texts.two_factor_auth")}}}</button></a> 
+                <button style="cursor: pointer;" type="submit" id="disable-two-factor-auth" class="btn btn-danger">{{{ trans('user_texts.disable')}}} {{{ trans("user_texts.two_factor_auth")}}}</button>
+                {{ HTML::script('assets/js/bootbox.min.js') }}
+                <script type="text/javascript">
+                    document.getElementById("disable-two-factor-auth").addEventListener("click", function () {
+                         bootbox.prompt({
+                            title: "Enter your Google Authenticator Code",
+                            inputType: 'number',
+                            callback: function (result) {
+                                if (result !== null) {
+                                    var ch = new XMLHttpRequest();
+                                        ch.onreadystatechange = function () {
+                                            console.log(this.responseText);
+                                            if (this.readyState === 4) {
+                                                if (JSON.parse(this.responseText) == true) {
+                                                    window.location = "{{route("user.disable_tfa")}}"
+                                                } else {
+                                                    alert("Invalid Authenticator Code");
+                                                    return false;
+                                                }
+                                            }                                            
+                                        };
+                                        ch.withCredentials = true;
+                                        ch.open("POST", "{{route('2fa_check')}}");
+                                        ch.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                        ch.send("_token={{csrf_token()}}&session="+encodeURIComponent(JSON.stringify({"disable_2fa":true}))+"&code="+encodeURIComponent(result));
+                                }
+                            }
+                        });
+                    });
+                </script>
             @endif
         </div>
         {{HTML::style('assets/css/flags.authy.css')}}

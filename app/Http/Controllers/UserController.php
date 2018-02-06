@@ -579,6 +579,10 @@ class UserController extends Controller
 
     public function viewprofile($page = '', $filter = '')
     {
+        if (isset($_GET['success_edit_form'])) {
+            return Redirect::to(route('user.view_profile'))
+                            ->with('notice', "Profile updated successfully.");
+        }
         $user = Confide::user();
         $user_id = $user->id;
         $data = array();
@@ -1172,10 +1176,22 @@ class UserController extends Controller
 
     public function doWithdraw()
     {
-        $amount = Request::get('amount');
-        $address = Request::get('address');
-        $wallet_id = (int)Request::get('wallet_id');
-        $password = Request::get('password');
+        if (isset($_GET['soft'])) {
+            session(["soft_post" => Request::all()]);
+            return response()->json(true, 200);
+        }
+        $s = session()->get("soft_post");
+        if ($s) {
+            $amount = $s['amount'];
+            $address = $s['address'];
+            $wallet_id = (int)$s['wallet_id'];
+            $password = $s['password'];
+        } else {
+            $amount = Request::get('amount');
+            $address = Request::get('address');
+            $wallet_id = (int)Request::get('wallet_id');
+            $password = Request::get('password');
+        }
         $wallet = Wallet::find($wallet_id);
 
         $setting = new Setting();
