@@ -51,5 +51,6 @@ return array(
     "login_with_two_factor" => "Click on the button to login with Two Factor Authentication.",
     "your_order" => "Your Order",
     "market_order" => "Market Order",
-    
+    "tfa_1" => "You must set up your Google Authenticator app before continuing. ",
+    "tfa_2" => "Set up your two factor authentication by scanning the barcode below. Alternatively, you can use the code"
 );
