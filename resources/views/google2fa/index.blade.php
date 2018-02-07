@@ -10,7 +10,6 @@
                 <div class="panel-body">
                     <form class="form-horizontal" method="POST" action="{{ route('2fa') }}">
                         {{ csrf_field() }}
-
                         <div class="form-group">
                             <label for="one_time_password" class="col-md-4 control-label">Google Authenticator</label>
 

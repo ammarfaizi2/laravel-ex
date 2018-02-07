@@ -1,6 +1,5 @@
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
-		  
 		<!-- Security -->
 		<div id="security">
 			<h2>{{{ trans('user_texts.security')}}}</h2>
@@ -33,16 +32,14 @@
                 $user->email,
                 $registration_data['google2fa_secret']
             );
-
-        // Pass the QR barcode image to our view
+            // Pass the QR barcode image to our view
             ?>
-            <h4 class="alert alert-danger">Two-Factor Authentication: <span id="twofaStatus">Disabled</span></h4>
+            <h4 class="alert alert-danger">{{trans("user_texts.tfa_info")}}: <span id="twofaStatus">{{trans("user_texts.disabled")}}</span></h4>
               <div class="container">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
                         <div class="panel panel-default">
-                            <div class="panel-heading">Set up Google Authenticator</div>
-
+                            <div class="panel-heading">{{trans("user_texts.set_up_tfa")}}</div>
                             <div class="panel-body" style="text-align: center;">
                                 <p>{{trans('user_texts.tfa_2')}} {{$registration_data['google2fa_secret'] }}</p>
                                 <div>
@@ -51,7 +48,45 @@
                                 @if (!@$reauthenticating) {{-- add this line --}}
                                     <p>{{trans('user_texts.tfa_1')}}</p><br>
                                     <div>
-                                        <a href="{{route('user.complete_tfa')}}?secret={{$registration_data['google2fa_secret']}}"><button class="btn-primary">Complete Registration</button></a>
+                                        <a href="javascript:void(0);"><button id="complete-reg" type="button" class="btn-primary">{{trans("user_texts.complete_reg_tfa")}}</button></a>
+                                        <script type="text/javascript">
+                                            document.getElementById("complete-reg").addEventListener("click", function () {
+                                                    bootbox.prompt({
+                                                        title: "{{trans('user_texts.tfa_3')}}",
+                                                        inputType: 'number',
+                                                        callback: function (result) {
+                                                            if (result !== null) {
+                                                                var ch = new XMLHttpRequest();
+                                                                    ch.onreadystatechange = function () {
+                                                                        if (this.readyState === 4) {
+                                                                            try {
+                                                                                var a = JSON.parse(this.responseText);
+                                                                                if (a["alert"] != null) {
+                                                                                    bootbox.alert({ 
+                                                                                      size: "small",
+                                                                                      title: "Error",
+                                                                                      message: a["alert"], 
+                                                                                      callback: function(){}
+                                                                                    });
+                                                                                }
+                                                                                if (a["redirect"] != null) {
+                                                                                    window.location = a["redirect"];
+                                                                                }
+                                                                            } catch (e) {
+                                                                                alert(e.message);
+                                                                            }
+                                                                        }
+                                                                    };
+                                                                    ch.withCredentials = true;
+                                                                    ch.open("POST", "{{route('user.complete_tfa')}}");
+                                                                    ch.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                                                    ch.setRequestHeader("Requested-With", "XMLHttpRequest");
+                                                                    ch.send("_token={{csrf_token()}}&secret={{$registration_data['google2fa_secret']}}&code="+result);
+                                                            }
+                                                        }
+                                                    });
+                                                });
+                                        </script>
                                     </div>
                                 @endif {{-- and this line --}}
                             </div>
@@ -66,7 +101,7 @@
                 <script type="text/javascript">
                     document.getElementById("disable-two-factor-auth").addEventListener("click", function () {
                          bootbox.prompt({
-                            title: "Enter your Google Authenticator Code",
+                            title: "{{trans('user_texts.tfa_3')}}",
                             inputType: 'number',
                             callback: function (result) {
                                 if (result !== null) {
@@ -77,8 +112,12 @@
                                                 if (JSON.parse(this.responseText) == true) {
                                                     window.location = "{{route("user.disable_tfa")}}"
                                                 } else {
-                                                    alert("Invalid Authenticator Code");
-                                                    return false;
+                                                    bootbox.alert({ 
+                                                      size: "small",
+                                                      title: "Error",
+                                                      message: "{{trans("user_texts.error_tfa_1")}}", 
+                                                      callback: function(){}
+                                                    });
                                                 }
                                             }                                            
                                         };

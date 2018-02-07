@@ -17,15 +17,11 @@ class Google2FA
      */
     public function handle($request, Closure $next)
     {
-        $u = Confide::user();
-        if ($u !== null && $u->google2fa_secret !== null) {
-            $curUrl = url()->current();
-            if ($curUrl !== route('2fa')) {
-                session(['2fa_redirect' => $curUrl]);
-            }
-            return (new Middleware())->handle($request, $next);
-        } else {
-            return $next($request);
+        $user = Confide::user();
+        if (isset($user->google2fa_secret) and $user->google2fa_secret && session()->get("google2fa") === null) {
+            print view("2fa_lock");
+            exit();
         }
+        return $next($request);
     }
 }

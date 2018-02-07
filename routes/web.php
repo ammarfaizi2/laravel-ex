@@ -153,7 +153,7 @@ Route::get( 'user/register',                 'UserController@create');
 Route::get( 'user/register',                 'UserController@register')->name('register');
 Route::post('user',                        'UserController@store');
 Route::get( 'login',                        'UserController@login')->name('user.login');
-Route::post('user/login',                  'UserController@do_login');
+Route::post('user/login',                  'UserController@do_login')->name("user.do_login");
 Route::get( 'user/confirm/{code}',         'UserController@confirm');
 Route::get( 'user/forgot_password',        'UserController@forgot_password')->name('forgot_password');
 Route::post('user/forgot_password',        'UserController@do_forgot_password');
@@ -161,7 +161,7 @@ Route::get( 'user/reset_password/{token}', 'UserController@reset_password');
 Route::post('user/reset_password',         'UserController@do_reset_password');
 Route::any( 'user/logout',                 'UserController@logout')->name('logout');
 Route::post( 'check-captcha',               'UserController@checkCaptcha');
-Route::post( 'user/update-setting',         'UserController@updateSetting');
+Route::any( 'user/update-setting',         'UserController@updateSetting');
 
 
 
@@ -172,6 +172,8 @@ Route::any('/2fa', function () {
         $r = session()->get('2fa_redirect');
         return redirect($r ? $r : '/');
 })->name('2fa')->middleware('2fa');
+
+Route::any("/2fa_check_code", "UserController@check2facode")->name("2fa_check_code");
 //user profile
 Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
     Route::post('/2fa_check', 'Google2FAHandler@check')->name("2fa_check");
@@ -188,7 +190,7 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa
         session(['google2fa' => null]);
         return redirect(route('user.profile_page', 'two-factor-auth'));
     })->name('user.disable_tfa');
-    Route::get('/complete-two-factor-auth', 'UserController@completeTwoFactorAuth')->name('user.complete_tfa');
+    Route::post('/complete-two-factor-auth', 'UserController@completeTwoFactorAuth')->name('user.complete_tfa');
 
     //Normal route
     Route::get('profile', 'UserController@viewProfile')->name('user.view_profile');

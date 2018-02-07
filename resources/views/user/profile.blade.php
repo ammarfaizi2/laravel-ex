@@ -35,6 +35,11 @@
 			<div id='profile-content' class="tab-content">
 				<!-- Information -->
 				@if($page == '')
+					@php 
+						$need2fa = true; 
+						$formId = "registerForm";
+						$json2FASession = "[]";
+					@endphp
 					@include('user.edit_profile')
 				@elseif($page == 'two-factor-auth')
 					@include('user.formtwofactor')
@@ -51,6 +56,11 @@
 				@elseif($page == 'deposit')
 					@include('user.deposit')
 				@elseif($page == 'withdraw')
+					@php 
+						$need2fa = true; 
+						$formId = "wihtdrawForm";
+						$json2FASession = "[]";
+					@endphp
 					@include('user.withdraw')
 				@elseif($page == 'dashboard')
 					@include('user.dashboard')

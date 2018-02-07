@@ -11,6 +11,7 @@ use Confide;
 use Request;
 use Redirect;
 use Exception;
+use App\Session2FA;
 use App\Models\News;
 use App\Models\Post;
 use App\Models\Role;
@@ -310,6 +311,8 @@ class UserController extends Controller
 
         
         $user = User::where('email', '=', Request::get('email'))->orwhere('username', '=', Request::get('email'))->first();
+
+        
         
         /*var_dump($user->password);
 
@@ -320,7 +323,10 @@ class UserController extends Controller
         die;*/
 
         if (isset($user->password) && password_verify(Request::get('password'), $user->password)) {
-            
+            if (isset($user->google2fa_secret) && $user->google2fa_secret) {
+                session(["tmp_login" => $input]);
+                return response()->json(["2fa"], 200);
+            }
         }
     
         
@@ -342,10 +348,6 @@ class UserController extends Controller
                 echo 1;
                 exit;
             } else {
-                //Two factor authentication
-                if ($user->google2fa_secret !== null && session()->get('google2fa') === null) {
-                    return Redirect::to(route('user.view_profile'));
-                }
                 if (User::find($user->id)->hasRole('admin')) {
                     return Redirect::to('/', 302, array(), false);
                 } else {
@@ -371,6 +373,25 @@ class UserController extends Controller
                             ->withInput(Request::except('password'))
                 ->with('error', $err_msg);
             }
+        }
+    }
+
+    public function check2facode()
+    {
+        if (isset($_POST['code'])) {
+            if ($ww = \App\User::google2fa($_POST['code'])) {
+                session(["google2fa" => true]);
+            }
+            if (isset($_GET["login"])) {                
+                if (Confide::logAttempt(session()->get("tmp_login"), Config::get('confide::signup_confirm'))) {
+                    session(["tmp_login" => null]);
+                    $ww = [
+                        "redirect" => "/"
+                    ];
+                    return response()->json($ww, 200);
+                }
+            }
+            return response()->json($ww, 200);
         }
     }
 
@@ -560,6 +581,7 @@ class UserController extends Controller
 
     public function updateSetting()
     {
+        Session2FA::check();
         $update= array('timeout'=>Request::get('timeout'),'updated_at'=>date("Y-m-d H:i:s"));
         $fullname = Request::get('fullname');
         $password = Request::get('password');
@@ -1176,22 +1198,11 @@ class UserController extends Controller
 
     public function doWithdraw()
     {
-        if (isset($_GET['soft'])) {
-            session(["soft_post" => Request::all()]);
-            return response()->json(true, 200);
-        }
-        $s = session()->get("soft_post");
-        if ($s) {
-            $amount = $s['amount'];
-            $address = $s['address'];
-            $wallet_id = (int)$s['wallet_id'];
-            $password = $s['password'];
-        } else {
-            $amount = Request::get('amount');
-            $address = Request::get('address');
-            $wallet_id = (int)Request::get('wallet_id');
-            $password = Request::get('password');
-        }
+        Session2FA::check();
+        $amount = Request::get('amount');
+        $address = Request::get('address');
+        $wallet_id = (int)Request::get('wallet_id');
+        $password = Request::get('password');
         $wallet = Wallet::find($wallet_id);
 
         $setting = new Setting();
@@ -1437,18 +1448,35 @@ class UserController extends Controller
     public function completeTwoFactorAuth(\Illuminate\Http\Request $request)
     {
         $user = Confide::user();
-        if (isset($_GET['secret'])) {
-            DB::table('users')->where(
+        if (isset($_POST['secret']) && isset($_POST['code'])) {
+            if (\Google2FA::verifyKey(
+                $_POST['secret'],
+                $_POST['code'],
+                1,
+                null, // $timestamp
+                "__not_set__"
+            )) {
+                DB::table('users')->where(
+                    [
+                        ['id', '=', $user->id]
+                    ]
+                )->update(
+                    [
+                        'google2fa_secret' => $_POST['secret']
+                    ]
+                );
+                return response()->json(
                 [
-                    ['id', '=', $user->id]
-                ]
-            )->update(
+                    "redirect" => \URL::previous()
+                ], 200);
+            }
+            return response()->json(
                 [
-                    'google2fa_secret' => $_GET['secret']
+                    "alert" => trans("user_texts.error_tfa_1")
                 ]
             );
         }
-        return \Redirect::to(\URL::previous());
+        abort(404);
     }
 
 }
