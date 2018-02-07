@@ -344,8 +344,10 @@ class UserController extends Controller
                 exit;
             } else {
                 //Two factor authentication
-                if ($user->google2fa_secret !== null && session()->get('google2fa') === null) {
+                if ($user->google2fa_secret === null) {
                     return Redirect::to(route('user.view_profile'));
+                } else {
+                    return response()->json(["2fa"], 200);
                 }
                 if (User::find($user->id)->hasRole('admin')) {
                     return Redirect::to('/', 302, array(), false);
@@ -1428,18 +1430,35 @@ class UserController extends Controller
     public function completeTwoFactorAuth(\Illuminate\Http\Request $request)
     {
         $user = Confide::user();
-        if (isset($_GET['secret'])) {
-            DB::table('users')->where(
+        if (isset($_POST['secret']) && isset($_POST['code'])) {
+            if (\Google2FA::verifyKey(
+                $_POST['secret'],
+                $_POST['code'],
+                1,
+                null, // $timestamp
+                "__not_set__"
+            )) {
+                DB::table('users')->where(
+                    [
+                        ['id', '=', $user->id]
+                    ]
+                )->update(
+                    [
+                        'google2fa_secret' => $_POST['secret']
+                    ]
+                );
+                return response()->json(
                 [
-                    ['id', '=', $user->id]
-                ]
-            )->update(
+                    "redirect" => \URL::previous()
+                ], 200);
+            }
+            return response()->json(
                 [
-                    'google2fa_secret' => $_GET['secret']
+                    "alert" => trans("user_texts.error_tfa_1")
                 ]
             );
         }
-        return \Redirect::to(\URL::previous());
+        abort(404);
     }
 
 }

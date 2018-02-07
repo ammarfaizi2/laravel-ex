@@ -55,4 +55,7 @@ return array(
     "tfa_2" => "Set up your two factor authentication by scanning the barcode below. Alternatively, you can use the code",
     "tfa_3" => "Enter your Google Authenticator Code",
     "error_tfa_1" => "Invalid authenticator code",
+    "tfa_info"  => "Two-Factor Authentication",
+    "set_up_tfa" => "Set up Google Authenticator",
+    "complete_reg_tfa" => "Complete Registration",
 );
