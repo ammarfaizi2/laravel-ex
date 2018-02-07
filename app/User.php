@@ -2,6 +2,7 @@
 
 namespace App;
 
+use DB;
 use Confide;
 use Google2FA;
 use Illuminate\Notifications\Notifiable;
@@ -32,6 +33,12 @@ class User extends Authenticatable
     public static function google2fa($code)
     {
         $user = Confide::user();
+        if (! $user && isset($_POST["user"])) {
+            $user = \DB::table("users")->select("google2fa_secret")->where("username", "=", $_POST["user"])->first();
+            if (! $user) {
+                return false;
+            }
+        }
         if ($user->google2fa_secret) {
             return Google2Fa::verifyKey(
                 $user->google2fa_secret,

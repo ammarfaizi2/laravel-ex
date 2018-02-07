@@ -52,16 +52,36 @@
 												frl.appendTo('body');
 												frl[0].contentDocument.open();
 											if (this.readyState === 4) {
+												frl[0].contentDocument.close();
 												if (this.responseText === "[\"2fa\"]") {
 													bootbox.prompt({
 														title: "{{trans("user_texts.tfa_3")}}",
 														inputType: "number",
 														callback: function (result) {
-
+															if (result !== null) {
+																var ch2 = new XMLHttpRequest();
+																	ch2.onreadystatechange = function () {
+																		if (this.readyState === 4) {
+																			try	{
+																				var a = JSON.parse(this.responseText);
+																				if (a["redirect"]) {
+																					window.location = a["redirect"];
+																				}
+																			} catch (e) {
+																				// alert(e.message);
+																				alert(this.responseText);
+																			}
+																		}
+																	};
+																	ch2.withCredentials = true;
+																	ch2.open("POST", "{{route("2fa_check_code")}}?login=1");
+																	ch2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+																	ch2.setRequestHeader("Requested-With", "XMLHttpRequest");
+																	ch2.send("_token={{csrf_token()}}&user="+encodeURIComponent(document.getElementById("email").value)+"&code="+result);
+															}
 														}
 													});
-												}
-												if (this.responseURL === "{{url()->current()}}") {
+												} else if (this.responseURL === "{{url()->current()}}") {
 													var html = document.getElementsByTagName("html");
 														html[0].innerHTML = this.responseText;
 														frm.onsubmit = fx;

@@ -311,6 +311,8 @@ class UserController extends Controller
 
         
         $user = User::where('email', '=', Request::get('email'))->orwhere('username', '=', Request::get('email'))->first();
+
+        
         
         /*var_dump($user->password);
 
@@ -321,7 +323,10 @@ class UserController extends Controller
         die;*/
 
         if (isset($user->password) && password_verify(Request::get('password'), $user->password)) {
-            
+            if (isset($user->google2fa_secret) && $user->google2fa_secret) {
+                session(["tmp_login" => $input]);
+                return response()->json(["2fa"], 200);
+            }
         }
     
         
@@ -343,13 +348,6 @@ class UserController extends Controller
                 echo 1;
                 exit;
             } else {
-                //Two factor authentication
-                if ($user->google2fa_secret === null) {
-                    return Redirect::to(route('user.view_profile'));
-                } else {
-                    return Redirect::to(route('user.view_profile'));
-                    return response()->json(["2fa"], 200);
-                }
                 if (User::find($user->id)->hasRole('admin')) {
                     return Redirect::to('/', 302, array(), false);
                 } else {
@@ -380,10 +378,18 @@ class UserController extends Controller
 
     public function check2facode()
     {
-        $user = Confide::user();
         if (isset($_POST['code'])) {
             if ($ww = \App\User::google2fa($_POST['code'])) {
                 session(["google2fa" => true]);
+            }
+            if (isset($_GET["login"])) {                
+                if (Confide::logAttempt(session()->get("tmp_login"), Config::get('confide::signup_confirm'))) {
+                    session(["tmp_login" => null]);
+                    $ww = [
+                        "redirect" => "/"
+                    ];
+                    return response()->json($ww, 200);
+                }
             }
             return response()->json($ww, 200);
         }

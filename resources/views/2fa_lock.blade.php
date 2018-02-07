@@ -12,6 +12,8 @@
 	{{ HTML::script('assets/js/bootbox.min.js') }}
 </head>
 <body>
+</body>
+</html>
 <script type="text/javascript">
 	function promptCode() {
 		bootbox.prompt({
@@ -28,7 +30,11 @@
 										var ch2 = new XMLHttpRequest();
 											ch2.onreadystatechange = function () {
 												if (this.readyState === 4) {
-													document.getElementById("mainHTML").innerHTML = this.responseText;
+													if (this.responseText.match(/g2fahandler/gui)) {
+														window.location = this.responseURL;
+													} else {
+														document.getElementById("mainHTML").innerHTML = this.responseText;
+													}
 												}
 											};
 											ch2.withCredentials = true;
@@ -60,5 +66,3 @@
 	}
 	promptCode();
 </script>
-</body>
-</html>
