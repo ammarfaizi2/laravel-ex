@@ -1,6 +1,5 @@
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
-			
 		<!-- Security -->
 		<div id="coin_deposits">
 			<h2>{{{ trans('texts.coin_withdrawals')}}} @if(isset($current_coin)) {{' - '.$current_coin}} @endif</h2> 
@@ -111,7 +110,6 @@
                         showMessageSingle('{{{ trans('texts.error') }}}', 'error');
                     }
                 });
-                
                 /*
                 $.post('<?php echo action('UserController@cancelWithdraw')?>', {isAjax: 1, withdraw_id: withdraw_id }, function(response){
                       var obj = $.parseJSON(response); 

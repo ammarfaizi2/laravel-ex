@@ -18,7 +18,6 @@
 					@endif
 				</div>
 			@endif
-
 			@if ( Session::get('notice') )
 				<div class="alert alert-success">
 					<button type="button" class="close" data-dismiss="alert">×</button>
@@ -46,8 +45,6 @@
 					   <b id="net_total" class="control-label">0.00</b> <b>{{{ $current_coin }}}</b><br /><br />
 					  </div>
 					</div>
-				   
-					
 				  <div class="control-group">
 					<label class="col-lg-2 control-label col-lg-pull-0">Receive Address</label>
 					<div class="col-lg-10">
@@ -66,11 +63,8 @@
 					<div class="col-lg-10">	 
 					  <input type="hidden" name="fee_withdraw" id="fee_withdraw" value="{{$fee_withdraw}}"> 	      
 					  <input type="hidden" name="wallet_id" id="wallet_id" value="{{$wallet_id}}">
-					   <?php
-		   				$user = Confide::user();
-					   ?>
+					<?php $user = Confide::user(); ?>
 		   			@if ($user->google2fa_secret)
-						{{ HTML::script('assets/js/bootbox.min.js') }}
 					  <button type="submit" class="btn btn-primary">{{trans('texts.withdraw')}}</button>
 					  <script type="text/javascript">
 					  	var d = document.getElementById("wihtdrawForm");

@@ -161,7 +161,7 @@ Route::get( 'user/reset_password/{token}', 'UserController@reset_password');
 Route::post('user/reset_password',         'UserController@do_reset_password');
 Route::any( 'user/logout',                 'UserController@logout')->name('logout');
 Route::post( 'check-captcha',               'UserController@checkCaptcha');
-Route::post( 'user/update-setting',         'UserController@updateSetting');
+Route::any( 'user/update-setting',         'UserController@updateSetting');
 
 
 

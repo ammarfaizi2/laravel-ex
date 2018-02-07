@@ -1,6 +1,5 @@
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
-		  
 		<!-- Security -->
 		<div id="security">
 			<h2>{{{ trans('user_texts.security')}}}</h2>
@@ -33,8 +32,7 @@
                 $user->email,
                 $registration_data['google2fa_secret']
             );
-
-        // Pass the QR barcode image to our view
+            // Pass the QR barcode image to our view
             ?>
             <h4 class="alert alert-danger">Two-Factor Authentication: <span id="twofaStatus">Disabled</span></h4>
               <div class="container">
@@ -42,7 +40,6 @@
                     <div class="col-md-8 col-md-offset-2">
                         <div class="panel panel-default">
                             <div class="panel-heading">Set up Google Authenticator</div>
-
                             <div class="panel-body" style="text-align: center;">
                                 <p>{{trans('user_texts.tfa_2')}} {{$registration_data['google2fa_secret'] }}</p>
                                 <div>
@@ -66,7 +63,7 @@
                 <script type="text/javascript">
                     document.getElementById("disable-two-factor-auth").addEventListener("click", function () {
                          bootbox.prompt({
-                            title: "Enter your Google Authenticator Code",
+                            title: "{{trans('user_texts.tfa_3')}}",
                             inputType: 'number',
                             callback: function (result) {
                                 if (result !== null) {

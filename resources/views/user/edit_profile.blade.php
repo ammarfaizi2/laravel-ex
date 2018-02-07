@@ -12,7 +12,6 @@
 					@endif
 				</div>
 			@endif
-
 			@if ( Session::get('notice') )
 				<div class="alert alert-success">
 					<button type="button" class="close" data-dismiss="alert">×</button>
@@ -137,66 +136,7 @@
 				  });*/
 			   });
 			</script>
-		   <?php
-		   	$user = Confide::user();
-		   ?>
-		   @if ($user->google2fa_secret)
-		   	{{ HTML::script('assets/js/bootbox.min.js') }}
-		   	<button type="submit" class="btn btn-primary" id="update_button">Update Profile</button>
-		   	<script type="text/javascript">
-		   		var d = document.getElementById("registerForm");
-		   		var act = d.action;
-		   		d.action = "javascript:void(0);";
-		   		d.addEventListener("submit", function (t) {
-		   			    bootbox.prompt({
-					        title: "Enter your Google Authenticator Code",
-					        inputType: 'number',
-					        callback: function (result) {
-					            if (result !== null) {
-					            	var ch = new XMLHttpRequest(), token = document.getElementById("_token").value;
-					            		ch.onreadystatechange = function () {
-					            			if (this.readyState === 4) {
-					            				if (JSON.parse(this.responseText) == true) {
-					            					var ins = document.getElementsByTagName("input"), wi, postContext = "";
-					            					for(wi in ins) {
-					            						if (ins[wi].name) {
-					            							postContext += encodeURIComponent(ins[wi].name) + "=";
-					            							if (ins[wi].value) {
-					            								postContext += encodeURIComponent(ins[wi].value);
-					            							}
-					            							postContext += "&";
-					            						}
-					            					}
-					            					var ch2 = new XMLHttpRequest();
-					            						ch2.onreadystatechange = function () {
-					            							if (this.readyState === 4) {
-					            								window.location = "?success_edit_form=1";
-					            							}
-					            						}
-					            						ch2.withCredentials = true;
-					            						ch2.open("POST", act);
-					            						ch2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-					            						ch2.send(postContext);
-					            				} else {
-					            					alert("Invalid Authenticator Code");
-					            					return false;
-					            				}
-					            			}
-					            		};
-					            		ch.withCredentials = true;
-					            		ch.open("POST", "{{route('2fa_check')}}");
-					            		ch.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-					            		ch.send("_token="+encodeURIComponent(token)+"&code="+encodeURIComponent(result));
-					            }
-					        }
-					    });
-		   		});
-		   	</script>
-		   @else
 		   	<button type="submit" class="btn btn-primary">Update Profile</button>
-
-		   @endif
-			<br><br>
 			</form>
 		</div>
 	</div>
