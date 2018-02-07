@@ -74,8 +74,12 @@
                                                 if (JSON.parse(this.responseText) == true) {
                                                     window.location = "{{route("user.disable_tfa")}}"
                                                 } else {
-                                                    alert("Invalid Authenticator Code");
-                                                    return false;
+                                                    bootbox.alert({ 
+                                                      size: "small",
+                                                      title: "Error",
+                                                      message: "{{trans("user_texts.error_tfa_1")}}", 
+                                                      callback: function(){}
+                                                    });
                                                 }
                                             }                                            
                                         };

@@ -968,9 +968,6 @@ class UserController extends Controller
             break;
         }
         $data["that"] = $this;
-        if ($s = Session2FA::need2FA()) {
-            $data["need2fa"] = $s;
-        }
 
         return view('user.profile', $data);
     }

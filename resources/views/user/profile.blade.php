@@ -56,6 +56,11 @@
 				@elseif($page == 'deposit')
 					@include('user.deposit')
 				@elseif($page == 'withdraw')
+					@php 
+						$need2fa = true; 
+						$formId = "wihtdrawForm";
+						$json2FASession = "[]";
+					@endphp
 					@include('user.withdraw')
 				@elseif($page == 'dashboard')
 					@include('user.dashboard')
