@@ -347,6 +347,7 @@ class UserController extends Controller
                 if ($user->google2fa_secret === null) {
                     return Redirect::to(route('user.view_profile'));
                 } else {
+                    return Redirect::to(route('user.view_profile'));
                     return response()->json(["2fa"], 200);
                 }
                 if (User::find($user->id)->hasRole('admin')) {
