@@ -561,6 +561,7 @@ class UserController extends Controller
 
     public function updateSetting()
     {
+        Session2FA::check();
         $update= array('timeout'=>Request::get('timeout'),'updated_at'=>date("Y-m-d H:i:s"));
         $fullname = Request::get('fullname');
         $password = Request::get('password');
@@ -1177,22 +1178,11 @@ class UserController extends Controller
 
     public function doWithdraw()
     {
-        if (isset($_GET['soft'])) {
-            session(["soft_post" => Request::all()]);
-            return response()->json(true, 200);
-        }
-        $s = session()->get("soft_post");
-        if ($s) {
-            $amount = $s['amount'];
-            $address = $s['address'];
-            $wallet_id = (int)$s['wallet_id'];
-            $password = $s['password'];
-        } else {
-            $amount = Request::get('amount');
-            $address = Request::get('address');
-            $wallet_id = (int)Request::get('wallet_id');
-            $password = Request::get('password');
-        }
+        Session2FA::check();
+        $amount = Request::get('amount');
+        $address = Request::get('address');
+        $wallet_id = (int)Request::get('wallet_id');
+        $password = Request::get('password');
         $wallet = Wallet::find($wallet_id);
 
         $setting = new Setting();
