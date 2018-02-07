@@ -18,39 +18,43 @@
 				title: "{{trans("user_texts.tfa_3")}}",
 				inputType: "number",
 				callback: function (result) {
-					var ch = new XMLHttpRequest();
-						ch.onreadystatechange = function () {
-							if (this.readyState === 4) {
-								if (this.responseText === "true") {
-									var ch2 = new XMLHttpRequest();
-										ch2.onreadystatechange = function () {
-											if (this.readyState === 4) {
-												document.getElementById("mainHTML").innerHTML = this.responseText;
-											}
-										};
-										ch2.withCredentials = true;
-										ch2.open("GET", "");
-										ch2.send(null);
-								} else {
-									bootbox.confirm({ 
-									  size: "small",
-									  message: "{{trans("user_texts.error_tfa_1")}}<br>Do you want to try again?", 
-									  callback: function(result){ 
-									  	if (result) {
-									  		promptCode();
-									  	} else {
-									  		window.location = "{{route("logout")}}";
-									  	}
-									  }
-									})
+					if (result === null) {
+						window.location = "{{route("logout")}}";
+					} else {
+						var ch = new XMLHttpRequest();
+							ch.onreadystatechange = function () {
+								if (this.readyState === 4) {
+									if (this.responseText === "true") {
+										var ch2 = new XMLHttpRequest();
+											ch2.onreadystatechange = function () {
+												if (this.readyState === 4) {
+													document.getElementById("mainHTML").innerHTML = this.responseText;
+												}
+											};
+											ch2.withCredentials = true;
+											ch2.open("GET", "");
+											ch2.send(null);
+									} else {
+										bootbox.confirm({ 
+										  size: "small",
+										  message: "{{trans("user_texts.error_tfa_1")}}<br>Do you want to try again?", 
+										  callback: function(result){ 
+										  	if (result) {
+										  		promptCode();
+										  	} else {
+										  		window.location = "{{route("logout")}}";
+										  	}
+										  }
+										})
+									}
 								}
-							}
-						};
-						ch.withCredentials = true;
-						ch.open("POST", "{{route("2fa_check_code")}}");
-						ch.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-						ch.setRequestHeader("Requested-Wiht", "XMLHttpRequest");
-						ch.send("_token={{csrf_token()}}&code="+result);
+							};
+							ch.withCredentials = true;
+							ch.open("POST", "{{route("2fa_check_code")}}");
+							ch.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+							ch.setRequestHeader("Requested-Wiht", "XMLHttpRequest");
+							ch.send("_token={{csrf_token()}}&code="+result);
+						}
 				}
 			});
 	}
