@@ -378,6 +378,17 @@ class UserController extends Controller
         }
     }
 
+    public function check2facode()
+    {
+        $user = Confide::user();
+        if (isset($_POST['code'])) {
+            if ($ww = \App\User::google2fa($_POST['code'])) {
+                session(["google2fa" => true]);
+            }
+            return response()->json($ww, 200);
+        }
+    }
+
     /**
      * Attempt to confirm account with code
      *

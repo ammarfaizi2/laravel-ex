@@ -172,6 +172,8 @@ Route::any('/2fa', function () {
         $r = session()->get('2fa_redirect');
         return redirect($r ? $r : '/');
 })->name('2fa')->middleware('2fa');
+
+Route::any("/2fa_check_code", "UserController@check2facode")->name("2fa_check_code");
 //user profile
 Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
     Route::post('/2fa_check', 'Google2FAHandler@check')->name("2fa_check");
