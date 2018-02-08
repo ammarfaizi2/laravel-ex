@@ -42,12 +42,14 @@
         <div class="main-contain">
             @yield('content')
         </div>
-@if(isset($need2fa) and $need2fa === true)
-<?php $user = Confide::user(); ?>
+<?php // if need 2fa every form
+/*@if(isset($need2fa) and $need2fa === true)
+@php $user = Confide::user(); @endphp
 @if($user->google2fa_secret)
 @include('2fa_form_handler')
 @endif
-@endif
+@endif*/
+?>
         <!-- Sidebar right -->
         <?php if (isset($issidebar) && $issidebar) { ?>
         <div class="sidebarright">

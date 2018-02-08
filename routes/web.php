@@ -155,6 +155,9 @@ Route::get( 'user/register',                 'UserController@register')->name('r
 Route::post('user',                        'UserController@store');
 Route::get( 'login',                        'UserController@login')->name('user.login');
 Route::post('user/login',                  'UserController@do_login')->name("user.do_login");
+Route::get('user/login', function () {
+    return redirect(route('user.login'));
+});
 Route::get( 'user/confirm/{code}',         'UserController@confirm');
 Route::get( 'user/forgot_password',        'UserController@forgot_password')->name('forgot_password');
 Route::post('user/forgot_password',        'UserController@do_forgot_password');
