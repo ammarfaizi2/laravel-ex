@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Hash;
 use Lang;
 use Config;
 use App\Models\News;

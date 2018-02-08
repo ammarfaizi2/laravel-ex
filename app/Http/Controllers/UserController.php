@@ -384,14 +384,18 @@ class UserController extends Controller
                 if (isset($_POST['admin_page'])) {
                     session(["admin_page" => true]);
                 }
+
             }
             if (isset($_GET["login"])) {                
-                if (Confide::logAttempt(session()->get("tmp_login"), Config::get('confide::signup_confirm'))) {
+                if ($ww && Confide::logAttempt(session()->get("tmp_login"), Config::get('confide::signup_confirm'))) {
                     session(["tmp_login" => null]);
                     $ww = [
                         "redirect" => "/"
                     ];
-                    return response()->json($ww, 200);
+                } else {
+                    $ww = [
+                        "redirect" => null
+                    ]
                 }
             }
             return response()->json($ww, 200);
@@ -1460,6 +1464,7 @@ class UserController extends Controller
                 null, // $timestamp
                 "__not_set__"
             )) {
+                session(["google2fa" => true]);
                 DB::table('users')->where(
                     [
                         ['id', '=', $user->id]
