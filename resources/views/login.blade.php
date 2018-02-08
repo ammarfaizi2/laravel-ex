@@ -66,9 +66,15 @@
 																				var a = JSON.parse(this.responseText);
 																				if (a["redirect"]) {
 																					window.location = a["redirect"];
+																				} else {
+																					bootbox.alert({ 
+																					  size: "small",
+																					  title: "Error",
+																					  message: "{{trans("user_texts.error_tfa_1")}}", 
+																					  callback: function(){}
+																					});
 																				}
 																			} catch (e) {
-																				// alert(e.message);
 																				alert(this.responseText);
 																			}
 																		}
