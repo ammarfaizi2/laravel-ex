@@ -395,7 +395,7 @@ class UserController extends Controller
                 } else {
                     $ww = [
                         "redirect" => null
-                    ]
+                    ];
                 }
             }
             return response()->json($ww, 200);
