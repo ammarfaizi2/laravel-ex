@@ -1,6 +1,6 @@
 <script type="text/javascript">
-	function g2fahandler() {
-		var form = document.getElementById("{{$formId}}"),
+	function g2fahandler(formId) {
+		var form = document.getElementById(formId),
 		mainHTML = document.getElementById("mainHTML");
 		var act  = form.action, 
 		sessionHandler = encodeURIComponent(JSON.stringify({{$json2FASession}}));
@@ -15,7 +15,7 @@
 							ch.onreadystatechange = function () {
 								if (this.readyState === 4) {
 									if (JSON.parse(this.responseText) == true) {
-										form = document.getElementById("{{$formId}}");
+										form = document.getElementById(formId);
 										var postContext = "_token={{csrf_token()}}&",
 											inputs = [
 												form.getElementsByTagName("input"), 
@@ -45,20 +45,27 @@
 													frl[0].contentDocument.open();
 												if (this.readyState === 4) {
 													try	{
-														var msg = this.responseText;
-														mainHTML.innerHTML = msg;
-														var form = document.getElementById("{{$formId}}");
-														var act  = form.action;
-														form.action = "javascript:void(0);";
-														form.onsubmit = fx;
-														window.scrollTo(0, 0); 
+														@if(isset($need2FAredirect))
+															// alert(this.responseText);
+															window.location = act;
+														@else
+															var msg = this.responseText;
+															mainHTML.innerHTML = msg;
+															var form = document.getElementById(formId);
+															if (form !== null) {
+																var act  = form.action;
+																form.action = "javascript:void(0);";
+																form.onsubmit = fx;
+															}
+															window.scrollTo(0, 0);
+														@endif 
 													} catch (e) {
 														alert("Error: " + e.message);
 													}
 												}
 											};
 											ch2.withCredentials = true;
-											ch2.open("POST", act + "?ajax_2fa=1");
+											ch2.open("POST", act + "?ajax_2fa=1{!! isset($need2FAredirect) ? "&redirect=1" : "" !!}");
 											ch2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 											ch2.setRequestHeader("Requested-With", "XMLHttpRequest");
 											ch2.send(postContext);
@@ -83,5 +90,12 @@
 			};
 			form.addEventListener("submit", fx);
 		}
-		g2fahandler();
+		@if(is_array($formId))
+			@foreach($formId as $formId)
+				g2fahandler("{{$formId}}");	
+			@endforeach
+		@else
+		g2fahandler("{{$formId}}");
+		@endif
 </script>
+<style type="text/css">iframe{display:none;}</style>

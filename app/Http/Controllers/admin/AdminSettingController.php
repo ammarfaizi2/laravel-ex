@@ -9,6 +9,7 @@ use Config;
 use Request;
 use Redirect;
 use Exception;
+use App\Session2FA;
 use App\Models\News;
 use App\Models\Post;
 use App\Models\Role;
@@ -66,6 +67,9 @@ class AdminSettingController extends Controller
             $market_wallet[$market->id] = $market->getWalletType($market->id);
         }
         $data['markets'] = $market_wallet;
+        $data['need2fa'] = true;
+        $data['formId'] = "";
+        $data['json2FASession'] = "[]";
         switch ($page) {
         case 'news':
             break;
@@ -93,10 +97,13 @@ class AdminSettingController extends Controller
                 ->select('fee_trade.*', 'market.wallet_from', 'wallets.name', 'wallets.type')->orderby('wallets.name', 'asc')->get();
             //echo "<pre>fee_trades: "; print_r($fee_trades); echo "</pre>";
             //echo "<pre>markets: "; print_r($markets); echo "</pre>";exit;
+            $data['formId'] = ['add_fee_market', 'edit_fee_trade'];
+            $data['need2FAredirect'] = true;
             return view('admin.setting_fee', $data);
                 break;
         case 'fee-withdraw':
             $data['fee_withdraws'] = FeeWithdraw::leftjoin('wallets', 'fee_withdraw.wallet_id', '=', 'wallets.id')->select('fee_withdraw.*', 'wallets.type', 'wallets.name')->orderby('wallets.type')->get();
+            $data['formId'] = 'edit_fee_withdraw';
             return view('admin.setting_fee_withdraw', $data);
                 break;
         case 'limit-trade':
@@ -110,6 +117,8 @@ class AdminSettingController extends Controller
             $offset_start = ($pager_page-1)*$record_per_page;
             $data['wallets'] = Wallet::orderby('type')->get();
             $data['limit_trades'] = WalletLimitTrade::leftjoin('wallets', 'wallet_limittrade.wallet_id', '=', 'wallets.id')->select('wallet_limittrade.*', 'wallets.type as wallet_type', 'wallets.name as wallet_name')->skip($offset_start)->take($record_per_page)->orderby('wallet_type')->get();
+            $data['need2fa'] = true;
+            $data['formId'] = 'add_limit_trade';
             return view('admin.limittrade.setting_limittrade', $data);
                 break;
         case 'statistic-coin-exchanged':
@@ -678,6 +687,7 @@ class AdminSettingController extends Controller
             $data['percent_point_reward_referred_trade']=$setting->getSetting('percent_point_reward_referred_trade', 0);
 
             //echo "<pre>data: "; print_r($data); echo "</pre>"; exit;
+            $data["formId"] = "setting_general";
             return view('admin.setting', $data);
                 break;
         }
@@ -869,6 +879,7 @@ class AdminSettingController extends Controller
     
     public function updateSetting()
     {
+        Session2FA::check();
         $setting = new Setting();
         $site_mode = Request::get('site_mode');
         //$bg_color = Request::get('bg_color');
@@ -924,9 +935,16 @@ class AdminSettingController extends Controller
     }
     public function setFeeTrade()
     {
-        $fee_buy = Request::get('buy_fee');
-        $fee_sell = Request::get('sell_fee');
-        $market_id = Request::get('market_id');
+        Session2FA::check();
+        if ($s = Session2FA::post2fa()) {
+            $fee_buy = $s['buy_fee'];
+            $fee_sell = $s['sell_fee'];
+            $market_id = $s['market_id'];
+        } else {
+            $fee_buy = Request::get('buy_fee');
+            $fee_sell = Request::get('sell_fee');
+            $market_id = Request::get('market_id');
+        }
         FeeTrade::where('market_id', $market_id)->update(array('fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
         return Redirect::to('admin/setting/fee')->with('success', Lang::get('messages.update_success'));
     }
@@ -1639,6 +1657,7 @@ class AdminSettingController extends Controller
 
     public function addNewLimitTrade()
     {
+        Session2FA::check();
         $wallet_id = strtoupper(Request::get('wallet_id'));
         $min_amount = Request::get('min_amount');
         $max_amount = Request::get('max_amount');
@@ -1669,13 +1688,25 @@ class AdminSettingController extends Controller
             return Redirect::to('admin/setting/limit-trade')->with('error', Lang::get('messages.limit_trade_not_exist'));
         }
         $data['limit_trade'] = $limit_trade;
+        $data['need2fa'] = true;
+        $data['formId'] = 'edit_limit_trade';
+        $data['json2FASession'] = "[]";
+        $data['need2FAredirect'] = true;
         return view('admin.limittrade.edit_limittrade', $data);
     }
     public function doEditLimitTrade()
     {
-        $wallet_id = strtoupper(Request::get('wallet_id'));
-        $min_amount = Request::get('min_amount');
-        $max_amount = Request::get('max_amount');
+        Session2FA::check();
+        if ($s = Session2FA::post2fa()) {
+            $wallet_id = strtoupper($s['wallet_id']);
+            $min_amount = $s['min_amount'];
+            $max_amount = $s['max_amount'];
+        } else {
+            $wallet_id = strtoupper(Request::get('wallet_id'));
+            $min_amount = Request::get('min_amount');
+            $max_amount = Request::get('max_amount');
+        }
+
         $limitTrade=WalletLimitTrade::where('wallet_id', $wallet_id)->first();
         if (isset($limitTrade->wallet_id)) {
             $limitTrade->min_amount=$min_amount;
@@ -1693,7 +1724,12 @@ class AdminSettingController extends Controller
 
     public function addFee()
     {
-        $re = Request::except('_token');
+        Session2FA::check();
+        if ($re = Session2FA::post2fa()) {
+            unset($re["_token"]);
+        } else {
+            $re = Request::except('_token');
+        }
         try {
             $a = FeeTrade::insert(
                 [
