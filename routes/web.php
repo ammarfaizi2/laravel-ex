@@ -183,7 +183,7 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa
     Route::post('/2fa_check', 'Google2FAHandler@check')->name("2fa_check");
     Route::get('/disable-two-factor-auth', function () {
         if (! session()->get("disable_2fa")) {
-            return redirect("/");
+            abort(404);
         }
         $user = Confide::user();
         DB::table('users')->where('id', '=', $user->id)->update(
@@ -191,7 +191,7 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa
                 'google2fa_secret' => null
             ]
         );
-        session(['google2fa' => null]);
+        session(['google2fa' => null, "disable_2fa" => null]);
         return redirect(route('user.profile_page', 'two-factor-auth'));
     })->name('user.disable_tfa');
     Route::post('/complete-two-factor-auth', 'UserController@completeTwoFactorAuth')->name('user.complete_tfa');
