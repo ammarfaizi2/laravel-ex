@@ -99,6 +99,7 @@
                 <button style="cursor: pointer;" type="submit" id="disable-two-factor-auth" class="btn btn-danger">{{{ trans('user_texts.disable')}}} {{{ trans("user_texts.two_factor_auth")}}}</button>
                 {{ HTML::script('assets/js/bootbox.min.js') }}
                 <script type="text/javascript">
+                    'use g2fahandler';
                     document.getElementById("disable-two-factor-auth").addEventListener("click", function () {
                          bootbox.prompt({
                             title: "{{trans('user_texts.tfa_3')}}",

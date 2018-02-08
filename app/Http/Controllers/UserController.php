@@ -381,6 +381,9 @@ class UserController extends Controller
         if (isset($_POST['code'])) {
             if ($ww = \App\User::google2fa($_POST['code'])) {
                 session(["google2fa" => true]);
+                if (isset($_POST['admin_page'])) {
+                    session(["admin_page" => true]);
+                }
             }
             if (isset($_GET["login"])) {                
                 if (Confide::logAttempt(session()->get("tmp_login"), Config::get('confide::signup_confirm'))) {
@@ -543,7 +546,8 @@ class UserController extends Controller
     {
         Confide::logout();
         session([
-            'google2fa' => null
+            'google2fa' => null,
+            'admin_page' => null
         ]);
         return Redirect::to('/');
     }

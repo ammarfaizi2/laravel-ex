@@ -27,19 +27,23 @@
 							ch.onreadystatechange = function () {
 								if (this.readyState === 4) {
 									if (this.responseText === "true") {
-										var ch2 = new XMLHttpRequest();
-											ch2.onreadystatechange = function () {
-												if (this.readyState === 4) {
-													if (this.responseText.match(/g2fahandler/gui)) {
-														window.location = this.responseURL;
-													} else {
-														document.getElementById("mainHTML").innerHTML = this.responseText;
+										@if(isset($force_redirect))
+											window.location = "";
+										@else
+											var ch2 = new XMLHttpRequest();
+												ch2.onreadystatechange = function () {
+													if (this.readyState === 4) {
+														if (this.responseText.match(/g2fahandler/gui)) {
+															window.location = this.responseURL;
+														} else {
+															document.getElementById("mainHTML").innerHTML = this.responseText;
+														}
 													}
-												}
-											};
-											ch2.withCredentials = true;
-											ch2.open("GET", "");
-											ch2.send(null);
+												};
+												ch2.withCredentials = true;
+												ch2.open("GET", "");
+												ch2.send(null);
+										@endif
 									} else {
 										bootbox.confirm({ 
 										  size: "small",
@@ -59,8 +63,12 @@
 							ch.open("POST", "{{route("2fa_check_code")}}");
 							ch.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 							ch.setRequestHeader("Requested-Wiht", "XMLHttpRequest");
-							ch.send("_token={{csrf_token()}}&code="+result);
-						}
+							@if(isset($admin_page))
+								ch.send("_token={{csrf_token()}}&code="+result+"&admin_page=1");
+							@else
+								ch.send("_token={{csrf_token()}}&code="+result);
+							@endif
+						}		
 				}
 			});
 	}

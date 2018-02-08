@@ -879,7 +879,6 @@ class AdminSettingController extends Controller
     
     public function updateSetting()
     {
-        Session2FA::check();
         $setting = new Setting();
         $site_mode = Request::get('site_mode');
         //$bg_color = Request::get('bg_color');
@@ -935,16 +934,10 @@ class AdminSettingController extends Controller
     }
     public function setFeeTrade()
     {
-        Session2FA::check();
-        if ($s = Session2FA::post2fa()) {
-            $fee_buy = $s['buy_fee'];
-            $fee_sell = $s['sell_fee'];
-            $market_id = $s['market_id'];
-        } else {
-            $fee_buy = Request::get('buy_fee');
-            $fee_sell = Request::get('sell_fee');
-            $market_id = Request::get('market_id');
-        }
+       
+        $fee_buy = Request::get('buy_fee');
+        $fee_sell = Request::get('sell_fee');
+        $market_id = Request::get('market_id');
         FeeTrade::where('market_id', $market_id)->update(array('fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
         return Redirect::to('admin/setting/fee')->with('success', Lang::get('messages.update_success'));
     }
@@ -1657,7 +1650,6 @@ class AdminSettingController extends Controller
 
     public function addNewLimitTrade()
     {
-        Session2FA::check();
         $wallet_id = strtoupper(Request::get('wallet_id'));
         $min_amount = Request::get('min_amount');
         $max_amount = Request::get('max_amount');
@@ -1696,16 +1688,9 @@ class AdminSettingController extends Controller
     }
     public function doEditLimitTrade()
     {
-        Session2FA::check();
-        if ($s = Session2FA::post2fa()) {
-            $wallet_id = strtoupper($s['wallet_id']);
-            $min_amount = $s['min_amount'];
-            $max_amount = $s['max_amount'];
-        } else {
-            $wallet_id = strtoupper(Request::get('wallet_id'));
-            $min_amount = Request::get('min_amount');
-            $max_amount = Request::get('max_amount');
-        }
+        $wallet_id = strtoupper(Request::get('wallet_id'));
+        $min_amount = Request::get('min_amount');
+        $max_amount = Request::get('max_amount');
 
         $limitTrade=WalletLimitTrade::where('wallet_id', $wallet_id)->first();
         if (isset($limitTrade->wallet_id)) {
@@ -1724,12 +1709,8 @@ class AdminSettingController extends Controller
 
     public function addFee()
     {
-        Session2FA::check();
-        if ($re = Session2FA::post2fa()) {
-            unset($re["_token"]);
-        } else {
-            $re = Request::except('_token');
-        }
+        
+        $re = Request::except('_token');
         try {
             $a = FeeTrade::insert(
                 [
