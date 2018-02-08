@@ -25,12 +25,13 @@ class CreateUsersTable extends Migration {
 			$table->string('authy');
 			$table->string('two_factor_auth');
 			$table->timestamps();
-			$table->dateTime('lastest_login')->default('0000-00-00 00:00:00');
+			$table->dateTime('lastest_login')->nullable();
 			$table->string('timeout', 50);
 			$table->string('referral', 100)->nullable();
 			$table->string('trade_key');
 			$table->string('ip_lastlogin');
 			$table->string('remember_token')->nullable();
+			$table->text('google2fa_secret', 65535)->nullable();
 		});
 	}
 
