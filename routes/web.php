@@ -30,6 +30,7 @@ Route::get('/test',function(){
 return View::make('test');
 });
 
+
 Route::get('testLocate','BaseController@testLocate');
 
 Route::get('/', 'HomeController@index'); // call index page
@@ -120,13 +121,13 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middl
     Route::post('restore', 'admin\\AdminSettingController@doRestore');
 
     //limit trade
-    Route::post('add-limit-trade', 'admin\\AdminSettingController@addNewLimitTrade');
+    Route::post('add-limit-trade', 'admin\\AdminSettingController@addNewLimitTrade')->name('admin.add_new_limit_trade');
     Route::get('edit-limit-trade/{wallet}', 'admin\\AdminSettingController@editLimitTrade');
-    Route::post('edit-limit-trade', 'admin\\AdminSettingController@doEditLimitTrade');
+    Route::any('edit-limit-trade', 'admin\\AdminSettingController@doEditLimitTrade');
     Route::post('delete-limit-trade', 'admin\\AdminSettingController@deleteLimitTrade');
     Route::post('update-setting', 'admin\\AdminSettingController@updateSetting');
 
-    Route::post('set-fee-trade', 'admin\\AdminSettingController@setFeeTrade');
+    Route::any('set-fee-trade', 'admin\\AdminSettingController@setFeeTrade');
     Route::post('set-fee-withdraw', 'admin\\AdminSettingController@setFeeWithdraw');
 
     Route::post('delete-coin-vote', 'admin\\AdminSettingController@deleteCoinVote');
@@ -135,7 +136,7 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middl
 
     Route::post('add-post', 'admin\\AdminSettingController@addNewPost');
 
-    Route::post('add-fee', 'admin\\AdminSettingController@addFee');
+    Route::any('add-fee', 'admin\\AdminSettingController@addFee');
 
     Route::get('featured_market', 'admin\\AdminSettingController@featuredMarket')->name('admin.featured_market');
     Route::post('add_featured_market', 'admin\\AdminSettingController@addFeaturedMarket')->name('admin.add_featured_market');

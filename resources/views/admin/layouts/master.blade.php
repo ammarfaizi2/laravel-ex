@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html id="mainHTML">
 <head>
     <title>
         @section('title')
@@ -25,6 +25,7 @@
     {{ HTML::script('assets/js/bootstrap.min.js') }}
     {{ HTML::script('assets/js/bootstrap-dialog.min.js') }}
     {{ HTML::script('assets/superfish/js/superfish.js') }}
+    {{ HTML::script('assets/js/bootbox.min.js') }}
 </head>
 
 <body>
@@ -41,6 +42,12 @@
         <div class="main-contain">
             @yield('content')
         </div>
+@if(isset($need2fa) and $need2fa === true)
+<?php $user = Confide::user(); ?>
+@if($user->google2fa_secret)
+@include('2fa_form_handler')
+@endif
+@endif
         <!-- Sidebar right -->
         <?php if (isset($issidebar) && $issidebar) { ?>
         <div class="sidebarright">
