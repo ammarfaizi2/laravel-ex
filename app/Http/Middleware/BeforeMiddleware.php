@@ -79,7 +79,7 @@ class BeforeMiddleware
             $new_date = date("Y-m-d H:i:s", strtotime($lastest_login." +".$timeout));
             $cur_date = date("Y-m-d H:i:s");
             if (strtotime($cur_date) >= strtotime($new_date)) {
-                // var_dump($lastest_login, $new_datem, $cur_date);exit();
+                var_dump($lastest_login, $new_datem, $cur_date);exit();
                 Confide::logout();
                 session(["google2fa" => null]);
                 return Redirect::to('/login');
