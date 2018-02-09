@@ -65,7 +65,7 @@
 																			try	{
 																				var a = JSON.parse(this.responseText);
 																				if (a["redirect"]) {
-																					// window.location = a["redirect"];
+																					window.location = a["redirect"];
 																					alert(this.responseText);
 																				} else {
 																					bootbox.alert({ 
