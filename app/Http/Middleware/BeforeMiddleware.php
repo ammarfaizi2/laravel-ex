@@ -73,7 +73,7 @@ class BeforeMiddleware
             $user = Confide::user();
             $timeout = trim($user->timeout);
             if (empty($timeout)) {
-                $timeout = "45 minutes";
+                $timeout = env("USER_SESSION_TIMEOUT");
             }
             $lastest_login = $user->lastest_login;
             $new_date = date("Y-m-d H:i:s", strtotime($lastest_login." +".$timeout));
