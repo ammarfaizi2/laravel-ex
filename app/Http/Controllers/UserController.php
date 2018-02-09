@@ -389,7 +389,9 @@ class UserController extends Controller
             if (isset($_GET["login"])) {                
                 if ($ww && Confide::logAttempt(session()->get("tmp_login"), Config::get('confide::signup_confirm'))) {
                     session(["tmp_login" => null]);
+                    $user = Condife::user();
                     $ww = [
+                        "user" => $user->toArray(),
                         "redirect" => "/"
                     ];
                 } else {
