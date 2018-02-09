@@ -79,7 +79,9 @@ class BeforeMiddleware
             $new_date = date("Y-m-d H:i:s", strtotime($lastest_login." +".$timeout));
             $cur_date = date("Y-m-d H:i:s");
             if (strtotime($cur_date) >= strtotime($new_date)) {
-                Confide::logout();
+                // Confide::logout();
+
+                var_dump("Logout", $cur_date, $user->timeout, $new_date);exit();
                 
                 return Redirect::to('/login');
             }
