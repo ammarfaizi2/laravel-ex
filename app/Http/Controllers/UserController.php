@@ -1478,6 +1478,10 @@ class UserController extends Controller
                         'google2fa_secret' => $_POST['secret']
                     ]
                 );
+                $user = Confide::user();
+                $ip=$this->get_client_ip();
+                $this->sendMailIPUser($user, $ip);
+                User::where('id', $user->id)->update(array('lastest_login' => date("Y-m-d H:i:s"), 'ip_lastlogin'=>$ip));
                 return response()->json(
                 [
                     "redirect" => \URL::previous()
