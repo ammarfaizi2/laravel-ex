@@ -26,13 +26,10 @@ Route::get('/', function () {
 
 // Cach goi 2
 
-Route::get('/test',function(){
+/*Route::get('/test',function(){
     return View::make('test');
-});
+});*/
 
-Route::get('/test2', function () {
-    var_dump(Confide::user()->toArray());
-});
 
 
 Route::get('testLocate','BaseController@testLocate');
