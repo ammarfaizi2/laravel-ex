@@ -6,6 +6,7 @@ use DB;
 use Confide;
 use Closure;
 use Redirect;
+use App\User;
 
 class admin
 {
@@ -19,6 +20,9 @@ class admin
     public function handle($request, Closure $next)
     {
         $a = Confide::user();
+        if (! User::find($user->id)->hasRole('admin')) {
+            abort(404);
+        }
         if (isset($a->google2fa_secret) && !session()->get("admin_page")) {
             print view("2fa_lock", ["force_redirect" => true, "admin_page" => true]);
             exit();

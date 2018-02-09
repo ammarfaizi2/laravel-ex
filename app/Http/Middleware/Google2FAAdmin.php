@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+
 use Confide;
 use Closure;
+use App\User;
 use PragmaRX\Google2FALaravel\Middleware;
 
 class Google2FAAdmin
