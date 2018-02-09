@@ -388,6 +388,10 @@ class UserController extends Controller
             }
             if (isset($_GET["login"])) {                
                 if ($ww && Confide::logAttempt(session()->get("tmp_login"), Config::get('confide::signup_confirm'))) {
+                    $user = Confide::user();
+                    $ip=$this->get_client_ip();
+                    $this->sendMailIPUser($user, $ip);
+                    User::where('id', $user->id)->update(array('lastest_login' => date("Y-m-d H:i:s"), 'ip_lastlogin'=>$ip));
                     session(["tmp_login" => null]);
                     $ww = [
                         "redirect" => "/"
