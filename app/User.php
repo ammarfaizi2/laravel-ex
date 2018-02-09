@@ -49,4 +49,19 @@ class User extends Authenticatable
             );
         }
     }
+
+    public static function _hasRole($role)
+    {
+        $user = Confide::user();
+        if ($user) {
+            if ($user = \DB::table("users_roles")
+            ->select(["users_roles.role_id", "roles.name"])
+            ->join("roles", "roles.id", "=", "users_roles.role_id", "inner")
+            ->where("users_roles.user_id", "=", $user->id)
+            ->first()) {
+                return strtolower($user->name) === strtolower($role);
+            }
+        }
+        return false;
+    }
 }

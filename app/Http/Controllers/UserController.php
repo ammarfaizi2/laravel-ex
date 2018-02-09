@@ -348,7 +348,7 @@ class UserController extends Controller
                 echo 1;
                 exit;
             } else {
-                if (User::find($user->id)->hasRole('admin')) {
+                if (User::_hasRole('admin')) {
                     return Redirect::to('/', 302, array(), false);
                 } else {
                     return Redirect::to('/', 302, array(), false); // change it to '/admin', '/dashboard' or something
