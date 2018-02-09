@@ -31,6 +31,7 @@ class admin
         if (isset($q->name) && $q->name === 'Admin') {
             return $next($request);
         } else {
+            abort(404);
             http_response_code(403);
             ?>
             <!DOCTYPE html>
