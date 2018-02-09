@@ -189,7 +189,9 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa
         $user = Confide::user();
         DB::table('users')->where('id', '=', $user->id)->update(
             [
-                'google2fa_secret' => null
+                'google2fa_secret' => null,
+                'lastest_login' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
             ]
         );
         session(['google2fa' => null, "disable_2fa" => null]);
