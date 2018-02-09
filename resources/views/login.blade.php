@@ -65,7 +65,8 @@
 																			try	{
 																				var a = JSON.parse(this.responseText);
 																				if (a["redirect"]) {
-																					window.location = a["redirect"];
+																					// window.location = a["redirect"];
+																					alert(this.responseText);
 																				} else {
 																					bootbox.alert({ 
 																					  size: "small",
@@ -93,7 +94,8 @@
 														frm.onsubmit = fx;
 														listen();
 												} else {
-													window.location = this.responseURL;
+													// window.location = this.responseURL;
+													alert(this.responseURL);
 												}
 											}
 										};
