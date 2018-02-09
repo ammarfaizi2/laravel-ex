@@ -59,6 +59,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'before' => \App\Http\Middleware\BeforeMiddleware::class,
         '2fa' => \App\Http\Middleware\Google2FA::class,
+        '2fa_admin' => \App\Http\Middleware\Google2FA::class,
         'before' => \App\Http\Middleware\BeforeMiddleware::class
     ];
 }

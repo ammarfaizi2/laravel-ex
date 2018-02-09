@@ -52,7 +52,7 @@ Route::post('page/submit-coin', 'HomeController@submitCoin');
 //pages , news
 Route::get('post/{post}', 'HomeController@viewPost');
 #################################################################################
-Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middleware' => ['App\Http\Middleware\admin', '2fa']), function()
+Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middleware' => ['App\Http\Middleware\admin', '2fa_admin']), function()
 {
     Route::get('/', 'admin\\AdminSettingController@routePage');
     Route::get('setting', 'admin\\AdminSettingController@routePage');
