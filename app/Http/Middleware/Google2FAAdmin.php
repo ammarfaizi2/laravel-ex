@@ -6,7 +6,7 @@ use Confide;
 use Closure;
 use PragmaRX\Google2FALaravel\Middleware;
 
-class Google2FA
+class Google2FAAdmin
 {
     /**
      * Handle an incoming request.
