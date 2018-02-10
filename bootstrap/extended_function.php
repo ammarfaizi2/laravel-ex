@@ -7,7 +7,7 @@ class ex
 	 * ~ Function ~
 	 * How to use in blade:
 	 *
-	 * {{ (new ex())->example2() }} // It will print 123
+	 * {{ (new ex())->example1() }} // It will print 123
 	 */
 	public function example1()
 	{
@@ -18,7 +18,7 @@ class ex
 	 * ~ Static function ~
 	 * How to use in blade:
 	 *
-	 * {{ ex::example() }} // It will print 123
+	 * {{ ex::example2() }} // It will print 123
 	 */
 	public static function example2()
 	{
