@@ -32,7 +32,8 @@
             "App\\": "app/"
         },
         "files": [
-            "bootstrap/old_helpers.php"
+            "bootstrap/old_helpers.php",
+            "app/Http/Controllers/customHelperController.php"
         ]
     },
     "autoload-dev": {
