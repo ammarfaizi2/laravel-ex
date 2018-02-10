@@ -2,21 +2,35 @@
 
 class ex
 {
+
 	/**
+	 * ~ Function ~
 	 * How to use in blade:
 	 *
-	 * {{ ex::example() }}
+	 * {{ (new ex())->example2() }} // It will print 123
 	 */
-	public static function example()
+	public function example1()
+	{
+		return 123;
+	}
+
+	/**
+	 * ~ Static function ~
+	 * How to use in blade:
+	 *
+	 * {{ ex::example() }} // It will print 123
+	 */
+	public static function example2()
 	{
 		return 123;
 	}
 }
 
 /**
+ * ~ Global function ~
  * How to use in blade:
  *
- * {{ example() }}
+ * {{ example() }} // It will print 123
  */
 function example()
 {
