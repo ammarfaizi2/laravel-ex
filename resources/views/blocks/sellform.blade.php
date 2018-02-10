@@ -8,71 +8,74 @@
 </div>
   <form class="form-horizontal inblock">
 	
-    <div class="form-group">
-      <label class="col-lg-2 control-label" for="s_amount">{{{ trans('texts.amount') . ' ' . $coinmain}}} </label>
-      <div class="col-lg-10 input-group">      
-        <input id="s_amount" name="s_amount" class="form-control" type="text" value="0">
-		<span class="input-group-addon">{{{ $coinmain }}}</span> 
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-lg-2 control-label" >{{{ trans('texts.price_per')}}} {{{ $coinmain }}}</label>
-      <div class="col-lg-10 input-group">      
-        <input id="s_price" name="s_price" class="form-control" type="text" value="{{$buy_highest}}">
-		<span class="input-group-addon">{{{ $coinsecond }}}</span> 
-      </div>
-    </div>
-	
-	<div class="forConfirm">
 		<div class="form-group">
-		  <label class="col-lg-2 control-label" >{{{ trans('texts.total')}}}</label>
-		  <div class="col-lg-10 input-group">
-			  <span class="">
-			   <strong id="s_all">0.00</strong> <strong>{{{ $coinsecond }}}</strong>
-			  </span>
-			</div>
+		  <label class="col-lg-2 control-label" for="s_amount">{{{ trans('texts.amount') }}} </label>
+		  <div class="col-lg-10 input-group">      
+			<input id="s_amount" name="s_amount" class="form-control" type="text" value="0">
+			<span class="input-group-addon">{{{ $coinmain }}}</span> 
+		  </div>
 		</div>
-
-
 		<div class="form-group">
-		  <label class="col-lg-2 control-label" >{{{ trans('texts.trading_fee_short')}}} (<span id="fee_sell">{{$fee_sell}}</span>%)</label>
-		  <div class="col-lg-10 input-group">
-			  <span class="">
-			   <strong id="s_fee">0 </strong> <strong>{{{ $coinsecond }}}</strong>
-			  </span>
+		  <label class="col-lg-2 control-label" >{{{ trans('texts.price')}}} </label>
+		  <div class="col-lg-10 input-group">      
+			<input id="s_price" name="s_price" class="form-control" type="text" value="{{$buy_highest}}">
+			<span class="input-group-addon">{{{ $coinsecond }}}</span> 
+		  </div>
+		</div>
+		<div class="">
+		  <!-- Data Slider-->
+		  <div class="col-lg-11 col-centered">
+			<div id="sell_slider" ></div>
+		  </div>
+		</div> 
+		
+		
+		<div class="forConfirm">
+			<div class="form-group">
+			  <label class="col-lg-2 control-label" >{{{ trans('texts.total')}}}</label>
+			  <div class="col-lg-10 input-group">
+				  <span class="">
+				   <span id="s_all">0.00</span> <span>{{{ $coinsecond }}}</span>
+				  </span>
+				</div>
 			</div>
+
+
+			<div class="form-group">
+			  <label class="col-lg-2 control-label" >{{{ trans('texts.trading_fee_short')}}} (<span id="fee_sell">{{$fee_sell}}</span>%)</label>
+			  <div class="col-lg-10 input-group">
+				  <span class="">
+				   <span id="s_fee">0 </span> <span>{{{ $coinsecond }}}</span>
+				  </span>
+				</div>
+			</div>
+			
+			<div class="form-group">
+			  <label class="col-lg-2 control-label" >{{{ trans('texts.net_total')}}}</label>
+			  <div class="col-lg-10 input-group">
+				  <span class="">
+				   <span id="s_net_total">0 </span> <span>{{{ $coinsecond }}}</span>
+				  </span>
+				</div>
+			</div>
+			
 		</div>
 		
 		<div class="form-group">
-		  <label class="col-lg-2 control-label" >{{{ trans('texts.net_total')}}}</label>
-		  <div class="col-lg-10 input-group">
-			  <span class="">
-			   <strong id="s_net_total">0 </strong> <strong>{{{ $coinsecond }}}</strong>
-			  </span>
-			</div>
+		  <span id="s_message"></span>
 		</div>
 		
-	</div>
-	
-    <div class="form-group">
-    	<hr>
-      <span id="s_message"></span>
-    </div>
-    
-    <div class="control-group"> 
-		@if($enable_trading == 1)
-			<input type="hidden" name="sell_market_id" id="sell_market_id" value="{{{Session::get('market_id')}}}">  
-			<!-- <button type="button" class="btn" id="calc_sell">{{trans('texts.caculate')}}</button> -->
-			<button type="button" class="btn btn-primary btn-danger" id="do_sell">{{trans('texts.sell')}} {{{ $coinmain }}}</button>
-			<div style="display:none; width:75px; height:42px; padding:8px 12px; float: right;" id="sell_loader">
-			  <i class="fa fa-circle-o-notch fa-spin fa-1x" style="color:#27c295; "></i>
-			</div>
-		@else
-			<div class="alert alert-danger">
-				<i class="fa fa-exclamation-triangle"></i> <strong>{{{ trans('texts.market_disabled')}}}</strong>
-			</div>	
-		@endif
-    </div>
+		<div class="control-group"> 
+			
+				<input type="hidden" name="sell_market_id" id="sell_market_id" value="{{{Session::get('market_id')}}}">  
+				<!-- <button type="button" class="btn" id="calc_sell">{{trans('texts.caculate')}}</button> -->
+				<button type="button" class="btn btn-primary btn-danger btn-block" id="do_sell">{{trans('texts.sell')}} {{{ $coinmain }}} <i class="fa fa-circle-o-notch fa-spin fa-1x hide" id="sell_loader"></i></button>
+			@if($enable_trading != 1)
+				<div class="alert alert-danger">
+					<i class="fa fa-exclamation-triangle"></i> <strong>{{{ trans('texts.market_disabled')}}}</strong>
+				</div>	
+			@endif
+		</div>
   </form> 
 
 <script type="text/javascript">
@@ -82,11 +85,66 @@ function updateDataSell(){
     var fee = $('#fee_sell').html();
     var total = amount*price;
     var fee_amount = total*(fee/100);
-    $('#s_all').html(total.toFixed(8));
+    
+	$('#s_all').html(total.toFixed(8));
     $('#s_fee').html(fee_amount.toFixed(8));
     $('#s_net_total').html((total-fee_amount).toFixed(8));
   }
   
+
+  //------// START - SLIDER CODE //------//
+//Sell Slider Init
+
+	var sellOrderSlider = document.getElementById('sell_slider');
+
+	noUiSlider.create(sellOrderSlider, {
+		start: 0,
+		connect: [true, false],
+		range: {
+		  'min': 0,
+		  'max': 100
+		},
+		tooltips: true
+	});
+	
+	//Buy Input-handler for the Slider
+	var sellInputFormat = document.getElementById('s_amount');
+	
+	sellOrderSlider.noUiSlider.on('update', function( values, handle ) {
+		sellInputFormat.value = values[handle];
+		updateDataSell();
+	});
+	
+	sellInputFormat.addEventListener('change', function(){
+		sellOrderSlider.noUiSlider.set(this.value);
+	});
+	
+	
+	// If the checkbox is checked, disabled the slider.
+	// Otherwise, re-enable it.
+	/*
+	if ( this.checked ) {
+		element.setAttribute('disabled', true);
+	} else {
+		element.removeAttribute('disabled');
+	}
+	*/
+	/*
+	origins = buyInputFormat.getElementsByClassName('noUi-origin');
+	console.log("origins: ");
+	console.log(origins);
+	*/
+	
+	
+	//Disable BUY when user is not logged in 
+	@if ( Auth::guest() ) 
+		buyOrderSlider.setAttribute('disabled', true);
+		buyInputFormat.setAttribute('disabled', true);
+		document.getElementById('s_price').setAttribute('disabled', true);
+		document.getElementById('do_sell').setAttribute('disabled', true);
+	@endif
+
+//------// STOP - SLIDER CODE //------//
 
 $(function(){
   $('#sell_coin_link').click(function(e) {
@@ -130,9 +188,11 @@ $(function(){
         showMessage(["{{trans('messages.message_limit_trade',array('min_amount'=> $limit_trade['min_amount'],'max_amount'=> $limit_trade['max_amount']))}}"],'error'); 
 
       }      
-      else if(balance < amount){
+      //else if(balance < net_total  ){
+	  else if(balance < amount){
         //$('#s_message').html('<p style="color:red; font-weight:bold;text-align:center;">{{trans('messages.sell_not_enough')}}</p>');
         showMessage(['{{trans('messages.sell_not_enough')}}'],'error'); 
+		showMessage(['balance: '+balance + ' < ' +amount + ' net_total'],'error'); 
 
       }
       /*else if(amount>10){
@@ -152,7 +212,7 @@ $(function(){
 		
 		
 		<?php
-        /*
+		/*
         $.post('<?php echo action('OrderController@doSell')?>', {isAjax: 1, price: price, amount: amount, market_id:market_id }, function(response){
           var obj = $.parseJSON(response);           
           //app.BrainSocket.message('doTrade',obj.message_socket);
@@ -174,8 +234,10 @@ $(function(){
 		  
         });
 		*/
-        ?>
+		?>
       }
   });
+  
+
 });
 </script>

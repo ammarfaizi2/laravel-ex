@@ -1,5 +1,9 @@
 $(function() {
 
+	//General
+	$('[data-toggle="tooltip"]').tooltip();
+	$('[data-toggle="popover"]').popover({trigger: "hover"}); 
+
 //Sidebar
 	/*
 	//Open
@@ -17,29 +21,37 @@ $(function() {
         //$('.mini-submenu').hide();
 	})
 	*/
+
+
+	$(".clear-input>span").click(function(){
+        // Clear the input field before this clear button
+        // and give it focus.
+
+		$(this).prev().val('').focus();
+		$(this).prev().keyup();
+		$(this).removeClass("fa-times-circle").addClass("fa-search");
+		//$('#sidebar_search_market').keyup();
+		//$("#sidebar_search_market").val("bay").focus();
+        
+    });
 	
-	//Sidebar Menu - Toggle
-	$('[data-toggle=offcanvas]').click(function() {
-		$('.row-offcanvas').toggleClass('active');
-	});
-	
-		
-		
-
-
-
 
 
 	//START - Sidebar
 	//Search sidebar
 	$('#sidebar_search_market').keyup(function(){
 
-	   var valThis = $(this).val().toLowerCase();
+		if($(this).val()=="")
+			$(this).next().removeClass("fa-times-circle").addClass("fa-search");
+		else
+			$(this).next().removeClass("fa-search").addClass("fa-times-circle");
+
+		var valThis = $(this).val().toLowerCase();
 		$('ul.market>li').each(function(){
-		 var text = $(this).text().toLowerCase();
+			var text = $(this).text().toLowerCase();
 			(text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();            
-	   });
-	   
+		});
+
 	});
 		
 	//STOP - Sidebar

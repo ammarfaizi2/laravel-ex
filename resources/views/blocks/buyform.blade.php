@@ -6,77 +6,84 @@
     <a id="buy_coin_link" data-amount="{{{ $balance_coinsecond }}}" href="#"><b><span id="cur_to" class="money_rur">{{{ $balance_coinsecond }}}</span> {{{ $coinsecond }}}</b></a>
   </div>
 </div>
+
     <form class="form-horizontal inblock">
 		
-    <div class="form-group">
-      <label class="col-lg-2 control-label" for="b_amount">{{{ trans('texts.amount') .' '. $coinmain }}}</label>
-      <div class="col-lg-10 input-group">      
-        <input id="b_amount" name="b_amount" class="form-control" type="text" value="0">
-		<span class="input-group-addon">{{{ $coinmain }}}</span> 
-      </div>
-    </div>
-	
-    <div class="form-group">
-      <label class="col-lg-2 control-label" >{{{ trans('texts.price_per')}}} {{{ $coinmain }}}</label>
-      <div class="col-lg-10 input-group">
-        <input id="b_price" name="b_price" class="form-control" type="text" value="{{$buy_highest}}">
-		<span class="input-group-addon">{{{ $coinsecond }}}</span> 
-      </div>
-    </div> 
-	
-	
-	<div class="forConfirm">
 		<div class="form-group">
-		  <label class="col-lg-2 control-label" >{{{ trans('texts.total')}}}</label>
-		  <div class="col-lg-10 input-group">
-			  <span class="">
-			   <strong id="b_all">0.00 </strong> <strong>{{{ $coinsecond }}}</strong>
-			  </span>
-			</div>
-		</div>
-
-
-		<div class="form-group">
-		  <label class="col-lg-2 control-label" >{{{ trans('texts.trading_fee_short')}}} (<span id="fee_buy">{{$fee_buy}}</span>%)</label>
-		  <div class="col-lg-10 input-group">
-			  <span class="">
-			   <strong id="b_fee">0 </strong> <strong>{{{ $coinsecond }}}</strong>
-			  </span>
-			</div>
+		  <label class="col-lg-2 control-label" for="b_amount">{{{ trans('texts.amount')  }}}</label>
+		  <div class="col-lg-10 input-group">      
+			<input id="b_amount" name="b_amount" class="form-control" type="text" value="0">
+			<span class="input-group-addon">{{{ $coinmain }}}</span> 
+		  </div>
 		</div>
 		
-
 		<div class="form-group">
-		  <label class="col-lg-2 control-label" >{{{ trans('texts.net_total')}}}</label>
+		  <label class="col-lg-2 control-label" >{{{ trans('texts.price')}}} </label>
 		  <div class="col-lg-10 input-group">
-			  <span class="">
-			   <strong id="b_net_total">0 </strong> <strong>{{{ $coinsecond }}}</strong>
-			  </span>
+			<input id="b_price" name="b_price" class="form-control" type="text" value="{{$buy_highest}}">
+			<span class="input-group-addon">{{{ $coinsecond }}}</span> 
+		  </div>
+		</div> 
+		<div class="">
+		  <!-- Data Slider-->
+		  <div class="col-lg-11 col-centered">
+			<div id="buy_slider" ></div>
+		  </div>
+		</div> 
+		
+		
+		
+		
+
+		
+		<div class="forConfirm">
+			<div class="form-group">
+			  <label class="col-lg-2 control-label" >{{{ trans('texts.total')}}}</label>
+			  <div class="col-lg-10 input-group">
+				  <span class="">
+				   <span id="b_all">0.00 </span> <span>{{{ $coinsecond }}}</span>
+				  </span>
+				</div>
 			</div>
+
+
+			<div class="form-group">
+			  <label class="col-lg-2 control-label" >{{{ trans('texts.trading_fee_short')}}} (<span id="fee_buy">{{$fee_buy}}</span>%)</label>
+			  <div class="col-lg-10 input-group">
+				  <span class="">
+				   <span id="b_fee">0 </span> <span>{{{ $coinsecond }}}</span>
+				  </span>
+				</div>
+			</div>
+			
+
+			<div class="form-group">
+			  <label class="col-lg-2 control-label" >{{{ trans('texts.net_total')}}}</label>
+			  <div class="col-lg-10 input-group">
+				  <span class="">
+				   <span id="b_net_total">0 </span> <span>{{{ $coinsecond }}}</span>
+				  </span>
+				</div>
+			</div>
+			
+			
+		</div>
+		<div class="form-group">
+		  <span id="b_message"></span>
 		</div>
 		
-		
-    </div>
-    <div class="form-group">
-    	<hr>
-      <span id="b_message"></span>
-    </div>
-    
-    <div class="control-group"> 
+		<div class="control-group"> 
 
-		@if($enable_trading == 1)
-			<input type="hidden" name="buy_market_id" id="buy_market_id" value="{{{Session::get('market_id')}}}">     
-			<!-- <button type="button" class="btn" id="calc_buy">{{trans('texts.caculate')}}</button> -->
-			<button type="button" class="btn btn-primary btn-success" id="do_buy">{{ trans('texts.buy')}} {{{ $coinmain }}}</button>      
-			<div style="display:none; width:75px; height:42px; padding:8px 12px; float: right;" id="buy_loader">
-			  <i class="fa fa-circle-o-notch fa-spin fa-1x" style="color:#27c295; "></i>
-			</div>
-		@else
-			<div class="alert alert-danger">
-				<i class="fa fa-exclamation-triangle"></i> <strong>{{{ trans('texts.market_disabled')}}}</strong>
-			</div>	
-		@endif
-    </div>
+			
+				<input type="hidden" name="buy_market_id" id="buy_market_id" value="{{{Session::get('market_id')}}}">     
+				<!-- <button type="button" class="btn" id="calc_buy">{{trans('texts.caculate')}}</button> -->
+				<button type="button" class="btn btn-primary btn-success btn-block" id="do_buy">{{ trans('texts.buy')}} {{{ $coinmain }}} <i class="fa fa-circle-o-notch fa-spin fa-1x hide"  id="buy_loader"></i></button> 
+			@if($enable_trading != 1)
+				<div class="alert alert-danger">
+					<i class="fa fa-exclamation-triangle"></i> <strong>{{{ trans('texts.market_disabled')}}}</strong>
+				</div>	
+			@endif
+		</div>
   </form> 
 
 
@@ -195,16 +202,92 @@ $('#modal_ConfirmOrder').on('shown.bs.modal', function () {
   
 })
 
+//------// START - SLIDER CODE //------//
+//Buy Slider Init
+
+	var buyOrderSlider = document.getElementById('buy_slider');
+
+	noUiSlider.create(buyOrderSlider, {
+		start: 0,
+		connect: [true, false],
+		range: {
+		  'min': 0,
+		  'max': 100
+		},
+		tooltips: true
+	});
+	
+	//Buy Input-handler for the Slider
+	var buyInputFormat = document.getElementById('b_amount');
+	
+	buyOrderSlider.noUiSlider.on('update', function( values, handle ) {
+		buyInputFormat.value = values[handle];
+		updateDataBuy();
+	});
+	
+	buyInputFormat.addEventListener('change', function(){
+		buyOrderSlider.noUiSlider.set(this.value);
+	});
+	
+	
+	// If the checkbox is checked, disabled the slider.
+	// Otherwise, re-enable it.
+	/*
+	if ( this.checked ) {
+		element.setAttribute('disabled', true);
+	} else {
+		element.removeAttribute('disabled');
+	}
+	*/
+	/*
+	origins = buyInputFormat.getElementsByClassName('noUi-origin');
+	console.log("origins: ");
+	console.log(origins);
+	*/
+	
+	
+	//Disable BUY when user is not logged in 
+	@if ( Auth::guest() ) 
+		buyOrderSlider.setAttribute('disabled', true);
+		buyInputFormat.setAttribute('disabled', true);
+		document.getElementById('b_price').setAttribute('disabled', true);
+		document.getElementById('do_buy').setAttribute('disabled', true);
+	@endif
+	
+	//Function for updating Slider range
+	function updateSliderRange ( el, max=1, min=0 ) {
+		/*
+		min = (min >= max) ? 0: min;
+		if(min => max){
+			min = 0; max=1;
+		}else{
+		}
+		*/
+
+		el.noUiSlider.updateOptions({
+			range: {
+				'min': min,
+				'max': max
+			}
+		});
+	}
+//------// STOP - SLIDER CODE //------//
+	
+	
 function updateDataBuy(){
     var amount = $('#b_amount').val(); 
     var price = $('#b_price').val();
     var fee = $('#fee_buy').html();
-
     var total = amount*price;
     var fee_amount = total*(fee/100);
+
     $('#b_all').html(total.toFixed(8)); 
     $('#b_fee').html(fee_amount.toFixed(8));
-    $('#b_net_total').html((total+fee_amount).toFixed(8));
+	
+	$('#b_net_total').html( parseFloat(total+fee_amount).toFixed(8));
+    
+	var newAmount = +amount+0;
+	$('#b_amount').val(newAmount); 
   }
   
 function doPostTradeOrder(tradeArray){
@@ -246,11 +329,9 @@ function doPostTradeOrder(tradeArray){
 			}
 			
 			if(type == 'buy'){
-				$('#do_buy').fadeIn();
-				$('#buy_loader').fadeOut(500);
+				$('#buy_loader').addClass("hide");
 			}else if(type == 'sell'){
-				$('#do_sell').fadeIn();
-				$('#sell_loader').fadeOut(500);
+				$('#sell_loader').addClass("hide");
 			}
 
 		}, error:function(response) {
@@ -319,11 +400,9 @@ function doPostTradeOrder(tradeArray){
 				}else {
 					//showMessageSingle('{{{ trans('texts.error') }}}', 'error');
 					if(type == 'buy'){
-						$('#do_buy').fadeIn();
-						$('#buy_loader').fadeOut(500);
+						$('#buy_loader').addClass("hide");
 					}else if(type == 'sell'){
-						$('#do_sell').fadeIn();
-						$('#sell_loader').fadeOut(500);
+						$('#sell_loader').addClass("hide");
 					}
 
 				}
@@ -343,11 +422,9 @@ function doPostTradeOrder(tradeArray){
                 },
 				onhide: function(dialog){
 					if(type == 'buy'){
-						$('#do_buy').fadeIn();
-						$('#buy_loader').fadeOut(500);
+						$('#buy_loader').addClass("hide");
 					}else if(type == 'sell'){
-						$('#do_sell').fadeIn();
-						$('#sell_loader').fadeOut(500);
+						$('#sell_loader').addClass("hide");
 					}
 				},
 				buttons: [{
@@ -383,10 +460,17 @@ $(function(){
     //var amount = total/fee;
 
     $('#b_all').html(total.toFixed(8)); 
-    $('#b_net_total').html( prettyFloat(total+fee_amount, 8));
-    //$('#b_all').html(total/1.001).toFixed(8)); 
+    $('#b_net_total').html( parseFloat(total+fee_amount).toFixed(8));
     $('#b_fee').html(fee_amount.toFixed(8));
-    $('#b_amount').val(amount.toFixed(8)); 
+    
+	var newAmount = +amount+0;
+	$('#b_amount').val(newAmount); 
+	
+	
+	updateDataBuy();
+	//Update Slider Range 
+	updateSliderRange(buyOrderSlider, newAmount)
+	buyOrderSlider.noUiSlider.set(newAmount);
 
   });
 
@@ -433,7 +517,8 @@ else
         
       }      
 	  //else if(parseFloat(balance.toFixed(8)) < parseFloat(net_total.toFixed(8))){
-      else if(prettyFloat(balance, 8) < prettyFloat(net_total, 8) ){
+      else if(balance < net_total  ){
+		//Not enough Balance
         showMessage(['{{trans('messages.buy_not_enough')}}'],'error'); 
         showMessage(['balance: '+balance + ' < ' +net_total + ' net_total'],'error'); 
        
@@ -441,13 +526,9 @@ else
       /*else if((amount*price)>10){
         $('#b_message').html('<p style="color:red; font-weight:bold;text-align:center;">{{trans('messages.message_max_total',array('total'=> '10'))}}</p>');
       }*/else{
-		$('#do_buy').fadeOut(500);
-		$('#buy_loader').fadeIn();
-        /*
-		$('#do_buy').fadeOut(500, function() {
-          $('#buy_loader').fadeIn();
-        });
-		*/
+
+		$('#buy_loader').removeClass("hide");
+
 		
 
 		var tradeArray = [price,amount,market_id, 'buy'];
@@ -456,7 +537,7 @@ else
 		
 
 		<?php
-        /*
+		/*
         $.post('<?php echo action('OrderController@doBuy')?>', {isAjax: 1, price: price, amount: amount, market_id:market_id }, function(response){
           var obj = $.parseJSON(response);
           //app.BrainSocket.message('doTrade',obj.message_socket);          
@@ -482,9 +563,17 @@ else
           //console.log('Obj: ',obj);
         });
 		*/
-        ?>
+		?>
       }
     });
+	
+
+
+
+
+	
 });
 
+	
+	
 </script>
