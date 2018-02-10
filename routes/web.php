@@ -32,6 +32,7 @@ Route::get('/', function () {
 
 
 
+
 Route::get('testLocate','BaseController@testLocate');
 
 Route::get('/', 'HomeController@index'); // call index page

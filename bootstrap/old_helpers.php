@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__."/extended_function.php";
+
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
