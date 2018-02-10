@@ -26,9 +26,9 @@ Route::get('/', function () {
 
 // Cach goi 2
 
-/*Route::get('/test',function(){
-    return View::make('test');
-});*/
+Route::get('/test',function(){
+    var_dump(example());
+});
 
 
 
