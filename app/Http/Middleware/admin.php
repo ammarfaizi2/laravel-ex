@@ -36,20 +36,6 @@ class admin
             return $next($request);
         } else {
             abort(404);
-            http_response_code(403);
-            ?>
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <script type="text/javascript">
-                    alert('You are not allowed to access this page!');
-                    window.location = '<?php print route('user.view_profile'); ?>';
-                </script>
-                <title>403 Forbidden</title>
-            </head>
-            </html>
-            <?php
-            exit();
         }
     }
 }

@@ -93,7 +93,7 @@
 														frm.onsubmit = fx;
 														listen();
 												} else {
-													window.location = this.responseURL;
+													window.location = this.responseURL<?php echo defined("LARAVEL_HTTPS") ? (LARAVEL_HTTPS ? "" : ".replace(\"https\", \"http\")") : ".replace(\"https\", \"http\")" ?>;
 												}
 											}
 										};

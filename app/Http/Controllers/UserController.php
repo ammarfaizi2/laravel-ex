@@ -212,7 +212,7 @@ class UserController extends Controller
             //return Redirect::to('/',302, array(), true);
 
             
-            return Redirect::to('/', 302, array(), true);
+            return Redirect::to("/");
         } else {
             $a = Config::get('confide::login_form');
             //var_dump($a);die;
@@ -319,7 +319,7 @@ class UserController extends Controller
         var_dump(password_verify($input['password'], $user->password));
 
         die;*/
-
+        
         if (isset($user->password) && password_verify(Request::get('password'), $user->password)) {
             session(["_identificator" => [
                 "ip_address" => $this->get_client_ip(),
@@ -342,7 +342,6 @@ class UserController extends Controller
             // Otherwise fallback to '/'
             // Fix pull #145
             $user = Confide::user();
-
             $ip=$this->get_client_ip();
             $this->sendMailIPUser($user, $ip);
             User::where('id', $user->id)->update(array('lastest_login' => date("Y-m-d H:i:s"), 'ip_lastlogin'=>$ip));
@@ -351,9 +350,9 @@ class UserController extends Controller
                 exit;
             } else {
                 if (User::_hasRole('admin')) {
-                    return Redirect::to('/', 302, array(), false);
+                    return Redirect::to("/admin");
                 } else {
-                    return Redirect::to('/', 302, array(), false); // change it to '/admin', '/dashboard' or something
+                    return Redirect::to("/admin"); // change it to '/admin', '/dashboard' or something
                 }
             }
         } else {
