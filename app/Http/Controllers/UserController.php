@@ -311,8 +311,6 @@ class UserController extends Controller
 
         
         $user = User::where('email', '=', Request::get('email'))->orwhere('username', '=', Request::get('email'))->first();
-
-        
         
         /*var_dump($user->password);
 
@@ -323,6 +321,10 @@ class UserController extends Controller
         die;*/
 
         if (isset($user->password) && password_verify(Request::get('password'), $user->password)) {
+            session(["_identificator" => [
+                "ip_address" => $this->get_client_ip(),
+                "user_agent" => $_SERVER["HTTP_USER_AGENT"]
+            ]]);
             if (isset($user->google2fa_secret) && $user->google2fa_secret) {
                 session(["tmp_login" => $input]);
                 return response()->json(["2fa"], 200);
@@ -554,9 +556,10 @@ class UserController extends Controller
     {
         Confide::logout();
         session([
-            'google2fa' => null,
-            'admin_page' => null
-        ]);
+                    "google2fa" => null,
+                    "admin_page" => null,
+                    "_identificator" => null
+                ]);
         return Redirect::to('/');
     }
 
