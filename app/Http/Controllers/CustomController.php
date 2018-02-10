@@ -1,13 +1,15 @@
 <?php
 
-class ex
+namespace App\Http\Controllers;
+
+class CustomController
 {
 
 	/**
 	 * ~ Function ~
 	 * How to use in blade:
 	 *
-	 * {{ (new ex())->example1() }} // It will print 123
+	 * {{ (new CustomController())->example1() }} // It will print 123
 	 */
 	public function example1()
 	{
@@ -18,7 +20,7 @@ class ex
 	 * ~ Static function ~
 	 * How to use in blade:
 	 *
-	 * {{ ex::example2() }} // It will print 123
+	 * {{ CustomController::example2() }} // It will print 123
 	 */
 	public static function example2()
 	{

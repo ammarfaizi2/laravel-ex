@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__."/extended_function.php";
+// load extended controller
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;

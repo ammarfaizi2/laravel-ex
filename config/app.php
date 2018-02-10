@@ -277,9 +277,9 @@ return [
         'Withdraw' => App\Models\Withdraw::class,
         'Confide'    => Zizaco\Confide\Facade::class,
 
-        // controller
-        'App\\Http\\Controllers\\Admin_SettingController' => App\Http\Controllers\admin\Admin_SettingController::class,
         'Google2FA' => PragmaRX\Google2FALaravel\Facade::class,
+
+        'CustomController' => App\Http\Controllers\CustomController::class
     ],
 
 ];
