@@ -99,6 +99,10 @@ return [
         ],
     ],
 
-    'model' => App\Models\User::class
+    'model' => App\Models\User::class,
+
+    'reminder' => [
+        'table' => 'password_reminders'
+    ]
 
 ];

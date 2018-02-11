@@ -12,32 +12,20 @@
 				<hr class="colorgraph">
 				
 					<!-- <form class="form-horizontal" role="form" id="forgotForm" method="POST" class="login clearfix" action="{{ (Auth::check('UserController@do_forgot_password')) ?: URL::to('/user/forgot') }}" accept-charset="UTF-8"> -->
-					<form class="form-horizontal" role="form" id="forgotForm" method="POST" class="login clearfix" action="{{ (Auth::check('UserController@do_forgot_password')) }}" accept-charset="UTF-8">
-				
-
+					<form class="form-horizontal" role="form" id="forgotForm" method="POST" class="login clearfix" action="javascript:void(0);" accept-charset="UTF-8">
 					<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
-			  
 					<fieldset>
-						
-
 						<div class="form-group">
 							<div class="input-group">
 									<span class="input-group-addon"><i class="fa fa-lock fa-lg"></i></span>
 									<input type="text" class="form-control" tabindex="1" name="email" id="email" placeholder="{{{ Lang::get('confide::confide.e_mail') }}}" value="{{{ Request::old('email') }}}" required>
 							</div>
 						</div>
-						
-						
 						<div class="form-group">
-							
 							<button tabindex="2" class="btn btn-lg btn-success btn-block" type="button" tabindex="2"  id="forgot_password_button">{{{ Lang::get('confide::confide.forgot.submit') }}}</button>
 						</div>
-					
-					
 					</fieldset>
 					</form>
-				
-				
 				<div>
 				
 
@@ -70,16 +58,9 @@
 
   
 $(document).ready(function() {
-
 	$("#forgot_password_button").on( "click", function() {
-		console.log( $( this ).text() );
-	
-    
-		
-		
-	
+		// console.log( $( this ).text() );
         var email = $('#forgotForm #email').val();
-        
 		$.ajax({
 			type: 'post',
 			url: '<?php echo action('UserController@forgot_password')?>',

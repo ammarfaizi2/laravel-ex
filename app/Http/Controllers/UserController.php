@@ -11,6 +11,7 @@ use Confide;
 use Request;
 use Redirect;
 use Exception;
+use Validator;
 use App\Session2FA;
 use App\Models\News;
 use App\Models\Post;
@@ -438,8 +439,10 @@ class UserController extends Controller
      */
     public function do_forgot_password()
     {
-        
-                
+
+        // do the validation ----------------------------------
+        // validate against the inputs from our form
+
         $error_msg = '';
         $error_msg_type = '';
         $error_msg_control = '';
@@ -468,18 +471,14 @@ class UserController extends Controller
             // redirect our user back to the form with the errors from the validator
             //return Redirect::to('ducks')
             //    ->withErrors($validator);
-        }/* else {
+        } else {
         // validation successful ---------------------------
         $error_msg = 'Email OK';
                 echo $error_msg;
                 exit;
         }
-        */
-    
+        $error_msg = Lang::get('confide::confide.alerts.password_forgot');
 
-                
-
-                
         if (Confide::forgotPassword(Request::get('email'))) {
             $error_msg = Lang::get('confide::confide.alerts.password_forgot');
             $error_msg_type = 'notice';
@@ -489,11 +488,9 @@ class UserController extends Controller
             //$error_msg = Lang::get('confide::confide.alerts.wrong_password_forgot');
             $error_msg_type = 'error';
             $error_msg_control = 'forgot_password';
-                        /*
-            return Redirect::action('UserController@forgot_password')
+            /*return Redirect::action('UserController@forgot_password')
                             ->withInput()
-                ->with( 'error', $error_msg );
-            */
+                ->with( 'error', $error_msg );*/
         }
         if (Request::get('isAjax')) {
                 echo $error_msg;
