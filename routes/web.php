@@ -27,7 +27,6 @@ Route::get('/', function () {
 // Cach goi 2
 
 Route::get('/test',function(){
-    var_dump(example());
 });
 
 

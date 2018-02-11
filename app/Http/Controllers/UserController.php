@@ -474,12 +474,12 @@ class UserController extends Controller
         } else {
         // validation successful ---------------------------
         $error_msg = 'Email OK';
-                echo $error_msg;
-                exit;
+                // echo $error_msg;
+                // exit;
         }
         $error_msg = Lang::get('confide::confide.alerts.password_forgot');
 
-        if (Confide::forgotPassword(Request::get('email'))) {
+        if (/*Confide::forgotPassword(Request::get('email'))*/ $this->forgotPasswordAction(Request::get('email'))) {
             $error_msg = Lang::get('confide::confide.alerts.password_forgot');
             $error_msg_type = 'notice';
             $error_msg_control = 'login';
@@ -499,6 +499,25 @@ class UserController extends Controller
             return Redirect::action('UserController@'.$error_msg_control)
             ->with($error_msg_type, $error_msg);
         }
+    }
+
+    private function forgotPasswordAction($email)
+    {
+        $user = DB::table("users")
+                ->select(["username", "email"])
+                ->where("email", "=", $email)
+                ->first();
+        if (isset($user->username) && isset($user->email)) {
+            Mail::to($email)
+            ->send(new \App\Mail\ForgotPassword(
+                [
+                    "username" => $user->username,
+                    "email" => $user->email
+                ]
+            ));
+            return true;
+        }
+        return false;
     }
 
     /**
