@@ -37,22 +37,25 @@ use Illuminate\Support\Facades\Session;
 if (isset($_REQUEST['marketid'])) {
     $market_id = $_REQUEST['marketid'];
     if (! is_numeric($market_id)) {
+        $success = 0;
         $a = explode('_', $market_id);
-        $b = DB::table('wallets')
-            ->select(['market.id', 'market.wallet_to'])
-            ->join('market', 'market.wallet_from', '=', 'wallets.id')
-            ->where('wallets.type', '=', strtoupper($a[0]))
-            ->get();
-        if ($b) {
-            foreach ($b as $b) {
-                $c = DB::table('wallets')
-                ->select(['type'])
-                ->where('id', '=', $b->wallet_to)
-                ->first();
-                if (isset($c->type) && strtoupper($a[1]) === $c->type) {
-                    $_REQUEST['marketid'] = $b->id;
-                    $success = 1;
-                    break;
+        if (count($a) === 2) {
+            $b = DB::table('wallets')
+                ->select(['market.id', 'market.wallet_to'])
+                ->join('market', 'market.wallet_from', '=', 'wallets.id')
+                ->where('wallets.type', '=', strtoupper($a[0]))
+                ->get();
+            if ($b) {
+                foreach ($b as $b) {
+                    $c = DB::table('wallets')
+                    ->select(['type'])
+                    ->where('id', '=', $b->wallet_to)
+                    ->first();
+                    if (isset($c->type) && strtoupper($a[1]) === $c->type) {
+                        $_REQUEST['marketid'] = $b->id;
+                        $success = 1;
+                        break;
+                    }
                 }
             }
         }

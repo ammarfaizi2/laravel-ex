@@ -1,5 +1,7 @@
 <?php
-$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+if (! isset($qq[0]->id)) {
+    abort(404);
+}
 ?>
 @extends('admin.layouts.master')
 @section('content')
@@ -9,7 +11,8 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 <!-- Main Content -->
 <div id="container" class="clear">
 <div class="main-contain">
-<h2>{{$coin = $that->getCoinNameByMarketId($_GET['id'])}} | Custom Fields</h2>
+<a href="{{route('admin.custom_fields')}}">Back</a>
+<h2>{{$coin = $qq[0]->coin_name}} | Custom Fields</h2>
 @if ( is_array(Session::get('error')) )
 <div class="alert alert-error">{{ head(Session::get('error')) }}</div>
 @elseif ( Session::get('error') )
@@ -37,7 +40,10 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
         <label class="col-sm-2 control-label">Coin Name</label>
         <div class="col-sm-10">
             <div class="input-append">
-              {!! $that->editCustomFieldsName($_GET['id'], 2) !!}
+              <select disabled>
+                <option>{{$coin}}</option>
+              </select>
+              <input type="hidden" name="coin-name" value="{{$_GET['id']}}">
             </div>                
         </div>
     </div>
@@ -88,8 +94,8 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
     @php
         $no = $page === 1 ? 1 : $page + 15;
     @endphp
-    @foreach($that->getCustomFieldsSpecific($page === 1 ? 0 : $page + 13) as $q)
-        <tr><td>{{$no++}}</td><td>{{$q->name}}</td><td>{{$q->value}}</td><td>{{$q->type}}</td><td><a href="{{ route('admin.edit_custom_fields') }}?id={{$q->id}}&amp;prgc={{$_GET['id']}}" class="edit_page">Edit</a> | <a href="?delete={{$q->id}}&amp;prgc={{$_GET['id']}}">Delete</a></td></tr>
+    @foreach($qq as $q)
+        <tr><td>{{$no++}}</td><td>{{$q->name}}</td><td>{{$q->value}}</td><td>{{$q->type}}</td><td><a href="{{ route('admin.edit_custom_fields') }}?id={{$_GET['id']}}&amp;prgc={{$q->id}}&amp;action=edit" class="edit_page">Edit</a> | <a href="?id={{$_GET['id']}}&amp;prgc={{$q->id}}&amp;action=delete">Delete</a></td></tr>
     @endforeach
 </table>
 <div id="pager"></div>

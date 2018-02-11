@@ -5,6 +5,7 @@
 <div id="container" class="clear">
 <!-- Main content -->
 <div class="main-contain">
+<a href="?id={{$_GET['id']}}">Back</a>
 <h2>Edit Custom Field</h2>
 	@if ( is_array(Session::get('error')) )
         <div class="alert alert-error">{{ head(Session::get('error')) }}</div>
@@ -18,13 +19,16 @@
 	@if ( Session::get('notice') )
 	      <div class="alert">{{{ Session::get('notice') }}}</div>
 	@endif
-<form class="form-horizontal" role="form" id="edit_user" method="POST" action="{{ route('admin.edit_custom_fields') }}?id={{$_GET['id']}}&amp;prgc={{$_GET['prgc']}}" autocomplete=off>
+<form class="form-horizontal" role="form" id="edit_user" method="POST" action="{{ route('admin.edit_custom_fields') }}?id={{$_GET['id']}}&amp;prgc={{$_GET['prgc']}}&amp;action=edit" autocomplete=off>
 	<input type="hidden" name="_token" value="{{ csrf_token() }}">
 	<div class="form-group">
 	    <label for="inputEmail3" class="col-sm-2 control-label">Coin Name</label>
 	    <div class="col-sm-10">
 	    	<div class="input-append">
-			 {!! $that->editCustomFieldsName($q->id) !!}
+	    	<select disabled>
+			 <option>{{ $q->coin_name }}</option>
+			</select>
+			<input type="hidden" name="custom_id" value="{{$_GET['prgc']}}">
 			</div>	      	      
 	    </div>
 	</div>
