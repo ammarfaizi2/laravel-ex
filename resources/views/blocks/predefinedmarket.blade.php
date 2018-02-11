@@ -1,18 +1,6 @@
-@if($qwe = $that->hasCustomFields($market_id)->toArray())
-<div>@php $no = 1; @endphp
-	<table style="border-collapse: collapse;width:300px;" border="1">
-		<tr>
-			@foreach(['No.','Name','Value','Type'] as $qw)
-				<th align="center"><center>{{$qw}}</center></th>
-			@endforeach
-		</tr>
-		@foreach($qwe as $q)
-			<tr><td align="center">{{$no++}}.</td><td align="center">{{$q->name}}</td><td align="center">{{$q->value}}</td><td align="center">{{$q->type}}</td></tr>
-		@endforeach
-	</table>
-</div>
-@endif
-
+<?php
+var_dump($market_predefined)
+?>
 <div class="row">
 	<div class="market_info">
 		<div class="row">
@@ -22,10 +10,12 @@
 		@if($enable_trading == 0)
 			<div class="row">
 				<div class="col-12-xs col-sm-12 col-lg-12">
-					<div class="alert alert-danger">
-						<i class="fa fa-exclamation-triangle fa-2x left"></i> <h4>{{$market_from}} - {{{ trans('texts.market_disabled')}}}</h4>
+					<div class="notice notice-danger">
+						<strong><i class="fa fa-exclamation-triangle fa-2x left"></i> {{ trans('texts.notice') }}</strong> {{ $coinmain }}/{{ $coinsecond }} - {{{ trans('texts.market_disabled')}}}
 					</div>
 			</div>
+			
+			
 		@endif
 		
 		<!-- Coin Data -->
@@ -222,36 +212,62 @@
 	
 	<!-- Coin Info -->
 	<div class="row">
-		<div class="col-12-xs col-sm-12 col-lg-12">
-			<ul class="nav nav-tabs">
-				<li class="active"><a aria-expanded="true" href="#coin_info" data-toggle="tab">{{$market_from}} ({{{ $coinmain }}}) - Information</a></li>
-				<li class=""><a aria-expanded="false" href="#coin_upcoming" data-toggle="tab">Profile</a></li>
-				<li class="disabled"><a>Disabled</a></li>
-				<li class="dropdown">
-					<a aria-expanded="false" class="dropdown-toggle" data-toggle="dropdown" href="#">
-					Links <span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu">
-						<li><a href="#dropdown1" data-toggle="tab">Link 1</a></li>
-						<li class="divider"></li>
-						<li><a href="#dropdown2" data-toggle="tab">Link 2</a></li>
-					</ul>
-				</li>
-			</ul>
-			<div id="myTabContent" class="tab-content">
-				<div class="tab-pane fade active in" id="coin_info">
-					<p>Information about the Coin</p>
+		<div class="col-xs-12 col-sm-12 col-lg-12">
+
+			@if($qwe = $that->hasCustomFields($market_id)->toArray())
+			<div class="coin-info inblock">
+				<?php
+				var_dump($qwe);
+				$coin_description ='';
+				$coin_description_li ='';
+				foreach($qwe as $q){
+						if ($q->name == 'description')
+							$coin_description = $q->value;
+						else
+							$coin_description_li .= '<li><span>'.$q->name.'</span><p>'.$q->value.'</p></li>';
+						//echo $q->name . ' '.$q->type . ' '.$q->value;
+						//echo '<br />';
+						
+				}
+					
+				?>
+
+				<div class="col-xs-7 col-sm-12 col-lg-12">
+					Currency Information
+					<hr />
 				</div>
-				<div class="tab-pane fade" id="coin_upcoming">
-					<p>Upcoming features.</p>
+				<!-- Coin Information -->
+				<div class="col-xs-7 col-sm-5 col-lg-5" >
+					<span>Introduction</span>
+					<hr />
+					{{$coin_description}}
 				</div>
-				<div class="tab-pane fade" id="dropdown1">
-					<p>Link 1 Content.</p>
+				<div class="col-xs-7 col-sm-7 col-lg-7" >
+					<div class="col-xs-7 col-sm-12 col-lg-12" >
+						<ul class="nav ">
+						<?php echo $coin_description_li?>
+						</ul>
+					
+					</div>
 				</div>
-				<div class="tab-pane fade" id="dropdown2">
-					<p>Link 2 Content.</p>
-				</div>
+				<?php
+				/*
+				@php $no = 1; @endphp
+				<table style="border-collapse: collapse;width:300px;" border="1">
+					<tr>
+						@foreach(['No.','Name','Value','Type'] as $qw)
+							<th align="center"><center>{{$qw}}</center></th>
+						@endforeach
+					</tr>
+					@foreach($qwe as $q)
+						<tr><td align="center">{{$no++}}.</td><td align="center">{{$q->name}}</td><td align="center">{{$q->value}}</td><td align="center">{{$q->type}}</td></tr>
+					@endforeach
+				</table>
+				*/
+				?>
 			</div>
+			@endif
+
 		</div>
 	</div>
 	

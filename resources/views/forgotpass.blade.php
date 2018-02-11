@@ -2,7 +2,7 @@
 @section('content')
 
 
-<div class="row" id="page_forgotpass">
+<div class="row" >
 	<div class="col-md-4 col-md-offset-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -11,7 +11,8 @@
 			
 				<hr class="colorgraph">
 				
-					<form class="form-horizontal" role="form" id="forgotForm" method="POST" class="login clearfix" action="{{ (Auth::check('UserController@do_forgot_password')) ?: URL::to('/user/forgot') }}" accept-charset="UTF-8">
+					<!-- <form class="form-horizontal" role="form" id="forgotForm" method="POST" class="login clearfix" action="{{ (Auth::check('UserController@do_forgot_password')) ?: URL::to('/user/forgot') }}" accept-charset="UTF-8"> -->
+					<form class="form-horizontal" role="form" id="forgotForm" method="POST" class="login clearfix" action="{{ (Auth::check('UserController@do_forgot_password')) }}" accept-charset="UTF-8">
 				
 
 					<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
@@ -29,7 +30,7 @@
 						
 						<div class="form-group">
 							
-							<button tabindex="2" class="btn btn-lg btn-success btn-block" type="button" tabindex="2" onclick="_tryForgotPassword()" class="forgot_password_button">{{{ Lang::get('confide::confide.forgot.submit') }}}</button>
+							<button tabindex="2" class="btn btn-lg btn-success btn-block" type="button" tabindex="2"  id="forgot_password_button">{{{ Lang::get('confide::confide.forgot.submit') }}}</button>
 						</div>
 					
 					
@@ -69,8 +70,11 @@
 
   
 $(document).ready(function() {
-		
-    function _tryForgotPassword(){
+
+	$("#forgot_password_button").on( "click", function() {
+		console.log( $( this ).text() );
+	
+    
 		
 		
 	
@@ -112,13 +116,14 @@ $(document).ready(function() {
         });
         */
         return false;
-    }
-    
+    });
+   
     $('#email').keypress(function(e) {
       if (e.keyCode == '13') {
-          _tryForgotPassword();
+		  $("#forgot_password_button").click();
       }
-  }); 
+	}); 
+}); 
   
 
 

@@ -1,12 +1,102 @@
 @extends('layouts.nolayout')
 @section('content')
+<?php
+/*
+https://www.google.com/recaptcha/admin#site/340106525?setup
+https://developers.google.com/recaptcha/docs/invisible
+https://developers.google.com/recaptcha/docs/verify
+*/
+?>
 
-<script type="text/javascript">
- var RecaptchaOptions = {
-    theme : 'clean'
- };
- </script>
  <div id="contentinner">
+ 
+ form class="form-horizontal inblock">
+		<div class="inblock order_header">
+			<div class="header-left">
+					{{{ trans('texts.your_balance')}}}: 
+					<!-- <a id="buy_coin_link" data-amount="{{{ $balance_coinsecond }}}" href="javascript:void(0)" onclick="a_calc(17)"><b><span id="cur_to" class="money_rur">{{{ $balance_coinsecond }}}</span> {{{ $coinsecond }}}</b></a> -->
+					<a id="buy_coin_link" data-amount="{{{ $balance_coinsecond }}}" href="#"><b><span id="cur_to" class="money_rur">{{{ $balance_coinsecond }}}</span> {{{ $coinsecond }}}</b></a>
+			</div>
+		</div>
+		@if($enable_trading != 1)
+			<div class="notice notice-danger">
+				<strong><i class="fa fa-exclamation-triangle fa-2x left"></i> {{ trans('texts.notice') }}</strong> {{ trans('texts.market_disabled') }}
+			</div>
+		@endif
+		<hr />
+		
+		<div class="form-group">
+		  <label class="col-lg-2 control-label" for="b_amount">{{{ trans('texts.amount')  }}}</label>
+		  <div class="col-lg-10 input-group">      
+			<input id="b_amount" name="b_amount" class="form-control" type="text" value="0">
+			<span class="input-group-addon">{{{ $coinmain }}}</span> 
+		  </div>
+		</div>
+		
+		<div class="form-group">
+		  <label class="col-lg-2 control-label" >{{{ trans('texts.price')}}} </label>
+		  <div class="col-lg-10 input-group">
+			<input id="b_price" name="b_price" class="form-control" type="text" value="{{$buy_highest}}">
+			<span class="input-group-addon">{{{ $coinsecond }}}</span> 
+		  </div>
+		</div> 
+		<div class="">
+		  <!-- Data Slider-->
+		  <div class="col-lg-11 col-centered">
+			<div id="buy_slider" ></div>
+		  </div>
+		</div> 
+		
+		
+		
+		
+
+		
+		<div class="forConfirm">
+			<div class="form-group">
+			  <label class="col-lg-2 control-label" >{{{ trans('texts.total')}}}</label>
+			  <div class="col-lg-10 input-group">
+				  <span class="">
+				   <span id="b_all">0.00 </span> <span>{{{ $coinsecond }}}</span>
+				  </span>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+			  <label class="col-lg-2 control-label" >{{{ trans('texts.trading_fee_short')}}} (<span id="fee_buy">{{$fee_buy}}</span>%)</label>
+			  <div class="col-lg-10 input-group">
+				  <span class="">
+				   <span id="b_fee">0 </span> <span>{{{ $coinsecond }}}</span>
+				  </span>
+				</div>
+			</div>
+			
+
+			<div class="form-group">
+			  <label class="col-lg-2 control-label" >{{{ trans('texts.net_total')}}}</label>
+			  <div class="col-lg-10 input-group">
+				  <span class="">
+				   <span id="b_net_total">0 </span> <span>{{{ $coinsecond }}}</span>
+				  </span>
+				</div>
+			</div>
+			
+			
+		</div>
+		<div class="form-group">
+		  <span id="b_message"></span>
+		</div>
+		
+		<div class="control-group"> 
+			
+			<input type="hidden" name="buy_market_id" id="buy_market_id" value="{{{Session::get('market_id')}}}">     
+			<!-- <button type="button" class="btn" id="calc_buy">{{trans('texts.caculate')}}</button> -->
+			<button type="button" class="btn btn-primary btn-success btn-block" id="do_buy">{{ trans('texts.buy')}} {{{ $coinmain }}} <i class="fa fa-circle-o-notch fa-spin fa-1x hide"  id="buy_loader"></i></button> 
+		
+		</div>
+  </form> 
+  
  <div class="outer">
 	<div class="middle">
 		<div class="inner">
@@ -98,15 +188,8 @@
 				</table>
 				*/
                 ?>
-                <h3>Verification</h3>
                 <div align="center">
-                    <script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?k={{$recaptcha_publickey}}"></script>
-                    <script type="text/javascript" src="https://www.google.com/recaptcha/api/js/recaptcha.js"></script>
-                    <noscript>
-                    &lt;iframe src="https://www.google.com/recaptcha/api/noscript?k={{$recaptcha_publickey}}" height="300" width="500" frameborder="0"&gt;&lt;/iframe&gt;&lt;br/&gt;
-                    &lt;textarea name="recaptcha_challenge_field" rows="3" cols="40"&gt;&lt;/textarea&gt;
-                    &lt;input type="hidden" name="recaptcha_response_field" value="manual_challenge"/&gt;
-                    </noscript>
+                    
                     <div id="captchaStatus"></div>
                     <br>
                     
@@ -129,7 +212,10 @@
                 @endif
                 <div align="center">
                     <input type="hidden" value="@if(isset($referral)){{$referral}}@else{{{Request::old('referral')}}}@endif" name="referral">
-                    <button type="submit" class="btn btn-primary">{{{ Lang::get('confide::confide.signup.submit') }}}</button>
+
+					<button type="button" class="btn btn-primary g-recaptcha" data-sitekey="6LcdnUUUAAAAALwXU3jX_VrciJdIDmcrN1Q5UVDw" data-callback="onSubmit">{{{ Lang::get('confide::confide.signup.submit') }}}</button>
+
+
                 </div>
                
             </form>
@@ -255,6 +341,14 @@
             */
             ?>
         });
+		
+		
    });
+
+
+	function onSubmit(token) {
+		document.getElementById("registerForm").submit();
+	}
+
 </script>
 @stop

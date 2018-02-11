@@ -13,7 +13,7 @@
 		<!-- CSS are placed here -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		{{ HTML::style('assets/css/bootstrap-dialog.min.css') }}
-		
+		{{ HTML::style('assets/css/pnotify.custom.min.css') }}
 
 		{{ HTML::style('assets/css/main.css') }}	
 		{{ HTML::style('assets/css/style.css') }}	
@@ -23,15 +23,18 @@
 		{{ HTML::script('assets/js/jquery-1.10.2.js') }} 	
 		{{ HTML::script('assets/js/bootstrap.min.js') }}
 		
+		{{ HTML::script('assets/js/pnotify.custom.min.js') }}
+		
 		{{ HTML::script('assets/js/bootstrap-dialog.min.js') }}
 		{{ HTML::script('assets/js/custom.js') }}
 	
+		<script src="//www.google.com/recaptcha/api.js" async defer></script>
 	</head>
 <body class="@if ( Auth::guest() ) guest @else logged @endif">
     <!-- Content -->
 	<div id="content marginauto">
 
-		<div id="content_nolayout">
+		<div class="content_nolayout">
 			@yield('content')
 		</div>
 		<div class="clear"></div>

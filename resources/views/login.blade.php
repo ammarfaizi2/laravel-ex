@@ -1,7 +1,9 @@
 @extends('layouts.nolayout')
 @section('content')
-<div class="row" id="page_login">
+<div class="row" >
 	<div class="col-md-4 col-md-offset-4">
+	
+  
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<span class="fa fa-lock fa-lg"></span> {{{ Config::get('config_custom.company_name') }}} - {{trans('user_texts.login')}}</div> 
@@ -155,6 +157,46 @@
 			
 			</div>
 		</div>
+		
+		<!-- -->
+		<form class="form-horizontal inblock">
+		<div class="inblock order_header">
+			<div class="header-left">
+					Just doing some remake here... use the form above for logging in.
+					
+					<a id="buy_coin_link" data-amount="" href="#"><b><span id="cur_to" class="money_rur">fiestr</span> second</b></a>
+			</div>
+		</div>
+
+		<hr />
+		
+		<div class="form-group">
+			<div class="col-md-12 input-group">
+				<span class="input-group-addon"><i class="fa fa-user fa-lg"></i></span>
+				<input type="text" class="form-control" tabindex="1" name="email" id="email" placeholder="{{{ Lang::get('confide::confide.username') }}}" value="{{{ Request::old('email') }}}" required/>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-12 input-group">
+					<span class="input-group-addon"><i class="fa fa-lock fa-lg"></i></span>
+					<input type="password" class="form-control" tabindex="2" name="password" id="password" placeholder="{{{ Lang::get('confide::confide.password') }}}" required>
+			</div>
+		</div>
+		<div class="checkbox right">
+			<label for="remember">
+				<input tabindex="3" type="checkbox" name="remember" id="remember" value="1">
+			  {{ Lang::get('confide::confide.login.remember') }}
+			</label>
+		</div>
+		
+		
+		<div class="control-group"> 
+			<input id="login_button" tabindex="4" class="btn btn-lg btn-success btn-block" tabindex="4" type="submit" value="{{ trans('texts.login')}}" >
+
+		
+		</div>
+  </form> 
+  
 	</div>
 </div>
 @stop

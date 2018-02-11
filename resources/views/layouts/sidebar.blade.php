@@ -148,153 +148,161 @@ $trade = new Trade();
 			<!-- >#Sidebar Market Tabs -->
 			
 				<div class="sidebar_tabs">
-					<div class="col-md-12">
-					<ul class="nav nav-tabs">
-						<li class="active"><a data-toggle="tab" href="#side_btc_market">BTC</a></li>
-						<li><a data-toggle="tab" href="#side_ltc_market">LTC</a></li>
-						<li class="navbar-right"><a data-toggle="tab" href="#side_fav_market"><i class="fa fa-star"></i> Fav</a></li>
-					</ul>
-					</div>
-					<div class="tab-content">
-						<div id="side_btc_market" class="tab-pane active">
-						  <!-- BTC Markets -->
-						  <div class="panel panel-default">
-							  <div class="panel-body">
-								<div class="btc_market coinmarket nano clear">
-						<?php
-						//var_dump($btc_datainfo);
-						//var_dump($btc_markets); 
-						//$btc_markets = [];
-						//$ltc_markets = [];
-						?>
-						
-								<ul class="market well nano-content">
-										<li class="title">
-											<span class="name">Coin</span>
-											<span class="price">Price</span>
-											<span class="change">% Change</span>
-										</li>
 
-										@foreach($btc_markets as $btc_market)
-										<?php 
-											$total_btc = isset($btc_datainfo[$btc_market->id]['total'])? $btc_datainfo[$btc_market->id]['total']:0; 
-											$curr_price = isset($btc_datainfo[$btc_market->id][0]['price'])? $btc_datainfo[$btc_market->id][0]['price']:0;
-											$pre_price = isset($btc_datainfo[$btc_market->id][1]['price'])? $btc_datainfo[$btc_market->id][1]['price']:0;
-											$change = 0;
-											//$change = ($pre_price!=0) ? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100) : 0;
-											//$change = $change +0;
-											
-											if ( isset($btc_datainfo[$btc_market->id][1]['created_at']) ){
-												$pre_price = $trade->getChangeDayPrevPrice($btc_datainfo[$btc_market->id][1]['created_at'], $pre_price);
-											}
-												$change = $trade->getChangeDayPrice($pre_price, $curr_price, $pre_price);
+				
+				<!-- Sidebar Markets Nav Tabs -->
+								<div class="card">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li role="presentation" class="active"><a href="#side_btc_market" aria-controls="side_btc_market" role="tab" data-toggle="tab">BTC</a></li>
+                                        <li role="presentation"><a href="#side_ltc_market" aria-controls="side_ltc_market" role="tab" data-toggle="tab">LTC</a></li>
+                                        <li role="presentation" class="navbar-right"><a href="#side_fav_market" aria-controls="side_fav_market" role="tab" data-toggle="tab"><i class="fa fa-star"></i> Fav</a></li>
+                                    </ul>
 
-
-											
-											//echo "Cur: ".$curr_price." -- Pre: ".$pre_price;
-											//if($change>0) $change = '+'.$change;
-											
-											
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+										<div id="side_btc_market" class="tab-pane active" role="tabpanel">
+										  <!-- BTC Markets -->
+										  <div class="panel panel-default">
+											  <div class="panel-body">
+												<div class="btc_market coinmarket nano clear">
+										<?php
+										//var_dump($btc_datainfo);
+										//var_dump($btc_markets); 
+										//$btc_markets = [];
+										//$ltc_markets = [];
 										?>
-											<li class="volume" id="volume-{{$btc_market->id}}" data-toggle="popover" data-placement="right" title="Volume" data-content="{{sprintf('%.8f',$total_btc)}} BTC">
-												<a href="{{$marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($btc_market->id).'_BTC')}}">
-													<span class="name">
-														@if($btc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="bottom" title="{{$btc_market->type}}" data-content="{{trans('texts.market_disabled')}}" ></i> @endif
-														{{$btc_market->type}}
-													</span>
-													<span class="hide">{{$btc_market->name}}</span>
-													<span class="price" yesterdayPrice="{{sprintf('%.8f',$pre_price)}}" id="spanPrice-{{$btc_market->id}}">{{sprintf('%.8f',$curr_price)}}</span>
-														@if($change==0)
-															<span class="change" id="spanChange-{{$btc_market->id}}">{{$change}}% <i class="fa fa-minus"></i></span>
-														@elseif($change>0)
-															<span class="change up" id="spanChange-{{$btc_market->id}}">{{$change}}% <i class="fa fa-arrow-up"></i></span>
-														@else
-															<span class="change down" id="spanChange-{{$btc_market->id}}">{{$change}}% <i class="fa fa-arrow-down"></i></span>
-														@endif
-												</a>
-											<?php /* <div class="volume" id="volume-{{$btc_market->id}}" data-toggle="popover" data-placement="right" title="sdasd">Vol: {{sprintf('%.8f',$total_btc)}} BTC</div> */?>
-											</li> 
-										@endforeach
-									</ul>
-									</div>
-									
-							  </div>
-							
-						  </div>
-						  
-						</div>
-						<div id="side_ltc_market" class="tab-pane ">
-						  <!-- LTC Markets-->
-						  <div class="panel panel-default">
-							  <div class="panel-body">
-									<div class="ltc_market coinmarket nano clear">
-										<ul class="market well nano-content">
-											<li class="title">
-												<span class="name">Coin</span>
-												<span class="price">Price</span>
-												<span class="change">% Change</span>
-											</li>
-											@foreach($ltc_markets as $ltc_market)
-											<?php 
-												$total_ltc = isset($ltc_datainfo[$ltc_market->id]['total'])? $ltc_datainfo[$ltc_market->id]['total']:0; 
-												$curr_price = isset($ltc_datainfo[$ltc_market->id][0]['price'])? $ltc_datainfo[$ltc_market->id][0]['price']:0;
-												$pre_price = isset($ltc_datainfo[$ltc_market->id][1]['price'])? $ltc_datainfo[$ltc_market->id][1]['price']:0;
-												
-												//if($change>0) $change = '+'.$change;
-												
-												if ( isset($ltc_datainfo[$ltc_market->id][1]['created_at']) ){
-													$pre_price = $trade->getChangeDayPrevPrice($ltc_datainfo[$ltc_market->id][1]['created_at'], $pre_price);
-												}
-												$change = $trade->getChangeDayPrice($pre_price, $curr_price, $pre_price);
-												
-												
-												
-												/*
-												if ( isset($ltc_datainfo[$ltc_market->id][1]['created_at']) ) {
-													//Check previous trade date and compare to the previous day
-													if ( strtotime($ltc_datainfo[$ltc_market->id][1]['created_at']) < strtotime('yesterday') )
-														$pre_price = 0;
-												}
-												$change = ($pre_price!=0)? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100) : 0;
-												$change = $change +0;
-												*/
-												
-												/*
-												echo '<pre>';
-												print_r($ltc_datainfo[$ltc_market->id]);
-												echo '</pre>';
-												*/
-											?>
-												<li class="volume" id="volume-{{$ltc_market->id}}" data-toggle="popover" data-placement="right" title="Volume" data-content="{{sprintf('%.8f',$total_ltc)}} BTC">
-													<a href="{{ $marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($ltc_market->id).'_LTC')}}">
-													<span class="name">
-														@if($ltc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="bottom" title="{{$ltc_market->type}}" data-content="{{trans('texts.market_disabled')}}"></i> @endif
-														{{$ltc_market->type}}
-													</span>
-													<span class="price" yesterdayPrice="{{sprintf('%.8f',$pre_price)}}" id="spanPrice-{{$ltc_market->id}}">{{sprintf('%.8f',$curr_price)}}</span>
-													
-														@if($change==0)
-															<span class="change" id="spanChange-{{$ltc_market->id}}">{{$change}}% <i class="fa fa-minus"></i></span>
-														@elseif($change>0)
-															<span class="change up" id="spanChange-{{$ltc_market->id}}">{{$change}}% <i class="fa fa-arrow-up"></i></span>
-														@else
-															<span class="change down" id="spanChange-{{$ltc_market->id}}">{{$change}}% <i class="fa fa-arrow-down"></i></span>
-														@endif
-													</a>
-													<?php /*<div class="volume" id="volume-{{$ltc_market->id}}" >Vol: {{sprintf('%.8f',$total_ltc)}} LTC</div> */?>
-												</li>
-											@endforeach
-										</ul>
-									</div>
-							  </div>
+										
+												<ul class="market well nano-content">
+														<li class="title">
+															<span class="name">Coin</span>
+															<span class="price">Price</span>
+															<span class="change">% Change</span>
+														</li>
 
-						  </div>
-						  
-						</div>
-						<div id="side_fav_market" class="tab-pane fade">
-						  <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-						</div>
-					</div>
+														@foreach($btc_markets as $btc_market)
+														<?php 
+															$total_btc = isset($btc_datainfo[$btc_market->id]['total'])? $btc_datainfo[$btc_market->id]['total']:0; 
+															$curr_price = isset($btc_datainfo[$btc_market->id][0]['price'])? $btc_datainfo[$btc_market->id][0]['price']:0;
+															$pre_price = isset($btc_datainfo[$btc_market->id][1]['price'])? $btc_datainfo[$btc_market->id][1]['price']:0;
+															$change = 0;
+															//$change = ($pre_price!=0) ? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100) : 0;
+															//$change = $change +0;
+															
+															if ( isset($btc_datainfo[$btc_market->id][1]['created_at']) ){
+																$pre_price = $trade->getChangeDayPrevPrice($btc_datainfo[$btc_market->id][1]['created_at'], $pre_price);
+															}
+																$change = $trade->getChangeDayPrice($pre_price, $curr_price, $pre_price);
+
+
+															
+															//echo "Cur: ".$curr_price." -- Pre: ".$pre_price;
+															//if($change>0) $change = '+'.$change;
+															
+															
+														?>
+															<li class="volume" id="volume-{{$btc_market->id}}" data-toggle="popover" data-placement="right" title="Volume" data-content="{{sprintf('%.8f',$total_btc)}} BTC">
+																<a href="{{$marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($btc_market->id).'_BTC')}}">
+																	<span class="name">
+																		@if($btc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="bottom" title="{{$btc_market->type}}" data-content="{{trans('texts.market_disabled')}}" ></i> @endif
+																		{{$btc_market->type}}
+																	</span>
+																	<span class="hide">{{$btc_market->name}}</span>
+																	<span class="price" yesterdayPrice="{{sprintf('%.8f',$pre_price)}}" id="spanPrice-{{$btc_market->id}}">{{sprintf('%.8f',$curr_price)}}</span>
+																		@if($change==0)
+																			<span class="change" id="spanChange-{{$btc_market->id}}">{{$change}}% <i class="fa fa-minus"></i></span>
+																		@elseif($change>0)
+																			<span class="change up" id="spanChange-{{$btc_market->id}}">{{$change}}% <i class="fa fa-arrow-up"></i></span>
+																		@else
+																			<span class="change down" id="spanChange-{{$btc_market->id}}">{{$change}}% <i class="fa fa-arrow-down"></i></span>
+																		@endif
+																</a>
+															<?php /* <div class="volume" id="volume-{{$btc_market->id}}" data-toggle="popover" data-placement="right" title="sdasd">Vol: {{sprintf('%.8f',$total_btc)}} BTC</div> */?>
+															</li> 
+														@endforeach
+													</ul>
+													</div>
+													
+											  </div>
+											
+										  </div>
+										  
+										</div>
+										<div id="side_ltc_market" class="tab-pane " role="tabpanel">
+										  <!-- LTC Markets-->
+										  <div class="panel panel-default">
+											  <div class="panel-body">
+													<div class="ltc_market coinmarket nano clear">
+														<ul class="market well nano-content">
+															<li class="title">
+																<span class="name">Coin</span>
+																<span class="price">Price</span>
+																<span class="change">% Change</span>
+															</li>
+															@foreach($ltc_markets as $ltc_market)
+															<?php 
+																$total_ltc = isset($ltc_datainfo[$ltc_market->id]['total'])? $ltc_datainfo[$ltc_market->id]['total']:0; 
+																$curr_price = isset($ltc_datainfo[$ltc_market->id][0]['price'])? $ltc_datainfo[$ltc_market->id][0]['price']:0;
+																$pre_price = isset($ltc_datainfo[$ltc_market->id][1]['price'])? $ltc_datainfo[$ltc_market->id][1]['price']:0;
+																
+																//if($change>0) $change = '+'.$change;
+																
+																if ( isset($ltc_datainfo[$ltc_market->id][1]['created_at']) ){
+																	$pre_price = $trade->getChangeDayPrevPrice($ltc_datainfo[$ltc_market->id][1]['created_at'], $pre_price);
+																}
+																$change = $trade->getChangeDayPrice($pre_price, $curr_price, $pre_price);
+																
+																
+																
+																/*
+																if ( isset($ltc_datainfo[$ltc_market->id][1]['created_at']) ) {
+																	//Check previous trade date and compare to the previous day
+																	if ( strtotime($ltc_datainfo[$ltc_market->id][1]['created_at']) < strtotime('yesterday') )
+																		$pre_price = 0;
+																}
+																$change = ($pre_price!=0)? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100) : 0;
+																$change = $change +0;
+																*/
+																
+																/*
+																echo '<pre>';
+																print_r($ltc_datainfo[$ltc_market->id]);
+																echo '</pre>';
+																*/
+															?>
+																<li class="volume" id="volume-{{$ltc_market->id}}" data-toggle="popover" data-placement="right" title="Volume" data-content="{{sprintf('%.8f',$total_ltc)}} BTC">
+																	<a href="{{ $marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($ltc_market->id).'_LTC')}}">
+																	<span class="name">
+																		@if($ltc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="bottom" title="{{$ltc_market->type}}" data-content="{{trans('texts.market_disabled')}}"></i> @endif
+																		{{$ltc_market->type}}
+																	</span>
+																	<span class="price" yesterdayPrice="{{sprintf('%.8f',$pre_price)}}" id="spanPrice-{{$ltc_market->id}}">{{sprintf('%.8f',$curr_price)}}</span>
+																	
+																		@if($change==0)
+																			<span class="change" id="spanChange-{{$ltc_market->id}}">{{$change}}% <i class="fa fa-minus"></i></span>
+																		@elseif($change>0)
+																			<span class="change up" id="spanChange-{{$ltc_market->id}}">{{$change}}% <i class="fa fa-arrow-up"></i></span>
+																		@else
+																			<span class="change down" id="spanChange-{{$ltc_market->id}}">{{$change}}% <i class="fa fa-arrow-down"></i></span>
+																		@endif
+																	</a>
+																	<?php /*<div class="volume" id="volume-{{$ltc_market->id}}" >Vol: {{sprintf('%.8f',$total_ltc)}} LTC</div> */?>
+																</li>
+															@endforeach
+														</ul>
+													</div>
+											  </div>
+
+										  </div>
+										  
+										</div>
+										<div id="side_fav_market" class="tab-pane fade" role="tabpanel">
+										  <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+										</div>
+									</div>
+								</div>
+
+
+					
 				</div>
 			
 		  <!-- <#Sidebar Market Tabs -->
