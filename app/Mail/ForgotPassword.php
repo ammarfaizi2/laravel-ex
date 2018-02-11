@@ -50,7 +50,7 @@ class ForgotPassword extends Mailable
                 ]
             );
         return $this->view(
-                'confide::emails.passwordreset', 
+                'emails.password_reset', 
                 [
                     'user' => [
                         'username' => $user["username"], 
