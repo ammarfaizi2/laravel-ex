@@ -1,6 +1,4 @@
-<?php
-var_dump($market_predefined)
-?>
+<?php ?>
 <div class="row">
 	<div class="market_info">
 		<div class="row">
@@ -214,10 +212,9 @@ var_dump($market_predefined)
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-lg-12">
 
-			@if($qwe = $that->hasCustomFields($market_id)->toArray())
+			@if($qwe = $that->hasCustomFields($market_id))
 			<div class="coin-info inblock">
 				<?php
-				var_dump($qwe);
 				$coin_description ='';
 				$coin_description_li ='';
 				foreach($qwe as $q){
