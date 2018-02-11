@@ -2145,3 +2145,15 @@ input#sidebar_search_market{
     width: 150px;
     text-align: left;	
 }
+
+
+/*modal*/
+.modal-header {
+	background-color: #428bca;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	padding: 10px 10px;
+}
+.modal-header .modal-title {
+	color: #FFF;
+}

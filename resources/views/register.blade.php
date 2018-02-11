@@ -8,95 +8,60 @@ https://developers.google.com/recaptcha/docs/verify
 */
 ?>
 
- <div id="contentinner">
+<div class="row" >
+	<div class="col-md-4 col-md-offset-4">
  
- form class="form-horizontal inblock">
+ 
+ 
+ <!-- -->
+		<form class="form-horizontal inblock">
 		<div class="inblock order_header">
 			<div class="header-left">
-					{{{ trans('texts.your_balance')}}}: 
-					<!-- <a id="buy_coin_link" data-amount="{{{ $balance_coinsecond }}}" href="javascript:void(0)" onclick="a_calc(17)"><b><span id="cur_to" class="money_rur">{{{ $balance_coinsecond }}}</span> {{{ $coinsecond }}}</b></a> -->
-					<a id="buy_coin_link" data-amount="{{{ $balance_coinsecond }}}" href="#"><b><span id="cur_to" class="money_rur">{{{ $balance_coinsecond }}}</span> {{{ $coinsecond }}}</b></a>
+					Just doing some remake here... use the form above for logging in.
+					
+					<a id="buy_coin_link" data-amount="" href="#"><b><span id="cur_to" class="money_rur">fiestr</span> second</b></a>
 			</div>
 		</div>
-		@if($enable_trading != 1)
-			<div class="notice notice-danger">
-				<strong><i class="fa fa-exclamation-triangle fa-2x left"></i> {{ trans('texts.notice') }}</strong> {{ trans('texts.market_disabled') }}
-			</div>
-		@endif
+
 		<hr />
 		
 		<div class="form-group">
-		  <label class="col-lg-2 control-label" for="b_amount">{{{ trans('texts.amount')  }}}</label>
-		  <div class="col-lg-10 input-group">      
+		  <label class="col-lg-2 control-label" for="b_amount">Username</label>
+		  <div class="col-lg-10">      
 			<input id="b_amount" name="b_amount" class="form-control" type="text" value="0">
-			<span class="input-group-addon">{{{ $coinmain }}}</span> 
+			<span class="input-group-addon">asas</span> 
 		  </div>
 		</div>
 		
 		<div class="form-group">
-		  <label class="col-lg-2 control-label" >{{{ trans('texts.price')}}} </label>
-		  <div class="col-lg-10 input-group">
-			<input id="b_price" name="b_price" class="form-control" type="text" value="{{$buy_highest}}">
-			<span class="input-group-addon">{{{ $coinsecond }}}</span> 
-		  </div>
-		</div> 
-		<div class="">
-		  <!-- Data Slider-->
-		  <div class="col-lg-11 col-centered">
-			<div id="buy_slider" ></div>
-		  </div>
-		</div> 
-		
-		
-		
-		
-
-		
-		<div class="forConfirm">
-			<div class="form-group">
-			  <label class="col-lg-2 control-label" >{{{ trans('texts.total')}}}</label>
-			  <div class="col-lg-10 input-group">
-				  <span class="">
-				   <span id="b_all">0.00 </span> <span>{{{ $coinsecond }}}</span>
-				  </span>
-				</div>
+			<label class="col-lg-2 control-label" for="b_amount">Username</label>
+			<div class="col-lg-10 input-group">
+				<span class="input-group-addon"><i class="fa fa-user fa-lg"></i></span>
+				<input type="text" class="form-control" tabindex="1" name="email" id="email" placeholder="{{{ Lang::get('confide::confide.username') }}}" value="{{{ Request::old('email') }}}" required/>
 			</div>
-
-
-			<div class="form-group">
-			  <label class="col-lg-2 control-label" >{{{ trans('texts.trading_fee_short')}}} (<span id="fee_buy">{{$fee_buy}}</span>%)</label>
-			  <div class="col-lg-10 input-group">
-				  <span class="">
-				   <span id="b_fee">0 </span> <span>{{{ $coinsecond }}}</span>
-				  </span>
-				</div>
-			</div>
-			
-
-			<div class="form-group">
-			  <label class="col-lg-2 control-label" >{{{ trans('texts.net_total')}}}</label>
-			  <div class="col-lg-10 input-group">
-				  <span class="">
-				   <span id="b_net_total">0 </span> <span>{{{ $coinsecond }}}</span>
-				  </span>
-				</div>
-			</div>
-			
-			
 		</div>
 		<div class="form-group">
-		  <span id="b_message"></span>
+			<div class="col-md-12 input-group">
+					<span class="input-group-addon"><i class="fa fa-lock fa-lg"></i></span>
+					<input type="password" class="form-control" tabindex="2" name="password" id="password" placeholder="{{{ Lang::get('confide::confide.password') }}}" required>
+			</div>
 		</div>
+		<div class="checkbox right">
+			<label for="remember">
+				<input tabindex="3" type="checkbox" name="remember" id="remember" value="1">
+			  {{ Lang::get('confide::confide.login.remember') }}
+			</label>
+		</div>
+		
 		
 		<div class="control-group"> 
-			
-			<input type="hidden" name="buy_market_id" id="buy_market_id" value="{{{Session::get('market_id')}}}">     
-			<!-- <button type="button" class="btn" id="calc_buy">{{trans('texts.caculate')}}</button> -->
-			<button type="button" class="btn btn-primary btn-success btn-block" id="do_buy">{{ trans('texts.buy')}} {{{ $coinmain }}} <i class="fa fa-circle-o-notch fa-spin fa-1x hide"  id="buy_loader"></i></button> 
+			<input id="login_button" tabindex="4" class="btn btn-lg btn-success btn-block" tabindex="4" type="submit" value="{{ trans('texts.login')}}" >
+
 		
 		</div>
-  </form> 
-  
+  </form>
+  </div>
+<!-- --> 
  <div class="outer">
 	<div class="middle">
 		<div class="inner">

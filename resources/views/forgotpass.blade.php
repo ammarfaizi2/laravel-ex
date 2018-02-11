@@ -58,6 +58,12 @@
 
   
 $(document).ready(function() {
+	
+	$("#forgotForm").submit(function(event) {
+		event.preventDefault();
+		$("#forgot_password_button").click();
+	});
+	
 	$("#forgot_password_button").on( "click", function() {
 		// console.log( $( this ).text() );
         var email = $('#forgotForm #email').val();
