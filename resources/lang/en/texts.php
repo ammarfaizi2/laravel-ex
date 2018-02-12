@@ -200,4 +200,6 @@ return array(
     "search_market"  => "Search Market",
     "online_users" => "Online users",
     "online_clients" => "Online clients",
+    
+	"exchange" => "Exchange",
 );

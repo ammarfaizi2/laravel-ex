@@ -300,11 +300,18 @@ function doPostTradeOrder(tradeArray){
 		market_id = tradeArray[2];
 		type = tradeArray[3];
 		var ajax_trade_url;
-		
+		/*
+		I dont wont pure URL in the code, it should use Laravel routing instead
 		if(type == 'buy'){
 			ajax_trade_url = '/dobuy';
 		}else if(type == 'sell'){
 			ajax_trade_url = '/dosell';
+		}
+		*/
+		if(type == 'buy'){
+			ajax_trade_url = '<?php echo action('OrderController@doBuy')?>';
+		}else if(type == 'sell'){
+			ajax_trade_url = '<?php echo action('OrderController@doSell')?>';
 		}
 		
 	$.ajax({

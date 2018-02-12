@@ -14,100 +14,44 @@ https://developers.google.com/recaptcha/docs/verify
  
  
  <!-- -->
-		<form class="form-horizontal inblock">
+		<form class="form-horizontal inblock" id="registerForm" method="POST" action="{{{ (Auth::check('UserController@store')) ?: URL::to('user')  }}}" accept-charset="UTF-8">
+		<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
+				
 		<div class="inblock order_header">
 			<div class="header-left">
 					Just doing some remake here... use the form above for logging in.
 					
-					<a id="buy_coin_link" data-amount="" href="#"><b><span id="cur_to" class="money_rur">fiestr</span> second</b></a>
+					{{trans('user_texts.your_details')}}
 			</div>
 		</div>
 
 		<hr />
 		
 		<div class="form-group">
-		  <label class="col-lg-2 control-label" for="b_amount">Username</label>
-		  <div class="col-lg-10">      
-			<input id="b_amount" name="b_amount" class="form-control" type="text" value="0">
-			<span class="input-group-addon">asas</span> 
-		  </div>
-		</div>
-		
-		<div class="form-group">
-			<label class="col-lg-2 control-label" for="b_amount">Username</label>
-			<div class="col-lg-10 input-group">
+			<div class="col-lg-12 input-group">
 				<span class="input-group-addon"><i class="fa fa-user fa-lg"></i></span>
-				<input type="text" class="form-control" tabindex="1" name="email" id="email" placeholder="{{{ Lang::get('confide::confide.username') }}}" value="{{{ Request::old('email') }}}" required/>
+				<input tabindex="1" minlength="4" type="text" class="form-control" placeholder="{{{ Lang::get('confide::confide.username') }}}" name="username" id="username" value="{{{ Request::old('username') }}}" required>
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-md-12 input-group">
-					<span class="input-group-addon"><i class="fa fa-lock fa-lg"></i></span>
-					<input type="password" class="form-control" tabindex="2" name="password" id="password" placeholder="{{{ Lang::get('confide::confide.password') }}}" required>
+			<div class="col-lg-12 input-group">
+					<span class="input-group-addon"><i class="fa fa-envelope fa-lg"></i></span>
+					<input tabindex="2" type="text" name="email" id="email" class="form-control" placeholder="{{{ Lang::get('confide::confide.e_mail') }}}" value="{{{ Request::old('email') }}}" required>
 			</div>
 		</div>
-		<div class="checkbox right">
-			<label for="remember">
-				<input tabindex="3" type="checkbox" name="remember" id="remember" value="1">
-			  {{ Lang::get('confide::confide.login.remember') }}
-			</label>
+		<div class="form-group">
+			<div class="col-lg-12 input-group">
+					<span class="input-group-addon"><i class="fa fa-lock fa-lg"></i></span>
+					<input type="password" class="form-control" tabindex="3" name="password" id="password" placeholder="{{{ Lang::get('confide::confide.password') }}}" required>
+			</div>
 		</div>
-		
-		
-		<div class="control-group"> 
-			<input id="login_button" tabindex="4" class="btn btn-lg btn-success btn-block" tabindex="4" type="submit" value="{{ trans('texts.login')}}" >
-
-		
+		<div class="form-group">
+			<div class="col-lg-12 input-group">
+					<span class="input-group-addon"><i class="fa fa-lock fa-lg"></i></span>
+					<input type="password" class="form-control" tabindex="4" name="password_confirmation" id="password_confirmation" placeholder="{{{ Lang::get('confide::confide.password_confirmation') }}}" required>
+			</div>
 		</div>
-  </form>
-  </div>
-<!-- --> 
- <div class="outer">
-	<div class="middle">
-		<div class="inner">
-								
-			<h2 >{{trans('user_texts.register_account')}}</h2>
-			<form id="registerForm" method="POST" action="{{{ (Auth::check('UserController@store')) ?: URL::to('user')  }}}" accept-charset="UTF-8">
-				<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
-				<h3>{{trans('user_texts.your_details')}}</h3>
-				<table class="table register">
-					<tbody>
-						<?php
-                        /*
-						<tr>
-							<th style="width:180px;">{{trans('user_texts.fullname')}}</th>
-							<td><input minlength="2" type="text" required="" name="fullname" id="fullname" value="{{{ Request::old('fullname') }}}"></td>
-						</tr>
-						*/
-                        ?>
-                        <tr>
-                            <th style="width:180px;">{{{ Lang::get('confide::confide.username') }}}</th>
-                            <td>
-                                <input minlength="2" type="text" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.username') }}}" name="username" id="username" value="{{{ Request::old('username') }}}">
-                                <span>This will be your used for your login and confirming withdrawals.</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>{{{ Lang::get('confide::confide.e_mail') }}} <small>{{ Lang::get('confide::confide.signup.confirmation_required') }}</small></th>
-                            <td><input type="text" name="email" id="email" required="" class="form-control" placeholder="{{{ Lang::get('confide::confide.e_mail') }}}" value="{{{ Request::old('email') }}}"><br>
-                                <span>This will be your used for your login and confirming withdrawals.</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>{{{ Lang::get('confide::confide.password') }}}</th>
-                            <td><input type="password" name="password" id="password" class="form-control" placeholder="{{{ Lang::get('confide::confide.password') }}}"><br>
-                                <span>Please enter 8 characters minimum, including 1 or more digits.</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>{{{ Lang::get('confide::confide.password_confirmation') }}}</th>
-                            <td><input class="form-control" placeholder="{{{ Lang::get('confide::confide.password_confirmation') }}}" type="password" name="password_confirmation" id="password_confirmation"><br>
-                                <span>Please type your password again.</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <?php
+		<?php
                 /*
 				<h3>Security Questions</h3>
 				Please answer two security questions below, these will be used if you ever lose access to your account.<br>Be aware that these answers cannot be changed once you have set up your account.<br><br>
@@ -153,40 +97,34 @@ https://developers.google.com/recaptcha/docs/verify
 				</table>
 				*/
                 ?>
-                <div align="center">
-                    
-                    <div id="captchaStatus"></div>
-                    <br>
-                    
-                    
-                    <input type="checkbox" name="termsofservice" id="termsofservice"><label for="termsofservice">&nbsp; {{trans('user_texts.i_agree_terms')}}</label> {{ HTML::link('post/terms', trans('user_texts.term_service')) }}<a href="/terms/"></a>.
-                    
-                              
-                    <br><br>
-                </div>
-                @if ( Session::get('error') )
-                    <div class="alert alert-error alert-danger">
-                        @if ( is_array(Session::get('error')) )
-                            {{ head(Session::get('error')) }}
-                        @endif
-                    </div>
-                @endif
-
-                @if ( Session::get('notice') )
-                    <div class="alert alert-info">{{ Session::get('notice') }}</div>
-                @endif
-                <div align="center">
-                    <input type="hidden" value="@if(isset($referral)){{$referral}}@else{{{Request::old('referral')}}}@endif" name="referral">
-
-					<button type="button" class="btn btn-primary g-recaptcha" data-sitekey="6LcdnUUUAAAAALwXU3jX_VrciJdIDmcrN1Q5UVDw" data-callback="onSubmit">{{{ Lang::get('confide::confide.signup.submit') }}}</button>
 
 
-                </div>
-               
-            </form>
-        </div>
-    </div>
-</div>
+		@if ( Session::get('error') )
+			<div class="alert alert-error alert-danger">
+				@if ( is_array(Session::get('error')) )
+					{{ head(Session::get('error')) }}
+				@endif
+			</div>
+		@endif
+
+		@if ( Session::get('notice') )
+			<div class="alert alert-info">{{ Session::get('notice') }}</div>
+		@endif
+
+		<div id="captchaStatus"></div>
+
+		<input type="checkbox" name="termsofservice" id="termsofservice"><label for="termsofservice">&nbsp; {{trans('user_texts.i_agree_terms')}}</label> {{ HTML::link('post/terms', trans('user_texts.term_service')) }}<a href="/terms/"></a>.
+					
+		<input type="hidden" value="@if(isset($referral)){{$referral}}@else{{{Request::old('referral')}}}@endif" name="referral">
+
+				
+		<div class="control-group">
+			<button type="button" class="btn btn-primary btn-block g-recaptcha" data-sitekey="6LcdnUUUAAAAALwXU3jX_VrciJdIDmcrN1Q5UVDw" data-callback="onSubmit">{{{ Lang::get('confide::confide.signup.submit') }}}</button>
+		</div>
+  </form>
+  </div>
+<!-- --> 
+ 
 </div>
 {{ HTML::script('assets/js/jquery.validate.min.js') }}
 <script type="text/javascript">

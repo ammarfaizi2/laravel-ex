@@ -9,7 +9,12 @@
 				<span class="fa fa-lock fa-lg"></span> {{{ Config::get('config_custom.company_name') }}} - {{{ Lang::get('confide::confide.forgot.title') }}}</div> 
 			<div class="panel-body">
 			
-				<hr class="colorgraph">
+				<div class="notice notice-danger hide" id="form_callback">
+					<strong><i class="fa fa-exclamation-triangle fa-2x left"></i>{{{trans('texts.error')}}}</strong> <span id="form_callback_msg"></span>
+				</div>
+					
+
+				<hr class="colorgraph" style="margin: 5px 0 20px ;">
 				
 					<!-- <form class="form-horizontal" role="form" id="forgotForm" method="POST" class="login clearfix" action="{{ (Auth::check('UserController@do_forgot_password')) ?: URL::to('/user/forgot') }}" accept-charset="UTF-8"> -->
 					<form class="form-horizontal" role="form" id="forgotForm" method="POST" class="login clearfix" action="javascript:void(0);" accept-charset="UTF-8">
@@ -21,8 +26,16 @@
 									<input type="text" class="form-control" tabindex="1" name="email" id="email" placeholder="{{{ Lang::get('confide::confide.e_mail') }}}" value="{{{ Request::old('email') }}}" required>
 							</div>
 						</div>
+						
+						<div class="checkbox">
+							<label for="reset_terms">
+								<input tabindex="3" type="checkbox" name="reset_terms" id="reset_terms" value="1">
+							  I acknowledge that my account will be locked for a minimum of XX hours.
+							</label>
+						</div>
+				
 						<div class="form-group">
-							<button tabindex="2" class="btn btn-lg btn-success btn-block" type="button" tabindex="2"  id="forgot_password_button">{{{ Lang::get('confide::confide.forgot.submit') }}}</button>
+							<button tabindex="2" class="btn btn-lg btn-success btn-block" type="submit" tabindex="2"  id="forgot_password_button"><i class="fa fa-unlock"></i> {{{ trans('texts.reset_password') }}}</button>
 						</div>
 					</fieldset>
 					</form>
@@ -64,9 +77,15 @@ $(document).ready(function() {
 		$("#forgot_password_button").click();
 	});
 	
-	$("#forgot_password_button").on( "click", function() {
+	$("#forgot_password_button").on( "click", function(e) {
+		e.preventDefault();
+		
 		// console.log( $( this ).text() );
-        var email = $('#forgotForm #email').val();
+		if (!$("#form_callback").hasClass("hide")) 
+			$("#form_callback").addClass("hide");
+
+
+		var email = $('#forgotForm #email').val();
 		$.ajax({
 			type: 'post',
 			url: '<?php echo action('UserController@forgot_password')?>',
@@ -76,16 +95,26 @@ $(document).ready(function() {
                 return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
             },
             success:function(response) {
-              var title = '{{{ Lang::get('confide::confide.forgot.title') }}}';
-                var msg = response;
-                
-                $('#email').val('');
-                BootstrapDialog.show({
-                    title: title,
-                    message: msg
-                });
+				 var data = $.parseJSON(response);
+				console.log(data);
+                if(data.status == "success"){
+					$("#form_callback").removeClass("hide").removeClass("notice-danger").addClass("notice-success");
+					$("#form_callback_msg").text(data.msg);
+					$("#forgot_password_button").addClass("hide");
+					$(".checkbox").addClass("hide");
+					$('input[type=submit]').attr('disabled', 'disabled');
+					//$('form').bind('submit',function(e){e.preventDefault();});
+					
+				}else{
+					$("#form_callback").removeClass("hide").removeClass("notice-danger").addClass("notice-danger");
+					$("#form_callback_msg").text(data.msg);
+				}
+				
+
             }, error:function(response) {
-                showMessageSingle('{{{ trans('texts.error') }}}', response);
+				var data = $.parseJSON(response)
+				$("#form_callback").removeClass("hide").removeClass("notice-success").addClass("notice-danger");
+				$("#form_callback_msg").text(data.msg);
             }
         });
     
@@ -106,6 +135,7 @@ $(document).ready(function() {
     });
    
     $('#email').keypress(function(e) {
+		
       if (e.keyCode == '13') {
 		  $("#forgot_password_button").click();
       }

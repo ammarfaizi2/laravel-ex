@@ -41,14 +41,14 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">{{trans("user_texts.set_up_tfa")}}</div>
                             <div class="panel-body" style="text-align: center;">
-                                <p>{{trans('user_texts.tfa_2')}} {{$registration_data['google2fa_secret'] }}</p>
+                                <p>{{trans('user_texts.tfa_2')}}<br /> {{$registration_data['google2fa_secret'] }}</p>
                                 <div>
                                     <img src="{{ $QR_Image }}">
                                 </div>
                                 @if (!@$reauthenticating) {{-- add this line --}}
                                     <p>{{trans('user_texts.tfa_1')}}</p><br>
                                     <div>
-                                        <a href="javascript:void(0);"><button id="complete-reg" type="button" class="btn-primary">{{trans("user_texts.complete_reg_tfa")}}</button></a>
+                                        <a href="javascript:void(0);"><button id="complete-reg" type="button" class="btn btn-primary">{{trans("user_texts.complete_reg_tfa")}}</button></a>
                                         <script type="text/javascript">
                                             document.getElementById("complete-reg").addEventListener("click", function () {
                                                     bootbox.prompt({

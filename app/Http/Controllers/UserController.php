@@ -464,9 +464,9 @@ class UserController extends Controller
             //$messages = $validator->messages();
 
             $error_msg = Lang::get('validation.email', array('attribute' => 'Email'));
-
-            echo $error_msg;
-            exit;
+			$error_msg_type = 'error';
+            //echo $error_msg;
+            //exit;
                 
             // redirect our user back to the form with the errors from the validator
             //return Redirect::to('ducks')
@@ -476,24 +476,25 @@ class UserController extends Controller
         $error_msg = 'Email OK';
                 // echo $error_msg;
                 // exit;
+			if (/*Confide::forgotPassword(Request::get('email'))*/ $this->forgotPasswordAction(Request::get('email'))) {
+				$error_msg = Lang::get('confide::confide.alerts.password_forgot');
+				$error_msg_type = 'notice';
+				$error_msg_control = 'login';
+			} else {
+				$error_msg = Lang::get('confide::confide.alerts.instructions_sent');
+				//$error_msg = Lang::get('confide::confide.alerts.wrong_password_forgot');
+				$error_msg_type = 'success';
+				$error_msg_control = 'forgot_password';
+				/*return Redirect::action('UserController@forgot_password')
+								->withInput()
+					->with( 'error', $error_msg );*/
+			}
         }
-        $error_msg = Lang::get('confide::confide.alerts.password_forgot');
 
-        if (/*Confide::forgotPassword(Request::get('email'))*/ $this->forgotPasswordAction(Request::get('email'))) {
-            $error_msg = Lang::get('confide::confide.alerts.password_forgot');
-            $error_msg_type = 'notice';
-            $error_msg_control = 'login';
-        } else {
-            $error_msg = Lang::get('confide::confide.alerts.instructions_sent');
-            //$error_msg = Lang::get('confide::confide.alerts.wrong_password_forgot');
-            $error_msg_type = 'error';
-            $error_msg_control = 'forgot_password';
-            /*return Redirect::action('UserController@forgot_password')
-                            ->withInput()
-                ->with( 'error', $error_msg );*/
-        }
+        
         if (Request::get('isAjax')) {
-                echo $error_msg;
+                echo json_encode(array("status" => $error_msg_type, "msg" => $error_msg));
+				//echo $error_msg;
                 exit;
         } else {
             return Redirect::action('UserController@'.$error_msg_control)
