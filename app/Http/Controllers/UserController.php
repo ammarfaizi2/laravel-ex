@@ -606,7 +606,8 @@ class UserController extends Controller
      */
     public function checkCaptcha()
     {
-        
+        echo 1;
+        exit;   
         include app_path().'/libraries/recaptchalib.php';
         $setting = new Setting();
         $publickey = $setting->getSetting('recaptcha_publickey', '');// "6LeoOPASAAAAAPsHsCBdbM60dEBKVDydRItjlmHR"; // you got this from the signup page

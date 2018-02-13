@@ -22,14 +22,15 @@ https://developers.google.com/recaptcha/docs/verify
 								
 						<div class="alert alert-error alert-danger" id="alert_field">
 							@if ( Session::get('error') )
-								
+									
 									@if ( is_array(Session::get('error')) )
 										{{ head(Session::get('error')) }}
+									@else
+										{{ head(Session::get('error')) }}
 									@endif
-								
+
 							@endif
 						</div>
-
 						@if ( Session::get('notice') )
 							<div class="alert alert-info">{{ Session::get('notice') }}</div>
 						@endif
@@ -142,10 +143,10 @@ https://developers.google.com/recaptcha/docs/verify
 {{ HTML::script('assets/js/jquery.validate.min.js') }}
 <script type="text/javascript">
 	var formDom = $("#registerForm")[0];
-	var urlAction = formDom.action;
-		formDom.action = "javascript:void(0);";
 	var aldom = $("#alert_field")[0];
+	@if (! Session::get('error'))
 		aldom.style.display = "none";
+	@endif		
 	function showAlert(msg, customClosure = null)
 	{
 		if (customClosure !== null) {
@@ -205,6 +206,7 @@ https://developers.google.com/recaptcha/docs/verify
 		                },
 		                success:function(response) {
 		                    if(response == 1){   
+		                    	alert(123123);
 		                        document.getElementById("registerForm").submit();
 		                        return true;
 		                    }else{

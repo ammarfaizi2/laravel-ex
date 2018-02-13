@@ -11,14 +11,16 @@ class ConfirmAccount extends Mailable
 {
     use Queueable, SerializesModels;
 
+    private $userInfo = [];
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($p)
     {
-        //
+        $this->userInfo = $p;
     }
 
     /**
@@ -37,13 +39,14 @@ class ConfirmAccount extends Mailable
             $token .= $r[rand(0, $l)];
         }
         return $this->view(
-                'emails.password_reset', 
+                'emails.confirm_account', 
                 [
                     'user' => [
                         'username' => $user["username"], 
                         'email' => $user["email"]
                     ], 
-                    'confirmation_code' => $token
+                    'confirmation_code' => $token,
+                    'token' => $token
                 ]
             );
     }
