@@ -8,6 +8,7 @@
 		<div class="content-body">
 			{{$post->body}}
 		</div>
-		@stop
+		
 	</div>
 </div>
+@stop

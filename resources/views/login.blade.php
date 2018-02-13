@@ -3,15 +3,16 @@
 <div class="row" >
 	<div class="col-md-4 col-md-offset-4">
 	
-  
 
-		
-		<!-- -->
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<span class="fa fa-lock fa-lg"></span> {{{ Config::get('config_custom.company_name') }}} - {{trans('user_texts.login')}}</div> 
+				<span class="fa fa-lock fa-lg"></span> <a href="{{ url('/') }}">{{{ Config::get('config_custom.company_name') }}}</a> - <span>{{trans('user_texts.login')}}</span></div> 
 				<div class="panel-body">
 
+				<div class="notice hide" id="form_callback">
+					<strong><i id="form_callback_icon" class="fa  fa-2x left"></i><span id="form_callback_title">{{{trans('texts.error')}}}</span></strong> <span id="form_callback_msg"></span>
+				</div>
+					
 				@if ( Session::get('error') )
 					<div class="notice notice-danger">
 						<strong><i class="fa fa-exclamation-triangle fa-2x left"></i>{{{trans('texts.error')}}}</strong> {{{ Session::get('error') }}}
@@ -62,7 +63,11 @@
 				
 				<div class="control-group"> 
 					<input id="login_button" tabindex="4" class="btn btn-lg btn-success btn-block" type="submit" value="{{ trans('texts.login')}}" >
-
+					
+					<button id="login_ajax" tabindex="4" class="button button-blue btn btn-lg btn-block" type="button" >
+						<i class="fa fa-sign-in fa-2x"></i> 
+						<span>AJAX {{ trans('texts.login')}}</span>
+					</button>
 				
 				</div>
 			</form> 
@@ -85,33 +90,41 @@
 	<style type="text/css">iframe{display:none;}</style>
 	<script type="text/javascript">
 		
-	/*
+	
 	$(document).ready(function() {
 		
-		$("form").submit(function(event) {
+		$("#login_ajax").on( "click", function(e) {
+			
 			$.ajax({
 				type: 'post',
 				//url: ' action('UserController@firstAuth')',
 				//url: 'action("UserController@do_login")',
 				url: '{{route("user.do_login")}}',
 				datatype: 'json',
-				data: {isAjax: 1, user: $('#email').val(), password: $('#password').val(), remember:  $('#remember').val() },
+				//data: {isAjax: 1, user: $('#email').val(), email: $('#email').val(), password: $('#password').val(), remember:  $('#remember').val(), token: $("#_token").val() },
+				data: {isAjax: 1, email: $('#email').val(), password: $('#password').val(), remember:  $('#remember').val(), token: $("#_token").val() },
 				beforeSend: function(request) {
 					return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
 				},
 				success:function(response) {
-					var obj = $.parseJSON(response);
-
-					alert();
-					if(obj.status == 'success'){
+					var obj = JSON.parse(response);
+					
+					console.log(obj);
+					if(obj.status == "success"){
 //STOP...............I am not finished with the AJAX porting.............
-						if (obj.responseRext === '["2fa"]') {
+						if (obj.callnext === "2fa") {
+							
+							//Message UI
+							$("#form_callback").addClass("notice-warning").removeClass("hide");
+							$("#form_callback_msg").text(obj.message)
+							$("#form_callback_title").text("{{trans('texts.notice')}}")
+						
 							bootbox.prompt({
-								title: "{{trans("user_texts.tfa_3")}}",
-								inputType: "number",
+								title: "{{trans('user_texts.tfa_3')}}",
 								callback: function (result) {
 									if (result !== null) {
-										try	{
+										try	
+										{
 											var a = JSON.parse(this.responseText);
 											if (a["redirect"]) {
 												window.location = a["redirect"];
@@ -123,27 +136,33 @@
 												  callback: function(){}
 												});
 											}
-											} catch (e) {
-												alert(this.responseText);
-											}
+										} catch (e) {
+											alert(this.responseText);
+										}
 									}
 								}
 							});
+						}
 //STOP...............I am not finished with the AJAX porting.............
 					}else{
-						//error
+						$("#form_callback").addClass("notice-danger").removeClass("hide");
+						$("#form_callback_msg").text(obj.message)
+						$("#form_callback_title").text("{{trans('texts.error')}}")
+						//Handle Data Error
+						//NOT SUCCESS
 					}
 
 
-				}, error:function(response) {
-					//LARAVEL PHP ERROR
+				
+			}, error:function(response) {
+					//Handle Error
 				}
 			});
 		});
 	});
 	
 	
-	*/
+	
 		var frm = document.getElementById("loginForm");
 		var fx = function () {
 			var ch = new XMLHttpRequest();
@@ -153,6 +172,13 @@
 						frl[0].contentDocument.open();
 					if (this.readyState === 4) {
 						frl[0].contentDocument.close();
+						
+						//var obj = $.parseJSON(this);
+						//var obj = this;
+						//console.log(this.responseText);
+						//console.log(obj);
+						//if (this.responseText === "2fa") {
+						
 						if (this.responseText === "[\"2fa\"]") {
 							bootbox.prompt({
 								title: "{{trans("user_texts.tfa_3")}}",
@@ -230,7 +256,7 @@
 			document.getElementById("loginForm").addEventListener("submit", fx);
 		}
 		listen();
-		
+	
 	</script>
 	
 @stop

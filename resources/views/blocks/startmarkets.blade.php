@@ -18,11 +18,11 @@
 				
 					<a class="button button-green" href="<?=url('/', $parameters = array(), $secure = null);?>/user/register">
 					  <i class="fa fa-user-plus"></i>
-					  <strong>{{trans('user_texts.register')}}</strong>
+					  <span>{{trans('user_texts.register')}}</span>
 					</a>
 					<a class="button button-blue" href="<?=url('/', $parameters = array(), $secure = null);?>/login">
 					  <i class="fa fa-sign-in "></i>
-					  <strong>{{trans('user_texts.login')}}</strong>
+					  <span>{{trans('user_texts.login')}}</span>
 					</a>
 
 				</div>

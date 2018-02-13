@@ -4,17 +4,25 @@
 
 <div class="row" >
 	<div class="col-md-4 col-md-offset-4">
+	
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<span class="fa fa-lock fa-lg"></span> {{{ Config::get('config_custom.company_name') }}} - {{{ Lang::get('confide::confide.forgot.title') }}}</div> 
-			<div class="panel-body">
+				<span class="fa fa-lock fa-lg"></span> <a href="{{ url('/') }}">{{{ Config::get('config_custom.company_name') }}}</a> - <span>{{{ Lang::get('confide::confide.forgot.title') }}}</span></div> 
+				<div class="panel-body">
 			
-				<div class="notice notice-danger hide" id="form_callback">
-					<strong><i class="fa fa-exclamation-triangle fa-2x left"></i>{{{trans('texts.error')}}}</strong> <span id="form_callback_msg"></span>
-				</div>
-					
+					<div class="notice notice-danger hide" id="form_callback">
+						<strong><i class="fa fa-exclamation-triangle fa-2x left"></i>{{{trans('texts.error')}}}</strong> <span id="form_callback_msg"></span>
+					</div>
+						
+					@if ( Session::get('error') )
+						<div class="alert alert-error alert-danger">{{{ Session::get('error') }}}</div>
+					@endif
 
-				<hr class="colorgraph" style="margin: 5px 0 20px ;">
+					@if ( Session::get('notice') )
+						<div class="alert alert-info">{{{ Session::get('notice') }}}</div>
+					@endif
+					
+					<hr class="colorgraph">
 				
 					<!-- <form class="form-horizontal" role="form" id="forgotForm" method="POST" class="login clearfix" action="{{ (Auth::check('UserController@do_forgot_password')) ?: URL::to('/user/forgot') }}" accept-charset="UTF-8"> -->
 					<form class="form-horizontal" role="form" id="forgotForm" method="POST" class="login clearfix" action="javascript:void(0);" accept-charset="UTF-8">
@@ -33,31 +41,30 @@
 							  I acknowledge that my account will be locked for a minimum of XX hours.
 							</label>
 						</div>
-				
-						<div class="form-group">
-							<button tabindex="2" class="btn btn-lg btn-success btn-block" type="submit" tabindex="2"  id="forgot_password_button"><i class="fa fa-unlock"></i> {{{ trans('texts.reset_password') }}}</button>
-						</div>
+	
+						
+						<div class="control-group">
+						<button tabindex="2" id="forgot_password_button" class="button button-yellow btn btn-lg btn-block g-recaptcha" data-sitekey="6LcdnUUUAAAAALwXU3jX_VrciJdIDmcrN1Q5UVDw" data-callback="onSubmit" type="button" >
+							<i class="fa fa-unlock fa-2x"></i> 
+							<span>{{{ trans('texts.reset_password') }}}</span>
+						</button>
+					</div>
+					
 					</fieldset>
 					</form>
 				<div>
-				
-
-
-					@if ( Session::get('error') )
-						<div class="alert alert-error alert-danger">{{{ Session::get('error') }}}</div>
-					@endif
-
-					@if ( Session::get('notice') )
-						<div class="alert alert-info">{{{ Session::get('notice') }}}</div>
-					@endif
-					
 					
 				</div>
 				
 				
 			</div>
 			<div class="panel-footer">
-
+				<div class="sign_up">
+					<a href="{{{ route('register') }}}">{{{ Lang::get('confide::confide.signup.desc') }}}</a>
+				</div>
+				<div class="forgot_password">						
+					<a href="{{{ route('forgot_password') }}}">{{{ Lang::get('confide::confide.forgot.title') }}}</a>
+				</div>
 			
 			</div>
 		</div>
@@ -69,7 +76,10 @@
 {{ HTML::script('assets/js/jquery.validate.min.js') }}
 <script type="text/javascript"> 
 
-  
+function onSubmit(token) {
+	document.getElementById("forgotForm").submit();
+}
+	
 $(document).ready(function() {
 	
 	$("#forgotForm").submit(function(event) {
@@ -146,5 +156,4 @@ $(document).ready(function() {
 
 </script>
 
-<!-- End Reset password -->
 @stop

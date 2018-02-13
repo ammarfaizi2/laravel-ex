@@ -1,10 +1,9 @@
 @extends('layouts.default')
 @section('content')
 
-
 	<div class="row">
-
 		<div class="col-12-xs col-sm-12 col-lg-12">
+		
 			<h1>{{{ trans('texts.fees')}}}</h1>  
 			<h2 style="text-align: center;">{{{ trans('texts.trding_fees')}}}</h2>
 			<p style="text-align: center;">All trading fees are collected in BTC/LTC. The buy order fee is added to the BTC/LTC order value, whereas the sell order fee is taken away from the BTC/LTC order value.<br><br></p>
@@ -42,6 +41,7 @@
 				</tbody>
 			  </table>
 			</div>
-			@stop
+			
 		</div>
 	</div>
+@stop

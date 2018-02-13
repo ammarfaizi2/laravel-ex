@@ -280,17 +280,14 @@ class UserController extends Controller
                     // Check if there was too many login attempts
                     if (Confide::isThrottled($input)) {
                         $err_msg = Lang::get('confide::confide.alerts.too_many_attempts');
-                        echo json_encode(array('status'=>'error','c'=>$c,'message'=>$err_msg));
-                        exit;
                     } elseif ($user->checkUserExists($input) and ! $user->isConfirmed($input)) {
                         $err_msg = Lang::get('confide::confide.alerts.not_confirmed');
-                        echo json_encode(array('status'=>'error','c'=>$c,'message'=>$err_msg));
-                        exit;
                     } else {
                         $err_msg = Lang::get('confide::confide.alerts.wrong_credentials');
-                        echo json_encode(array('status'=>'error','c'=>$c,'message'=>$err_msg));
-                        exit;
                     }
+					
+					echo json_encode(array('status'=>'error','c'=>$c,'message'=>$err_msg));
+					exit;
                 }
             }
         } else {
@@ -328,7 +325,22 @@ class UserController extends Controller
             ]]);
             if (isset($user->google2fa_secret) && $user->google2fa_secret) {
                 session(["tmp_login" => $input]);
-                return response()->json(["2fa"], 200);
+				
+				if (Request::get('isAjax')) {
+					echo json_encode(array('status'=>'success','c'=>true,'message'=>trans("user_texts.tfa_3"), 'callnext'=>'2fa'));
+					exit;
+					// response()->json
+					//means send back as json object, JS no need to convert to json object
+				} else {
+					return response()->json(["2fa"], 200);
+				}
+				//return json_encode(array('status'=>'success','c'=>'2fa','message'=>trans("user_texts.tfa_3")));
+				
+				//return response()->json(array('status'=>'success','c'=>'2fa','message'=>trans("user_texts.tfa_3")));
+				//return response()->json(array('status'=>'success','c'=>'2fa','message'=>trans("user_texts.tfa_3")));
+				//echo json_encode(array('status'=>'success','c'=>'2fa','message'=>trans("user_texts.tfa_3")));
+				//exit;
+				
             }
         }
     
@@ -337,7 +349,7 @@ class UserController extends Controller
         // with the second parameter as true.
         // logAttempt will check if the 'email' perhaps is the username.
         // Get the value from the config file instead of changing the controller
-        if (Confide::logAttempt($input, Config::get('confide::signup_confirm'))) {
+        if ($c = Confide::logAttempt($input, Config::get('confide::signup_confirm'))) {
             // Redirect the user to the URL they were trying to access before
             // caught by the authentication filter IE Redirect::guest('user/login').
             // Otherwise fallback to '/'
@@ -367,8 +379,9 @@ class UserController extends Controller
             } else {
                 $err_msg = Lang::get('confide::confide.alerts.wrong_credentials');
             }
+			
             if (Request::get('isAjax')) {
-                echo $err_msg;
+                echo json_encode(array('status'=>'error','c'=>$c,'message'=>$err_msg));
                 exit;
             } else {
                 return Redirect::action('UserController@login')

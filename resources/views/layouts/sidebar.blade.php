@@ -201,6 +201,9 @@ $trade = new Trade();
 															
 														?>
 															<li class="volume" id="volume-{{$btc_market->id}}" data-toggle="popover" data-placement="right" title="Volume" data-content="{{sprintf('%.8f',$total_btc)}} BTC">
+																<span class="mark_fav">
+																	  <i class="fa fa-star"></i>
+																</span> 
 																<a href="{{$marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($btc_market->id).'_BTC')}}">
 																	<span class="name">
 																		@if($btc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="bottom" title="{{$btc_market->type}}" data-content="{{trans('texts.market_disabled')}}" ></i> @endif
@@ -270,6 +273,7 @@ $trade = new Trade();
 																*/
 															?>
 																<li class="volume" id="volume-{{$ltc_market->id}}" data-toggle="popover" data-placement="right" title="Volume" data-content="{{sprintf('%.8f',$total_ltc)}} BTC">
+																	<span class="mark_fav"><i class="fa fa-star"></i></span> 
 																	<a href="{{ $marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($ltc_market->id).'_LTC')}}">
 																	<span class="name">
 																		@if($ltc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="bottom" title="{{$ltc_market->type}}" data-content="{{trans('texts.market_disabled')}}"></i> @endif
@@ -296,7 +300,20 @@ $trade = new Trade();
 										  
 										</div>
 										<div id="side_fav_market" class="tab-pane fade" role="tabpanel">
-										  <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+											<ul class="market well nano-content">
+													<li class="title">
+														<span class="name">Coin</span>
+														<span class="price">Price</span>
+														<span class="change">% Change</span>
+													</li>
+													<li class="volume" >
+														<span class="mark_fav"><i class="fa fa-star"></i></span> 
+														<a href="#">
+															<span class="name">COIN</span>
+															<span class="price">0.0000012</span>
+															<span class="change" >0% <i class="fa fa-minus"></i></span>
+														</a>
+													</li>
 										</div>
 									</div>
 								</div>

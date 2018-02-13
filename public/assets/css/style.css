@@ -4,11 +4,13 @@
 /* @import url('fonts.css'); */
 
 * {
-    font:13px "Open Sans","Lucida Sans Unicode","Lucida Grande",Arial,Helvetica,sans-serif;
+    /* font:13px "Open Sans","Lucida Sans Unicode","Lucida Grande",Arial,Helvetica,sans-serif; */
+	
 }
 html, body {
     margin: 0;
     padding: 0;
+	font:13px Montserrat, "Open Sans","Lucida Sans Unicode","Lucida Grande",Arial,Helvetica,sans-serif !important;
 	/* font: 500 16px "Dosis","Source Sans Pro",Calibri,Candara,Arial,sans-serif; */
 	
 	
@@ -278,7 +280,17 @@ button.dropdown-toggle { min-width: 100px; text-align: left;}
     /*display: inline-block;*/
 	box-shadow: 0 1px 2px #ccc
 }
-
+.panel-heading,
+.panel-footer {
+	padding: 7px 12px;
+}
+.panel-default .panel-heading span,
+.panel-default .panel-heading a{
+	font-size: 1.2em;
+}
+.panel-default .panel-footer div {
+	padding: 2px 0;
+}
 .panel-default .panel-heading {
     color: #333333;
     font-size: 1.2em;
@@ -355,7 +367,33 @@ and (min-width : 1824px) {
 }
 
 /*Sidebar*/
+.sidebar ul.market li a {
 
+}
+
+.sidebar .fa-star{
+  color: #FFCC33; /* your background color */
+  opacity: 0.5;
+}
+.sidebar .fa-star:hover{
+	color: #333;
+}
+
+.sidebar .mark_fav {
+	position: relative;
+	float: left;
+	cursor: pointer;
+	padding: 0 8px 0 0;
+	/*
+	padding: 0;
+    left: -2px;
+	*/
+	
+	
+}
+.sidebar .mark_fav:hover {
+	color: black;
+}
 .sidebar {
 	padding: 0;
 	border: 0;
