@@ -206,7 +206,6 @@ https://developers.google.com/recaptcha/docs/verify
 		                },
 		                success:function(response) {
 		                    if(response == 1){   
-		                    	alert(123123);
 		                        document.getElementById("registerForm").submit();
 		                        return true;
 		                    }else{
