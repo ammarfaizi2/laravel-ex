@@ -97,7 +97,7 @@
 		<div class="tab-content">
 			<div class="tab-pane fade active in" id="btc_market_tab">
 				<!-- BTC MARKET CONTENT-->
-				<h2 id="nav-pills" style="margin-top:0px; display: none;">BTC - Live Market Data</h2>
+				<h2 class="nav-pills" style="margin-top:0px; display: none;">BTC - Live Market Data</h2>
 				<?php
 					//var_dump($all_markets);
 					?>
@@ -127,11 +127,11 @@
 						<tr id="mainCoin-{{$am['market']->id}}" class="mainCoin">
 							<td>
 								<a href="{{$marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($am['market']->id).'_BTC')}}">
-									<img src="{{asset('')}}/{{$am['logo']}}" class="coin_icon_small" />
+									<img src="{{asset('')}}/{{$am['logo']}}" class="coin_icon_small" alt="Image of {{$am['from_name']}}"/>
 									@if($am['enable_trading'] == 0) <i class="fa fa-exclamation-triangle red" data-toggle="tooltip" data-placement="bottom" title="{{$am['from_name']}} - {{ trans('texts.market_disabled') }}" ></i> @endif
 
 									<div><span class="first_assist">{{$am['from']}} </span><span class="sec_assist">/ {{$am['to']}}</span></div>
-									<div class="third_assist vol _mobile_style_">Vol <span id="mainVolume-{{$am['market']->id}}">@if(empty($am['prices']->volume)) {{{sprintf('%.8f',0)}}}  @else {{sprintf('%.8f',$am['prices']->volume)}}  @endif</span></div>
+									<div class="third_assist vol _mobile_style_">Vol <span class="mainVolume-{{$am['market']->id}}">@if(empty($am['prices']->volume)) {{{sprintf('%.8f',0)}}}  @else {{sprintf('%.8f',$am['prices']->volume)}}  @endif</span></div>
 								</a>
 							</td>
 							<td class="from_name">
@@ -203,7 +203,7 @@
 							</td>
 							<td class="_desktop_style_">
 								<a href="{{$marketUrl}}">
-									<div class="first_assist currency_light vol"><span id="mainVolume-{{$am['market']->id}}">@if(empty($am['prices']->volume)) {{{sprintf('%.8f',0)}}}  @else {{sprintf('%.8f',$am['prices']->volume)}}  @endif</span></div>
+									<div class="first_assist currency_light vol"><span class="mainVolume-{{$am['market']->id}}">@if(empty($am['prices']->volume)) {{{sprintf('%.8f',0)}}}  @else {{sprintf('%.8f',$am['prices']->volume)}}  @endif</span></div>
 								</a>
 							</td>
 						</tr>
@@ -214,7 +214,7 @@
 			</div>
 			<div class="tab-pane fade" id="ltc_market_tab">
 				<!-- LTC MARKET CONTENT-->
-				<h2 id="nav-pills" style="margin-top:0px; display: none;">LTC - Live Market Data</h2>
+				<h2 class="nav-pills" style="margin-top:0px; display: none;">LTC - Live Market Data</h2>
 				<table  class="table table-striped table-hover market market_table" id="ltc_market_table">
 					<thead class="columnSelector-disable">
 						<tr class="header-tb">
@@ -279,7 +279,7 @@
 								<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}" class="nostrong" id="mainLowPrice-{{$am['market']->id}}"> @if(empty($coin_min_)) - @else {{$coin_min_}} @endif</a>
 							</td>
 							<td>
-								<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}" class="nostrong" id="mainVolume-{{$am['market']->id}}"> @if(empty($am['prices']->volume)) {{{sprintf('%.8f',0)}}} {{$am['to']}} @else {{sprintf('%.8f',$am['prices']->volume)}} {{$am['to']}} @endif</a>
+								<a  href="{{{ URL::to('/market/') }}}/{{$am['market']->id}}" class="nostrong mainVolume-{{$am['market']->id}}"> @if(empty($am['prices']->volume)) {{{sprintf('%.8f',0)}}} {{$am['to']}} @else {{sprintf('%.8f',$am['prices']->volume)}} {{$am['to']}} @endif</a>
 							</td>
 						</tr>
 						@endif
