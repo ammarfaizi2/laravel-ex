@@ -14,7 +14,7 @@
 		</div>
         
         <div class="navbar-inverse side-collapse in" id="navbar-main">
-            <nav role="navigation" class="navbar-collapse">
+            <nav class="navbar-collapse">
 				<ul class="nav navbar-nav">
 					<li @if(Request::is('page/voting')) {{'class="active"'}} @endif>{{ HTML::link('page/voting', trans('user_texts.voting'), array('class' => Request::is('page/voting')?'active':'')) }}</li>
 					<li @if(Request::is('page/fees')) {{'class="active"'}} @endif>{{ HTML::link('page/fees', trans('user_texts.fees'), array('class' => Request::is('page/fees')?'active':'')) }}</li>

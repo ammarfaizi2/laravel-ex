@@ -294,7 +294,10 @@
 	
 	
 
+<?php
+/*
 
+//OLD MARKETS TABLE
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
 		<h2 id="nav-pills" style="float: left; margin-top:0px;">BTC - Live Market Data</h2>
@@ -357,11 +360,11 @@
                         }
                             
                             
-                            /*
-							echo '<pre>';
-							print_r($am);
-							echo '</pre>';
-							*/
+                            
+							//echo '<pre>';
+							//print_r($am);
+							//echo '</pre>';
+							
                             ?>
                         @if ($am['market_change'] == 0)
                         <span class="change" >{{$am['market_change']}}% <i class="fa fa-minus"></i></span>
@@ -439,15 +442,15 @@
                         <span class="change down" >{{$am['market_change']}}% <i class="fa fa-arrow-down"></i></span>
                         @endif
                         <?php
-                            /*
-							@if ($am['market_change']['change'] == 0)
-								<span class="change" >{{$am['market_change']['change']}}% <i class="fa fa-minus"></i></span>
-							@elseif ($am['market_change']['change'] > 0)
-								<span class="change up" >{{$am['market_change']['change']}}% <i class="fa fa-arrow-up"></i></span>
-							@else ($am['latest_price'] < 0)
-								<span class="change down" >{{$am['market_change']['change']}}% <i class="fa fa-arrow-down"></i></span>
-							@endif
-							*/
+                            
+							//@if ($am['market_change']['change'] == 0)
+							//	<span class="change" >{{$am['market_change']['change']}}% <i class="fa fa-minus"></i></span>
+							//@elseif ($am['market_change']['change'] > 0)
+							//	<span class="change up" >{{$am['market_change']['change']}}% <i class="fa fa-arrow-up"></i></span>
+							//@else ($am['latest_price'] < 0)
+							//	<span class="change down" >{{$am['market_change']['change']}}% <i class="fa fa-arrow-down"></i></span>
+							//@endif
+							
                             ?>
                     </td>
                     <td>
@@ -466,4 +469,5 @@
         </table>
     </div>
 </div>
+*/?>
 

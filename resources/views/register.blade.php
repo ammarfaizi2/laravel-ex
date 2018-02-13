@@ -239,7 +239,7 @@ https://developers.google.com/recaptcha/docs/verify
                 },
                 username: {
                     required: true,
-                    minlength: {{ env("MIN_USERNAME_LENGTH", 5) }},
+                    minlength: 5,
 					CharNumsOnly: true,
                 }
             },

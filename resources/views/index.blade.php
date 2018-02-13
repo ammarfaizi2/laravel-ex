@@ -27,7 +27,6 @@
 	<div class="row">
 		<div id="market_place">
 			<div>
-
 				<!-- #Startpage Markets -->
 				@if(isset($show_all_markets) && $show_all_markets === true)
 					@include('blocks.startmarkets')
@@ -36,8 +35,8 @@
 				@if($market_predefined)
 					@include('blocks.predefinedmarket')
 				@endif
-			</div>
-			
+				
+			</div>			
 		</div>
 	</div>
 	{{ HTML::script('assets/js/jquery.tablesorter.js') }}
