@@ -20,14 +20,15 @@ https://developers.google.com/recaptcha/docs/verify
 					<form class="form-horizontal" id="registerForm" method="POST" action="{{{ (Auth::check('UserController@store')) ?: URL::to('user')  }}}" accept-charset="UTF-8">
 						<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
 								
-
-						@if ( Session::get('error') )
-							<div class="alert alert-error alert-danger">
-								@if ( is_array(Session::get('error')) )
-									{{ head(Session::get('error')) }}
-								@endif
-							</div>
-						@endif
+						<div class="alert alert-error alert-danger" id="alert_field">
+							@if ( Session::get('error') )
+								
+									@if ( is_array(Session::get('error')) )
+										{{ head(Session::get('error')) }}
+									@endif
+								
+							@endif
+						</div>
 
 						@if ( Session::get('notice') )
 							<div class="alert alert-info">{{ Session::get('notice') }}</div>
@@ -117,7 +118,7 @@ https://developers.google.com/recaptcha/docs/verify
 
 							
 					<div class="control-group">
-						<button id="login_ajax" tabindex="4" class="button button-green btn btn-lg btn-block g-recaptcha" data-sitekey="6LcdnUUUAAAAALwXU3jX_VrciJdIDmcrN1Q5UVDw" data-callback="onSubmit" type="button" >
+						<button id="login_ajax" tabindex="4" class="button button-green btn btn-lg btn-block g-recaptcha" data-sitekey="6LcdnUUUAAAAALwXU3jX_VrciJdIDmcrN1Q5UVDw" data-callback="onSubmit" type="submit" >
 							<i class="fa fa-user-plus fa-2x"></i> 
 							<span>{{{ Lang::get('confide::confide.signup.submit') }}}</span>
 						</button>
@@ -140,59 +141,133 @@ https://developers.google.com/recaptcha/docs/verify
 </div>
 {{ HTML::script('assets/js/jquery.validate.min.js') }}
 <script type="text/javascript">
-    $(document).ready(function() {
+	var formDom = $("#registerForm")[0];
+	var urlAction = formDom.action;
+		formDom.action = "javascript:void(0);";
+	var aldom = $("#alert_field")[0];
+		aldom.style.display = "none";
+	function showAlert(msg, customClosure = null)
+	{
+		if (customClosure !== null) {
+			customClosure();
+		}
+		let aldom = $("#alert_field")[0];
+		aldom.style.display = "none";
+		aldom.innerHTML = msg;
+		aldom.style.display = "";
+	}
+	function s(param1, param2 = null)
+	{
+		return function () {
+			showAlert(param1, param2);
+		};
+	}
+	$(document).ready(function() {
         $.validator.addMethod("CharNumsOnly", function(value, element) {
             return this.optional(element) || /^[a-z0-9 _@\-]+$/i.test(value);
         }, "This field must contain only letters, numbers, or dashes.");
 
         $("#registerForm").validate({
+        	submitHandler: function(form) {
+        		if ($("#termsofservice")[0].checked) {
+        			let aldom = $("#alert_field")[0];
+					aldom.style.display = "none";
+	        		var form = $("#registerForm")[0];
+					var postContext = "_token={{csrf_token()}}&",
+						inputs = [
+							form.getElementsByTagName("input")
+						],
+						i, ii;
+					for (ii in inputs) {
+						input = inputs[ii];
+						for (i = 0 ; i < input.length; i++) {
+							if (! input[i].disabled) {
+								if (input[i].name !== "") {
+									postContext += encodeURIComponent(input[i].name) + "=";
+									if (input[i].value !== "") {
+										postContext += encodeURIComponent(input[i].value);
+									}
+									postContext += "&";
+								}
+							}
+						}
+					}
+					postContext = postContext.substr(0, postContext.length - 1);
+					var challengeField = $("input#recaptcha_challenge_field").val(), 
+						responseField = $("input#recaptcha_response_field").val(); 
+		            $.ajax({
+		                url: '<?php echo action('UserController@checkCaptcha')?>',
+		                type: 'POST',
+		                datatype: 'json',
+		                data: "recaptcha_challenge_field="+encodeURIComponent(challengeField)+"&recaptcha_response_field="+encodeURIComponent(responseField),
+		                beforeSend: function(request) {
+		                    return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
+		                },
+		                success:function(response) {
+		                    if(response == 1){   
+		                        document.getElementById("registerForm").submit();
+		                        return true;
+		                    }else{
+		                        /*$("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");*/
+		                        s("Your captcha is incorrect. Please try again")();
+		                        Recaptcha.reload();
+		                        return false;
+		                    }
+		                }, error:function(response) {
+		                    showMessageSingle('{{{ trans('texts.error') }}}', 'error');
+		                }
+		            });
+		        } else {
+		        	s("Please accept our TOS.")();
+		        }
+  			},
             rules: {
-                password: {
-                    required: true,
-                    minlength: 8
-                },
-                password_confirmation: {
+            	password_confirmation: {
                     required: true,
                     minlength: 8,
                     equalTo: "#password"
                 },
-				username: {
+                password: {
                     required: true,
-                    minlength: 5,
-					CharNumsOnly: true,
+                    minlength: 8
                 },
                 email: {
                     CharNumsOnly: false,
                     required: true,
                     email: true
                 },
-                termsofservice: "required"
+                username: {
+                    required: true,
+                    minlength: 5,
+					CharNumsOnly: true,
+                }
             },
             messages: {
+            	password_confirmation: {
+                    required: s("Please provide a password."),
+                    minlength: s("Your password must be at least 8 characters long."),
+                    equalTo: s("Please enter the same password as above.")
+                },
                 password: {
-                    required: "Please provide a password.",
-                    minlength: "Your password must be at least 8 characters long."
-                },
-                confirm_password: {
-                    required: "Please provide a password.",
-                    minlength: "Your password must be at least 8 characters long.",
-                    equalTo: "Please enter the same password as above."
-                },
-                username: {
-                    required: "Please enter a username.",
-                    CharNumsOnly: "Username must contain only letters, numbers, or dashes.",
+                    required: s("Please provide a password."),
+                    minlength: s("Your password must be at least 8 characters long.")
                 },
                 email: {
-                    email: "Please enter a valid email address.",
-                    CharNumsOnly: "Email Address must contain only letters, numbers, or dashes.",
+                	required: s("Please enter a username."),
+                    email: s("Please enter a valid email address."),
+                    CharNumsOnly: s("Email Address must contain only letters, numbers, or dashes."),
                 },
-                termsofservice: "Please accept our TOS.<span><span></span></span>"
+                username: {
+                    required: s("Please enter a username."),
+                    CharNumsOnly: s("Username must contain only letters, numbers, or dashes.")
+                }
             }
-    });
+    	});
 
-       
+      /* 
         $("#registerForm").submit(function(event) {
           event.preventDefault();
+          
             var challengeField = $("input#recaptcha_challenge_field").val();
             var responseField = $("input#recaptcha_response_field").val(); 
             console.log('responseField',responseField);         
@@ -207,8 +282,8 @@ https://developers.google.com/recaptcha/docs/verify
                 },
                 success:function(response) {
                     if(response == 1){   
-                        //document.getElementById("registerForm").submit();
-						alert(response);
+                        document.getElementById("registerForm").submit();
+						// alert(response);
                         return true;
                     }else{
                         $("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");
@@ -220,7 +295,7 @@ https://developers.google.com/recaptcha/docs/verify
                 }
             });
             
-            <?
+            <?php
             /*
             $.post('<?php echo action('UserController@checkCaptcha')?>', {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField }, function(response){
                 if(response == 1){   
@@ -234,7 +309,7 @@ https://developers.google.com/recaptcha/docs/verify
             });
             */
             ?>
-        });
+        });*/
 		
 		
    });
