@@ -161,7 +161,16 @@ class UserController extends Controller
         // Save if valid. Password field will be hashed before save
         $user->save();
 
+
         if ($user->id) {
+            Mail::to(Request::get('email'))
+            ->send(new \App\Mail\ConfirmAccount(
+                [
+                    "username" => $user->username,
+                    "email" => $user->email
+                ]
+            ));
+
             $user->addRole('User');
             
                 //Only during beta test
