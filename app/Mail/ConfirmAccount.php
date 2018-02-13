@@ -43,7 +43,8 @@ class ConfirmAccount extends Mailable
                 [
                     'user' => [
                         'username' => $user["username"], 
-                        'email' => $user["email"]
+                        'email' => $user["email"],
+                        'confirmation_code' => $token,
                     ], 
                     'confirmation_code' => $token,
                     'token' => $token
