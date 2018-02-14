@@ -1,7 +1,7 @@
 <div id="header" class="navbar navbar-default navbar-fixed-top">
 	<div class="container">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="<?php echo url('/', $parameters = array(), $secure = null);?>">
+			<a class="navbar-brand" href="{{ url('/') }}">
 				{{{ Config::get('config_custom.company_name') }}}
 			</a>
 			<!-- <button data-target="#navbar-main" data-toggle="collapse" type="button" class="navbar-toggle collapsed" aria-expanded="false"> -->
@@ -17,13 +17,6 @@
             <nav class="navbar-collapse">
 				<ul class="nav navbar-nav">
 					<li @if(Request::is('page/voting')) {{'class="active"'}} @endif>{{ HTML::link('page/voting', trans('user_texts.voting'), array('class' => Request::is('page/voting')?'active':'')) }}</li>
-					<li @if(Request::is('page/fees')) {{'class="active"'}} @endif>{{ HTML::link('page/fees', trans('user_texts.fees'), array('class' => Request::is('page/fees')?'active':'')) }}</li>
-					@if(isset($menu_pages))
-						@foreach($menu_pages as $menu_page)
-							<li @if(Request::is('post/'.$menu_page->permalink)) {{'class="active"'}} @endif>{{ HTML::link('post/'.$menu_page->permalink, $menu_page->title, array('class' => Request::is('post/'.$menu_page->permalink)?'active':'')) }}</li>
-						@endforeach
-					@endif
-					<li @if(Request::is('page/api')) {{'class="active"'}} @endif><a href="{{ url('page/api') }}"><i class="fa fa-file"></i> {{trans('user_texts.api')}}</a> </li>
 				</ul>
             <!--Lang menu  start-->
             <?php
@@ -69,7 +62,7 @@
                         <div id="popoverMarketSelectorTarget"></div>
                     </div>
                 </li>
-				<li class="btc_price">
+				<li class="nav-btn btc_price">
 					<span class="">
 						BTC = $
 					</span>
@@ -77,8 +70,17 @@
 				
 
                 @if ( Auth::guest() )
-					<li @if(Request::is('register')) {{'class="active"'}} @endif><a href="<?=url('/', $parameters = array(), $secure = null);?>/user/register" class="navitem login {{Request::is('register')?'active':''}}"><i class="fa fa-user-plus"></i> {{trans('user_texts.register')}}</a></li>
-					<li @if(Request::is('login')) {{'class="active"'}} @endif><a href="<?=url('/', $parameters = array(), $secure = null);?>/login" class="navitem login {{Request::is('login')?'active':''}}"><i class="fa fa-sign-in"></i> {{trans('user_texts.login')}}</a></li>
+					
+					<li class="nav-btn register {{Request::is('register')?'active':''}}">
+						<span class="">
+						<a href="{{ url('/user/register') }}" class="navitem register {{Request::is('register')?'active':''}}"><i class="fa fa-user-plus"></i> {{trans('user_texts.register')}}</a>
+						</span>
+					</li>
+					<li class="nav-btn login {{Request::is('login')?'active':''}}">
+						<span class="">
+						<a href="{{ url('/login') }}" class="navitem login {{Request::is('login')?'active':''}}"><i class="fa fa-sign-in"></i> {{trans('user_texts.login')}}</a>
+						</span>
+					</li>
                 @else
 				<li class="">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{trans('user_texts.hello')}} {{Confide::user()->username}} <b class="caret"></b></a>

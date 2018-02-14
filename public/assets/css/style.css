@@ -288,6 +288,9 @@ button.dropdown-toggle { min-width: 100px; text-align: left;}
 .panel-default .panel-heading a{
 	font-size: 1.2em;
 }
+.panel-default .panel-heading a:hover{
+	text-decoration: none;
+}
 .panel-default .panel-footer div {
 	padding: 2px 0;
 }
@@ -450,6 +453,7 @@ and (min-width : 1824px) {
 }
 .sidebar .sidebar_tabs .nav>li.navbar-right {
 	margin-right: 0;
+	float: right;
 }
 .sidebar .sidebar_tabs .nav>li>a{
 	padding: 5px 10px;
@@ -677,7 +681,7 @@ and (min-width : 1824px) {
 
 
 /* Footer */
-#footer {
+.footer {
 	
     background-color: #171717;
     color: #bbb;
@@ -752,18 +756,21 @@ https://codepen.io/anon/pen/PQzQNE
   border-radius: 4px;
   cursor: pointer;
   display: inline-block;
-  font-family: Verdana, sans-serif;
   font-size: 12px;
   font-weight: bold;
   line-height: 20px;
   padding: 9px 16px 9px;
   transition: all 20ms ease-out;
   vertical-align: top;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px #333;
 }
 .button:hover, .button:focus {
   background: #f2f2f2;
   border-color: #8c8c8c;
   box-shadow: inset 0 1px 0 white, inset 0 -1px 0 #d9d9d9, inset 0 0 0 1px #f2f2f2;
+  color: #FFF;
+  text-decoration: none;
 }
 .button:active {
   background: #f2f2f2;
@@ -774,6 +781,9 @@ https://codepen.io/anon/pen/PQzQNE
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
+.button .fa-2x {
+	font-size:20px;
+}
 .button-blue {
   background-color: #42b0e3;
   background-image: linear-gradient(to bottom, #42b0e3, #2ba9e3);
@@ -1016,12 +1026,16 @@ https://codepen.io/anon/pen/PQzQNE
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .button.btn-lg{
-	padding: 10px 16px;
+	padding: 10px 20px;
 	font-size: 18px;
 	line-height: 1.3333333;
 	border-radius: 6px;
 }
-.button .fa {
+.uppercase {
+	text-transform: uppercase !important;
+}
+.lowercase {
+	text-transform: lowercase !important;
 }
 .button .fa {
   /*
@@ -1031,10 +1045,6 @@ https://codepen.io/anon/pen/PQzQNE
   margin: -1px 8px 0 -4px;
   vertical-align: top;
   */
-}
-.button:hover {
-	color: inherit !important;
-	text-decoration: none;
 }
 
 	/* Startpage - Content Data*/
@@ -1355,8 +1365,6 @@ input, textarea, select {
 	margin:0;
 	padding:4px 6px;
 }
-
-
 .row {
 	margin:0;
 	padding:0;
@@ -1364,12 +1372,6 @@ input, textarea, select {
 .row .row_break {
 	margin-top: 10px;
 }
-
-
-
-
-
-
 
 ul.market {
 	/*background:#fff;*/
@@ -1739,19 +1741,39 @@ table.market_table tbody tr td:nth-child(5) {
 	}
 }
 
-.btc_price {
-border-radius: 3px;
-background-color: #000;
-margin: 10px 0 0 0;
-padding: 5px;
-border: 1px solid #333;
-cursor: pointer;
+.navbar-nav li.nav-btn {
+	border-radius: 3px;
+	background-color: #000;
+	margin: 10px 0 0 5px;
+	padding: 5px;
+	border: 2px solid #333;
+	cursor: pointer;
 }
 
-.btc_price span {
+.nav-btn span a{
+	color: #FFF;
+}
+.nav-btn span a:hover{
+	color: #FFF;
+	text-decoration: none;
+}
+.nav-btn span  {
 	margin-top: 10px;
 	color: #FFFCCC;
 	/* width: 100%; */
+}
+
+.navbar-nav > li.nav-btn.register {
+	border-color: #8bcc62;
+}
+.navbar-nav > li.nav-btn.login {
+	border-color: #2ba9e3;
+}
+.navbar-nav > li.nav-btn.register:hover{
+	border-color: #FFF;
+}
+.navbar-nav > li.nav-btn.login:hover {
+	border-color: #FFF;
 }
 
 /*
@@ -2179,4 +2201,17 @@ input#sidebar_search_market{
 }
 .modal-header .modal-title {
 	color: #FFF;
+}
+
+.input-group .error{
+	display: none;
+	margin-left: 10px;
+	color: red;
+}
+input.invalid, textarea.invalid{
+	border: 2px solid red;
+}
+
+input.valid, textarea.valid{
+	border: 2px solid green;
 }

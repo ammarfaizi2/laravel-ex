@@ -20,8 +20,8 @@
 				@endif
 
 				@if ( Session::get('notice') )
-					<div class="notice notice-warning">
-						<strong><i class="fa fa-exclamation-triangle fa-2x left"></i>{{{trans('texts.notice')}}}</strong> {{{ Session::get('notice') }}}
+					<div class="notice notice-success">
+						<strong><i class="fa fa-exclamation-triangle fa-2x left"></i>{{{trans('texts.success')}}}</strong> {{{ Session::get('notice') }}}
 					</div>
 				@endif
 				

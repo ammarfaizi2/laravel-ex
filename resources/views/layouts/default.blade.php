@@ -92,23 +92,30 @@ $(document).ready(function() {
 				<!-- Sidebar -->
 				@include('layouts.sidebar')
 				<!-- End Sidebar -->
+				
+				<!-- Content -->
 				<div id="main">
 					@yield('content')
 				</div>
+				<!-- End Content -->
+				
+				<!-- Footer -->
+					@include('layouts.footer')
+				<!-- End Footer -->
+				
 			</div>
 			<div class="clear"></div>
 		</div>
-		<!--Google 2fa -->
+		
 		@if(isset($need2fa) and $need2fa === true)
+			<!--Google 2fa -->
 			<?php $user = Confide::user(); ?>
 			@if($user->google2fa_secret)
 				@include('2fa_form_handler')
 			@endif
 		@endif
 	
-		<!-- Footer -->
-			@include('layouts.footer')
-		<!-- End Footer -->
+
 		
 		<!-- Overlay -->
 		<div class="side-content-overlay hide"></div>

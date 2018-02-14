@@ -19,8 +19,18 @@ https://developers.google.com/recaptcha/docs/verify
  
 					<form class="form-horizontal" id="registerForm" method="POST" action="{{{ (Auth::check('UserController@store')) ?: URL::to('user')  }}}" accept-charset="UTF-8">
 						<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
-								
-						<div class="alert alert-error alert-danger" id="alert_field">
+											
+						<div class="notice notice-danger" id="alert_field">
+							<strong><i class="fa fa-exclamation-triangle fa-2x left"></i>{{{trans('texts.error')}}}</strong>
+							
+							<ul class="alert_field">
+								<li class="hide username_msg">Username must contain only letters, numbers, or dashes and have a minimum of {{ env("MIN_USERNAME_LENGTH", 5) }} chars</li>
+								<li class="hide email_msg">A valid email address is required</li>
+								<li class="hide password_msg">Your password must be at least 8 characters long</li>
+								<li class="hide password_confirm_msg">Your confirmed password is not the same!</li>
+								<li class="hide termsofservice_msg">ToS must be accepted!</li>
+							</ul>
+
 							@if ( Session::get('error') )
 									
 									@if ( is_array(Session::get('error')) )
@@ -40,7 +50,9 @@ https://developers.google.com/recaptcha/docs/verify
 						<div class="form-group">
 							<div class="col-lg-12 input-group">
 								<span class="input-group-addon"><i class="fa fa-user fa-lg"></i></span>
-								<input tabindex="1" minlength="4" type="text" class="form-control" placeholder="{{{ Lang::get('confide::confide.username') }}}" name="username" id="username" value="{{{ Request::old('username') }}}" required>
+								<input tabindex="1" minlength="5" type="text" class="form-control" placeholder="{{{ Lang::get('confide::confide.username') }}}" name="username" id="username" value="{{{ Request::old('username') }}}" required>
+								
+								
 							</div>
 						</div>
 						<div class="form-group">
@@ -61,65 +73,23 @@ https://developers.google.com/recaptcha/docs/verify
 									<input type="password" class="form-control" tabindex="4" name="password_confirmation" id="password_confirmation" placeholder="{{{ Lang::get('confide::confide.password_confirmation') }}}" required>
 							</div>
 						</div>
-					<?php
-							/*
-							<h3>Security Questions</h3>
-							Please answer two security questions below, these will be used if you ever lose access to your account.<br>Be aware that these answers cannot be changed once you have set up your account.<br><br>
-							<table class="table register">
-								<tbody>
-									<tr>
-										<th style="width:180px;">Security Question 1</th>
-										<td>
-											<select name="question1" class="form-control">
-												@foreach($question1s as $question1)
-													<option value="{{$question1->id}}" @if(Request::old('question1')==$question1->id) selected @endif>{{$question1->questions}}</option>
-												@endforeach
-												<!-- <option value="1">What was the name of your first school?</option>
-												<option value="2">In what city or town was your first job?</option>
-												<option value="3">What is the name of your favorite childhood friend?</option>
-												<option value="4">Who was your childhood hero?</option>
-												<option value="5">Where were you when you had your first alcoholic drink or cigarette?</option>
-												<option value="6">Where were you when you had your first kiss?</option>
-												<option value="7">Where did you meet your significant other?</option> -->
-											</select>
-											<input type="text" name="answer1" value="{{{ Request::old('answer1') }}}">
-										</td>
-									</tr>
-								<tr>
-									<th>Security Question 2</th>
-										<td>
-											<select name="question2" class="form-control">
-												@foreach($question2s as $question2)
-													<option value="{{$question2->id}}" @if(Request::old('question2')==$question2->id) selected @endif>{{$question2->questions}}</option>
-												@endforeach
-												<!-- <option value="1">What is the name of your first pet?</option>
-												<option value="2">What street did you grow up on?</option>
-												<option value="3">What was the name of the hospital where you were born?</option>
-												<option value="4">What was your dream job as a child?</option>
-												<option value="5">What country is your dream holiday destination?</option>
-												<option value="6">What was the make and model of your first car?</option>
-												<option value="7">What is your mother's maiden name?</option> -->
-											</select>
-										<input type="text" name="answer2" value="{{{ Request::old('answer2') }}}">
-									</td>
-								</tr>
-								</tbody>
-							</table>
-							*/
-							?>
-
-
 
 
 					<div id="captchaStatus"></div>
 
-					<input type="checkbox" name="termsofservice" id="termsofservice"><label for="termsofservice">&nbsp; {{trans('user_texts.i_agree_terms')}}</label> {{ HTML::link('post/terms', trans('user_texts.term_service')) }}<a href="/terms/"></a>.
-								
+					<div>
+						<input type="checkbox" name="termsofservice" id="termsofservice"><label for="termsofservice">&nbsp; {{trans('user_texts.i_agree_terms')}}</label> {{ HTML::link('post/terms', trans('user_texts.term_service')) }}<a href="/terms/"></a>.
+						
+					</div>
+					
 					<input type="hidden" value="@if(isset($referral)){{$referral}}@else{{{Request::old('referral')}}}@endif" name="referral">
 
 							
 					<div class="control-group">
-						<button id="login_ajax" tabindex="4" class="button button-green btn btn-lg btn-block g-recaptcha" data-sitekey="6LcdnUUUAAAAALwXU3jX_VrciJdIDmcrN1Q5UVDw" data-callback="onSubmit" type="submit" >
+						<button id="register_ajax" tabindex="4" class="button button-green btn btn-lg btn-block " type="submit" >Test</button>
+						<!-- <button id="login_ajax" tabindex="4" class="button button-green btn btn-lg btn-block g-recaptcha" data-sitekey="6LcdnUUUAAAAALwXU3jX_VrciJdIDmcrN1Q5UVDw" data-callback="onSubmit" type="submit" > -->
+						
+						<button id="login_ajax" tabindex="4" class="button button-green btn btn-lg btn-block " type="submit" >
 							<i class="fa fa-user-plus fa-2x"></i> 
 							<span>{{{ Lang::get('confide::confide.signup.submit') }}}</span>
 						</button>
@@ -142,163 +112,133 @@ https://developers.google.com/recaptcha/docs/verify
 </div>
 {{ HTML::script('assets/js/jquery.validate.min.js') }}
 <script type="text/javascript">
-	var formDom = $("#registerForm")[0];
-	var aldom = $("#alert_field")[0];
-	@if (! Session::get('error'))
-		aldom.style.display = "none";
-	@endif		
-	function showAlert(msg, customClosure = null)
-	{
-		if (customClosure !== null) {
-			customClosure();
+$(document).ready(function() {
+
+// Username can't be blank
+$('#username').on('input', function() {
+	var input=$(this);
+	var is_username=input.val();
+	if(is_username.length >= {{ env("MIN_USERNAME_LENGTH", 5) }}){
+		input.removeClass("invalid").addClass("valid");
+		$('.username_msg').addClass("hide");
+	}
+	else{
+		input.removeClass("valid").addClass("invalid");
+		$('.username_msg').removeClass("hide");
+	}
+});
+
+// Email must be an email
+$('#email').on('input', function() {
+	var input=$(this);
+	var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	var is_email=re.test(input.val());
+	if(is_email){input.removeClass("invalid").addClass("valid");}
+	else{input.removeClass("valid").addClass("invalid");}
+});
+// Password can't be blank
+$('#password').on('input', function() {
+	var input=$(this);
+	var is_password=input.val();
+	if(is_password.length >= 8){input.removeClass("invalid").addClass("valid");}
+	else{input.removeClass("valid").addClass("invalid");}
+});
+// Password can't be blank
+$('#password_confirmation').on('input', function() {
+	var input=$(this);
+	var is_password=input.val();
+	if(is_password == $('#password').val() ){input.removeClass("invalid").addClass("valid");}
+	else{input.removeClass("valid").addClass("invalid");}
+});
+
+// After Form Submitted Validation
+$("#registerForm button#register_ajax").click(function(event){
+	event.preventDefault(); 
+	console.log("============================");
+	var i, s, form_inputs = ["username", "email", "password", "password_confirm", "termsofservice"], len = form_inputs.length;
+	for(i=0; i<len; ++i){
+		if (i in form_inputs){
+			s= form_inputs[i];
+				//do something with s
+			console.log("s->: "+s);
+			//$("#"+s).next().html("test "+s);
+			$("."+s+"_msg").removeClass("hide");
+		}else{
+			console.log("wot ?");
 		}
-		let aldom = $("#alert_field")[0];
-		aldom.style.display = "none";
-		aldom.innerHTML = msg;
-		aldom.style.display = "";
 	}
-	function s(param1, param2 = null)
-	{
-		return function () {
-			showAlert(param1, param2);
-		};
+	event.preventDefault(); 
+	//https://formden.com/blog/validate-contact-form-jquery
+	/*
+	var form_data=$("#registerForm").serializeArray();
+	var error_free=true;
+	console.log(form_data);
+	
+	if( $("#termsofservice").is(':checked') ){ 
+		var error_element=$("span", $("#registerForm  #termsofservice").parent());
+		error_element.removeClass("error").addClass("hide"); error_free=true; 
+		
+			
+	}else{
+		var error_element=$("span", $("#registerForm #termsofservice").parent());
+		error_element.removeClass("hide").addClass("error"); error_free=false; 
 	}
-	$(document).ready(function() {
-        $.validator.addMethod("CharNumsOnly", function(value, element) {
-            return this.optional(element) || /^[a-z0-9 _@\-]+$/i.test(value);
-        }, "This field must contain only letters, numbers, or dashes.");
+	
+	for (var input in form_data){
+		form_input_name = form_data[input]['name'];
+		if(form_input_name != "g-recaptcha-response" && form_input_name != "referral" && form_input_name != "_token"){
+			var element=$("#registerForm #"+form_input_name);
+			console.log('element: '+"#registerForm #"+form_input_name);
+			var valid=element.hasClass("valid");
+			var error_element=$("span", element.parent());
+			if (!valid){error_element.removeClass("error").removeClass("hide"); error_free=false;}
+			else{error_element.removeClass("hide").addClass("error"); }
+		}
+	}
+	
+	if (!error_free){
+		event.preventDefault(); 
+		alert("errors founds");
+	}
+	else{
+		alert('No errors: Form will be submitted');
+	}
+	*/
+});
 
-        $("#registerForm").validate({
-        	submitHandler: function(form) {
-        		if ($("#termsofservice")[0].checked) {
-        			let aldom = $("#alert_field")[0];
-					aldom.style.display = "none";
-	        		var form = $("#registerForm")[0];
-					var postContext = "_token={{csrf_token()}}&",
-						inputs = [
-							form.getElementsByTagName("input")
-						],
-						i, ii;
-					for (ii in inputs) {
-						input = inputs[ii];
-						for (i = 0 ; i < input.length; i++) {
-							if (! input[i].disabled) {
-								if (input[i].name !== "") {
-									postContext += encodeURIComponent(input[i].name) + "=";
-									if (input[i].value !== "") {
-										postContext += encodeURIComponent(input[i].value);
-									}
-									postContext += "&";
-								}
-							}
-						}
-					}
-					postContext = postContext.substr(0, postContext.length - 1);
-					var challengeField = $("input#recaptcha_challenge_field").val(), 
-						responseField = $("input#recaptcha_response_field").val(); 
-		            $.ajax({
-		                url: '<?php echo action('UserController@checkCaptcha')?>',
-		                type: 'POST',
-		                datatype: 'json',
-		                data: "recaptcha_challenge_field="+encodeURIComponent(challengeField)+"&recaptcha_response_field="+encodeURIComponent(responseField),
-		                beforeSend: function(request) {
-		                    return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
-		                },
-		                success:function(response) {
-		                    if(response == 1){   
-		                        document.getElementById("registerForm").submit();
-		                        return true;
-		                    }else{
-		                        /*$("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");*/
-		                        s("Your captcha is incorrect. Please try again")();
-		                        Recaptcha.reload();
-		                        return false;
-		                    }
-		                }, error:function(response) {
-		                    showMessageSingle('{{{ trans('texts.error') }}}', 'error');
-		                }
-		            });
-		        } else {
-		        	s("Please accept our TOS.")();
-		        }
-  			},
-            rules: {
-            	password_confirmation: {
-                    required: true,
-                    minlength: 8,
-                    equalTo: "#password"
-                },
-                password: {
-                    required: true,
-                    minlength: 8
-                },
-                email: {
-                    CharNumsOnly: false,
-                    required: true,
-                    email: true
-                },
-                username: {
-                    required: true,
-                    minlength: {{ env("MIN_USERNAME_LENGTH", 5) }},
-					CharNumsOnly: true,
-                }
-            },
-            messages: {
-            	password_confirmation: {
-                    required: s("Please provide a password."),
-                    minlength: s("Your password must be at least 8 characters long."),
-                    equalTo: s("Please enter the same password as above.")
-                },
-                password: {
-                    required: s("Please provide a password."),
-                    minlength: s("Your password must be at least 8 characters long.")
-                },
-                email: {
-                	required: s("Please enter a username."),
-                    email: s("Please enter a valid email address."),
-                    CharNumsOnly: s("Email Address must contain only letters, numbers, or dashes."),
-                },
-                username: {
-                    required: s("Please enter a username."),
-                    CharNumsOnly: s("Username must contain only letters, numbers, or dashes.")
-                }
-            }
-    	});
-
-      /* 
+       
         $("#registerForm").submit(function(event) {
-          event.preventDefault();
-          
+			/*
+			event.preventDefault();
             var challengeField = $("input#recaptcha_challenge_field").val();
             var responseField = $("input#recaptcha_response_field").val(); 
             console.log('responseField',responseField);         
-            
-            $.ajax({
-                type: 'post',
-                url: '<?php echo action('UserController@checkCaptcha')?>',
-                datatype: 'json',
-                data: {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField },
-                beforeSend: function(request) {
-                    return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
-                },
-                success:function(response) {
-                    if(response == 1){   
-                        document.getElementById("registerForm").submit();
-						// alert(response);
-                        return true;
-                    }else{
-                        $("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");
-                        Recaptcha.reload();
-                        return false;
-                    }
-                }, error:function(response) {
-                    showMessageSingle('{{{ trans('texts.error') }}}', 'error');
-                }
-            });
-            
-            <?php
-            /*
-            $.post('<?php echo action('UserController@checkCaptcha')?>', {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField }, function(response){
+			
+			$.ajax({
+				type: 'post',
+				url: '<?php echo action('UserController@checkCaptcha')?>',
+				datatype: 'json',
+				data: {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField },
+				beforeSend: function(request) {
+					return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
+				},
+				success:function(response) {
+					if(response == 1){   
+						document.getElementById("registerForm").submit();                  
+						return true;
+					}else{
+						$("#captchaStatus").html("<label class='error'>Your captcha is incorrect. Please try again</label>");
+						Recaptcha.reload();
+						return false;
+					}
+				}, error:function(response) {
+					showMessageSingle('{{{ trans('texts.error') }}}', 'error');
+				}
+			});
+			*/
+            <?
+			/*
+			$.post('<?php echo action('UserController@checkCaptcha')?>', {recaptcha_challenge_field: challengeField, recaptcha_response_field: responseField }, function(response){
                 if(response == 1){   
                     document.getElementById("registerForm").submit();                  
                     return true;
@@ -308,17 +248,16 @@ https://developers.google.com/recaptcha/docs/verify
                     return false;
                 }
             });
-            */
-            ?>
-        });*/
-		
-		
+			*/
+			?>
+        });
    });
-
-
+   
 	function onSubmit(token) {
-		document.getElementById("registerForm").submit();
+		//document.getElementById("registerForm").submit();
+		console.log("form validate is calling");
+		//$("#registerForm").validate();		
 	}
-
+	
 </script>
 @stop

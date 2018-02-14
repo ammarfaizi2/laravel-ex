@@ -15,7 +15,6 @@
 		{{ HTML::style('assets/css/bootstrap-dialog.min.css') }}
 		{{ HTML::style('assets/css/pnotify.custom.min.css') }}
 
-		{{ HTML::style('assets/css/main.css') }}	
 		{{ HTML::style('assets/css/style.css') }}	
 		
 
@@ -28,7 +27,7 @@
 		{{ HTML::script('assets/js/bootstrap-dialog.min.js') }}
 		{{ HTML::script('assets/js/custom.js') }}
 	
-		<!-- <script src="//www.google.com/recaptcha/api.js" async defer></script> -->
+		<script src="//www.google.com/recaptcha/api.js" async defer></script>
 	</head>
 <body class="@if ( Auth::guest() ) guest @else logged @endif">
     <!-- Content -->

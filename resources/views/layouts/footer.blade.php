@@ -89,8 +89,19 @@
 */
 ?>
 <div class="row">
-		<div id="footer">
+		<div class="footer">
 			Copyright &copy; <?php echo date('Y')?> <strong>{{{ Config::get('config_custom.company_name') }}}</strong>. All Rights Reserved. {{{ Config::get('config_custom.company_slogan') }}}.
+			<br />
+			<p>
+			@if(isset($menu_pages))
+				@foreach($menu_pages as $menu_page)
+					<span @if(Request::is('post/'.$menu_page->permalink)) {{'class="active"'}} @endif>{{ HTML::link('post/'.$menu_page->permalink, $menu_page->title, array('class' => Request::is('post/'.$menu_page->permalink)?'active':'')) }}</span> |
+				@endforeach
+			@endif
+			<span @if(Request::is('page/fees')) {{'class="active"'}} @endif>{{ HTML::link('page/fees', trans('user_texts.fees'), array('class' => Request::is('page/fees')?'active':'')) }}</span> | 
+			<span @if(Request::is('page/api')) {{'class="active"'}} @endif><a href="{{ url('page/api') }}"><i class="fa fa-file"></i> {{trans('user_texts.api')}}</a> </span>
+					
+			</p>
 		</div>
 </div>
 

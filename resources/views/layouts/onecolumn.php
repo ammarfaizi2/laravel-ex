@@ -24,7 +24,6 @@
 		{{ HTML::style('assets/css/bootstrap-dialog.min.css') }}
 		
 		
-		{{ HTML::style('assets/css/main.css') }}	
 		{{ HTML::style('assets/css/style.css') }}	
 		
 		{{ HTML::style('assets/css/pnotify.custom.min.css') }}	
