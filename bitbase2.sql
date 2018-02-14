@@ -32,7 +32,7 @@ CREATE TABLE `balance` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `balance` (`id`, `user_id`, `amount`, `wallet_id`) VALUES
-(1, 194,  102.17105257, 23),
+(1, 194,  102.16804957, 23),
 (2, 194,  2381065,  25),
 (3, 194,  1004334,  39),
 (4, 194,  781.79543188, 24),
@@ -50,7 +50,7 @@ INSERT INTO `balance` (`id`, `user_id`, `amount`, `wallet_id`) VALUES
 (16,  196,  1000, 24),
 (17,  196,  1000000,  34),
 (18,  196,  1000000,  45),
-(19,  197,  10, 23),
+(19,  197,  9.9800005,  23),
 (20,  197,  1000000,  25),
 (21,  197,  1000000,  39),
 (22,  197,  1000, 24),
@@ -164,7 +164,119 @@ INSERT INTO `balance` (`id`, `user_id`, `amount`, `wallet_id`) VALUES
 (130, 212,  1000000,  45),
 (131, 212,  5000000,  49),
 (132, 212,  5000000,  50),
-(133, 212,  1000, 24);
+(133, 212,  1000, 24),
+(134, 215,  10, 23),
+(135, 215,  1000000,  25),
+(136, 215,  1000000,  39),
+(137, 215,  1000000,  34),
+(138, 215,  1000000,  45),
+(139, 215,  5000000,  49),
+(140, 215,  5000000,  50),
+(141, 215,  1000, 24),
+(142, 216,  10, 23),
+(143, 216,  1000000,  25),
+(144, 216,  1000000,  39),
+(145, 216,  1000000,  34),
+(146, 216,  1000000,  45),
+(147, 216,  5000000,  49),
+(148, 216,  5000000,  50),
+(149, 216,  1000, 24),
+(150, 217,  10, 23),
+(151, 217,  1000000,  25),
+(152, 217,  1000000,  39),
+(153, 217,  1000000,  34),
+(154, 217,  1000000,  45),
+(155, 217,  5000000,  49),
+(156, 217,  5000000,  50),
+(157, 217,  1000, 24),
+(158, 218,  10, 23),
+(159, 218,  1000000,  25),
+(160, 218,  1000000,  39),
+(161, 218,  1000000,  34),
+(162, 218,  1000000,  45),
+(163, 218,  5000000,  49),
+(164, 218,  5000000,  50),
+(165, 218,  1000, 24),
+(166, 219,  10, 23),
+(167, 219,  1000000,  25),
+(168, 219,  1000000,  39),
+(169, 219,  1000000,  34),
+(170, 219,  1000000,  45),
+(171, 219,  5000000,  49),
+(172, 219,  5000000,  50),
+(173, 219,  1000, 24),
+(174, 222,  10, 23),
+(175, 222,  1000000,  25),
+(176, 222,  1000000,  39),
+(177, 222,  1000000,  34),
+(178, 222,  1000000,  45),
+(179, 222,  5000000,  49),
+(180, 222,  5000000,  50),
+(181, 222,  1000, 24),
+(182, 223,  10, 23),
+(183, 223,  1000000,  25),
+(184, 223,  1000000,  39),
+(185, 223,  1000000,  34),
+(186, 223,  1000000,  45),
+(187, 223,  5000000,  49),
+(188, 223,  5000000,  50),
+(189, 223,  1000, 24),
+(190, 224,  10, 23),
+(191, 224,  1000000,  25),
+(192, 224,  1000000,  39),
+(193, 224,  1000000,  34),
+(194, 224,  1000000,  45),
+(195, 224,  5000000,  49),
+(196, 224,  5000000,  50),
+(197, 224,  1000, 24),
+(198, 225,  10, 23),
+(199, 225,  1000000,  25),
+(200, 225,  1000000,  39),
+(201, 225,  1000000,  34),
+(202, 225,  1000000,  45),
+(203, 225,  5000000,  49),
+(204, 225,  5000000,  50),
+(205, 225,  1000, 24),
+(206, 226,  10, 23),
+(207, 226,  1000000,  25),
+(208, 226,  1000000,  39),
+(209, 226,  1000000,  34),
+(210, 226,  1000000,  45),
+(211, 226,  5000000,  49),
+(212, 226,  5000000,  50),
+(213, 226,  1000, 24),
+(214, 227,  10, 23),
+(215, 227,  1000000,  25),
+(216, 227,  1000000,  39),
+(217, 227,  1000000,  34),
+(218, 227,  1000000,  45),
+(219, 227,  5000000,  49),
+(220, 227,  5000000,  50),
+(221, 227,  1000, 24),
+(222, 228,  10, 23),
+(223, 228,  1000000,  25),
+(224, 228,  1000000,  39),
+(225, 228,  1000000,  34),
+(226, 228,  1000000,  45),
+(227, 228,  5000000,  49),
+(228, 228,  5000000,  50),
+(229, 228,  1000, 24),
+(230, 229,  10, 23),
+(231, 229,  1000000,  25),
+(232, 229,  1000000,  39),
+(233, 229,  1000000,  34),
+(234, 229,  1000000,  45),
+(235, 229,  5000000,  49),
+(236, 229,  5000000,  50),
+(237, 229,  1000, 24),
+(238, 230,  10, 23),
+(239, 230,  1000000,  25),
+(240, 230,  1000000,  39),
+(241, 230,  1000000,  34),
+(242, 230,  1000000,  45),
+(243, 230,  5000000,  49),
+(244, 230,  5000000,  50),
+(245, 230,  1000, 24);
 
 DROP TABLE IF EXISTS `coin_votes`;
 CREATE TABLE `coin_votes` (
@@ -177,28 +289,39 @@ CREATE TABLE `coin_votes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+DROP TABLE IF EXISTS `confirmation_code`;
+CREATE TABLE `confirmation_code` (
+  `user_id` int(10) unsigned NOT NULL,
+  `code` varchar(255) NOT NULL,
+  `expired_at` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  KEY `user_id` (`user_id`),
+  KEY `code` (`code`),
+  CONSTRAINT `confirmation_code_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 DROP TABLE IF EXISTS `custom_fields`;
 CREATE TABLE `custom_fields` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `market_id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `coin_id` int(5) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  `type` enum('text','number','link') NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `value` text NOT NULL,
+  `type` enum('text','link','number') NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `market_id` (`market_id`),
-  CONSTRAINT `custom_fields_ibfk_2` FOREIGN KEY (`market_id`) REFERENCES `market` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `id` (`id`),
+  KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `custom_fields` (`id`, `market_id`, `name`, `value`, `type`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(3, 59, 'lpkopk', 'vyvy', 'text', '2018-01-31 05:20:13',  NULL, '2018-01-30 22:20:13'),
-(4, 51, '1223123 ', '123 123 123',  'text', '2018-01-31 05:17:26',  NULL, '2018-01-30 22:17:26'),
-(5, 51, 'test', '123123 ',  'number', '2018-01-31 05:29:40',  '2018-01-30 22:29:38',  '2018-01-30 22:29:40'),
-(6, 51, 'qweqwe_123123',  'sadfqw erqwe rqw', 'text', '2018-01-31 07:45:20',  '2018-01-31 00:45:20',  NULL),
-(7, 59, '1 2312 3', '12 3123 1',  'link', '2018-01-30 22:29:30',  NULL, NULL),
-(8, 51, 'test', '123123', 'number', '2018-01-30 22:53:10',  NULL, NULL);
+INSERT INTO `custom_fields` (`id`, `coin_id`, `name`, `value`, `type`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 33, 'test', '123',  'text', '2018-02-11 17:40:53',  NULL, '2018-02-11 17:41:17'),
+(2, 13, 'test', '123',  'text', '2018-02-11 17:41:25',  NULL, NULL),
+(3, 21, 'website',  'http://redcoin.pw/', 'link', '2018-02-11 19:58:31',  NULL, NULL),
+(4, 21, 'description',  ' Redcoin is a type of crypto currency, which can be spent and traded just like any other currency. However the main difference is unlike bank issued currencies, redcoin has no central authority or anyone controling redcoin. Redcoin is controled only by its users. ', 'text', '2018-02-11 19:58:53',  NULL, NULL),
+(5, 21, 'bitcointalk',  'https://bitcointalk.org/index.php?topic=246693.0', 'link', '2018-02-11 19:59:16',  NULL, NULL);
 
 DROP TABLE IF EXISTS `deposits`;
 CREATE TABLE `deposits` (
@@ -233,9 +356,9 @@ CREATE TABLE `featured_market` (
 
 INSERT INTO `featured_market` (`id`, `link`, `message`, `coin`, `start_date`, `end_date`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'asdfasd fqwer qwer 1234 1234 ',  'asdfasdfasdfasdf', 13, '2018-01-27 00:00:00',  '2018-01-28 00:00:00',  '2018-01-27 13:32:34',  NULL, '2018-01-27 13:35:33'),
-(2, '123123', '1234123412341',  47, '2018-01-27 00:00:00',  '2018-02-01 00:00:00',  '2018-01-29 05:32:56',  NULL, '2018-01-30 14:36:23'),
+(2, '123123', '1234123412341',  47, '2018-01-27 00:00:00',  '2018-02-23 00:00:00',  '0000-00-00 00:00:00',  NULL, NULL),
 (3, 'qweqweasd',  'asdasdasd',  13, '2018-01-30 00:00:00',  '2018-01-31 00:00:00',  '2018-01-30 14:36:28',  NULL, '2018-01-30 14:36:31'),
-(4, 'Bitbase Token',  'BBT Token',  13, '2018-02-06 00:00:00',  '2018-02-09 00:00:00',  '2018-02-06 23:37:37',  NULL, NULL);
+(4, 'Bitbase Token',  'BBT Token',  13, '2018-02-06 00:00:00',  '2018-02-19 00:00:00',  '2018-02-06 23:37:37',  NULL, NULL);
 
 DROP TABLE IF EXISTS `fee_trade`;
 CREATE TABLE `fee_trade` (
@@ -1051,7 +1174,10 @@ INSERT INTO `orders` (`id`, `market_id`, `user_id`, `price`, `from_value`, `to_v
 (563, 81, 194,  0.000002, 47863,  0.09572599999999999,  'buy',  'active', '2018-02-03 17:58:55',  '2018-02-03 17:58:55'),
 (564, 81, 194,  0.000002, 47863,  0.09572599999999999,  'buy',  'active', '2018-02-03 17:58:59',  '2018-02-03 17:58:59'),
 (565, 81, 194,  0.0000021,  47863,  0.10051229999999998,  'buy',  'filled', '2018-02-03 17:59:04',  '2018-02-03 17:59:18'),
-(566, 81, 194,  0.0000021,  47863,  0.10051229999999998,  'buy',  'filled', '2018-02-03 17:59:06',  '2018-02-03 17:59:18');
+(566, 81, 194,  0.0000021,  47863,  0.10051229999999998,  'buy',  'filled', '2018-02-03 17:59:06',  '2018-02-03 17:59:18'),
+(567, 80, 194,  0.000003, 1001, 0.003003, 'buy',  'active', '2018-02-09 04:42:59',  '2018-02-09 04:42:59'),
+(568, 81, 197,  0.00000201, 4975, 0.009999749999999998, 'buy',  'active', '2018-02-12 06:34:28',  '2018-02-12 06:34:28'),
+(569, 81, 197,  0.00000201, 4975, 0.009999749999999998, 'buy',  'active', '2018-02-12 06:34:55',  '2018-02-12 06:34:55');
 
 DROP TABLE IF EXISTS `password_reminders`;
 CREATE TABLE `password_reminders` (
@@ -1080,7 +1206,10 @@ INSERT INTO `password_reminders` (`email`, `token`, `created_at`) VALUES
 ('',  'fb271d1367f47713f12e76cb483495bb', '2015-07-14 11:36:41'),
 ('',  'fabcc88b7185821c886164955ba56a02', '2015-07-14 11:37:31'),
 ('admin@anoxymail.info',  '75d3179b044644dd9eb5bee73a3bf6c9', '2015-07-14 17:30:24'),
-('bitbase.me@gmail.com',  'c7efdeb15b6fd659e6efaf43995c226c', '2015-08-08 12:53:48');
+('bitbase.me@gmail.com',  'c7efdeb15b6fd659e6efaf43995c226c', '2015-08-08 12:53:48'),
+('ammarfaizi2@gmail.com', 'SW-_fj__bGeZ2vHtxzfmZYE6-1X_wLpTN-a0dDWeSG_Nh-6X0vbmx6beM8oRN_5O', '2018-02-11 19:01:50'),
+('ammarfaizi2@gmail.com', 'bwIqHC_X9mP7s9cU_plC4qbQ0U3zAa98YnIEShmcS9p6vWgnFjioXGexUYkp3a9f', '2018-02-11 19:11:03'),
+('ammarfaizi2@gmail.com', '0_ac_YNL9Egk8iE-pasINbtF8a9qKyK0Vk1LI0a4d9RiddD-cg4fr4VEbCcLWJEd', '2018-02-11 19:20:51');
 
 DROP TABLE IF EXISTS `phpmysqlautobackup`;
 CREATE TABLE `phpmysqlautobackup` (
@@ -1181,8 +1310,8 @@ CREATE TABLE `settings` (
 INSERT INTO `settings` (`id`, `name`, `value`) VALUES
 (1, 'datachart_market_1', 'a:14:{i:0;a:7:{s:4:\"date\";s:16:\"2014-05-01 17:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:1;a:7:{s:4:\"date\";s:16:\"2014-05-01 17:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:2;a:7:{s:4:\"date\";s:16:\"2014-05-01 18:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:3;a:7:{s:4:\"date\";s:16:\"2014-05-01 18:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:4;a:7:{s:4:\"date\";s:16:\"2014-05-01 19:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:5;a:7:{s:4:\"date\";s:16:\"2014-05-01 19:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:6;a:7:{s:4:\"date\";s:16:\"2014-05-01 20:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:7;a:7:{s:4:\"date\";s:16:\"2014-05-01 20:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:8;a:7:{s:4:\"date\";s:16:\"2014-05-01 21:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:9;a:7:{s:4:\"date\";s:16:\"2014-05-01 21:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:10;a:7:{s:4:\"date\";s:16:\"2014-05-01 22:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:11;a:7:{s:4:\"date\";s:16:\"2014-05-01 22:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:12;a:7:{s:4:\"date\";s:16:\"2014-05-01 23:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:13;a:7:{s:4:\"date\";s:16:\"2014-05-01 23:03\";s:3:\"low\";i:0;s:4:\"open\";i:0;s:5:\"close\";i:0;s:4:\"high\";i:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:278:\"\nnew_date: 2014-05-01 17:00:00\nend_date: 2014-05-01 23:03\n2014-05-01 17:00\n2014-05-01 17:30\n2014-05-01 18:00\n2014-05-01 18:30\n2014-05-01 19:00\n2014-05-01 19:30\n2014-05-01 20:00\n2014-05-01 20:30\n2014-05-01 21:00\n2014-05-01 21:30\n2014-05-01 22:00\n2014-05-01 22:30\n2014-05-01 23:00\";}}'),
 (2, 'price_open_start_chart', 'a:3:{s:4:\"time\";s:5:\"19:00\";s:13:\"open_previous\";s:10:\"0.00003800\";s:14:\"close_previous\";s:10:\"0.00003800\";}'),
-(3, 'recaptcha_privatekey', '6LfuwgkTAAAAAFSOIEYCGZUqvj6XdzXGibXVxRFZ'),
-(4, 'recaptcha_publickey',  '6LfuwgkTAAAAAGEjYzxIlPxuWy2NOSPUfVfgF7xy'),
+(3, 'recaptcha_privatekey', '6LcdnUUUAAAAANopVW1zInkMFaYiCDQlVWV6I2C3'),
+(4, 'recaptcha_publickey',  '6LcdnUUUAAAAALwXU3jX_VrciJdIDmcrN1Q5UVDw'),
 (5, 'datachart_market_13',  'a:14:{i:0;a:7:{s:4:\"date\";s:16:\"2014-04-29 20:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:1;a:7:{s:4:\"date\";s:16:\"2014-04-29 20:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:2;a:7:{s:4:\"date\";s:16:\"2014-04-29 21:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:3;a:7:{s:4:\"date\";s:16:\"2014-04-29 21:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:4;a:7:{s:4:\"date\";s:16:\"2014-04-29 22:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:5;a:7:{s:4:\"date\";s:16:\"2014-04-29 22:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:6;a:7:{s:4:\"date\";s:16:\"2014-04-29 23:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:7;a:7:{s:4:\"date\";s:16:\"2014-04-29 23:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:8;a:7:{s:4:\"date\";s:16:\"2014-04-30 00:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:9;a:7:{s:4:\"date\";s:16:\"2014-04-30 00:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:10;a:7:{s:4:\"date\";s:16:\"2014-04-30 01:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:11;a:7:{s:4:\"date\";s:16:\"2014-04-30 01:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:12;a:7:{s:4:\"date\";s:16:\"2014-04-30 02:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:13;a:7:{s:4:\"date\";s:16:\"2014-04-30 02:26\";s:3:\"low\";i:0;s:4:\"open\";i:0;s:5:\"close\";i:0;s:4:\"high\";i:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:278:\"\nnew_date: 2014-04-29 20:00:00\nend_date: 2014-04-30 02:26\n2014-04-29 20:00\n2014-04-29 20:30\n2014-04-29 21:00\n2014-04-29 21:30\n2014-04-29 22:00\n2014-04-29 22:30\n2014-04-29 23:00\n2014-04-29 23:30\n2014-04-30 00:00\n2014-04-30 00:30\n2014-04-30 01:00\n2014-04-30 01:30\n2014-04-30 02:00\";}}'),
 (6, 'datachart_market_14',  'a:14:{i:0;a:7:{s:4:\"date\";s:16:\"2014-04-29 20:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:1;a:7:{s:4:\"date\";s:16:\"2014-04-29 20:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:2;a:7:{s:4:\"date\";s:16:\"2014-04-29 21:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:3;a:7:{s:4:\"date\";s:16:\"2014-04-29 21:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:4;a:7:{s:4:\"date\";s:16:\"2014-04-29 22:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:5;a:7:{s:4:\"date\";s:16:\"2014-04-29 22:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:6;a:7:{s:4:\"date\";s:16:\"2014-04-29 23:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:7;a:7:{s:4:\"date\";s:16:\"2014-04-29 23:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:8;a:7:{s:4:\"date\";s:16:\"2014-04-30 00:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:9;a:7:{s:4:\"date\";s:16:\"2014-04-30 00:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:10;a:7:{s:4:\"date\";s:16:\"2014-04-30 01:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:11;a:7:{s:4:\"date\";s:16:\"2014-04-30 01:30\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:12;a:7:{s:4:\"date\";s:16:\"2014-04-30 02:00\";s:3:\"low\";d:0;s:4:\"open\";d:0;s:5:\"close\";d:0;s:4:\"high\";d:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:0:\"\";}i:13;a:7:{s:4:\"date\";s:16:\"2014-04-30 02:24\";s:3:\"low\";i:0;s:4:\"open\";i:0;s:5:\"close\";i:0;s:4:\"high\";i:0;s:15:\"exchange_volume\";i:0;s:4:\"temp\";s:278:\"\nnew_date: 2014-04-29 20:00:00\nend_date: 2014-04-30 02:24\n2014-04-29 20:00\n2014-04-29 20:30\n2014-04-29 21:00\n2014-04-29 21:30\n2014-04-29 22:00\n2014-04-29 22:30\n2014-04-29 23:00\n2014-04-29 23:30\n2014-04-30 00:00\n2014-04-30 00:30\n2014-04-30 01:00\n2014-04-30 01:30\n2014-04-30 02:00\";}}'),
 (7, 'disable_withdraw', NULL),
@@ -1933,10 +2062,10 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `fullname`, `username`, `email`, `password`, `confirmation_code`, `confirmed`, `banned`, `authy`, `two_factor_auth`, `created_at`, `updated_at`, `lastest_login`, `timeout`, `referral`, `trade_key`, `ip_lastlogin`, `remember_token`, `google2fa_secret`) VALUES
 (100, 'giveaway', 'giveaway', 'bitbase.me@gmail.com', 'bea802d27f2353047f5c4a595c721b16', '', 1,  0,  '', '', '0000-00-00 00:00:00',  '0000-00-00 00:00:00',  '0000-00-00 00:00:00',  '', NULL, '', '', NULL, NULL),
-(194, 'Anoxy Doxy', 'admino', 'bitbase.me@gmail.com', '$2y$10$9XKVSmByaMll3nl.KLdoy.O4GfROVnQzQJFC/KVuTvnL92hMfa3Nu', 'b42df0ecaa87cb86bdbbf3da11211bb8', 1,  0,  '', '', '2018-02-08 14:28:33',  '2018-02-08 14:28:33',  '2018-02-08 14:28:33',  '45 minutes', '', 'e7f4661830db86812861f59c263a1c55', '114.124.171.228',  'FAEBjgmEwyyOz40qV1i0YswSxwfUCbpsjeYEIFqWtTkgk2tnyiTWzVKDikU0', NULL),
+(194, 'Anoxy Doxy', 'admino', 'bitbase.me@gmail.com', '$2y$10$9XKVSmByaMll3nl.KLdoy.O4GfROVnQzQJFC/KVuTvnL92hMfa3Nu', 'b42df0ecaa87cb86bdbbf3da11211bb8', 1,  0,  '', '', '2018-02-09 10:25:43',  '2018-02-09 10:25:43',  '2018-02-09 10:25:43',  '45 minutes', '', 'e7f4661830db86812861f59c263a1c55', '114.124.149.244',  '4jDXtud0qa6kYV1Vv35lXPyRB6ESFHm41qcXKHl7ZkoOJs3pfcI6MBdN1JKn', NULL),
 (195, 'Anoxxxyyy',  'Anoxxxyyy',  'bitbase.me@gmail.com', '$2y$10$NegLKUTtZdxCdUCJqPAu6.IH7psHP//73d132nX2ifgF3dSmYJEa.', '73a86552293e33156adb4e03e1b3753d', 1,  0,  '', '', '2014-10-02 06:26:31',  '2014-10-02 06:26:31',  '0000-00-00 00:00:00',  '', '', 'd6c1b34290ab84fb84fffcdbadc6752a', '83.172.65.211',  NULL, NULL),
 (196, 'mcnamara.jeremy',  'PhatJ',  'bitbase.me@gmail.com', '$2y$10$j87sgAesfSMcpmBMXDFQjuXTqkh7Ug1Pwigq8m9DqNPMVecanc2Pe', '70b92423cb4a5f0ff0be3cfdcd582b4c', 1,  0,  '', '', '2014-10-03 04:03:44',  '2014-11-12 17:32:43',  '2014-11-12 17:32:43',  '24 hours', '', 'd20ad7f36c52d069ffdc35b02f15cf06', '75.129.114.100', NULL, NULL),
-(197, '', 'admin',  'bitbase.me@gmail.com', '$2y$10$7r2C6/11CeNFN/dThSTHzuHD0jOZ.KRwuibiMVszgZSPm3mJMqZK2', '58832b2f2f8b9efc807363b6f92c5372', 0,  0,  '', '', '2014-10-21 22:51:07',  '2014-10-21 22:51:07',  '0000-00-00 00:00:00',  '', '', '6971534338ef501f74d481ff4cee2686', '83.172.65.211',  NULL, NULL),
+(197, '', 'admin',  'bitbase.me@gmail.com', '$2y$10$PwjHxEXpVHaR5lfytZ/JOegM4rj910lprBk.X/5iR9l6INyWL8LMu', '58832b2f2f8b9efc807363b6f92c5372', 0,  0,  '', '', '2018-02-12 01:51:28',  '2018-02-12 01:51:28',  '2018-02-12 01:51:28',  '', '', '6971534338ef501f74d481ff4cee2686', '46.59.49.71',  'dPWtjan6wm3X77V2yJn0rNJnhsB8zBQGUTpPchnrhmQ24m4B2tOvzNSBvp10', 'D5TNZMOPOWK5QVPK'),
 (198, '', 'moderator',  'bitbase.me@gmail.com', '$2y$10$1BN5re7c0JmFM7xmj0VODe6tArX5afW.UtwpCnZ/IGKZilhokRvlS', '8287e4bf07a2490aa23a81e0f76f86e0', 0,  0,  '', '', '2014-10-21 22:59:40',  '2014-10-21 22:59:40',  '0000-00-00 00:00:00',  '', '', '769396c6caf7019a51381c2a36e9e758', '83.172.65.211',  NULL, NULL),
 (199, 'August', 'Falc0n', 'bitbase.me@gmail.com', '$2y$10$OIBENY4gOE1z8SnGEYUttepEb9ncUdtE8yev5ue2XE6SgGm/5jR..', 'f0fa45a4bff10924ac87196c988e1704', 1,  0,  '', '', '2014-11-04 17:04:01',  '2014-11-04 17:09:56',  '2014-11-04 17:06:48',  '45 minutes', '', '8db1e9d8525aba86c07d565c9b457dc7', '85.252.68.4',  NULL, NULL),
 (200, '', 'zilveer',  'bitbase.me@gmail.com', '$2y$10$dm8tPkksCc1A8jQvevXdduAhyTuZr3M/Z8g7n3f5g/tyM5QuAqzta', 'f7239aa24b4edb29d75d7af588a6477b', 1,  0,  '', '', '2014-11-04 17:57:32',  '2014-11-04 18:05:18',  '2014-11-04 18:05:18',  '', '', 'b860adaa22931e26d79126528ba072ac', '212.112.39.195', NULL, NULL),
@@ -1949,11 +2078,20 @@ INSERT INTO `users` (`id`, `fullname`, `username`, `email`, `password`, `confirm
 (207, '', 'jbar', 'bitbase.me@gmail.com', '$2y$10$NIAZzJRzECG4o.l404q/qeIRdivtQHBlI0IkOxkswxg/YWlYGJanW', 'e6a4ba61673ccca76cb5a432455dac23', 1,  0,  '', '', '2015-07-27 04:13:18',  '2015-07-27 04:13:59',  '2015-07-27 04:13:59',  '', '', 'f18aef6dd48e231745cd836b778df925', '94.15.198.215',  NULL, NULL),
 (208, '', 'wosch',  'bitbase.me@gmail.com', '$2y$10$YQwgPZSqRhvsdWrrgUyO1u0LGaQkFw4iKJs/N4X6/lkEN1x9ugevO', 'd62e9bfb8a94adf151fc90b28770d7c6', 0,  0,  '', '', '2015-07-31 17:23:19',  '2015-07-31 17:23:19',  '0000-00-00 00:00:00',  '', '', '95b19c14b56315974e234c3af3ed9053', '91.49.3.190',  NULL, NULL),
 (209, '', 'wosch76',  'bitbase.me@gmail.com', '$2y$10$0Q4vBGK.DM342mdWVWOc8e87DZ./hfX8Q9Gvj7vgaikVSiAywWD/.', 'da726d0a672c7586f263a23ccabf6651', 0,  0,  '', '', '2015-07-31 17:28:14',  '2015-07-31 17:28:14',  '0000-00-00 00:00:00',  '', '', '0706b077d0ddb53477c9f5f619e48527', '91.49.3.190',  NULL, NULL),
-(210, '', 'Bukan',  'bitbase.me@gmail.com', '$2y$10$P92PQnOC5/Jp9kMLVd9Qr.apE.dtEDW5AnlyTt0Q1D7vfHpGm5FUy', 'cfb1dd9468ff9e99499d0089201f559e', 1,  0,  '', '', '2018-02-07 14:14:01',  '2018-02-07 14:14:01',  '2018-02-07 14:14:01',  '', '', 'd1ec747bc2730cb300988f90445740a1', '114.124.147.208',  'rB1gyeESOzInneNaOz0DSRuSdky83oRlabBDLYOVs4fy0kEgono68aHALWX1', NULL),
+(210, '', 'Bukan',  'bitbase.me@gmail.com', '$2y$10$P92PQnOC5/Jp9kMLVd9Qr.apE.dtEDW5AnlyTt0Q1D7vfHpGm5FUy', 'cfb1dd9468ff9e99499d0089201f559e', 1,  0,  '', '', '2018-02-08 21:02:58',  '2018-02-08 21:02:58',  '2018-02-08 21:02:58',  '', '', 'd1ec747bc2730cb300988f90445740a1', '114.124.147.208',  'ySDkIIX69AaGb5YAO9olVnee9U4rbL9wKd32TxZuB3LZGxCdvYr8GXSi6ezA', NULL),
 (211, '', 'drizzle2405',  'bitbase.me@gmail.com', '$2y$10$DM4ui.FabK2qAjdCmECNceoGn3MaYkDpS4H8E4Cst3Ga14iMUFccm', '04d5254dad54e358ebf73216c7395d4c', 1,  0,  '', '', '2015-07-31 19:39:46',  '2015-07-31 19:48:19',  '2015-07-31 19:40:47',  '', '', '202ef29eaeac2bff84c91d9b51f493cd', '108.61.68.141',  'mxvZkpReU9LfHTbpTrYDvskV9mpNFF0IgVzRUtUb56NwrW4EoMCOoVAachAv', NULL),
 (212, '', 'acaudill133',  'bitbase.me@gmail.com', '$2y$10$pa9gTYZFVQ1u7.8HJPPMRehxD/8YD9yKaM52MOybbYIb3GAaTBlp2', '4925f654f669f3e2125536acf585a84b', 1,  0,  '', '', '2015-08-02 23:18:24',  '2015-08-02 23:18:24',  '0000-00-00 00:00:00',  '', '', 'ebd9491532920b685e5cdab558efc322', '69.244.132.157', NULL, NULL),
-(213, 'Louvian Lyndal', 'louvian',  'louvianlyndal@gmail.com',  '$2y$10$sqFBPpidDICEH.xUObxRyOxHYyI/GRNgfSWIhq60bsD2tHDhrH6t2', '', 1,  0,  '', '', '2018-01-29 00:24:23',  '2018-01-29 00:24:23',  '0000-00-00 00:00:00',  '', NULL, '', '', NULL, NULL),
-(214, 'Ammar Faizi',  'ammarfaizi2',  'ammarfaizi2@gmail.com',  '$2y$10$unQoBHf28ySToKHD.BXO8ek2au6PThfTeDq2ObQKW0DU2vrYcNueq', '', 1,  0,  '', '', '2018-02-08 13:57:29',  '2018-02-08 13:57:29',  '2018-02-08 13:57:29',  '', NULL, '', '114.124.171.228',  'Z2CpkI4argPFDGc5ljg01tLIa4dX2lCSicuHYU8pgrmxy5uHGEsmGjzvxYnz', NULL);
+(213, 'Louvian Lyndal', 'louvian',  'louvianlyndal@gmail.com',  '$2y$10$sqFBPpidDICEH.xUObxRyOxHYyI/GRNgfSWIhq60bsD2tHDhrH6t2', '', 1,  0,  '', '', '2018-02-09 12:47:51',  '2018-02-09 12:47:51',  '2018-02-09 12:47:51',  '', NULL, '', '114.124.181.212',  'gHb9HvYsWKXzauIEQHPmYVkgp9O7kQHnNENrv4CSdxa2vSJZBuwcG9dubUHU', '6BPFWOKDZPAI4ZMZ'),
+(214, 'Ammar Faizi',  'ammarfaizi2',  'ammarfaizi2@gmail.com',  '$2y$10$unQoBHf28ySToKHD.BXO8ek2au6PThfTeDq2ObQKW0DU2vrYcNueq', '', 1,  0,  '', '', '2018-02-12 05:56:00',  '2018-02-12 05:56:00',  '2018-02-12 05:56:00',  '', NULL, '', '182.253.62.30',  'ZQQfPFg5shxD7CJ7vSc4yPizPXSb9EuOhCCJ4BstxmckBfZ4z4iqMFqx8Gjp', NULL),
+(215, '', 'cryptoman81',  'logge_altun@hotmail.com',  '$2y$10$u7yC1rVtc6d76DIC.xDp..bR1Y2YVkDzcUm5eMk.PpbRK1pEH4n4a', '', 0,  0,  '', '', '2018-02-11 02:15:11',  '2018-02-11 02:15:11',  NULL, '', NULL, 'e66c060d3e0112def44e454e9787ffd6', '82.196.100.247', NULL, NULL),
+(216, '', 'hejsan', 'asasa@asas.com', '$2y$10$Apa7eBLp0QFof5/aYzEEN.ftHbaoVuPURhvzLUUYtqNOWCAe7iM76', '', 0,  0,  '', '', '2018-02-11 02:15:54',  '2018-02-11 02:15:54',  NULL, '', NULL, '2f18154c197cda3d5c9038f41b37cc57', '82.196.100.247', NULL, NULL),
+(217, '', 'logge',  'isak@elpida.se', '$2y$10$Lxfc9Gqf7xc24tGiqHYi5uIlOmU.q0CFxxLl3UarapafocztycjxG', '', 0,  0,  '', '', '2018-02-11 20:35:46',  '2018-02-11 20:35:46',  NULL, '', NULL, '552efaaf508e78e067b7946b8966adb6', '46.59.49.71',  NULL, NULL),
+(218, '', 'slruslan', 'dedagates@gmail.com',  '$2y$10$e5BA0f/umFqB6p5TYNMsmO0fulDahHr9KMiSZBYlerorpgXq40uaG', '', 0,  0,  '', '', '2018-02-11 21:56:50',  '2018-02-11 21:56:50',  '2018-02-11 21:56:50',  '', NULL, '19becda68511ca7ccb0814ac17076f0a', '195.218.182.116',  '1hSA9samRqzoDuK6WhbTsTgsGWDwjSZBHNTN2EF9IpWXzfP0wjSdlKxtZtmk', NULL),
+(226, '', 'amamrfaizi93', 'ammarfaizi128@gmail.com',  '$2y$10$TBnrx/jX70i/TW7BjkMm8eSb2rpM4w00cBRXbWa1VlzDrZBIdZa2S', '', 0,  0,  '', '', '2018-02-13 13:01:31',  '2018-02-13 13:01:31',  NULL, '', NULL, '321a86cbd158bbe77e43fde0c6d73ec2', '114.124.146.248',  NULL, NULL),
+(227, '', 'demora', 'demora@yopmail.com', '$2y$10$n76Cu3Dor1L18412yUncyeBWakoRP6jBGSpYuDIxxhjALBfaRDS02', '', 0,  0,  '', '', '2018-02-13 13:09:11',  '2018-02-13 13:09:11',  NULL, '', NULL, '01085b3ab7b6230f6c68d13eb492caf2', '46.59.49.71',  NULL, NULL),
+(228, '', 'Demora2',  'demora2@yopmail.com',  '$2y$10$OiC.oah2WaLu8uQUrQENOeUofTLefgV.l79kEou9tpCcjvi6fyTee', '', 0,  0,  '', '', '2018-02-13 19:00:13',  '2018-02-13 19:00:13',  NULL, '', NULL, 'b9c12b69deb4c8e05b02b4c0cca4eb36', '46.59.49.71',  NULL, NULL),
+(229, '', 'asasasa',  'admino@asas.co', '$2y$10$UuE8EN8CXSRZ84dhTlG3m.tRXsHu7BjhZyDx1zghZNwed/tzCUgnu', '', 0,  0,  '', '', '2018-02-14 13:09:56',  '2018-02-14 13:09:56',  NULL, '', NULL, 'd3dbe00df1704687bbf03fb569aed5aa', '46.59.49.71',  NULL, NULL),
+(230, '', 'asassdadasdasd', 'admin@anoxymail.info', '$2y$10$Wzgd4qNbRfLol0hpVaD3YuvDnmEv/qwJlgSg13xTAYA7FIFGkB8qK', '', 0,  0,  '', '', '2018-02-14 18:19:40',  '2018-02-14 18:19:40',  NULL, '', NULL, 'ffbc4cadf7275fd0546e9c4ccfe19e12', '77.218.248.255', NULL, NULL);
 
 DROP TABLE IF EXISTS `users_roles`;
 CREATE TABLE `users_roles` (
@@ -1964,7 +2102,7 @@ CREATE TABLE `users_roles` (
 INSERT INTO `users_roles` (`user_id`, `role_id`) VALUES
 (194, 1),
 (194, 3),
-(197, 3),
+(197, 1),
 (198, 3),
 (193, 3),
 (199, 3),
@@ -1981,10 +2119,23 @@ INSERT INTO `users_roles` (`user_id`, `role_id`) VALUES
 (210, 3),
 (211, 3),
 (212, 3),
-(213, 1),
-(213, 3),
 (214, 1),
-(214, 3);
+(214, 3),
+(213, 3),
+(215, 3),
+(216, 3),
+(217, 3),
+(218, 3),
+(219, 3),
+(222, 3),
+(223, 3),
+(224, 3),
+(225, 3),
+(226, 3),
+(227, 3),
+(228, 3),
+(229, 3),
+(230, 3);
 
 DROP TABLE IF EXISTS `user_address_deposit`;
 CREATE TABLE `user_address_deposit` (
@@ -2113,4 +2264,4 @@ CREATE TABLE `withdraws` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
--- 2018-02-08 14:28:40
+-- 2018-02-14 16:17:48
