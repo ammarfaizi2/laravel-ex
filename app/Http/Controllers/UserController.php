@@ -134,6 +134,41 @@ class UserController extends Controller
             $data
         );
     }
+
+    public function confirmAccount()
+    {
+        if (isset($_GET["code"])) {
+            $st = DB::table("confirmation_code")
+                ->select(["user_id", "expired_at"])
+                ->where("code", "=", $_GET["code"])
+                ->first();
+            if ($st) {
+                if (strtotime($st->expired_at) <= time()) {
+                    DB::table("confirmation_code")
+                    ->where("code", "=", $_GET["code"])
+                    ->limit(1)
+                    ->delete();
+                    return Redirect::to(route("user.login"))->with('notice', trans("email_messages.confirm_account_expired"));;
+                } else {
+                    DB::table("confirmation_code")
+                        ->where("code", "=", $_GET["code"])
+                        ->limit(1)
+                        ->delete();
+                    DB::table("users")
+                        ->where("id", "=", $st->user_id)
+                        ->limit(1)
+                        ->update(
+                            [
+                                "confirmed" => 1
+                            ]
+                        );
+                    return Redirect::to(route("user.login"))->with('notice', trans("email_messages.account_confirmed"));;
+                }
+            }
+        }
+        abort(404);
+    }
+
     /**
      * Stores new account
      */
@@ -166,6 +201,7 @@ class UserController extends Controller
             Mail::to(Request::get('email'))
             ->send(new \App\Mail\ConfirmAccount(
                 [
+                    "id" => $user->id,
                     "username" => $user->username,
                     "email" => $user->email
                 ]

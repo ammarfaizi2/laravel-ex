@@ -166,7 +166,7 @@ Route::post('user/reset_password',         'UserController@do_reset_password');
 Route::any( 'user/logout',                 'UserController@logout')->name('logout');
 Route::post( 'check-captcha',               'UserController@checkCaptcha');
 Route::any( 'user/update-setting',         'UserController@updateSetting');
-
+Route::get('user/confirm', 'UserController@confirmAccount')->name("user.confirm_account");
 
 
 Route::any('/2fa', function () {

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Mail;
-
+use DB;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -23,6 +23,7 @@ class ConfirmAccount extends Mailable
         $this->userInfo = $p;
     }
 
+
     /**
      * Build the message.
      *
@@ -38,6 +39,14 @@ class ConfirmAccount extends Mailable
         for ($i=0; $i < 64; $i++) { 
             $token .= $r[rand(0, $l)];
         }
+        DB::table("confirmation_code")->insert(
+            [
+                "user_id" => $user["id"],
+                "code" => $token,
+                "expired_at" => date("Y-m-d H:i:s", time()+7200),
+                "created_at" => date("Y-m-d H:i:s")
+            ]
+        );
         return $this->view(
                 'emails.confirm_account', 
                 [
