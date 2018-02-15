@@ -191,6 +191,7 @@ return [
         Way\Generators\GeneratorsServiceProvider::class,
         Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
         PragmaRX\Google2FALaravel\ServiceProvider::class,
+        Cmgmyr\Messenger\MessengerServiceProvider::class,
     ],
 
     /*

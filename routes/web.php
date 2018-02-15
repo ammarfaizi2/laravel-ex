@@ -178,6 +178,15 @@ Route::any('/2fa', function () {
 })->name('2fa')->middleware('2fa');
 
 Route::any("/2fa_check_code", "UserController@check2facode")->name("2fa_check_code");
+
+Route::group(['prefix' => 'messages', 'middleware' => ['2fa', 'App\Http\Middleware\user']], function () {
+    Route::get('/', ['as' => 'messages', 'uses' => 'MessagesController@index']);
+    Route::get('create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);
+    Route::post('/', ['as' => 'messages.store', 'uses' => 'MessagesController@store']);
+    Route::get('{id}', ['as' => 'messages.show', 'uses' => 'MessagesController@show']);
+    Route::put('{id}', ['as' => 'messages.update', 'uses' => 'MessagesController@update']);
+});
+
 //user profile
 Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
     Route::post('/2fa_check', 'Google2FAHandler@check')->name("2fa_check");
