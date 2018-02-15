@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Carbon\Carbon;
-use Cmgmyr\Messenger\Models\Thread;
+use App\Models\Messenger\Thread;
 use Cmgmyr\Messenger\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
