@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\User;
 use Carbon\Carbon;
 use App\Models\Messenger\Thread;
@@ -23,6 +24,23 @@ class MessagesController extends Controller
     {
         // All threads, ignore deleted/archived participants
         $threads = Thread::getAllLatest()->get();
+        if (isset($_GET["ajax_request"])) {
+            $data = [];
+            foreach ($threads as $thread) {
+                $creator = $thread->creator()->username;
+                $data[] = [
+                    'is_unread' => $thread->isUnread(Auth::id()),
+                    'thread_id' => $thread->id,
+                    'subject' => $thread->subject,
+                    'unread_count' => $thread->userUnreadMessagesCount(Auth::id()),
+                    'latest_message' => $thread->latestMessage->body,
+                    'creator' => $creator,
+                    'participants' => array_unique(explode(",",trim($creator.",".$thread->participantsString(Auth::id()), ",")))
+                ];
+            }
+
+            return response()->json($data);
+        }
 
         // All threads that user is participating in
         // $threads = Thread::forUser(Auth::id())->latest('updated_at')->get();
@@ -113,7 +131,19 @@ class MessagesController extends Controller
 
         // Recipients
         if (Input::has('recipients')) {
-            $thread->addParticipant($input['recipients']);
+            $re = explode(",",$input['recipients']);
+            $id = [];
+            foreach ($re as $val) {
+                $st = DB::table("users")
+                      ->select("id")
+                      ->where("username", "=", trim($val))
+                      ->first();
+                if (! $st) {
+                    return \Redirect::to(url()->previous())->with("error", trans("msg.user_not_found", ["username" => trim($val)]));
+                }
+                $id[] = $st->id;
+            }
+            $thread->addParticipant($id);
         }
         if (isset($_GET["ajax_request"])) {
             return response()->json("OK", 200);
