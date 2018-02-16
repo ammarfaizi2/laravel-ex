@@ -19,6 +19,7 @@ return array(
     "orders"                => "Orders",
     "trade_history"         => "Trade history",
     "logout"                =>"Logout",
+    "message"               => "Messages",
     "hello"                 => "Hello",
     "title_login"           => "Login to your Account",
     "term_service"          => "Terms of Service",

@@ -16,8 +16,13 @@
         <div class="navbar-inverse side-collapse in" id="navbar-main">
             <nav class="navbar-collapse">
 				<ul class="nav navbar-nav">
-					<li @if(Request::is('page/voting')) {{'class="active"'}} @endif>{{ HTML::link('page/voting', trans('user_texts.voting'), array('class' => Request::is('page/voting')?'active':'')) }}</li>
+					<li @if(Request::is('page/voting')) {!! 'class="active"' !!} @endif>{{ HTML::link('page/voting', trans('user_texts.voting'), array('class' => Request::is('page/voting')?'active':'')) }}</li>
 				</ul>
+				@if(Confide::user())
+				<ul class="nav navbar-nav">
+					<li @if(Request::is('messages')) {!! 'class="active"' !!} @endif>{{ HTML::link(route('messages'), trans('user_texts.message'), array('class' => Request::is('messages')?'active':'')) }}</li>
+				</ul>
+				@endif
             <!--Lang menu  start-->
             <?php
                 /*
