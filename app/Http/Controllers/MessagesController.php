@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Confide;
 use App\User;
 use Carbon\Carbon;
 use App\Models\Messenger\Thread;
@@ -26,17 +27,30 @@ class MessagesController extends Controller
         $threads = Thread::getAllLatest()->get();
         if (isset($_GET["ajax_request"])) {
             $data = [];
+            $user = Confide::user();
             foreach ($threads as $thread) {
-                $creator = $thread->creator()->username;
-                $data[] = [
-                    'is_unread' => $thread->isUnread(Auth::id()),
-                    'thread_id' => $thread->id,
-                    'subject' => $thread->subject,
-                    'unread_count' => $thread->userUnreadMessagesCount(Auth::id()),
-                    'latest_message' => $thread->latestMessage->body,
-                    'creator' => $creator,
-                    'participants' => array_unique(explode(",",trim($creator.",".$thread->participantsString(Auth::id()), ",")))
-                ];
+                if (DB::table(config("messenger.participants_table"))
+                    ->select('id')
+                    ->where('user_id', '=', $user->id)
+                    ->where('thread_id', '=', $thread->id)
+                    ->first()
+                ) {
+                    $creator = $thread->creator()->username;
+                    $participants = array_unique(explode(",",trim($user->username.",".$thread->participantsString(Auth::id()), ",")));
+                    $p = [];
+                    foreach ($participants as $val) {
+                        $p[] = trim($val);
+                    }
+                    $data[] = [
+                        'is_unread' => e($thread->isUnread(Auth::id())),
+                        'thread_id' => e($thread->id),
+                        'subject' => e($thread->subject),
+                        'unread_count' => e($thread->userUnreadMessagesCount(Auth::id())),
+                        'latest_message' => e($thread->latestMessage->body),
+                        'creator' => $creator,
+                        'participants' => $p
+                    ];
+                }
             }
 
             return response()->json($data);
@@ -192,5 +206,63 @@ class MessagesController extends Controller
             return response()->json("OK", 200);
         }
         return redirect()->route('messages.show', $id);
+    }
+
+    public function deleteThread()
+    {
+        if (isset($_POST['data'])) {
+            $data = json_decode($_POST['data'], true);
+            if (is_array($data)) {
+                $user = \Confide::user();
+                $q = DB::table(config("messenger.messages_table"))
+                    ->select("user_id")
+                    ->where("thread_id", "=", $data['thread_id'])
+                    ->orderBy("created_at")
+                    ->first();
+                if ($q->user_id === $user->id) {
+                    if (DB::table(config("messenger.threads_table"))
+                        ->where("id", "=", $data["thread_id"])
+                        ->limit(1)
+                        ->delete()) {
+                        return response()->json(["message" => trans("msg.delete_thread_success")]);
+                    } else {
+                        return response()->json(["message" => trans("msg.internal_error")]);
+                    }
+                } else {
+                    return response()->json(["message" => trans("msg.delete_thread_invalid_permission")]);
+                }
+            }
+        }
+        abort(404);
+    }
+
+    public function leaveThread()
+    {
+        if (isset($_POST['data'])) {
+            $data = json_decode($_POST['data'], true);
+            if (is_array($data)) {
+                $user = \Confide::user();
+                $q = DB::table(config("messenger.messages_table"))
+                    ->select("user_id")
+                    ->where("thread_id", "=", $data['thread_id'])
+                    ->orderBy("created_at")
+                    ->first();
+                if ($q->user_id === $user->id) {
+                    return response()->json(["message" => trans("msg.creator_leave_chat")]);
+                } else {
+                    if (DB::table("messenger.participants_table")
+                            ->where("thread_id", "=", $data["thread_id"])
+                            ->where("user_id", "=", $user->id)
+                            ->delete()
+                    ) {
+                        
+                        return response()->json(["message" => trans("msg.leave_chat_success")]);
+                    } else {
+                        return response()->json(["message" => trans("msg.internal_error")]);
+                    }
+                }
+            }
+        }
+        abort(404);
     }
 }

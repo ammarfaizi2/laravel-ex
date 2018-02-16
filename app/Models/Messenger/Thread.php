@@ -120,6 +120,15 @@ class Thread extends Eloquent
      */
     public static function getAllLatest()
     {
+        $u = \Confide::user();
+        // select * from `messenger_threads` where `messenger_threads`.`deleted_at` is null order by `updated_ata` desc
+        /*$tr = config("messenger.threads_table");
+        $pr = config("messenger.participants_table");
+        return \DB::table($tr)
+            ->join($pr, "{$tr}.id", "=", "{$pr}.thread_id")
+            ->where("{$pr}.user_id", "=", $u->id)
+            ->where("{$tr}.deleted_at", "=", null)
+            ->orderBy("{$tr}.updated_at", "desc");*/
         return self::latest('updated_at');
     }
 
