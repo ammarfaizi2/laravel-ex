@@ -32,13 +32,15 @@ class MessagesController extends Controller
         $pr = config("messenger.participants_table");
         $tr = config("messenger.threads_table");
         $ms = config("messenger.messages_table");
-        $this->threads = DB::table($tr)
-                            ->select(["{$tr}.id","{$tr}.subject","{$pr}.last_read"])
-                            ->join($pr, "{$pr}.thread_id", "=", "{$tr}.id", "inner")
-                            ->where("{$pr}.user_id", "=", $user->id)
-                            ->offset(($page === 1 ? 0 : $page+4))
-                            ->limit(4)
-                            ->get();
+
+        /*"SELECT * FROM messenger_participants AS pr INNER JOIN messenger_threads AS tr ON pr.thread_id = tr.id WHERE pr.user_id = 194 LIMIT 4 OFFSET 4";*/
+        $this->threads = DB::table($pr)
+                ->join($tr, "{$pr}.thread_id", "=", "{$tr}.id", "inner")
+                ->where("{$pr}.user_id", "=", $user->id)
+                ->orderBy("{$tr}.updated_at", "desc")
+                ->limit(4)
+                ->offset($page == 1 ? 0 : ($page - 1) * 4)
+                ->get();
         $isUnread = function ($id, $lastRead = false) use ($user, $pr, $tr, $ms) {
             $d = DB::table($pr)->join($ms, "{$pr}.thread_id", "=", "{$ms}.thread_id", "inner");
             if ($lastRead) {
@@ -53,7 +55,9 @@ class MessagesController extends Controller
             if ($lastRead) {
                 $d = $d->where("{$ms}.created_at", ">", "{$pr}.last_read");
             }
-            return $d->where("{$pr}.user_id", $user->id)->get()[0]->count_data;
+            return $d
+                ->where("{$ms}.thread_id", "=", $id)
+                ->where("{$pr}.user_id", $user->id)->get()[0]->count_data;
         };
         $latestMessage = function ($id) use ($user, $pr, $tr, $ms) {
             return DB::table($ms)

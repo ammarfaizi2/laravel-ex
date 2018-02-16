@@ -12,7 +12,7 @@
         <?php $page = isset($_GET['page']) ? (int) $_GET['page'] : 1; ?>
         $('.pagination').pagination({
             page: {{$page}}, 
-            lastPage: {{ceil($that->countIndexMessage() / 10)}},
+            lastPage: {{ceil($that->countIndexMessage() / 4)}},
             url: function (page) {
                 return '?page='+page;
             }
@@ -35,7 +35,7 @@
     		var that = this;
     		$.ajax({
     			type: "GET",
-    			url: "?ajax_request=1",
+    			url: "?ajax_request=1<?php print isset($_GET['page']) ? "&page=". ((int) $_GET['page']) : 0; ?>",
     			datatype: "json",
     			success: function (response) {
     				that.buildChatContext(response);
@@ -105,7 +105,7 @@
     		this.bound.innerHTML = "";
     		for (x in data) {
     			this.bound.innerHTML +=
-                    '<div style="border:1px solid #000;" '+(data[x]['is_unread'] ? 'class="alert-info"' : '')+'>'+
+                    '<div style="border:1px solid #000;margin-bottom:3px;" '+(data[x]['is_unread'] ? 'class="alert-info"' : '')+'>'+
     				'<div class="media alert">' +
     				'<a href="'+that.routeBound.replace('~~route~~', data[x]['thread_id'])+'"><h2 style="margin-top:-3px;">'+data[x]['subject']+'</h2></a>'+
                     (data[x]['unread_count'] != 0 ? ' ('+data[x]['unread_count']+' unread)' : '')+
