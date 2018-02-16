@@ -41,8 +41,8 @@
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
-                <li><a href="/messages">Messages @include('messenger.unread-count')</a></li>
-                <li><a href="/messages/create">Create New Message</a></li>
+                <li><a href="{{ route('messages') }}">Messages @include('messenger.unread-count')</a></li>
+                <li><a href="{{ route('messages.create') }}">Create New Message</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>

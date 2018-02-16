@@ -9,5 +9,6 @@ return [
 	"delete_thread_invalid_permission" => "You are not creator in this thread!",
 	"internal_error" => "Unknown error",
 	"creator_leave_chat" => "You are the creator of this thread",
-	"leave_chat_success" => "You left the thread"
+	"leave_chat_success" => "You left the thread",
+	"self_message" => "Cannot send message to your self"
 ];

@@ -24,11 +24,14 @@ class MessagesController extends Controller
     public function index()
     {
         // All threads, ignore deleted/archived participants
-        $threads = Thread::getAllLatest()->get();
+        $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+        $this->threads = $this->tr = Thread::getAllLatest(
+                ($page === 1 ? 0 : $page+4)
+            , 4)->get();
         if (isset($_GET["ajax_request"])) {
             $data = [];
             $user = Confide::user();
-            foreach ($threads as $thread) {
+            foreach ($this->threads as $thread) {
                 if (DB::table(config("messenger.participants_table"))
                     ->select('id')
                     ->where('user_id', '=', $user->id)
@@ -61,9 +64,14 @@ class MessagesController extends Controller
 
         // All threads that user is participating in, with new messages
         // $threads = Thread::forUserWithNewMessages(Auth::id())->latest('updated_at')->get();
-
-        return view('messenger.index', compact('threads'));
+        return view('messenger.index', ['threads' => $this->threads, 'that' => $this]);
     }
+
+
+    public function countIndexMessage()
+    {
+        return Thread::getAllLatestForPaginator();
+    }  
 
     /**
      * Shows a message thread.
@@ -110,8 +118,10 @@ class MessagesController extends Controller
             return response()->json($data);
         }
 
-        return view('messenger.show', compact('thread', 'users'));
+        $that = $this;
+        return view('messenger.show', compact('thread', 'users', 'that'));
     }
+
 
     /**
      * Creates a new message thread.
@@ -133,7 +143,8 @@ class MessagesController extends Controller
     public function store()
     {
         $input = Input::all();
-
+        $user = \Confide::user();
+        for($i=0;$i<20;$i++) {
         if (Input::has('recipients')) {
             $thread = Thread::create([
                 'subject' => $input['subject'],
@@ -141,10 +152,14 @@ class MessagesController extends Controller
             $re = explode(",",$input['recipients']);
             $id = [];
             foreach ($re as $val) {
+                $val = trim($val);
                 $st = DB::table("users")
                       ->select("id")
-                      ->where("username", "=", trim($val))
+                      ->where("username", "=", $val)
                       ->first();
+                if ($val === $user->username) {
+                    return \Redirect::to(url()->previous())->with("error", trans("msg.self_message"));
+                }
                 if (! $st) {
                     return \Redirect::to(url()->previous())->with("error", trans("msg.user_not_found", ["username" => trim($val)]));
                 }
@@ -173,7 +188,7 @@ class MessagesController extends Controller
         ]);
 
         // Recipients
-        
+        }
         if (isset($_GET["ajax_request"])) {
             return response()->json("OK", 200);
         }

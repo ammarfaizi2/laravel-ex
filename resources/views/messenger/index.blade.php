@@ -4,9 +4,19 @@
     @include('messenger.partials.flash')
 
     <!-- @ each('messenger.partials.thread', $threads, 'thread', 'messenger.partials.no-threads') -->
-    <div id="messages_bound"></div>
+    <div id="messages_bound"></div><div class="pagination"></div>
     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
+    {{HTML::script('assets/js/bootstrap.min.js')}}
+    <script src="{{ asset('assets/js/bootstrap-pagination.js') }}"></script>
     <script type="text/javascript">
+        <?php $page = isset($_GET['page']) ? (int) $_GET['page'] : 1; ?>
+        $('.pagination').pagination({
+            page: {{$page}}, 
+            lastPage: {{ceil($that->countIndexMessage() / 10)}},
+            url: function (page) {
+                return '?page='+page;
+            }
+        });
     	class message_index {
     		constructor () {
     			this.bound = $("#messages_bound")[0];
@@ -19,7 +29,7 @@
                 that.getChat();
     		setInterval(function () {
     			that.getChat();
-    		}, 1000);
+    		}, 5000);
     	};
     	message_index.prototype.getChat = function() {
     		var that = this;
@@ -31,7 +41,8 @@
     				that.buildChatContext(response);
     			}
     		});
-    	};
+    	};                    
+           
         class postContextMaker {
             constructor(type, id, name) {
                 this.type = type;
@@ -106,6 +117,7 @@
                         (data[x]['creator'] === that.selfUser ? '<button onclick="deleteThread('+data[x]['thread_id']+', \''+data[x]['subject']+'\')" class="btn btn-danger">Delete Thread</button> ' : '')+
                     '</div>'+
     				'</div></div>';
+                
     		}
             if (this.bound.innerHTML === "") {
                 this.bound.innerHTML = '@include("messenger.partials.no-threads")';
