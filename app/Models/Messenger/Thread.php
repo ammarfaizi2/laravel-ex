@@ -4,7 +4,6 @@ namespace App\Models\Messenger;
 
 use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Models;
-use Cmgmyr\Messenger\Models\Message;
 use Cmgmyr\Messenger\Models\Participant;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -48,7 +47,7 @@ class Thread extends Eloquent
      */
     public function __construct(array $attributes = [])
     {
-        $this->table = Models::table('threads');
+        $this->table = config("messenger.threads_table");
 
         parent::__construct($attributes);
     }

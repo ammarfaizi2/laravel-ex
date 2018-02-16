@@ -42,7 +42,7 @@ class MessagesController extends Controller
     public function show($id)
     {
         try {
-            $thread = Thread::findOrFail($id);
+        $thread = Thread::findOrFail($id);
         } catch (ModelNotFoundException $e) {
             Session::flash('error_message', 'The thread with ID: ' . $id . ' was not found.');
 
@@ -57,6 +57,17 @@ class MessagesController extends Controller
         $users = User::whereNotIn('id', $thread->participantsUserIds($userId))->get();
 
         $thread->markAsRead($userId);
+        if (isset($_GET["ajax_request"])) {
+            $data = [];
+            foreach ($thread->messages as $message) {
+                $data[] = [
+                    "name" => empty($message->user->name) ? e($message->user->username) : e($message->user->name." (".$message->user->username.")"),
+                    "body" => e($message->body),
+                    "posted" => e($message->created_at->diffForHumans())
+                ];
+            }
+            return response()->json($data);
+        }
 
         return view('messenger.show', compact('thread', 'users'));
     }
@@ -104,7 +115,9 @@ class MessagesController extends Controller
         if (Input::has('recipients')) {
             $thread->addParticipant($input['recipients']);
         }
-
+        if (isset($_GET["ajax_request"])) {
+            return response()->json("OK", 200);
+        }
         return redirect()->route('messages');
     }
 
@@ -143,9 +156,13 @@ class MessagesController extends Controller
 
         // Recipients
         if (Input::has('recipients')) {
-            $thread->addParticipant(Input::get('recipients'));
+            var_dump(123);
+            var_dump(json_decode(Input::get('recipients'), true));die;
+            $thread->addParticipant();
         }
-
+        if (isset($_GET["ajax_request"])) {
+            return response()->json("OK", 200);
+        }
         return redirect()->route('messages.show', $id);
     }
 }
