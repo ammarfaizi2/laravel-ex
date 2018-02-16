@@ -191,6 +191,7 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa
         Route::put('{id}', ['as' => 'messages.update', 'uses' => 'MessagesController@update']);
         Route::post('/delete_thread', 'MessagesController@deleteThread')->name('messages.delete_thread');
         Route::post('/leave_thread', 'MessagesController@leaveThread')->name('messages.leave_thread');
+        Route::post('/add_participants', 'MessagesController@addParticipants')->name('messages.add_participants');
     });
     Route::post('/2fa_check', 'Google2FAHandler@check')->name("2fa_check");
     Route::get('/disable-two-factor-auth', function () {

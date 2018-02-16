@@ -10,5 +10,8 @@ return [
 	"internal_error" => "Unknown error",
 	"creator_leave_chat" => "You are the creator of this thread",
 	"leave_chat_success" => "You left the thread",
-	"self_message" => "Cannot send message to your self"
+	"self_message" => "Cannot send message to your self",
+	"add_participants" => "Add participants to ~~name~~ thread (comma separated for multiple input)",
+	"add_success" => "Added successfuly",
+	"user_already_joined" => "Error: :username already joined"
 ];

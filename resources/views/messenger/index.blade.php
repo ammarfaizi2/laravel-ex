@@ -2,14 +2,13 @@
 
 @section('content')
     @include('messenger.partials.flash')
-
+<?php $page = isset($_GET['page']) ? (int) $_GET['page'] : 1; ?>
     <!-- @ each('messenger.partials.thread', $threads, 'thread', 'messenger.partials.no-threads') -->
-    <div id="messages_bound"></div><div class="pagination"></div>
+    <div id="messages_bound">@include("messenger.partials.no-threads")</div><div class="pagination"></div>
     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
     {{HTML::script('assets/js/bootstrap.min.js')}}
     <script src="{{ asset('assets/js/bootstrap-pagination.js') }}"></script>
     <script type="text/javascript">
-        <?php $page = isset($_GET['page']) ? (int) $_GET['page'] : 1; ?>
         $('.pagination').pagination({
             page: {{$page}}, 
             lastPage: {{ceil($that->countIndexMessage() / 4)}},
@@ -24,6 +23,14 @@
                 this.selfUser = "{{Confide::user()->username}}";
     		}
     	}
+        class postContextMaker {
+            constructor(type, id, name) {
+                this.type = type;
+                this.id = id;
+                this.name = name;
+                this.context = "";
+            }
+        }
     	message_index.prototype.listen = function() {
     		var that = this;
                 that.getChat();
@@ -41,16 +48,7 @@
     				that.buildChatContext(response);
     			}
     		});
-    	};                    
-           
-        class postContextMaker {
-            constructor(type, id, name) {
-                this.type = type;
-                this.id = id;
-                this.name = name;
-                this.context = "";
-            }
-        }
+    	};
         postContextMaker.prototype.make = function() {
             var that = this;
             this.context = {                    
@@ -61,6 +59,8 @@
                 this.context["action"] = "delete";
             } else if (this.type === "leave") {
                 this.context["action"] = "leave";
+            } else if (this.type === "add") {
+                this.context["action"] = "add";
             }
         };
         postContextMaker.prototype.getContext = function() {
@@ -100,27 +100,50 @@
                 }
             });
         }
+        function addParticipants(id, name) {
+            setTimeout(function () {
+                $(".bootbox-input")[0].placeholder = "username1,username2,username3";
+            }, 500);
+            bootbox.prompt({
+                title: ("{{trans('msg.add_participants')}}").replace("~~name~~", '<b>'+name+'</b>'),
+                inputType: "text",
+                callback: function (result) {
+                    if (result !== null) {
+                        var postContext = new postContextMaker('add', id, result);
+                        postContext.make();
+                        $.ajax({
+                            type: "POST",
+                            url:"{!! route('messages.add_participants') !!}",
+                            data: postContext.getContext(),
+                            dataType: 'json',
+                            success: function (response) {
+                                bootbox.alert(response['message']);
+                            }
+                        });
+                    }
+                }
+            });
+        }
     	message_index.prototype.buildChatContext = function(data) {
     		var x, that = this;
-    		this.bound.innerHTML = "";
-    		for (x in data) {
-    			this.bound.innerHTML +=
-                    '<div style="border:1px solid #000;margin-bottom:3px;" '+(data[x]['is_unread'] ? 'class="alert-info"' : '')+'>'+
-    				'<div class="media alert">' +
-    				'<a href="'+that.routeBound.replace('~~route~~', data[x]['thread_id'])+'"><h2 style="margin-top:-3px;">'+data[x]['subject']+'</h2></a>'+
-                    (data[x]['unread_count'] != 0 ? ' ('+data[x]['unread_count']+' unread)' : '')+
-    				'<p>'+data[x]['latest_message']+'</p>'+
-    				'<p><small><strong>Creator:</strong> '+data[x]['creator']+'</small></p>'+
-    				'<p><small><strong>Participants:</strong> '+data[x]['participants'].join(",")+'</small></p><br>'+
-                    '<div>'+
-                        '<button onclick="leaveThread('+data[x]['thread_id']+', \''+data[x]['subject']+'\')" class="btn btn-warning">Leave Thread</button> '+
-                        (data[x]['creator'] === that.selfUser ? '<button onclick="deleteThread('+data[x]['thread_id']+', \''+data[x]['subject']+'\')" class="btn btn-danger">Delete Thread</button> ' : '')+
-                    '</div>'+
-    				'</div></div>';
-                
-    		}
-            if (this.bound.innerHTML === "") {
-                this.bound.innerHTML = '@include("messenger.partials.no-threads")';
+            if (data.length) {
+        		this.bound.innerHTML = "";
+        		for (x in data) {
+        			this.bound.innerHTML +=
+                        '<div style="border:1px solid #000;margin-bottom:3px;" '+(data[x]['is_unread'] ? 'class="alert-info"' : '')+'>'+
+        				'<div class="media alert">' +
+        				'<a href="'+that.routeBound.replace('~~route~~', data[x]['thread_id'])+'"><h2 style="margin-top:-3px;">'+data[x]['subject']+'</h2></a>'+
+                        (data[x]['unread_count'] != 0 ? ' ('+data[x]['unread_count']+' unread)' : '')+
+        				'<p>'+data[x]['latest_message']+'</p>'+
+        				'<p><small><strong>Creator:</strong> '+data[x]['creator']+'</small></p>'+
+        				'<p><small><strong>Participants:</strong> '+data[x]['participants'].join(",")+'</small></p><br>'+
+                        '<div>'+
+                            '<button onclick="leaveThread('+data[x]['thread_id']+', \''+data[x]['subject']+'\')" class="btn btn-warning">Leave Thread</button> '+
+                            (data[x]['creator'] === that.selfUser ? '<button onclick="deleteThread('+data[x]['thread_id']+', \''+data[x]['subject']+'\')" class="btn btn-danger">Delete Thread</button> ' : '')+
+                            '<button onclick="addParticipants('+data[x]['thread_id']+', \''+data[x]['subject']+'\')" class="btn btn-primary">Add Participants</button>'+
+                        '</div>'+
+        				'</div></div>';
+                }
             }
     	};
     	var st = new message_index;

@@ -115,6 +115,51 @@ class MessagesController extends Controller
         return view('messenger.index', ['threads' => $this->threads, 'that' => $this]);
     }
 
+    public function addParticipants()
+    {
+        if (isset($_POST['data'])) {
+            $data = json_decode($_POST['data'], true);
+            if (is_array($data)) {
+                $user = \Confide::user();
+                if (isset($data['thread_name'])) {
+                    $ss = [];
+                    $s = explode(",", trim($data["thread_name"]));
+                    $pr = config("messenger.participants_table");
+                    foreach ($s as $val) {
+                        $val = trim($val);
+                        $st = DB::table("users")
+                            ->select(["id"])
+                            ->where("username", "like", $val)
+                            ->first();
+                        if (! $st) {
+                            return response()->json(["message" => trans("msg.user_not_found", ["username" => $val])]);
+                        }
+                        $st2 = DB::table($pr) 
+                            ->select([DB::raw("COUNT(id) as count_data")])
+                            ->where("user_id", "=", $st->id)
+                            ->where("thread_id", "=", $data["thread_id"])
+                            ->limit(1)
+                            ->count();
+                        if ($st2) {
+                            return response()->json(["message" => trans("msg.user_already_joined", ["username" => $val])]);
+                        }
+                        Participant::create([
+                            "thread_id" => $data["thread_id"],
+                            "user_id" => $st->id,
+                            "last_read" => null
+                        ]);
+                    }
+                }
+                if ($s) {
+                    return response()->json(["message" => trans("msg.add_success")]);
+                } else {
+                    return response()->json(["message" => trans("msg.internal_error")]);
+                }
+            }
+        }
+        abort(404);
+    }
+
 
     public function countIndexMessage()
     {
@@ -196,13 +241,13 @@ class MessagesController extends Controller
             $thread = Thread::create([
                 'subject' => $input['subject'],
             ]);
-            $re = explode(",",$input['recipients']);
+            $re = explode(",",trim($input['recipients']));
             $id = [];
             foreach ($re as $val) {
                 $val = trim($val);
                 $st = DB::table("users")
                       ->select("id")
-                      ->where("username", "=", $val)
+                      ->where("username", "like", $val)
                       ->first();
                 if ($val === $user->username) {
                     return \Redirect::to(url()->previous())->with("error", trans("msg.self_message"));
