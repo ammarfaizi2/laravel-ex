@@ -74,10 +74,19 @@ class MessagesController extends Controller
     public function show($id)
     {
         try {
-        $thread = Thread::findOrFail($id);
+            $user = \Confide::user();
+            if (
+                ! DB::table(config("messenger.participants_table"))
+                    ->select("user_id")
+                    ->where("user_id", "=", $user->id)
+                    ->where("thread_id", "=", $id)
+                    ->first()
+            ) {
+                throw new ModelNotFoundException("");
+            }
+            $thread = Thread::findOrFail($id);
         } catch (ModelNotFoundException $e) {
-            Session::flash('error_message', 'The thread with ID: ' . $id . ' was not found.');
-
+            Session::flash('error', 'The thread with ID: ' . $id . ' was not found.');
             return redirect()->route('messages');
         }
 
@@ -125,9 +134,29 @@ class MessagesController extends Controller
     {
         $input = Input::all();
 
-        $thread = Thread::create([
-            'subject' => $input['subject'],
-        ]);
+        if (Input::has('recipients')) {
+            $thread = Thread::create([
+                'subject' => $input['subject'],
+            ]);
+            $re = explode(",",$input['recipients']);
+            $id = [];
+            foreach ($re as $val) {
+                $st = DB::table("users")
+                      ->select("id")
+                      ->where("username", "=", trim($val))
+                      ->first();
+                if (! $st) {
+                    return \Redirect::to(url()->previous())->with("error", trans("msg.user_not_found", ["username" => trim($val)]));
+                }
+                $id[] = $st->id;
+            }
+            $thread->addParticipant($id);
+        } else {
+             return \Redirect::to(url()->previous())->with("error", trans("msg.user_not_found", ["username" => ""]));
+        }
+        
+
+        
 
         // Message
         Message::create([
@@ -144,21 +173,7 @@ class MessagesController extends Controller
         ]);
 
         // Recipients
-        if (Input::has('recipients')) {
-            $re = explode(",",$input['recipients']);
-            $id = [];
-            foreach ($re as $val) {
-                $st = DB::table("users")
-                      ->select("id")
-                      ->where("username", "=", trim($val))
-                      ->first();
-                if (! $st) {
-                    return \Redirect::to(url()->previous())->with("error", trans("msg.user_not_found", ["username" => trim($val)]));
-                }
-                $id[] = $st->id;
-            }
-            $thread->addParticipant($id);
-        }
+        
         if (isset($_GET["ajax_request"])) {
             return response()->json("OK", 200);
         }
@@ -247,19 +262,14 @@ class MessagesController extends Controller
                     ->where("thread_id", "=", $data['thread_id'])
                     ->orderBy("created_at")
                     ->first();
-                if ($q->user_id === $user->id) {
-                    return response()->json(["message" => trans("msg.creator_leave_chat")]);
+                if (DB::table(config("messenger.participants_table"))
+                        ->where("thread_id", "=", $data["thread_id"])
+                        ->where("user_id", "=", $user->id)
+                        ->delete()
+                ) {
+                    return response()->json(["message" => trans("msg.leave_chat_success")]);
                 } else {
-                    if (DB::table("messenger.participants_table")
-                            ->where("thread_id", "=", $data["thread_id"])
-                            ->where("user_id", "=", $user->id)
-                            ->delete()
-                    ) {
-                        
-                        return response()->json(["message" => trans("msg.leave_chat_success")]);
-                    } else {
-                        return response()->json(["message" => trans("msg.internal_error")]);
-                    }
+                    return response()->json(["message" => trans("msg.internal_error")]);
                 }
             }
         }

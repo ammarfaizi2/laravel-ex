@@ -16,7 +16,7 @@
                 that.getChat();
                 setInterval(function() {
                     that.getChat();
-                }, 5000);  
+                }, 1000);  
             };
             qq.prototype.buildMessage = function(data) {
                 this.msgField.innerHTML = '<center>';

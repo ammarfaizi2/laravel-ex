@@ -1,18 +1,20 @@
-<h2>Add a new message</h2>
-<form action="{{ route('messages.update', $thread->id) }}" method="post" id="sendMessageForm">
-    <input type="hidden" name="_method" value="put">
-    <input type="hidden" name="_token" value="{{ csrf_token() }}" id="_token">
 
-    <!-- Message Form Input -->
-    <div class="form-group">
-        <textarea name="message" id="body" class="form-control">{{ old('message') }}</textarea>
-    </div>
+<div style="margin-top:10px;">
+    <form action="{{ route('messages.update', $thread->id) }}" method="post" id="sendMessageForm">
+        <input type="hidden" name="_method" value="put">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}" id="_token">
 
-    <!-- Submit Form Input -->
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary form-control">Submit</button>
-    </div>
-</form>
+        <!-- Message Form Input -->
+        <div class="form-group">
+            <textarea required style="resize: none;" name="message" id="body" class="form-control">{{ old('message') }}</textarea>
+        </div>
+
+        <!-- Submit Form Input -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary form-control">Submit</button>
+        </div>
+    </form>
+</div>
 <script type="text/javascript">
     class _sendMessage {
         constructor () {
@@ -32,8 +34,8 @@
                     datatype: "json",
                     data: postContext,
                     success: function (response) {
-                        alert(response);
                         $("#body")[0].value = "";
+                        document.getElementById( 'bottom' ).scrollIntoView();
                     }
                 });
             }
