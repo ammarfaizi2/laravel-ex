@@ -129,7 +129,12 @@ class Thread extends Eloquent
             ->where("{$pr}.user_id", "=", $u->id)
             ->where("{$tr}.deleted_at", "=", null)
             ->orderBy("{$tr}.updated_at", "desc");*/
-        return self::offset($offset)->limit($limit)->latest('updated_at');
+        $user = \Confide::user();
+        $pr = config("messenger.participants_table");
+        $tr = config("messenger.threads_table");
+        return self::join($pr, 
+                "{$pr}.thread_id", "=", "{$tr}.id")
+                ->where("{$pr}.user_id", "=", $user->id)->offset($offset)->limit($limit)->latest($tr.'.updated_at');
     }
 
     public static function getAllLatestForPaginator() {

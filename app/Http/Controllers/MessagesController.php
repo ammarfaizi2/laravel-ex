@@ -25,35 +25,79 @@ class MessagesController extends Controller
     {
         // All threads, ignore deleted/archived participants
         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-        $this->threads = $this->tr = Thread::getAllLatest(
+        /*$this->threads = $this->tr = Thread::getAllLatest(
                 ($page === 1 ? 0 : $page+4)
-            , 4)->get();
+            , 4)->get();*/
+        $user = \Confide::user();
+        $pr = config("messenger.participants_table");
+        $tr = config("messenger.threads_table");
+        $ms = config("messenger.messages_table");
+        $this->threads = DB::table($tr)
+                            ->select(["{$tr}.id","{$tr}.subject","{$pr}.last_read"])
+                            ->join($pr, "{$pr}.thread_id", "=", "{$tr}.id", "inner")
+                            ->where("{$pr}.user_id", "=", $user->id)
+                            ->offset(($page === 1 ? 0 : $page+4))
+                            ->limit(4)
+                            ->get();
+        $isUnread = function ($id, $lastRead = false) use ($user, $pr, $tr, $ms) {
+            $d = DB::table($pr)->join($ms, "{$pr}.thread_id", "=", "{$ms}.thread_id", "inner");
+            if ($lastRead) {
+                $d = $d->where("{$ms}.created_at", ">", "{$pr}.last_read");
+            }
+            return (bool) $d->where("{$pr}.user_id", $user->id)->limit(1)->count();
+        };
+        $unreadCount = function ($id, $lastRead = false) use ($user, $pr, $tr, $ms) {
+            $d = DB::table($pr)
+                ->select([DB::raw("COUNT(*) AS count_data")])
+                ->join($ms, "{$pr}.thread_id", "=", "{$ms}.thread_id", "inner");
+            if ($lastRead) {
+                $d = $d->where("{$ms}.created_at", ">", "{$pr}.last_read");
+            }
+            return $d->where("{$pr}.user_id", $user->id)->get()[0]->count_data;
+        };
+        $latestMessage = function ($id) use ($user, $pr, $tr, $ms) {
+            return DB::table($ms)
+                ->select(["body"])
+                ->where("thread_id", "=", $id)
+                ->orderBy("created_at", "desc")
+                ->limit(1)
+                ->get()[0]->body;
+        };
+        $creator = function ($id) use ($user, $pr, $tr, $ms) {
+            return DB::table($ms)
+                ->select(["users.username"])
+                ->join("users", "{$ms}.user_id", "=", "users.id", "inner")
+                ->where("{$ms}.thread_id", "=", $id)
+                ->orderBy("{$ms}.created_at")
+                ->limit(1)
+                ->get()[0]->username;
+        };
+        $participants = function ($id) use ($user, $pr, $tr, $ms) {
+            $r = DB::table($pr)
+                ->select(["users.username"])
+                ->join("users", "{$pr}.user_id", "=", "users.id")
+                ->where("{$pr}.thread_id", "=", $id)
+                ->get()
+                ->toArray();
+            $rr = [];
+            foreach ($r as $val) {
+                $rr[] = $val->username;
+            }
+            return $rr;
+        };
         if (isset($_GET["ajax_request"])) {
             $data = [];
             $user = Confide::user();
             foreach ($this->threads as $thread) {
-                if (DB::table(config("messenger.participants_table"))
-                    ->select('id')
-                    ->where('user_id', '=', $user->id)
-                    ->where('thread_id', '=', $thread->id)
-                    ->first()
-                ) {
-                    $creator = $thread->creator()->username;
-                    $participants = array_unique(explode(",",trim($user->username.",".$thread->participantsString(Auth::id()), ",")));
-                    $p = [];
-                    foreach ($participants as $val) {
-                        $p[] = trim($val);
-                    }
                     $data[] = [
-                        'is_unread' => e($thread->isUnread(Auth::id())),
+                        'is_unread' => $isUnread($thread->id, $thread->last_read),
                         'thread_id' => e($thread->id),
                         'subject' => e($thread->subject),
-                        'unread_count' => e($thread->userUnreadMessagesCount(Auth::id())),
-                        'latest_message' => e($thread->latestMessage->body),
-                        'creator' => $creator,
-                        'participants' => $p
+                        'unread_count' => $unreadCount($thread->id, $thread->last_read),
+                        'latest_message' => e($latestMessage($thread->id)),
+                        'creator' => $creator($thread->id),
+                        'participants' => $participants($thread->id)
                     ];
-                }
             }
 
             return response()->json($data);
@@ -144,7 +188,6 @@ class MessagesController extends Controller
     {
         $input = Input::all();
         $user = \Confide::user();
-        for($i=0;$i<20;$i++) {
         if (Input::has('recipients')) {
             $thread = Thread::create([
                 'subject' => $input['subject'],
@@ -187,8 +230,6 @@ class MessagesController extends Controller
             'last_read' => new Carbon,
         ]);
 
-        // Recipients
-        }
         if (isset($_GET["ajax_request"])) {
             return response()->json("OK", 200);
         }
