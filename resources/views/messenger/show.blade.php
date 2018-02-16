@@ -10,44 +10,44 @@
         		constructor() {
         			this.msgField = $("#message_fields")[0];
         		}
-        		listen() {
-        			var that = this;
-        			that.getChat();
-        			setInterval(function() {
-        				that.getChat();
-        			}, 5000);
-        		}
-        		buildMessage(data) {
-        			this.msgField.innerHTML = '<center>';
-        			for(var x in data) {
-        				this.msgField.innerHTML += 
-						'<div class="media">'+
-						    '<a class="pull-left" href="#">'+
-						        '<img src="//www.gravatar.com/avatar/{{ md5(rand()) }} ?s=64" alt="'+data[x]['name']+'" class="img-circle">'+
-						    '</a>'+
-						    '<div class="media-body">'+
-						        '<h5 class="media-heading">'+data[x]['name']+'</h5>'+
-						        '<p>'+data[x]['body']+'</p>'+
-						        '<div class="text-muted">'+
-						            '<small>Posted '+data[x]['posted']+'</small>'+
-						        '</div>'
-						    '</div>'+
-						'</div>';
-        			}
-        			this.msgField.innerHTML += '</center>';
-        		}
-        		getChat() {
-        			var that = this;
-        			$.ajax({
-						type: 'GET',
-						url: '?ajax_request=1',
-						datatype: 'json',
-						success:function(response) {
-							that.buildMessage(response);
-						}
-					});
-        		}
         	}
+            qq.prototype.listen = function() {
+                var that = this;
+                that.getChat();
+                setInterval(function() {
+                    that.getChat();
+                }, 1000);  
+            };
+            qq.prototype.buildMessage = function(data) {
+                this.msgField.innerHTML = '<center>';
+                for(var x in data) {
+                    this.msgField.innerHTML += 
+                    '<div class="media">'+
+                        '<a class="pull-left" href="#">'+
+                            '<img src="//www.gravatar.com/avatar/{{ md5(rand()) }} ?s=64" alt="'+data[x]['name']+'" class="img-circle">'+
+                        '</a>'+
+                        '<div class="media-body">'+
+                            '<h5 class="media-heading">'+data[x]['name']+'</h5>'+
+                            '<p>'+data[x]['body']+'</p>'+
+                            '<div class="text-muted">'+
+                                '<small>Posted '+data[x]['posted']+'</small>'+
+                            '</div>'
+                        '</div>'+
+                    '</div>';
+                }
+                this.msgField.innerHTML += '</center>';  
+            };
+            qq.prototype.getChat = function() {
+                var that = this;
+                $.ajax({
+                    type: 'GET',
+                    url: '?ajax_request=1',
+                    datatype: 'json',
+                    success:function(response) {
+                        that.buildMessage(response);
+                    }
+                });
+            };
         	var st = new qq();
         		st.listen();
         </script>

@@ -11,6 +11,6 @@
         <small><strong>Creator:</strong> {{ $creator = $thread->creator()->username }}</small>
     </p>
     <p>
-        <small><strong>Participants:</strong> {{ trim($creator.",".$thread->participantsString(Auth::id()), ",") }}</small>
+        <small><strong>Participants:</strong> {{ implode(",",array_unique(explode(",",trim($creator.",".$thread->participantsString(Auth::id()), ",")))) }}</small>
     </p>
 </div>
