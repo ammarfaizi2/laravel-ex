@@ -42,6 +42,7 @@
                         datatype: "json",
                         data: postContext,
                         success: function (response) {
+                            alert(response);
                             $("#body")[0].value = "";
                         }
                     });
@@ -57,7 +58,7 @@
             };
             if (r.length) {
                 for (x in r) {
-                    if (r[x].value) {
+                    if (r[x].checked) {
                         rr[i++] = r[x].value;
                     }
                 }

@@ -1,7 +1,6 @@
-@extends('layouts.default')
+@extends('layouts.master')
 
 @section('content')
-
     <div class="col-md-6">
         <h1>{{ $thread->subject }}</h1>
         <?php  /*@ each('messenger.partials.messages', $thread->messages, 'message') */ ?> 
@@ -16,7 +15,7 @@
         			that.getChat();
         			setInterval(function() {
         				that.getChat();
-        			}, 1000);
+        			}, 5000);
         		}
         		buildMessage(data) {
         			this.msgField.innerHTML = '<center>';

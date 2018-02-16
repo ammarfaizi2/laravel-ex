@@ -156,9 +156,7 @@ class MessagesController extends Controller
 
         // Recipients
         if (Input::has('recipients')) {
-            var_dump(123);
-            var_dump(json_decode(Input::get('recipients'), true));die;
-            $thread->addParticipant();
+            $thread->addParticipant(json_decode(urldecode(Input::get('recipients')), true));
         }
         if (isset($_GET["ajax_request"])) {
             return response()->json("OK", 200);
