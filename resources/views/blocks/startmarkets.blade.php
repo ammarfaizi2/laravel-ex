@@ -58,14 +58,14 @@
 					<!-- >#Featured-Markets -->
 					@if(!$market_predefined && $stq = $that->hasFeaturedMarket()->toArray())
 						<?php $i = 1; ?>
-						<div style="margin-left:15px;padding-bottom:10px;">
+						<div >
 							<h2>Featured Market</h2>
-							<table style="border-collapse: collapse;" border="1">
-								<tr>@foreach(['No.', 'Coin', 'Link', 'Message', 'Start Date', 'End Date'] as $q)<th><center>{{$q}}</center></th>@endforeach</tr>
+							<ul>
+								<li>@foreach(['No.', 'Coin', 'Link', 'Message', 'Start Date', 'End Date'] as $q)<li>{{$q}}</li>@endforeach
 							@foreach($stq as $q)
-								<tr><td style="padding:5px;" align="center">{{$i++}}.</td><td style="padding:5px;" align="center">{{$q->type.' - '.$q->name}}</td><td style="padding:5px;" align="center">{{$q->link}}</td><td style="padding:5px;" align="center">{{$q->message}}</td><td style="padding:5px;" align="center">{{date("d F Y", strtotime($q->start_date))}}</td><td style="padding:5px;" align="center">{{date("d F Y", strtotime($q->end_date))}}</td></tr>
+								<li>{{$i++}} - {{$q->type.' - '.$q->name}} | {{$q->link}} || {{$q->message}} || sd: {{date("d F Y", strtotime($q->start_date))}} || ed: {{date("d F Y", strtotime($q->end_date))}}</li>
 							@endforeach
-							</table>
+							</ul>
 						</div>
 					@endif
 					<!-- <#Featured-Markets -->
