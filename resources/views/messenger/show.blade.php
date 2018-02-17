@@ -59,7 +59,7 @@
                 that.getChat(1);
                 setInterval(function() {
                     that.getChat();
-                }, 5000);  
+                }, 1000);  
             };
             qq.prototype.buildMessage = function(data) {
                 thatPage.pagination({
@@ -73,12 +73,12 @@
                 this.msgField.innerHTML = '<center>';
                 for(var x in data) {
                     this.msgField.innerHTML += 
-                    '<div class="media">'+
+                    '<div class="media" style="background-color:'+(x%2 ? '#caff59' : '#9bb4e8')+';margin-top:2px;margin-bottom:2px;">'+
                         '<a class="pull-left" href="#">'+
                             '<img src="//www.gravatar.com/avatar/{{ md5(rand()) }} ?s=64" alt="'+data[x]['name']+'" class="img-circle">'+
                         '</a>'+
                         '<div class="media-body">'+
-                            '<h5 class="media-heading">'+data[x]['name']+'</h5>'+
+                            '<h5 class="media-heading" style="color:grey;">'+data[x]['name']+'</h5>'+
                             '<p>'+data[x]['body']+'</p>'+
                             '<div class="text-muted">'+
                                 '<small>Posted '+data[x]['posted']+'</small>'+

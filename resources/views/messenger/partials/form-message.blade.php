@@ -28,14 +28,20 @@
         this.form.addEventListener("submit", function () {
             var postContext = that.buildContext();
             if (postContext !== false) {
+                $("#body")[0].disabled = 1;
+                $("#body")[0].style["background-color"] = "#cebbbb";
                 $.ajax({
                     type: "PUT",
                     url: that.action + "?ajax_request=1",
                     datatype: "json",
                     data: postContext,
                     success: function (response) {
-                        $("#body")[0].value = "";
                         // document.getElementById('bottom').scrollIntoView();
+                        setTimeout(function () {
+                            $("#body")[0].value = "";
+                            $("#body")[0].disabled = "";
+                            $("#body")[0].style["background-color"] = "";
+                        }, 300);
                         scrollDownChat();
                         st.getChat();
                     }
