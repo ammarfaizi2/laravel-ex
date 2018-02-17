@@ -21,6 +21,7 @@ return array(
     "logout"                =>"Logout",
     "message"               => "Messages",
     "hello"                 => "Hello",
+    "notification"          => "Notification",
     "title_login"           => "Login to your Account",
     "term_service"          => "Terms of Service",
     "i_agree_terms"         => "I have read and agree to the",

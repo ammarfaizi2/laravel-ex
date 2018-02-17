@@ -37,10 +37,15 @@
 	<?php /* https://cdnjs.com/libraries/pnotify 
 	{{ HTML::script('assets/js/jquery-2.1.1.min.js') }}
 	*/ ?>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	@if(Request::is("/user/messages"))
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	@endif
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> -->
 
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 	{{ HTML::script('assets/js/bootstrap.min.js') }}
-	
 	{{ HTML::script('assets/js/pnotify.custom.min.js') }}
 	{{ HTML::script('assets/js/bootstrap-dialog.min.js') }}
 	{{ HTML::script('assets/js/prettyFloat.min.js') }}

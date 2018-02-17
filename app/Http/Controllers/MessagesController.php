@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Request;
 use Confide;
 use App\User;
 use Carbon\Carbon;
@@ -290,6 +291,7 @@ class MessagesController extends Controller
      */
     public function create()
     {
+
         $users = User::where('id', '!=', Auth::id())->get();
 
         return view('messenger.create', compact('users'));
@@ -302,6 +304,7 @@ class MessagesController extends Controller
      */
     public function store()
     {
+        Request::flash();
         $input = Input::all();
         $user = \Confide::user();
         if (Input::has('recipients')) {

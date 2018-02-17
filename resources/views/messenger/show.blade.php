@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.default')
 
 @section('content')
     <div class="col-md-6">
@@ -16,7 +16,6 @@
         <div style="margin-top:-20px;" class="pagination"></div>
         <div id="message_fields" style="border:1px solid #000; height:400px;padding: 2px 2px 2px 5px;margin-top:-30px; overflow-y: scroll;"></div>
         <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
-        {{HTML::script('assets/js/bootstrap.min.js')}}
         <script src="{{ asset('assets/js/bootstrap-pagination.js') }}"></script>
         <script type="text/javascript">
             var thatPage = $('.pagination');

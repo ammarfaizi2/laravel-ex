@@ -1,15 +1,17 @@
-@extends('layouts.master')
-
+@extends('layouts.default')
 @section('content')
-    @include('messenger.partials.flash')
+@include('messenger.partials.flash')
 <?php $page = isset($_GET['page']) ? (int) $_GET['page'] : 1; ?>
-    <!-- @ each('messenger.partials.thread', $threads, 'thread', 'messenger.partials.no-threads') -->
-    <div id="nf">
-        @include("messenger.partials.no-threads")
+    <div style="margin:4%;">
+        <div style="margin-bottom:1%;">
+            <a href="{{route("messages.create")}}">Create new message</a>
+        </div>
+        <div id="nf">
+            @include("messenger.partials.no-threads")
+        </div>
+        <div id="messages_bound"></div><div class="pagination"></div>
     </div>
-    <div id="messages_bound"></div><div class="pagination"></div>
     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
-    {{HTML::script('assets/js/bootstrap.min.js')}}
     <script src="{{ asset('assets/js/bootstrap-pagination.js') }}"></script>
     <script type="text/javascript">
         $('.pagination').pagination({

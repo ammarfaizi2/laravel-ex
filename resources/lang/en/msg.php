@@ -13,5 +13,6 @@ return [
 	"self_message" => "Cannot send message to your self",
 	"add_participants" => "Add participants to ~~name~~ thread (comma separated for multiple input)",
 	"add_success" => "Added successfuly",
-	"user_already_joined" => "Error: :username already joined"
+	"user_already_joined" => "Error: :username already joined",
+	"back" => "Back to messages",
 ];
