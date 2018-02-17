@@ -34,12 +34,13 @@ class MessagesController extends Controller
         $ms = config("messenger.messages_table");
 
         /*"SELECT * FROM messenger_participants AS pr INNER JOIN messenger_threads AS tr ON pr.thread_id = tr.id WHERE pr.user_id = 194 LIMIT 4 OFFSET 4";*/
+        $limit = env("THREADS_PAGINATION_LIMIT");
         $this->threads = DB::table($pr)
                 ->join($tr, "{$pr}.thread_id", "=", "{$tr}.id", "inner")
                 ->where("{$pr}.user_id", "=", $user->id)
                 ->orderBy("{$tr}.updated_at", "desc")
-                ->limit(4)
-                ->offset($page == 1 ? 0 : ($page - 1) * 4)
+                ->limit($limit)
+                ->offset($page == 1 ? 0 : ($page - 1) * $limit)
                 ->get();
         $isUnread = function ($id, $lastRead = false) use ($user, $pr, $tr, $ms) {
             $d = DB::table($pr)->join($ms, "{$pr}.thread_id", "=", "{$ms}.thread_id", "inner");
@@ -175,7 +176,11 @@ class MessagesController extends Controller
     public function show($id)
     {
         try {
+            $limit = env("MESSAGES_PAGINATION_LIMIT");
             $user = \Confide::user();
+            $pr = config("messenger.participants_table");
+            $tr = config("messenger.threads_table");
+            $ms = config("messenger.messages_table");
             if (
                 ! DB::table(config("messenger.participants_table"))
                     ->select("user_id")
@@ -195,12 +200,13 @@ class MessagesController extends Controller
         // $users = User::whereNotIn('id', $thread->participantsUserIds())->get();
 
         // don't show the current user in list
-        $userId = Auth::id();
-        $users = User::whereNotIn('id', $thread->participantsUserIds($userId))->get();
+        // $userId = Auth::id();
+        // $users = User::whereNotIn('id', $thread->participantsUserIds($userId))->get();
 
-        $thread->markAsRead($userId);
+        // $thread->markAsRead($userId);
+        $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
         if (isset($_GET["ajax_request"])) {
-            $data = [];
+            /*$data = [];
             foreach ($thread->messages as $message) {
                 $data[] = [
                     "name" => empty($message->user->name) ? e($message->user->username) : e($message->user->name." (".$message->user->username.")"),
@@ -208,11 +214,64 @@ class MessagesController extends Controller
                     "posted" => e($message->created_at->diffForHumans())
                 ];
             }
+            return response()->json($data);*/
+            "SELECT ms.id,users.username,ms.body,ms.created_at FROM messenger_messages AS ms INNER JOIN messenger_threads AS tr ON ms.thread_id = tr.id INNER JOIN users ON ms.user_id = users.id WHERE tr.id = 17 ORDER BY ms.created_at DESC LIMIT 3 OFFSET 0";
+            $st = DB::table($ms)
+                ->select(["{$ms}.id as msg_id", "users.username", "{$ms}.body", "{$ms}.created_at"])
+                ->join("{$tr}", "{$ms}.thread_id", "=", "{$tr}.id")
+                ->join("users", "{$ms}.user_id", "=", "users.id")
+                ->where("{$tr}.id", "=", $id)
+                ->where("{$ms}.deleted_at", "=", null)
+                ->orderBy("{$ms}.created_at", "desc")
+                ->limit($limit)
+                ->offset($page == 1 ? 0 : ($page-1)*$limit);
+            $data = [];
+            foreach ($st->get() as $val) {
+                $data[] = [
+                    "id" => $val->msg_id,
+                    "name" => e($val->username),
+                    "body" => e($val->body),
+                    "posted" => (new Carbon($val->created_at))->diffForHumans()
+                ];
+            }
+            $data = [
+                "last_page" => ceil($this->countCurrentMessage($id)/$limit),
+                "data" => array_reverse($data)
+            ];
             return response()->json($data);
         }
 
         $that = $this;
-        return view('messenger.show', compact('thread', 'users', 'that'));
+        $creator = function ($id) use ($user, $pr, $tr, $ms) {
+            return DB::table($ms)
+                ->select(["users.username"])
+                ->join("users", "{$ms}.user_id", "=", "users.id", "inner")
+                ->where("{$ms}.thread_id", "=", $id)
+                ->orderBy("{$ms}.created_at")
+                ->limit(1)
+                ->get()[0]->username;
+        };
+        $creator = $creator($id);
+        $r = DB::table($pr)
+            ->select(["users.username"])
+            ->join("users", "{$pr}.user_id", "=", "users.id")
+            ->where("{$pr}.thread_id", "=", $id)
+            ->get()
+            ->toArray();
+        $pars = [];
+        foreach ($r as $val) {
+            $pars[] = $val->username;
+        }
+        return view('messenger.show', compact('thread', 'users', 'that', 'page', 'id', 'creator', 'pars'));
+    }
+
+    public function countCurrentMessage($id)
+    {
+        $ms = config("messenger.messages_table");
+        $st = DB::table($ms)
+                ->where("thread_id", "=", $id)
+                ->count();
+        return $st;                
     }
 
 

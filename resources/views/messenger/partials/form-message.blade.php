@@ -35,7 +35,9 @@
                     data: postContext,
                     success: function (response) {
                         $("#body")[0].value = "";
-                        document.getElementById( 'bottom' ).scrollIntoView();
+                        // document.getElementById('bottom').scrollIntoView();
+                        scrollDownChat();
+                        st.getChat();
                     }
                 });
             }
@@ -60,3 +62,4 @@
     var st = new _sendMessage();
         st.listen();
 </script>
+<div id="bottom"></div>

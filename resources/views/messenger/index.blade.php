@@ -4,14 +4,17 @@
     @include('messenger.partials.flash')
 <?php $page = isset($_GET['page']) ? (int) $_GET['page'] : 1; ?>
     <!-- @ each('messenger.partials.thread', $threads, 'thread', 'messenger.partials.no-threads') -->
-    <div id="messages_bound">@include("messenger.partials.no-threads")</div><div class="pagination"></div>
+    <div id="nf">
+        @include("messenger.partials.no-threads")
+    </div>
+    <div id="messages_bound"></div><div class="pagination"></div>
     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
     {{HTML::script('assets/js/bootstrap.min.js')}}
     <script src="{{ asset('assets/js/bootstrap-pagination.js') }}"></script>
     <script type="text/javascript">
         $('.pagination').pagination({
             page: {{$page}}, 
-            lastPage: {{ceil($that->countIndexMessage() / 4)}},
+            lastPage: {{ceil($that->countIndexMessage() / env("THREADS_PAGINATION_LIMIT"))}},
             url: function (page) {
                 return '?page='+page;
             }
@@ -36,7 +39,7 @@
                 that.getChat();
     		setInterval(function () {
     			that.getChat();
-    		}, 5000);
+    		}, 3000);
     	};
     	message_index.prototype.getChat = function() {
     		var that = this;
@@ -125,9 +128,9 @@
             });
         }
     	message_index.prototype.buildChatContext = function(data) {
-    		var x, that = this;
+    		var x, that = this, nf = $("#nf")[0];
+            this.bound.innerHTML = "";
             if (data.length) {
-        		this.bound.innerHTML = "";
         		for (x in data) {
         			this.bound.innerHTML +=
                         '<div style="border:1px solid #000;margin-bottom:3px;" '+(data[x]['is_unread'] ? 'class="alert-info"' : '')+'>'+
@@ -144,6 +147,9 @@
                         '</div>'+
         				'</div></div>';
                 }
+                nf.style.display = "none";
+            } else {
+                nf.style.display = "";
             }
     	};
     	var st = new message_index;
