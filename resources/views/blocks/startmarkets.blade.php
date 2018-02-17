@@ -31,9 +31,9 @@
 				<hr class="colorgraph" />
 			</div>
 			
-			
+			<!-- >#Markets Data -->
 			<div class="contentmarketdata">
-				<!-- ############ START VOLUME MARKETS-->
+				
 						<div class=" col-12-xs col-sm-12 col-lg-12 ">
 							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
 								BTC Vol: 1290
@@ -50,10 +50,40 @@
 
 				</div>
 			</div>
+			<!-- <#Markets Data -->
+			
+			<?php
+			if(!$market_predefined && $stq = $that->hasFeaturedMarket()->toArray()) :
+				$i = 1;
+				$stq_c = count($stq);
+				$t_col = (12/$stq_c);
+			?>
+			<!-- >#Featured-Markets -->
+			<div class="contentfeaturedmarkets">
+				<div class=" col-12-xs col-sm-12 col-lg-12 ">
+					@foreach($stq as $q)
+						<div class="col-lg-{{$t_col}} col-md-{{$t_col}} col-sm-{{$t_col}} col-xs-{{$t_col}}">
+							<div class="inblock" style="color: #ccc;background: #000;box-shadow: 0 1px 2px #000;border: 1px solid #555;">
+							{{$q->type.' - '.$q->name}} <br />
+							Price: 0.0041219BTC <br />
+							Vol: 212BTC
+							<span style="position: absolute;top: 10px;right: 20px;">Change: +18.5%</span>
+							</div>
+						</div>
+					@endforeach
+				</div>
+			</div>
+			<!-- <#Featured-Markets -->
+			<?php
+			endif
+			?>
+			
+			<?php
+			/*
 			<div class="">
 				<div class="row">
 					<div class="col-12-xs col-sm-12 col-md-12 col-lg-12 col-centered">
-						<!-- >#Featured-Markets -->
+						
 						@if(!$market_predefined && $stq = $that->hasFeaturedMarket()->toArray())
 							<?php $i = 1; ?>
 							<div >
@@ -66,11 +96,13 @@
 								</ul>
 							</div>
 						@endif
+						
 						<!-- #Featured-Markets -->
 					</div>
-					
 				</div>
 			</div>
+			*/
+			?>
 			
 
 		
