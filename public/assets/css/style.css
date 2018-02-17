@@ -338,28 +338,8 @@ span.logo {
 
 
 
-/* Desktops and laptops ----------- */
-@media only screen 
-and (min-width : 1224px) {
-/* Styles */
-.marginleft{margin-right:900px;}
 
-.margintop50{margin-top:50px;}
 
-.margintop20{margin-top:20px;}
-
-}
-
-/* Large screens ----------- */
-@media only screen 
-and (min-width : 1824px) {
-/* Styles */
-
-.marginleft{margin-right:900px;}
-
-.margintop50{margin-top:50px;}
-.margintop20{margin-top:20px;}
-}
 
 
 .recaptchatable, #recaptcha_area tr, #recaptcha_area td, #recaptcha_area th {
@@ -531,6 +511,20 @@ and (min-width : 1824px) {
 		display: none !important; 
 	}
 }
+/* Desktops and laptops ----------- */
+@media only screen 
+	and (min-width : 1220px) {
+
+		.col-md-11,
+		.col-lg-11,
+		.col-md-12,
+		.col-lg-12 {
+			float: none !important;
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 1170px;
+		}
+}
 
 
 .list-group {
@@ -687,14 +681,11 @@ and (min-width : 1824px) {
     color: #bbb;
     
     text-align: center;
-	height: 70px;
 	
 	border-top: 1px solid #666;
 	
 	clear: both;
-	padding: 15px 0;
 	margin: 0;
-	width: 100%;
 	position: relative;
 	bottom: 0;
 }
@@ -1048,7 +1039,7 @@ https://codepen.io/anon/pen/PQzQNE
 }
 
 	/* Startpage - Content Data*/
-	.contentmarketdata > .row > div {
+	.contentmarketdata {
 		padding: 10px 0;
 		border-bottom: 1px solid rgba(0,0,0,0.25);
 		background-color: #333;
@@ -1056,7 +1047,7 @@ https://codepen.io/anon/pen/PQzQNE
 		margin-bottom: 20px;
 		color: #999;
 	}
-
+	
 	.contentheader .button .fa {
 		float: left;
 		font-size: 24px;
@@ -1998,9 +1989,11 @@ table.market_table tbody tr td:nth-child(5) {
 }
 #market_place .contentheader{
 	background: #000;
-	color: #fff;padding: 15px;
+	color: #fff;
+	padding: 15px 0;
 	text-align: center;
 	justify-content: center;
+	display:flex;
 	
 }
 #market_place .contentheader .market_stats .list-group-item{
@@ -2033,6 +2026,9 @@ input#sidebar_search_market{
 }
 
 /*Menu Right Sidebar*/
+.navbar-right {
+margin: 0;
+}
 .navbar-default,
 .navbar-inverse {
     background-color: #171717;

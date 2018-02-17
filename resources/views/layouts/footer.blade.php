@@ -90,22 +90,26 @@
 ?>
 <div class="row">
 	<div class="contentinner">
+	
 		<div class="footer">
-			<div class="col-12-xs col-sm-12 col-lg-12" >
-		
-			Copyright &copy; <?php echo date('Y')?> <strong>{{{ Config::get('config_custom.company_name') }}}</strong>
-			<br />
-			All Rights Reserved. {{{ Config::get('config_custom.company_slogan') }}}.
-			<br />
 			<hr class="colorgraph"/>
-			@if(isset($menu_pages))
-				@foreach($menu_pages as $menu_page)
-					<span @if(Request::is('post/'.$menu_page->permalink)) {{'class="active"'}} @endif>{{ HTML::link('post/'.$menu_page->permalink, $menu_page->title, array('class' => Request::is('post/'.$menu_page->permalink)?'active':'')) }}</span> |
-				@endforeach
-			@endif
-			<span @if(Request::is('page/fees')) {{'class="active"'}} @endif>{{ HTML::link('page/fees', trans('user_texts.fees'), array('class' => Request::is('page/fees')?'active':'')) }}</span> | 
-			<span @if(Request::is('page/api')) {{'class="active"'}} @endif><a href="{{ url('page/api') }}"><i class="fa fa-file"></i> {{trans('user_texts.api')}}</a> </span>
-			<br />
+			<div class="col-12-xs col-sm-12 col-lg-12" >
+			
+				Copyright &copy; <?php echo date('Y')?> <strong>{{{ Config::get('config_custom.company_name') }}}</strong>
+				<br />
+				{{{ Config::get('config_custom.company_slogan') }}}.
+				<br />
+				
+				@if(isset($menu_pages))
+					@foreach($menu_pages as $menu_page)
+						<span @if(Request::is('post/'.$menu_page->permalink)) {{'class="active"'}} @endif>{{ HTML::link('post/'.$menu_page->permalink, $menu_page->title, array('class' => Request::is('post/'.$menu_page->permalink)?'active':'')) }}</span> |
+					@endforeach
+				@endif
+				<span @if(Request::is('page/fees')) {{'class="active"'}} @endif>{{ HTML::link('page/fees', trans('user_texts.fees'), array('class' => Request::is('page/fees')?'active':'')) }}</span> | 
+				<span @if(Request::is('page/api')) {{'class="active"'}} @endif><a href="{{ url('page/api') }}"><i class="fa fa-file"></i> {{trans('user_texts.api')}}</a> </span>
+				<br />
+				<br />
+			
 			
 			</div>
 		</div>

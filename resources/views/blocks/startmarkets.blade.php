@@ -6,16 +6,14 @@
 <!-- >#START MARKETS TABLE-->
 <div class="row">
 	<div class="contentinner">
-			@if ( Auth::guest() )
+			
 			<div class="contentheader" >
-
+				<div class="col-12-xs col-sm-12 col-lg-12 ">
+				@if ( Auth::guest() )
 				<h1 style="margin-top:5px;">{{{ Config::get('config_custom.company_name') }}}</h1>
 
 				<h2>The Fast, Secure and Reliable Crypto Exchange with Low Fees!</h2>
-
-
 				<div style="background-color: rgba(0,0,0,0.25); padding: 10px; border-radius: 4px;">
-
 					<a class="button button-green btn btn-lg" href="{{{ URL::to('/user/register') }}}">
 					  <i class="fa fa-user-plus"></i>
 					  <span>{{trans('user_texts.register')}}</span>
@@ -24,51 +22,52 @@
 					  <i class="fa fa-sign-in "></i>
 					  <span>{{trans('user_texts.login')}}</span>
 					</a>
-
 				</div>
-
+				@endif
+				</div>
 			</div>
+
 			<div class="row">
 				<hr class="colorgraph" />
 			</div>
-			@endif
+			
 			
 			<div class="contentmarketdata">
 				<!-- ############ START VOLUME MARKETS-->
-				<div class="row">
-						<div class="col-12-xs col-sm-12 col-lg-12 ">
-							<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-										BTC Vol: 1290
+						<div class=" col-12-xs col-sm-12 col-lg-12 ">
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+								BTC Vol: 1290
 							</div>
-							<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-										LTC Vol: 2191
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+								LTC Vol: 2191
 							</div>
-							<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-										# Trades: 2194
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+								# Trades: 2194
 							</div>
-							<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-										# Online: 987
+							<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+								# Online: 987
 							</div>
 
-						</div>
 				</div>
 			</div>
 			<div class="">
 				<div class="row">
-					<!-- >#Featured-Markets -->
-					@if(!$market_predefined && $stq = $that->hasFeaturedMarket()->toArray())
-						<?php $i = 1; ?>
-						<div >
-							<h2>Featured Market</h2>
-							<ul>
-								<li>@foreach(['No.', 'Coin', 'Link', 'Message', 'Start Date', 'End Date'] as $q)<li>{{$q}}</li>@endforeach
-							@foreach($stq as $q)
-								<li>{{$i++}} - {{$q->type.' - '.$q->name}} | {{$q->link}} || {{$q->message}} || sd: {{date("d F Y", strtotime($q->start_date))}} || ed: {{date("d F Y", strtotime($q->end_date))}}</li>
-							@endforeach
-							</ul>
-						</div>
-					@endif
-					<!-- <#Featured-Markets -->
+					<div class="col-12-xs col-sm-12 col-md-12 col-lg-12 col-centered">
+						<!-- >#Featured-Markets -->
+						@if(!$market_predefined && $stq = $that->hasFeaturedMarket()->toArray())
+							<?php $i = 1; ?>
+							<div >
+								<h2>Featured Market</h2>
+								<ul>
+									<li>@foreach(['No.', 'Coin', 'Link', 'Message', 'Start Date', 'End Date'] as $q)<li>{{$q}}</li>@endforeach
+								@foreach($stq as $q)
+									<li>{{$i++}} - {{$q->type.' - '.$q->name}} | {{$q->link}} || {{$q->message}} || sd: {{date("d F Y", strtotime($q->start_date))}} || ed: {{date("d F Y", strtotime($q->end_date))}}</li>
+								@endforeach
+								</ul>
+							</div>
+						@endif
+						<!-- #Featured-Markets -->
+					</div>
 					
 				</div>
 			</div>
@@ -89,7 +88,7 @@
 
 <!-- ############ START MARKETS TABLE-->	
 <div class="row markets_tab">
-	<div class="col-11-xs col-sm-11 col-lg-11 col-centered">
+	<div class="col-12-xs col-sm-12 col-md-12 col-lg-12 col-centered">
 		<ul class="nav nav-tabs">
 			<li class="active"><a aria-expanded="true" href="#btc_market_tab" data-toggle="tab">BTC Markets</a></li>
 			<li class=""><a aria-expanded="false" href="#ltc_market_tab" data-toggle="tab">LTC Markets</a></li>
