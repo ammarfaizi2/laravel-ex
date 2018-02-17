@@ -1,7 +1,11 @@
 @extends('layouts.default')
 
 @section('content')
+<div style="margin:1% 3% 0% 1%; ">
     <div class="col-md-6">
+        <div style="margin-bottom:2%;">
+            <a href="{{ route('messages') }}">Back</a>
+        </div>
         <button onclick="leaveThread({{$id}}, '{{ $thread->subject }}')" class="btn btn-warning">Leave Thread</button>
         <?php $user = Confide::user(); ?>
         @if($user->username === $creator)
@@ -72,7 +76,7 @@
                 this.msgField.innerHTML = '<center>';
                 for(var x in data) {
                     this.msgField.innerHTML += 
-                    '<div class="media" style="background-color:'+(x%2 ? '#caff59' : '#9bb4e8')+';margin-top:2px;margin-bottom:2px;">'+
+                    '<div class="media" style="background-color:'+(x%2 ? '#caff59' : '#bce4ff')+';margin-top:2px;margin-bottom:2px;">'+
                         '<a class="pull-left" href="#">'+
                             '<img src="//www.gravatar.com/avatar/{{ md5(rand()) }} ?s=64" alt="'+data[x]['name']+'" class="img-circle">'+
                         '</a>'+
@@ -166,5 +170,5 @@
         </script>
         @include('messenger.partials.form-message')
     </div>
-
+</div>
 @stop
