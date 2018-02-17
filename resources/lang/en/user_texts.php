@@ -59,4 +59,5 @@ return array(
     "tfa_info"  => "Two-Factor Authentication",
     "set_up_tfa" => "Set up Google Authenticator",
     "complete_reg_tfa" => "Complete Registration",
+    "error_tfa_throttled" => "Too many attempt, please try again later."
 );

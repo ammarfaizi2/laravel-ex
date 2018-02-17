@@ -14,7 +14,17 @@
 							var ch = new XMLHttpRequest();
 							ch.onreadystatechange = function () {
 								if (this.readyState === 4) {
-									if (JSON.parse(this.responseText) == true) {
+									var resp = JSON.parse(this.responseText);
+									if (resp == "throttled") {
+										bootbox.alert({ 
+										  size: "small",
+										  title: "Error",
+										  message: "{{trans("user_texts.error_tfa_throttled")}}", 
+										  callback: function(){}
+										});
+										return false;
+									}
+									if (resp == true) {
 										form = document.getElementById(formId);
 										var postContext = "_token={{csrf_token()}}&",
 											inputs = [

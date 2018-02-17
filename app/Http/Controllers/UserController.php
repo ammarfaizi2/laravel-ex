@@ -439,7 +439,29 @@ class UserController extends Controller
     public function check2facode()
     {
         if (isset($_POST['code'])) {
+            $max = env("GOOGLE2FA_THROTTLE") - 1;
+            $lockedTime = env("GOOGLE2FA_SECONDS_LOCKED");
+
+            $tries = session()->get("g2fa_tt");
+            $last_try = (int) session()->get("g2fa_lt");
+
+            if (is_int($tries)) {
+                if ($tries > $max) {
+                    if ($last_try+$lockedTime > time()) {
+                        session(["g2fa_lt" => time()]);
+                        return response()->json("throttled");
+                    } else {
+                        $tries = 0;
+                    }
+                }
+            } else {
+                $tries = 0;
+            }
+
+            session(["g2fa_lt" => time(), "g2fa_tt" => $tries+1]);
+
             if ($ww = \App\User::google2fa($_POST['code'])) {
+                session(["g2fa_tt" => 0]);
                 session(["google2fa" => true]);
                 if (isset($_POST['admin_page'])) {
                     session(["admin_page" => true]);

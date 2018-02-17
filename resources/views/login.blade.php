@@ -190,6 +190,15 @@
 												if (this.readyState === 4) {
 													try	{
 														var a = JSON.parse(this.responseText);
+														if (a == "throttled") {
+															bootbox.alert({ 
+															  size: "small",
+															  title: "Error",
+															  message: "{{trans("user_texts.error_tfa_throttled")}}", 
+															  callback: function(){}
+															});
+															return false;
+														}
 														if (a["redirect"]) {
 															window.location = a["redirect"];
 														} else {
