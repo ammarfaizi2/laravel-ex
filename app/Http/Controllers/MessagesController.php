@@ -196,6 +196,14 @@ class MessagesController extends Controller
             return redirect()->route('messages');
         }
 
+        DB::table($pr)
+            ->where("user_id", "=", $user->id)
+            ->where("thread_id", "=", $id)
+            ->limit(1)
+            ->update([
+                "last_read" => date("Y-m-d H:i:s")
+            ]);
+
         // show current user in list if not a current participant
         // $users = User::whereNotIn('id', $thread->participantsUserIds())->get();
 
