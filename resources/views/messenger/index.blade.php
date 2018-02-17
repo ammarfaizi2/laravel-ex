@@ -135,7 +135,7 @@
             if (data.length) {
         		for (x in data) {
         			this.bound.innerHTML +=
-                        '<div style="border:1px solid #000;margin-bottom:3px;" '+(data[x]['is_unread'] ? 'class="alert-info"' : '')+'>'+
+                        '<div style="border:1px solid #000;margin-bottom:3px;" '+(data[x]['unread_count'] ? 'class="alert-info"' : '')+'>'+
         				'<div class="media alert">' +
         				'<a href="'+that.routeBound.replace('~~route~~', data[x]['thread_id'])+'"><h2 style="margin-top:-3px;">'+data[x]['subject']+'</h2></a>'+
                         (data[x]['unread_count'] != 0 ? ' ('+data[x]['unread_count']+' unread)' : '')+

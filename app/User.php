@@ -42,7 +42,7 @@ class User extends Authenticatable
                 ->select([DB::raw("COUNT(*) AS count_data")])
                 ->join($ms, "{$pr}.thread_id", "=", "{$ms}.thread_id", "inner");
             if ($lastRead) {
-                $d = $d->where("{$ms}.created_at", ">", "{$pr}.last_read");
+                $d = $d->where("{$ms}.created_at", ">", $lastRead);
             }
             return $d
                 ->where("{$ms}.thread_id", "=", $id)

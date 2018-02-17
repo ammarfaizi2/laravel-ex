@@ -43,19 +43,12 @@ class MessagesController extends Controller
                 ->limit($limit)
                 ->offset($page == 1 ? 0 : ($page - 1) * $limit)
                 ->get();
-        $isUnread = function ($id, $lastRead = false) use ($user, $pr, $tr, $ms) {
-            $d = DB::table($pr)->join($ms, "{$pr}.thread_id", "=", "{$ms}.thread_id", "inner");
-            if ($lastRead) {
-                $d = $d->where("{$ms}.created_at", ">", "{$pr}.last_read");
-            }
-            return (bool) $d->where("{$pr}.user_id", $user->id)->limit(1)->count();
-        };
         $unreadCount = function ($id, $lastRead = false) use ($user, $pr, $tr, $ms) {
             $d = DB::table($pr)
                 ->select([DB::raw("COUNT(*) AS count_data")])
                 ->join($ms, "{$pr}.thread_id", "=", "{$ms}.thread_id", "inner");
             if ($lastRead) {
-                $d = $d->where("{$ms}.created_at", ">", "{$pr}.last_read");
+                $d = $d->where("{$ms}.created_at", ">", $lastRead);
             }
             return $d
                 ->where("{$ms}.thread_id", "=", $id)
@@ -96,7 +89,6 @@ class MessagesController extends Controller
             $user = Confide::user();
             foreach ($this->threads as $thread) {
                     $data[] = [
-                        'is_unread' => $isUnread($thread->id, $thread->last_read),
                         'thread_id' => e($thread->id),
                         'subject' => e($thread->subject),
                         'unread_count' => $unreadCount($thread->id, $thread->last_read),
