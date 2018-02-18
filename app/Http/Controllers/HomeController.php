@@ -109,7 +109,7 @@ class HomeController extends Controller
         
         Session::put('market_id', $market_id);
         $market_default = Market::find($market_id);
-        if (! $market_default) {
+        if (preg_match("/\/market\/\d+/", url()->current()) && ! $market_default) {
             abort(404);
         }
         if (!is_null($market_default)) {
