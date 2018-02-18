@@ -344,7 +344,8 @@ class HomeController extends Controller
     public function hasFeaturedMarket()
     {
         $now = date('Y-m-d 00:00:00');
-        return DB::table('featured_market')->select(['featured_market.*','wallets.type','wallets.name'])->join('wallets', 'wallets.id', '=', 'featured_market.coin', 'inner')->where('featured_market.deleted_at', '=', null)->where('featured_market.start_date', '<=', $now)->where('featured_market.end_date', '>=', $now)->get();
+        //return DB::table('featured_market')->select(['featured_market.*','wallets.type','wallets.name'])->join('wallets', 'wallets.id', '=', 'featured_market.coin', 'inner')->where('featured_market.deleted_at', '=', null)->where('featured_market.start_date', '<=', $now)->where('featured_market.end_date', '>=', $now)->get();
+        return DB::table('featured_market')->select(['featured_market.*','wallets.type','wallets.name','market.id as market_id'])->join('wallets', 'wallets.id', '=', 'featured_market.coin', 'inner')->join('market', 'market.wallet_from', '=', 'featured_market.coin', 'inner')->where('featured_market.deleted_at', '=', null)->where('featured_market.start_date', '<=', $now)->where('featured_market.end_date', '>=', $now)->get();
     }
 
     public function sendEmail()

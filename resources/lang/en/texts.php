@@ -202,4 +202,7 @@ return array(
     "online_clients" => "Online clients",
     
 	"exchange" => "Exchange",
+	"notice" => "Notice",
+	"error" => "Error",
+	"success" => "Success",
 );

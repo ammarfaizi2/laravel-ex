@@ -1057,6 +1057,44 @@ https://codepen.io/anon/pen/PQzQNE
 		margin-bottom: 20px;
 		color: #999;
 	}
+	.contentfeaturedmarkets .featured_change{
+		position: relative; right: 0; float: right;
+		color: #FFFCCC;
+	}
+	.contentfeaturedmarkets .inblock{
+		color: #ccc;
+		background: #000;
+		box-shadow: 0 1px 2px #000;
+		border: 1px solid #555;
+	}
+	.contentfeaturedmarkets .inblock:hover{
+		border: 1px solid #FFFCCC;
+		color: #FFFCAA;
+	}
+	.contentfeaturedmarkets a:hover{
+		text-decoration: none;
+	}
+	.contentfeaturedmarkets .featured_type_first{
+		font-size: 120%;
+		font-weight: bold;
+		color: #2a9fd6;
+	}
+	.contentfeaturedmarkets .featured_type_sec{
+		font-size: 85%;
+		color: #555;
+	}
+	.contentfeaturedmarkets .featured_price_first{
+		color: #CCC;
+		font-weight: bold;
+	}
+	.contentfeaturedmarkets .featured_price_fiat{
+		color: #555;
+		font-size: 90%;
+	}
+	.contentfeaturedmarkets .featured_vol{
+		color: #666;
+	}
+	
 	
 	.contentheader .button .fa {
 		float: left;
