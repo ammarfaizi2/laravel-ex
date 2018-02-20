@@ -1,5 +1,21 @@
 <?php
 
+$n = 17;
+$i = $r = 0;
+while ($r<$n) {
+	$r = fact($i++);
+}
+echo $r;
+
+function fact($n)
+{
+	$r = 1;
+	for ($i=1; $i <= $n; $i++) { 
+		$r *= $i;
+	}
+	return $r;
+}
+
 /*$r = [];
 foreach (scandir("app/Models") as $key => $value) {
 	if ($value !== "." and $value !== "..") {
@@ -14,7 +30,7 @@ foreach (scandir("app/Models") as $key => $value) {
 	}
 }
 */
-
+exit;
 $r = [];
 
 

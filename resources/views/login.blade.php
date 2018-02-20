@@ -17,6 +17,7 @@
 					<div class="notice notice-danger">
 						<strong><i class="fa fa-exclamation-triangle fa-2x left"></i>{{{trans('texts.error')}}}</strong> {{{ Session::get('error') }}}
 					</div>
+				<?php session(["error" => null]); ?>
 				@endif
 
 				@if ( Session::get('notice') )

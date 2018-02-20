@@ -340,6 +340,19 @@ class UserController extends Controller
             exit;
         }
     }
+
+    private function reverify($user)
+    {
+        Mail::to($user->email)
+            ->send(new \App\Mail\ConfirmAccount(
+                [
+                    "id" => $user->id,
+                    "username" => $user->username,
+                    "email" => $user->email
+                ]
+            ));
+    }
+
     /**
      * Attempt to do login
      */
@@ -387,6 +400,15 @@ class UserController extends Controller
 				//exit;
 				
             }
+        }
+
+        if (! $user->confirmed) {
+            $this->reverify($user);
+            $ww = [
+                "redirect" => route("user.login")
+            ];
+            session(["error" => trans("user_texts.re_confirm")]);
+            return response()->json($ww, 200);
         }
     
         
