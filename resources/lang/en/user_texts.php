@@ -61,7 +61,7 @@ return array(
     "set_up_tfa" => "Set up Google Authenticator",
     "complete_reg_tfa" => "Complete Registration",
     "error_tfa_throttled" => "Too many attempt, please try again later.",
-    "re_confirm" => "Your account isn't confirmed yet, we have sent out a mail with the confirmation link."
+    "re_confirm" => "Your account isn't confirmed yet, we have sent out a mail with the confirmation link.",
     "orders_open" => "Open Orders",
     "orders_partially_filled" => "Orders Partially Filled",
     "orders_closed" => "Orders Closed",
