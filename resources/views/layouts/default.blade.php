@@ -17,13 +17,18 @@
 		<?php /* 
 			{{ HTML::style('assets/css/bootstrap.min.css') }}
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> 
+			<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.6/css/all.css" >
 		*/ ?>
 			
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" >
 
 		{{ HTML::style('assets/css/bootstrap-dialog.min.css') }}
 		{{ HTML::style('assets/css/pnotify.custom.min.css') }}
 		{{ HTML::style('assets/css/nouislider.min.css') }}
+		
+		{{ HTML::style('assets/css/awesome-bootstrap-checkbox.css') }}	
 		{{ HTML::style('assets/css/style.css') }}	
 		
 	
@@ -88,28 +93,33 @@ $(document).ready(function() {
 
 	</head>
 	<body class="@if ( Auth::guest() ) guest @else logged @endif">
-		<!-- Header -->
-		@include('layouts.header')
-		<!-- End Header -->
-		<!-- Content -->
-		<div id="content" class="side-collapse-container">
-			<div class="row">
-				<!-- Sidebar -->
-				@include('layouts.sidebar')
-				<!-- End Sidebar -->
-				
-				<!-- Content -->
-				<div id="main">
-					@yield('content')
+		<div class="wrapper">
+
+			
+  
+			<!-- Header -->
+				@include('layouts.header')
+			<!-- End Header -->
+			<!-- Content -->
+			<div id="content" class="side-collapse-container">
+				<div class="row">
+					<!-- Sidebar -->
+					@include('layouts.sidebar')
+					<!-- End Sidebar -->
+					
+					<!-- Content -->
+					<div id="main">
+						@yield('content')
+					</div>
+					<!-- End Content -->
+					
+					<!-- Footer -->
+						@include('layouts.footer')
+					<!-- End Footer -->
+					
 				</div>
-				<!-- End Content -->
-				
-				<!-- Footer -->
-					@include('layouts.footer')
-				<!-- End Footer -->
-				
+				<div class="clear"></div>
 			</div>
-			<div class="clear"></div>
 		</div>
 		
 		@if(isset($need2fa) and $need2fa === true)
@@ -124,6 +134,7 @@ $(document).ready(function() {
 		
 		<!-- Overlay -->
 		<div class="side-content-overlay hide"></div>
+		
 
 		
 	</body>

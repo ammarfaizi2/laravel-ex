@@ -83,8 +83,19 @@
 						</span>
 					</li>
                 @else
+				<li>
+					<a href="#"><i class="fa fa-briefcase fa-2x"></i> Balance</a>
+				</li>
+				<li>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-file-alt fa-2x"></i> Orders</a>
+					<ul class="dropdown-menu">
+						<li @if(Request::is('user/profile/orders?status=active')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/orders?status=active', trans('user_texts.orders_open')) }}</li>
+						<li @if(Request::is('user/profile/orders?status=partly_filled')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/orders?status=partly_filled', trans('user_texts.orders_partially_filled')) }}</li>
+						<li @if(Request::is('user/profile/orders?status=filled')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/orders?status=filled', trans('user_texts.orders_closed')) }}</li>
+					</ul>
+				</li>
 				<li class="">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{trans('user_texts.hello')}} {{Confide::user()->username}} <b class="caret"></b></a>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-2x"></i> {{trans('user_texts.hello')}} {{Confide::user()->username}} <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li @if(Request::is('user/profile/balances')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/balances', trans('user_texts.wallets')) }}</li>
 						<li @if(Request::is('user/profile/dashboard')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/dashboard', trans('user_texts.dashboard')) }}</li>

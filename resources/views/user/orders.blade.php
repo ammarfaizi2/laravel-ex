@@ -39,10 +39,10 @@
                     <option value="" @if(isset($_GET['status']) == '') selected @endif>{{trans('texts.all')}}</option>
                         <option value="active" @if(isset($_GET['status']) && $_GET['status'] == 'active') selected @endif>{{trans('texts.active')}}</option>
                         <option value="filled" @if(isset($_GET['status']) && $_GET['status'] == 'filled') selected @endif>{{trans('texts.filled')}}</option>
-                        <option value="partly filled" @if(isset($_GET['status']) && $_GET['status'] == 'partly_filled') selected @endif>{{trans('texts.partially_filled')}}</option>
+                        <option value="partly_filled" @if(isset($_GET['status']) && $_GET['status'] == 'partly_filled') selected @endif>{{trans('texts.partially_filled')}}</option>
 
                 </select>
-                <button type="submit" class="btn btn-primary" name="do_filter">{{trans('texts.filter')}}</button>
+                <button type="submit" class="btn btn-primary">{{trans('texts.filter')}}</button>
             </form>
            
             <table class="table table-striped" id="marketOrders">
@@ -59,7 +59,7 @@
                 <?php
                 
                     //$active = array('active','partially_filled');
-                    $active = array('active','partly_filled');
+                    $active = array('active','partly_filled', 'filled');
                 
                 ?>
                 @foreach($ordershistories as $ordershistory)

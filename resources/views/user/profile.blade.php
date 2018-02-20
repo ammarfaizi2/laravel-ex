@@ -81,6 +81,7 @@
 				@endif
 			</div>
 		</div>
-		@stop
+		
 	</div>
 </div>
+@stop

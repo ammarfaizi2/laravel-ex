@@ -115,7 +115,7 @@ return array(
     'active' => 'Active',
     'filled' => 'Filled',
     'partially_filled' => 'Partially Filled',
-    'partly filled' => 'Partially() Filled',
+    'partly filled' => 'Partially Filled',
     'show' => 'Show',
     'income_calculate' => 'Income Calculate',
     'calc_hash' => 'Calculate hash',

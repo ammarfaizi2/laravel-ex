@@ -4,6 +4,7 @@
 		<div class="row">
 			<div class="row_break"></div>
 		</div>
+
 		<!-- Alert Message -->
 		@if($enable_trading == 0)
 			<div class="row">
@@ -39,12 +40,6 @@
 		</div>
 		
 	<!-- Coin name & Charts -->
-	<div class="row">
-		<!-- Charts Graph  , Coin Name-->
-		<div class="col-12-xs col-sm-12 col-lg-12">
-			<h2 ><!--<img width="32" border=0 height="32" src="{{asset('')}}/{{$coinmain_logo}}" /> --> {{$market_from}} - {{ $coinmain }}/{{ $coinsecond }} </h2>
-		</div>
-	</div>
 	</div>
 
 	
@@ -67,92 +62,34 @@
 	@if ( Session::get('notice') )
 		<div class="alert">{{{ Session::get('notice') }}}</div>
 	@endif
-	<!--
-		<div class="">
-			<div class="item18">
-				<div class="success box" id="lastprice-{{{Session::get('market_id')}}}">Last Price:<br><strong><span id="spanLastPrice-{{{Session::get('market_id')}}}">@if(empty($latest_price)) {{{sprintf('%.8f',0)}}} @else {{sprintf('%.8f',$latest_price)}} @endif</span> {{{ $coinsecond }}}</strong></div>
-			</div>
-			<div class="item18">
-				<div class="success box">24 h High:<br><strong><span id="spanHighPrice-{{{Session::get('market_id')}}}">@if(empty($get_prices->max)) {{{sprintf('%.8f',0)}}} @else {{sprintf('%.8f',$get_prices->max)}} @endif</span> {{{ $coinsecond }}}</strong></div>
-			</div>
-			<div class="item18">
-				<div class="success box">24 h Low:<br><strong><span id="spanLowPrice-{{{Session::get('market_id')}}}">@if(empty($get_prices->min)) {{{sprintf('%.8f',0)}}} @else {{sprintf('%.8f',$get_prices->min)}} @endif</span> {{{ $coinsecond }}}</strong></div>
-			</div>
-			<div class="item18">
-				<div class="success box">24 h Vol:<br><strong><span id="spanVolume-{{{Session::get('market_id')}}}">@if(empty($get_prices->volume)) {{{sprintf('%.8f',0)}}} @else {{sprintf('%.8f',$get_prices->volume)}} @endif</span> {{{ $coinsecond }}}</strong></div>
-			</div>
-			<div class="item25">
-				<div class="success box">
-					<div data-toggle="tooltip" data-placement="left" title="Total SELL in {{{ $coinsecond }}}">#Sell: <strong><span id="sellorders_total_all_box_{{{Session::get('market_id')}}}"></span> {{{ $coinsecond }}}</strong></div>
-					<div data-toggle="tooltip" data-placement="left" title="Total BUY in {{{ $coinmain }}}">#Buy: <strong><span id="buyorders_amount_all_box_{{{Session::get('market_id')}}}"></span> {{{ $coinmain }}}</strong></div>
-					
-				</div>
-			</div>
-		</div>
-		-->
+		
+	<!-- Coin name & Charts -->
 	<!-- Charts and Info !-->
+	
 	<div class="row">
-		<!-- Charts Graph  -->
-		<!--  <div class="col-xs-12 col-sm-6 col-md-8"> -->
-		<!--  <div class="col-12-xs col-sm-12 col-lg-12"> -->
 		<div class="col-12-xs col-sm-12 col-lg-12">
-			<ul class="nav nav-tabs" id="chart_marketdepth_tab" role="tablist" >
-				<li><a href="#orderdepth" role="tab" data-toggle="tab" data="order-chart" onclick="javascript: drawOrderDepthChart();">Order Depth</a></li>
-				<li class="right active"><a href="#chartdiv" role="tab" data-toggle="tab" data="price-volume-chart">Chart</a></li>
-			</ul>
-			<div class="tab-content chart_marketdepth">
-				<div class="tab-pane active" id="chartdiv" style="width:100%; height:400px;">
+			<div class="nav-tabs-custom" >
+				<!-- Tabs within a box -->
+				<ul class="nav nav-tabs pull-right ui-sortable-handle" id="chart_marketdepth_tab">
+				  <li class=""><a href="#orderdepth" data-toggle="tab" aria-expanded="false" data="order-chart" onclick="javascript: drawOrderDepthChart();">Order Depth</a></li>
+				  <li class="active"><a href="#chartdiv" data-toggle="tab" aria-expanded="true" data="price-volume-chart">Chart</a></li>
+				  <li class="pull-left header"><i class="fa fa-bar-chart"></i>
+					<!--<img width="32" border=0 height="32" src="{{asset('')}}/{{$coinmain_logo}}" /> --> {{$market_from}} - {{ $coinmain }}/{{ $coinsecond }}
+				  </li>
+				</ul>
+				<div class="tab-content chart_marketdepth">
+				  <!-- Morris chart - Sales -->
+				  <div class="chart tab-pane" id="orderdepth" style="width:100%; height:400px;">
+					Market Depth Loading ...
 					<div id="chartLoadingBox">Loading...</div>
+				  </div>
+				  <div class="chart tab-pane active" id="chartdiv" style="width:100%; height:400px;">
+					Chart Loading ...
+				  </div>
 				</div>
-				<div class="tab-pane" id="orderdepth" style="width:100%; height:400px;"></div>
-			</div>
-		</div>
-		<?php
-			/*
-			
-			<!-- Market Daily Info  -->
-			<div class="col-xs-6 col-md-4">
-			<div class="bs-component">
-			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						Basic panel	
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						Basic panel	
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						Basic panel	
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						Basic panel	
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						Basic panel	
-					</div>
-				</div>
-			</div>
-			</div>
-			</div>
-			
-			*/
-			?>
+			  </div>
+          </div>
+		  
 	</div>
 	
 

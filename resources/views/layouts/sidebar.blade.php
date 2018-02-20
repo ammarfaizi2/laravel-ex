@@ -200,25 +200,28 @@ $trade = new Trade();
 															
 															
 														?>
-															<li class="volume" id="volume-{{$btc_market->id}}" data-toggle="popover" data-placement="right" title="Volume" data-content="{{sprintf('%.8f',$total_btc)}} BTC">
-																<span class="mark_fav">
-																	  <i class="fa fa-star"></i>
-																</span> 
-																<a href="{{$marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($btc_market->id).'_BTC')}}">
-																	<span class="name">
-																		@if($btc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="bottom" title="{{$btc_market->type}}" data-content="{{trans('texts.market_disabled')}}" ></i> @endif
-																		{{$btc_market->type}}
-																	</span>
-																	<span class="hide">{{$btc_market->name}}</span>
-																	<span class="price" yesterdayPrice="{{sprintf('%.8f',$pre_price)}}" id="spanPrice-{{$btc_market->id}}">{{sprintf('%.8f',$curr_price)}}</span>
-																		@if($change==0)
-																			<span class="change" id="spanChange-{{$btc_market->id}}">{{$change}}% <i class="fa fa-minus"></i></span>
-																		@elseif($change>0)
-																			<span class="change up" id="spanChange-{{$btc_market->id}}">{{$change}}% <i class="fa fa-arrow-up"></i></span>
-																		@else
-																			<span class="change down" id="spanChange-{{$btc_market->id}}">{{$change}}% <i class="fa fa-arrow-down"></i></span>
-																		@endif
-																</a>
+															<li class="volume" id="volume-{{$btc_market->id}}" >
+																<div data-toggle="tooltip" data-placement="right" title="Vol: {{round(sprintf('%.8f',$total_btc), 4)}} BTC">
+																	<span class="mark_fav" >
+																		  <i class="fa fa-star"></i>
+																	</span> 
+																	<a href="{{$marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($btc_market->id).'_BTC')}}">
+																		<span class="name">
+																			@if($btc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="right" title="{{$btc_market->type}}" data-content="{{trans('texts.market_disabled')}}" ></i> @endif
+																			{{$btc_market->type}}
+																		</span>
+																		<span class="hide">{{$btc_market->name}}</span>
+																		<span class="price" yesterdayPrice="{{sprintf('%.8f',$pre_price)}}" id="spanPrice-{{$btc_market->id}}">{{sprintf('%.8f',$curr_price)}}</span>
+																			@if($change==0)
+																				<span class="change" id="spanChange-{{$btc_market->id}}">{{$change}}% <i class="fa fa-minus"></i></span>
+																			@elseif($change>0)
+																				<span class="change up" id="spanChange-{{$btc_market->id}}">{{$change}}% <i class="fa fa-arrow-up"></i></span>
+																			@else
+																				<span class="change down" id="spanChange-{{$btc_market->id}}">{{$change}}% <i class="fa fa-arrow-down"></i></span>
+																			@endif
+																	</a>
+																</div>
+																
 															<?php /* <div class="volume" id="volume-{{$btc_market->id}}" data-toggle="popover" data-placement="right" title="sdasd">Vol: {{sprintf('%.8f',$total_btc)}} BTC</div> */?>
 															</li> 
 														@endforeach

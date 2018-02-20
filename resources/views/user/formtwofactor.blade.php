@@ -41,9 +41,9 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">{{trans("user_texts.set_up_tfa")}}</div>
                             <div class="panel-body" style="text-align: center;">
-                                <p>{{trans('user_texts.tfa_2')}}<br /> {{$registration_data['google2fa_secret'] }}</p>
+                                <p>{{trans('user_texts.tfa_2')}}<br /> <strong>{{$registration_data['google2fa_secret'] }}</strong></p>
                                 <div>
-                                    <img src="{{ $QR_Image }}">
+                                    <img src="{{ $QR_Image }}" alt="{{$registration_data['google2fa_secret'] }}">
                                 </div>
                                 @if (!@$reauthenticating) {{-- add this line --}}
                                     <p>{{trans('user_texts.tfa_1')}}</p><br>

@@ -38,7 +38,7 @@
                     <option value="seller_id">{{trans('texts.seller')}}</option>
                     <option value="buyer_id">{{trans('texts.buyer')}}</option>
                 </select> -->
-                <button type="submit" class="btn btn-primary" name="do_filter">{{trans('texts.filter')}}</button>
+                <button type="submit" class="btn btn-primary" >{{trans('texts.filter')}}</button>
             </form>
             <table class="table table-striped">
                 <thead>

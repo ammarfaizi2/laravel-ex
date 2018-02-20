@@ -8,9 +8,11 @@
             $query_string .= $key."=".$value."&";
         }
         $query_string = trim($query_string, '&');
+		/*
         if (!empty($query_string)) {
             $query_string = "&"+$query_string;
         }
+		*/
         ?>
         <div id="transferout">
             <h2>{{{ trans('texts.transfer_in')}}} @if(isset($current_coin)) {{' - '.$current_coin}} @endif</h2>
@@ -23,7 +25,7 @@
                         <option value="{{$wallet['id']}}" @if(isset($_GET['wallet']) && $_GET['wallet']==$wallet['id']) selected @endif>{{ $wallet['type']}}</option>
                     @endforeach
                 </select>
-                <button type="submit" class="btn btn-primary" name="do_filter">{{trans('texts.filter')}}</button>
+                <button type="submit" class="btn btn-primary">{{trans('texts.filter')}}</button>
             </form>
             @endif
             <table class="table table-striped">

@@ -1,7 +1,16 @@
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
 
-			<!-- Security -->
+		<!-- Deposit History -->
+		<?php
+        $query_string = '';
+        foreach (Request::query() as $key => $value) {
+            if ($key!='pager_page') {
+                $query_string .= $key."=".$value."&";
+            }
+        }
+        $query_string = trim($query_string, '&');
+        ?>
 		<div id="coin_deposits">	
 			<h2>{{{ trans('texts.coin_deposits')}}} @if(isset($current_coin)) {{' - '.$current_coin}} @endif</h2>    
 			Below is a list of deposits that you have made.
@@ -25,20 +34,21 @@
 				<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
 				@if($filter=='')
 					<label>{{{ trans('texts.coin')}}}</label>        
-					<select id="pair" style="margin-right: 20px;" name="wallet" class="form-control">
+					<select id="wallet" style="margin-right: 20px;" name="wallet" class="form-control">
 						<option value="" selected="selected">{{trans('texts.all')}}</option>
 						@foreach($wallets as $key=> $wallet)
-							<option value="{{$wallet['id']}}">{{$wallet->type}}</option>
+							<option value="{{$wallet['id']}}" @if(isset($_POST['wallet']) && $_POST['wallet']==$wallet['id']) selected @endif>{{$wallet->type}}</option>
 						@endforeach
 					</select>
 				@endif
 				<label>{{{ trans('texts.type')}}}</label>
 				<select id="type" name="status" style="margin-right: 20px;" class="form-control">
 					<option value="" selected="selected">{{trans('texts.all')}}</option>
-					<option value="0">{{trans('texts.pending')}}</option>
-					<option value="1">{{trans('texts.complete')}}</option>
+					<option value="0" @if(isset($_POST['status']) && $_POST['status'] == '0') selected @endif>{{trans('texts.pending')}}</option>
+					<option value="1" @if(isset($_POST['status']) && $_POST['status'] == '1') selected @endif>{{trans('texts.complete')}}</option>
+					
 				</select>        
-				<button type="submit" class="btn btn-primary" name="do_filter">{{trans('texts.filter')}}</button>
+				<button type="submit" class="btn btn-primary">{{trans('texts.filter')}}</button>
 			</form>
 			<table class="table table-striped">
 				<thead>

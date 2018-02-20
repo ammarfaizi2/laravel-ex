@@ -86,7 +86,7 @@ https://developers.google.com/recaptcha/docs/verify
 						
 					</div>
 					
-					<input type="hidden" value="@if(isset($referral)){{$referral}}@else{{{Request::old('referral')}}}@endif" name="referral">
+					<input type="hidden" value="@if(isset($referral)){{$referral}}@else{{{Request::old('referral')}}}@endif" name="referral" class="form-control" disabled="true">
 
 							
 					<div class="control-group">

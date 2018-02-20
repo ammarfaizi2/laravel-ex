@@ -54,7 +54,7 @@ return array(
     "your_order" => "Your Order",
     "market_order" => "Market Order",
     "tfa_1" => "You must set up your Google Authenticator app before continuing. ",
-    "tfa_2" => "Set up your two factor authentication by scanning the barcode below. <br />Alternatively, you can use the code: ",
+    "tfa_2" => "Set up your two factor authentication by scanning the barcode below. Alternatively, you can use the code: ",
     "tfa_3" => "Enter your Google Authenticator Code",
     "error_tfa_1" => "Invalid authenticator code",
     "tfa_info"  => "Two-Factor Authentication",
@@ -62,4 +62,7 @@ return array(
     "complete_reg_tfa" => "Complete Registration",
     "error_tfa_throttled" => "Too many attempt, please try again later.",
     "re_confirm" => "Your account isn't confirmed yet, we have sent out a mail with the confirmation link."
+    "orders_open" => "Open Orders",
+    "orders_partially_filled" => "Orders Partially Filled",
+    "orders_closed" => "Orders Closed",
 );

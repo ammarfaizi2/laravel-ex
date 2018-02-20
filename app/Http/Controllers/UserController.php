@@ -785,6 +785,10 @@ class UserController extends Controller
                 //get HELD FOR ORDERS
                 //giao dich ban se giam tien cua wallet hien tai, doi voi btc/ltc (dong tien trao doi) thi giao dich mua se giam tien no
                 //vi vay can xac dinh dau la btc/ltc, bang cach dua vao market, wallet_to trong market chinh la dong tien chinh de trao doi
+				
+				// exchange rate of the currency pair, with the BTC / LTC (the exchange rate of the exchange) the transaction will reduce the exchange rate
+                // With a loan from a real estate BTC / LTC, the only way to market, wallet_to in the market is the main
+				
                 $wallets_to = Market::select("market.wallet_to")->distinct()->get();
                 $wal_to = array();
                 foreach ($wallets_to as $value) {
@@ -819,6 +823,7 @@ class UserController extends Controller
                 $pager_page = 1;
             } else {
                 $pager_page = $_GET['pager_page'];
+				
             }
             $data['cur_page'] = $pager_page;
             $offset_start = ($pager_page-1)*$record_per_page;
@@ -827,18 +832,31 @@ class UserController extends Controller
                 $data['current_coin'] = $wallet->getType($filter);
                 $select .= " AND (b.wallet_to='".$filter."' OR b.wallet_from='".$filter."') ";
             }
-
+			
+			if (isset($_GET['market']) && !empty($_GET['market'])) {
+				$select .= " AND a.market_id='".$_GET['market']."'";
+			}
+			if (isset($_GET['status']) && $_GET['status']!='') {
+				$status_ = str_replace('_', ' ', $_GET['status']);
+				$select .= " AND a.status='".$status_."'";
+			}
+			if (isset($_GET['type']) && $_GET['type']!='') {
+				$select .= " AND a.type='".$_GET['type']."'";
+			}
+			/*
             if (isset($_GET['do_filter'])) {
                 if (!empty($_GET['market'])) {
                     $select .= " AND a.market_id='".$_GET['market']."'";
                 }
                 if ($_GET['status']!='') {
-                    $select .= " AND a.status='".$_GET['status']."'";
+					$status_ = str_replace('_', ' ', $_GET['status']);
+                    $select .= " AND a.status='".$status_."'";
                 }
                 if ($_GET['type']!='') {
                     $select .= " AND a.type='".$_GET['type']."'";
                 }
             }
+			*/
 
             $select_count = $select;
             $total_records = DB::select($select_count);
@@ -862,7 +880,7 @@ class UserController extends Controller
             if (empty($_GET['pager_page'])) {
                 $pager_page = 1;
             } else {
-                $pager_page = $_GET['pager_page'];
+                $pager_page = (int)$_GET['pager_page'];
             }
             $data['cur_page'] = $pager_page;
             $offset_start = ($pager_page-1)*$record_per_page;
@@ -874,6 +892,14 @@ class UserController extends Controller
                 $select .= " AND (b.wallet_to='".$filter."' OR b.wallet_from='".$filter."') ";
             }
 
+			if (isset($_GET['market']) && !empty($_GET['market'])) {
+				$select .= " AND a.market_id='".$_GET['market']."'";
+			}
+			if (isset($_GET['type']) && !empty($_GET['type'])) {
+				$select .= " AND a.type='".$_GET['type']."'";
+			}
+				
+			/*
             if (isset($_GET['do_filter'])) {
                 if (!empty($_GET['market'])) {
                     $select .= " AND a.market_id='".$_GET['market']."'";
@@ -882,6 +908,7 @@ class UserController extends Controller
                     $select .= " AND a.type='".$_GET['type']."'";
                 }
             }
+			*/
 
             $select_count = $select;
             $total_records = DB::select($select_count);
@@ -910,6 +937,13 @@ class UserController extends Controller
                 $deposits = $deposits->where('deposits.wallet_id', '=', $filter);
             }
 
+			if (isset($_POST['wallet']) && $_POST['wallet']!='') {
+				$deposits = $deposits->where('wallet_id', '=', $_POST['wallet']);
+			}
+			if (isset($_POST['status']) && $_POST['status']!='') {
+				$deposits = $deposits->where('paid', '=', $_POST['status']);
+			}
+			/*
             if (isset($_POST['do_filter'])) {
                 if (isset($_POST['wallet']) && $_POST['wallet']!='') {
                     $deposits = $deposits->where('wallet_id', '=', $_POST['wallet']);
@@ -918,6 +952,7 @@ class UserController extends Controller
                     $deposits = $deposits->where('paid', '=', $_POST['status']);
                 }
             }
+			*/
 
             $deposits = $deposits->orderBy('created_at', 'desc')->get();
             //echo "<pre>_POST: "; print_r($_POST); echo "</pre>";
@@ -952,6 +987,13 @@ class UserController extends Controller
                 $withdrawals = $withdrawals->where('withdraws.wallet_id', '=', $filter);
             }
 
+			if (isset($_POST['wallet']) && $_POST['wallet']!='') {
+				$withdrawals = $withdrawals->where('wallet_id', '=', $_POST['wallet']);
+			}
+			if (isset($_POST['status']) && $_POST['status']!='') {
+				$withdrawals = $withdrawals->where('status', '=', $_POST['status']);
+			}
+			/*
             if (isset($_POST['do_filter'])) {
                 if ($_POST['wallet']!='') {
                     $withdrawals = $withdrawals->where('wallet_id', '=', $_POST['wallet']);
@@ -960,6 +1002,7 @@ class UserController extends Controller
                     $withdrawals = $withdrawals->where('status', '=', $_POST['status']);
                 }
             }
+			*/
 
             $withdrawals = $withdrawals->orderBy('created_at', 'desc')->get();
             //echo "<pre>_POST: "; print_r($_POST); echo "</pre>";
@@ -985,6 +1028,14 @@ class UserController extends Controller
                 $data['current_coin'] = $wallet->getType($filter);
                 $select .= " AND a.wallet_id='".$filter."'";
             }
+			$where = '';
+			if ($where=='') {
+				if (isset($_GET['wallet']) && !empty($_GET['wallet'])) {
+					$where = $where." AND a.wallet_id='".$_GET['wallet']."'";
+				}
+			}
+			
+			/*
             $where = '';
             if (isset($_GET['do_filter'])) {
                 if ($where=='') {
@@ -993,6 +1044,7 @@ class UserController extends Controller
                     }
                 }
             }
+			*/
             $select_count = $select_count." ".$where." order by `created_at` desc";
             $total_records = DB::select($select_count);
             //echo "<pre>total_records: "; print_r($total_records); echo "</pre>"; exit;
@@ -1027,6 +1079,14 @@ class UserController extends Controller
                 $data['current_coin'] = $wallet->getType($filter);
                 $select .= " AND a.wallet_id='".$filter."'";
             }
+			$where = '';
+			if ($where=='') {
+				if (isset($_GET['wallet']) && !empty($_GET['wallet'])) {
+					$where = $where." AND a.wallet_id='".$_GET['wallet']."'";
+				}
+			}
+			
+			/*
             $where = '';
             if (isset($_GET['do_filter'])) {
                 if ($where=='') {
@@ -1035,6 +1095,7 @@ class UserController extends Controller
                     }
                 }
             }
+			*/
             $select_count = $select_count." ".$where." order by `created_at` desc";
             $total_records = DB::select($select_count);
             //echo "<pre>total_records: "; print_r($total_records); echo "</pre>";
