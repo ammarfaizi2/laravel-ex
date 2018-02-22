@@ -62,7 +62,7 @@
                 that.getChat(1);
                 setInterval(function() {
                     that.getChat();
-                }, 1000);  
+                }, 10000);  
             };
             qq.prototype.buildMessage = function(data) {
                 thatPage.pagination({

@@ -54,12 +54,13 @@
                     <th>{{{ trans('texts.amount')}}}</th>
                     <th>{{{ trans('texts.total')}}}</th>
                     <th>{{{ trans('texts.status')}}}</th>
-                   <!--  <th>{{{ trans('texts.action')}}}</th> -->
+                    <th>{{{ trans('texts.action')}}}</th> 
                 </tr>
                 <?php
                 
                     //$active = array('active','partially_filled');
-                    $active = array('active','partly_filled', 'filled');
+					//array with orders which can be cancelled
+                    $active = array('active','partly_filled','partly filled');
                 
                 ?>
                 @foreach($ordershistories as $ordershistory)
@@ -75,17 +76,18 @@
                         <td>{{sprintf('%.8f',$ordershistory->to_value)}}</td>
                         <td><?php
                             //str_replace(' ', '_', $ordershistory->status);
-                        if ($ordershistory->status =='partly_filled') {
+                        if ($ordershistory->status =='partly_filled' || $ordershistory->status =='partly filled') {
                             echo trans('texts.partially_filled');
                         } else {
                             echo trans('texts.'.$ordershistory->status);
                         }
                             ?>
                         </td>
-                        <td>@if(in_array($ordershistory->status,$active)) 
-                            
-                            <button type="button" onclick="javascript:cancelOrder({{{$ordershistory->id}}});" class="btn btn-danger btn-xs">{{trans('texts.cancel')}}</button>
-                        @endif</td>
+                        <td>
+							@if(in_array($ordershistory->status,$active)) 
+								<button type="button" onclick="javascript:cancelOrder({{{$ordershistory->id}}});" class="btn btn-danger btn-xs">{{trans('texts.cancel')}}</button>
+							@endif
+						</td>
                     </tr>
                 @endforeach  
                 </tbody>

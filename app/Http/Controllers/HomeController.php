@@ -232,18 +232,46 @@ class HomeController extends Controller
         
         
         $all_markets = array();
+		foreach($_markets as $m) {
+			
+			$market_prices = $trade->getBlockPrice($m->id);
+			//$market_change = $trade->getChange($m->id);
+			$market_current_price = (empty($market_prices['latest_price'])) ? sprintf('%.8f',0) : sprintf('%.8f',$market_prices['latest_price']);
+			
+			$market_change = $trade->calMarketChange($market_prices['get_prices']->opening_price, $market_current_price);
+			
+			
+			
+			$all_markets[] = array(
+				'latest_price' => $market_current_price,
+				'from' => $wallets[$m->wallet_from]->type,
+				'to' => $wallets[$m->wallet_to]->type,
+				'from_name' => $wallets[$m->wallet_from]->name,
+				'to_name' => $wallets[$m->wallet_to]->name,
+				'logo' => $wallets[$m->wallet_from]->logo_coin,
+				'market' => $m,
+				'prices' => $market_prices['get_prices'],
+				'volume' => floatval($market_prices['get_prices']->volume),
+				'market_change' => $market_change,
+				'enable_trading' => $wallets[$m->wallet_from]->enable_trading
+				
+
+			);
+		}
+		
+		/*
         foreach ($_markets as $m) {
             $market_prices = $trade->getBlockPrice($m->id);
             //$market_change = $trade->getChange($m->id);
             $market_current_price = (empty($market_prices['latest_price'])) ? sprintf('%.8f', 0) : sprintf('%.8f', $market_prices['latest_price']);
             
-            /*
-            echo $market_prices->min;
-            echo $market_prices['latest_price'];
-            echo '<pre>';
-            var_dump($market_prices);
-            echo '</pre>';
-            */
+            
+            //echo $market_prices->min;
+            //echo $market_prices['latest_price'];
+            //echo '<pre>';
+            //var_dump($market_prices);
+            //echo '</pre>';
+            
 
             $market_prices_opening_price = (!isset($market_prices['get_prices']->opening_price) ? 0 : $market_prices['get_prices']->opening_price );
             $market_prices_volume = (!isset($market_prices['get_prices']->volume) ? 0 : $market_prices['get_prices']->volume );
@@ -267,15 +295,15 @@ class HomeController extends Controller
                     'market_change' => $market_change,
                     'enable_trading' => $wallets[$m->wallet_from]->enable_trading
                     
-                    /*,
-                'pool-url' => $wallets[$m->wallet_from]->url,
-                'blockviewer' => $wallets[$m->wallet_from]->blockviewer,
-                'forum' => $wallets[$m->wallet_from]->forum,
-                */
+                   // ,
+                //'pool-url' => $wallets[$m->wallet_from]->url,
+                //'blockviewer' => $wallets[$m->wallet_from]->blockviewer,
+                //'forum' => $wallets[$m->wallet_from]->forum,
+                
                 );
             }
         }
-                            
+        */            
         //var_dump($all_markets);
         //exit;
         

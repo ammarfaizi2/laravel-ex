@@ -23,12 +23,11 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" >
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/11.0.3/nouislider.min.css" >
 
 		{{ HTML::style('assets/css/bootstrap-dialog.min.css') }}
 		{{ HTML::style('assets/css/pnotify.custom.min.css') }}
-		{{ HTML::style('assets/css/nouislider.min.css') }}
 		
-		{{ HTML::style('assets/css/awesome-bootstrap-checkbox.css') }}	
 		{{ HTML::style('assets/css/style.css') }}	
 		
 	
@@ -44,17 +43,18 @@
 	*/ ?>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	@if(Request::is("/user/messages"))
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
 	@endif
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> -->
 
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-	{{ HTML::script('assets/js/bootstrap.min.js') }}
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/11.0.3/nouislider.min.js" ></script>
+
+	<!-- {{ HTML::script('assets/js/bootstrap.min.js') }} -->
 	{{ HTML::script('assets/js/pnotify.custom.min.js') }}
 	{{ HTML::script('assets/js/bootstrap-dialog.min.js') }}
 	{{ HTML::script('assets/js/prettyFloat.min.js') }}
-	{{ HTML::script('assets/js/nouislider.min.js') }}
 	{{ HTML::script('assets/js/bootbox.min.js') }}
 	{{ HTML::script('assets/js/custom.js') }}
 	

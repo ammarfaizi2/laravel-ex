@@ -230,12 +230,12 @@
 								
 								@elseif ($am['market_change'] > 0)
 								<span class="change up btn btn-success">
-									+ {{$am['market_change']}}% <i class="fa fa-arrow-up"></i>
+									{{$am['market_change']}}% <i class="fa fa-arrow-up"></i>
 								</span>
 								
 								@else ($am['market_change'] < 0)
 								<span class="change down btn btn-danger">
-									+ {{$am['market_change']}}% <i class="fa fa-arrow-down"></i>
+									{{$am['market_change']}}% <i class="fa fa-arrow-down"></i>
 								</span>
 								@endif						
 								

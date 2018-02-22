@@ -220,6 +220,7 @@ $('#modal_ConfirmOrder').on('shown.bs.modal', function () {
 	});
 	
 	
+	
 	// If the checkbox is checked, disabled the slider.
 	// Otherwise, re-enable it.
 	/*
@@ -238,8 +239,6 @@ $('#modal_ConfirmOrder').on('shown.bs.modal', function () {
 	
 	//Disable BUY when user is not logged in 
 	@if ( Auth::guest() ) 
-		buyOrderSlider.setAttribute('disabled', true);
-		buyInputFormat.setAttribute('disabled', true);
 		document.getElementById('b_price').setAttribute('disabled', true);
 		document.getElementById('do_buy').setAttribute('disabled', true);
 	@endif
@@ -254,12 +253,6 @@ $('#modal_ConfirmOrder').on('shown.bs.modal', function () {
 		}
 		*/
 
-		el.noUiSlider.updateOptions({
-			range: {
-				'min': min,
-				'max': max
-			}
-		});
 	}
 //------// STOP - SLIDER CODE //------//
 	
@@ -318,8 +311,8 @@ function doPostTradeOrder(tradeArray){
 			
 
 			if(obj.status == 'success'){
-				//socket.emit( 'subscribeAllMarkets', obj.message_socket);
-				//socket.emit( 'userOrder', obj.message_socket_user);
+				socket.emit( 'subscribeAllMarkets', obj.message_socket);
+				socket.emit( 'userOrder', obj.message_socket_user);
 				showMessage(obj.messages,'success');
 			}else{
 				showMessage(obj.messages,'error');
@@ -464,10 +457,10 @@ $(function(){
 	$('#b_amount').val(newAmount); 
 	
 	
-	updateDataBuy();
+	//updateDataBuy();
 	//Update Slider Range 
-	updateSliderRange(buyOrderSlider, newAmount)
-	buyOrderSlider.noUiSlider.set(newAmount);
+	//updateSliderRange(buyOrderSlider, newAmount)
+	//buyOrderSlider.noUiSlider.set(newAmount);
 
   });
 

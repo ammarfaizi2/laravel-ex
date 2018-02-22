@@ -43,7 +43,7 @@
                 that.getChat();
     		setInterval(function () {
     			that.getChat();
-    		}, 3000);
+    		}, 10000);
     	};
     	message_index.prototype.getChat = function() {
     		var that = this;

@@ -1,12 +1,12 @@
 <li>
 	<a href="{{ route('messages') }}">
-		<i class="fa fa-envelope-o"></i>
+		<i class="fa fa-envelope fa-2x"></i>
 		<span class="label label-success" id="messages-unread-count"></span>
 	</a>
 </li>
 <li>
 	<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-      <i class="fa fa-bell-o"></i>
+      <i class="fa fa-bell fa-2x"></i>
       <span class="label label-warning" id="notification-count"></span>
     </a>
 	<ul class="dropdown-menu">
@@ -14,6 +14,7 @@
 	</ul>
 </li>
 <script type="text/javascript">
+	
 	class notification_handler {
 		constructor() {
 		}
@@ -23,7 +24,7 @@
 		var that = this;
 		setInterval(function () {
 			that.getNotif();
-		}, 3000);	
+		}, 10000);	
 	};
 
 	notification_handler.prototype.getNotif = function(first_argument) {
@@ -43,5 +44,6 @@
 	var st = new notification_handler;
 		st.getNotif();
 		st.listen();
+	
 </script>
 

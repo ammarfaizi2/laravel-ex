@@ -352,6 +352,9 @@ span.logo {
 
 /*Sidebar*/
 
+.sidebar .stats24h{
+	padding: 5px;
+}
 
 .sidebar ul.market li a {
 
@@ -371,7 +374,7 @@ span.logo {
 	box-shadow: 0px 1px 2px #ccc; 
 }
 .sidebar .fa-star{
-  color: #FFCC33; /* your background color */
+  /* color: #FFCC33;  your background color */
   opacity: 0.5;
 }
 .sidebar .fa-star:hover{
@@ -1480,7 +1483,7 @@ ul.market li {
 ul.market li a, ul.stats li {
 	display:block;
 	line-height:32px;
-	padding:0px 5px;
+	padding:0;
 	text-decoration:none;
 }
 
@@ -1502,24 +1505,27 @@ ul.market li.active a span {
 }
 
 ul.market li.active ~ ul.market li  {
-border: 0;
-}ul.market li span {
+	border: 0;
+}
+ul.market li span {
 	display:inline-block;
 }
 
-ul.market li span.name {
+.sidebar ul.market li span.name {
 	color:#000;
-	width:28%;
+	width:25%;
 }
 
-ul.market li span.price {
-	width:38%;
+.sidebar ul.market li span.price {
+	width:34%;
 }
 
-ul.market li span.change,
+.sidebar ul.market li span.change,
 .market span.change {
 	color:#666;
 }
+
+
 .sidebar ul.market li span{
 	line-height: 1.2rem;
 }
@@ -1532,17 +1538,21 @@ ul.market li span.change,
 }
 
 
-ul.market li span.up,
+.sidebar ul.market li span.up,
 .market span.up {
-	color:#093 !important;
+	color:#093 ;
 }
 
-ul.market li span.down,
+.sidebar ul.market li span.down,
 .market span.down{
 	color:#900;
 }
 
 	
+#btc_market_tab ul.market li span.change,
+#btc_market_tab .market span.change {
+	color:#FFF;
+}
 
 
 /*
@@ -1579,6 +1589,7 @@ form span.label {
 
 .table td{}
 */
+
 
 .scrolltable {
 	max-height:350px;
@@ -1641,9 +1652,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {    color: #525252;}
 
 
 .amChartsButtonSelected,.amChartsButton{ border-radius: 0!important;}
-a,ul.market li span.up {
-    color: #2a9fd6;
-}
+
 form.inblock, .order_header{
     background-color: #fff!important;
 	border-radius: 4px;
@@ -1794,6 +1803,13 @@ table.market_table tbody tr td:nth-child(5) {
 	}
 	.market_stats{
 		width: 50%;
+	}
+	
+	.nav-tabs-custom > .nav-tabs > li.header {
+		font-size: 14px;
+	}
+	.fa-2x {
+			font-size:13px;
 	}
 }
 .navbar-nav .fa-2x{
@@ -2857,4 +2873,10 @@ https://bootsnipp.com/snippets/3knNB
 .material-switch > input[type="radio"]:checked + label::after {
     background: inherit;
     left: 20px;
+}
+.material-switch  span{
+    position:relative; 
+	 top:0;
+	 padding: 0 10px;
+	 white-space:nowrap;
 }

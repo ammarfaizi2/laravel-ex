@@ -302,7 +302,53 @@ class Trade extends Eloquent
         }
         return $close_price;
     }
-    public function getBlockPrice($market_id)
+        public function getBlockPrice($market_id){
+        //price
+        $previous_day = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s') . " -1 day")); 
+        $latest = Trade::where('market_id',$market_id)->orderby('id','desc')->first();
+        //icee $latest = Trade::where('market_id',$market_id)->orderby('created_at','desc')->first();
+        
+
+		/*
+SELECT max( price ) AS 24h_high, price as previous_day_price, min( price ) AS 24h_low, sum( amount * price ) AS base_volume, sum(amount) as volume, created_at
+FROM trade_history
+WHERE market_id = '80'
+AND created_at >= '2015-08-01 23:37:53'
+		
+/////////////
+SELECT max( price ) AS 24h_high, price AS previous_day_price, min( price ) AS 24h_low, sum( amount * price ) AS base_volume, sum( amount ) AS volume, created_at, 
+SUBSTRING_INDEX( GROUP_CONCAT( price ORDER BY created_at DESC ) , ',', 1 ) AS last_price
+FROM trade_history
+WHERE market_id = '80'
+AND created_at >= '2015-08-01 23:37:53'		
+/////////////		
+		$price_high = $max;
+		$price_low = $min;
+		$price_opening = $opening_price;
+		$base_volume = $volume;
+		$coin_volume = $coin_volume;
+		
+		$change = ($previous_day_price!=0)? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100):0;
+		*/
+		
+		$select = "SELECT max(price) as max, min(price) as min, price as opening_price, sum(amount*price) as volume, sum(amount) as coin_volume, created_at from trade_history where market_id='".$market_id."' AND created_at>='".$previous_day."' ";
+		//exit ($select);
+        //echo "SQL: ".$select;
+		
+
+		
+        $get_price = DB::select($select);
+        $data["get_prices"] = $get_price[0];
+        //echo "<pre>"; print_r($get_price); echo "</pre>";
+		//echo '<pre> '.print_r($latest).'</pre>';
+		//echo '<hr />';
+		//echo '<pre> '.print_r($get_price).'</pre>';
+		
+        $data['latest_price'] = isset($latest->price)? $latest->price:0;
+        return $data;
+    }
+	
+	public function getBlockPrice_bak($market_id)
     {
         //price
         $previous_day = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . " -1 day"));

@@ -14,44 +14,18 @@
 			</p>
 			
 			<p>
-			<div class="right checkbox checkbox-info checkbox-inline">
-				<input tabindex="1" type="checkbox" name="filterCheckBox" id="filterCheckBox" value="1" class="styled">
-				<label for="filterCheckBox">{{{ trans('texts.hide_zero_balance') }}}</label>
-			</div>
+
 			 <div class="material-switch pull-right">
-                            <input id="checky" name="someSwitchOption001" type="checkbox"/>
-                            <label for="checky" class="label-primary"></label>
-                        </div>
-			
-						 <div class="material-switch pull-right">
-                            <input id="radiob1" name="radiobuttons" type="radio"/>
-                            <label for="radiob1" class="label-success"></label>
-							
-							<input id="radiob2" name="radiobuttons" type="radio"/>
-                            <label for="radiob2" class="label-success"></label>							
-							
-							<input id="radiob3" name="radiobuttons" type="radio"/>
-                            <label for="radiob3" class="label-success"></label>
-                        </div>
-						
-					
+				<span class="pull-left">{{{ trans('texts.hide_zero_balance') }}}</span>
+				<input tabindex="1" type="checkbox" name="filterCheckBox" id="filterCheckBox" value="1">
+				<label for="filterCheckBox" class="label-info"></label>
+			</div>
+
+			<!-- https://codepen.io/anon/pen/vdRWWW
+				https://codepen.io/anon/pen/vdRpmv
+				-->
 			</p>
-			Radio: 
-			<div class="radio radio-primary">
-            <input type="radio" name="radio1" id="radio1" value="option1">
-            <label for="radio1">
-                Small
-            </label>
-        </div>
-		check:
-		<div class="checkbox">
-                        <input id="checkbox1" type="checkbox">
-                        <label for="checkbox1">
-                            Default
-                        </label>
-                    </div>
-		
-									  
+			
 			<table class="table table-striped" id="table_balance">
 				<thead>
 					<tr>

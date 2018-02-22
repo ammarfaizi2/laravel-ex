@@ -208,19 +208,10 @@ $('#modal_ConfirmOrder').on('shown.bs.modal', function () {
 
 	var buyOrderSlider = document.getElementById('buy_slider');
 
-	noUiSlider.create(buyOrderSlider, {
-		start: 0,
-		connect: [true, false],
-		range: {
-		  'min': 0,
-		  'max': 100
-		},
-		tooltips: true
-	});
-	
 	//Buy Input-handler for the Slider
-	var buyInputFormat = document.getElementById('b_amount');
 	
+	var buyInputFormat = document.getElementById('b_amount');
+	/*
 	buyOrderSlider.noUiSlider.on('update', function( values, handle ) {
 		buyInputFormat.value = values[handle];
 		updateDataBuy();
@@ -229,6 +220,7 @@ $('#modal_ConfirmOrder').on('shown.bs.modal', function () {
 	buyInputFormat.addEventListener('change', function(){
 		buyOrderSlider.noUiSlider.set(this.value);
 	});
+	*/
 	
 	
 	// If the checkbox is checked, disabled the slider.
@@ -249,28 +241,14 @@ $('#modal_ConfirmOrder').on('shown.bs.modal', function () {
 	
 	//Disable BUY when user is not logged in 
 	@if ( Auth::guest() ) 
-		buyOrderSlider.setAttribute('disabled', true);
-		buyInputFormat.setAttribute('disabled', true);
+
 		document.getElementById('b_price').setAttribute('disabled', true);
 		document.getElementById('do_buy').setAttribute('disabled', true);
 	@endif
 	
 	//Function for updating Slider range
 	function updateSliderRange ( el, max=1, min=0 ) {
-		/*
-		min = (min >= max) ? 0: min;
-		if(min => max){
-			min = 0; max=1;
-		}else{
-		}
-		*/
-
-		el.noUiSlider.updateOptions({
-			range: {
-				'min': min,
-				'max': max
-			}
-		});
+		
 	}
 //------// STOP - SLIDER CODE //------//
 	
@@ -477,8 +455,8 @@ $(function(){
 	
 	updateDataBuy();
 	//Update Slider Range 
-	updateSliderRange(buyOrderSlider, newAmount)
-	buyOrderSlider.noUiSlider.set(newAmount);
+	//updateSliderRange(buyOrderSlider, newAmount)
+	//buyOrderSlider.noUiSlider.set(newAmount);
 
   });
 

@@ -84,7 +84,7 @@
 					</li>
                 @else
 				<li>
-					<a href="#"><i class="fa fa-briefcase fa-2x"></i> Balance</a>
+					<a href="{{ url('user/profile/balances')}}"><i class="fa fa-briefcase fa-2x"></i> </a>
 				</li>
 				<li>
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-file-alt fa-2x"></i> Orders</a>

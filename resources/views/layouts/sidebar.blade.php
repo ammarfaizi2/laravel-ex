@@ -155,7 +155,7 @@ $trade = new Trade();
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li role="presentation" class="active"><a href="#side_btc_market" aria-controls="side_btc_market" role="tab" data-toggle="tab">BTC</a></li>
                                         <li role="presentation"><a href="#side_ltc_market" aria-controls="side_ltc_market" role="tab" data-toggle="tab">LTC</a></li>
-                                        <li role="presentation" class="navbar-right"><a href="#side_fav_market" aria-controls="side_fav_market" role="tab" data-toggle="tab"><i class="fa fa-star"></i> Fav</a></li>
+                                        <li role="presentation" class="navbar-right"><a href="#side_fav_market" aria-controls="side_fav_market" role="tab" data-toggle="tab"><i class="fa fa-star text-yellow"></i> Fav</a></li>
                                     </ul>
 
                                     <!-- Tab panes -->
@@ -203,7 +203,7 @@ $trade = new Trade();
 															<li class="volume" id="volume-{{$btc_market->id}}" >
 																<div data-toggle="tooltip" data-placement="right" title="Vol: {{round(sprintf('%.8f',$total_btc), 4)}} BTC">
 																	<span class="mark_fav" >
-																		  <i class="fa fa-star"></i>
+																		  <i class="fa fa-star text-yellow"></i>
 																	</span> 
 																	<a href="{{$marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($btc_market->id).'_BTC')}}">
 																		<span class="name">
@@ -276,7 +276,7 @@ $trade = new Trade();
 																*/
 															?>
 																<li class="volume" id="volume-{{$ltc_market->id}}" data-toggle="popover" data-placement="right" title="Volume" data-content="{{sprintf('%.8f',$total_ltc)}} BTC">
-																	<span class="mark_fav"><i class="fa fa-star"></i></span> 
+																	<span class="mark_fav"><i class="fa fa-star text-yellow"></i></span> 
 																	<a href="{{ $marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($ltc_market->id).'_LTC')}}">
 																	<span class="name">
 																		@if($ltc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="bottom" title="{{$ltc_market->type}}" data-content="{{trans('texts.market_disabled')}}"></i> @endif
@@ -310,7 +310,7 @@ $trade = new Trade();
 														<span class="change">% Change</span>
 													</li>
 													<li class="volume" >
-														<span class="mark_fav"><i class="fa fa-star"></i></span> 
+														<span class="mark_fav"><i class="fa fa-star text-yellow"></i></span> 
 														<a href="#">
 															<span class="name">COIN</span>
 															<span class="price">0.0000012</span>
@@ -336,18 +336,18 @@ $trade = new Trade();
 						  Statistics
 						</h4>
 				</div>
-				<div id="collapse24hStatistics" >
+				<div class="" >
 				  <div class="panel-body">
-						<ul class="market well stats">
+						<ul class="market well stats24h">
 							<?php
 							$number_btc = isset($statistic_btc->number_trade)? $statistic_btc->number_trade:0;
 							$volume_btc = (isset($statistic_btc->total) && !empty($statistic_btc->total))? sprintf('%.8f',$statistic_btc->total):0;
 							$number_ltc = isset($statistic_ltc->number_trade)? sprintf('%.8f',$statistic_ltc->number_trade):0;
 							$volume_ltc = (isset($statistic_ltc->total) && !empty($statistic_ltc->total))? sprintf('%.8f',$statistic_ltc->total):0;
 							?>
-							<li>BTC Volume <span class="change">{{$volume_btc}} BTC</span></li>
-							<li>LTC Volume <span class="change">{{$volume_ltc}} LTC</span></li>
-							<li>Number of Trades <span class="change">{{$number_ltc+$number_btc}}</span></li> 
+							<li>BTC Volume <span class="stats_btc_trades pull-right">{{$volume_btc}} BTC</span></li>
+							<li>LTC Volume <span class="stats_ltc_trades pull-right">{{$volume_ltc}} LTC</span></li>
+							<li>Number of Trades <span class="stats_no_trades pull-right">{{$number_ltc+$number_btc}}</span></li> 
 						</ul>
 				  </div>
 				</div>
