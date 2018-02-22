@@ -38,8 +38,11 @@ class MessagesController extends Controller
         $limit = env("THREADS_PAGINATION_LIMIT");
         $this->threads = DB::table($pr)
                 ->join($tr, "{$pr}.thread_id", "=", "{$tr}.id", "inner")
-                ->where("{$pr}.user_id", "=", $user->id)
-                ->orderBy("{$tr}.updated_at", "desc")
+                ->where("{$pr}.user_id", "=", $user->id);
+                if (isset($_GET['search'])) {
+                    $this->threads = $this->threads->where("{$tr}.subject", "LIKE", "%{$_GET['search']}%");
+                }
+                $this->threads = $this->threads->orderBy("{$tr}.updated_at", "desc")
                 ->limit($limit)
                 ->offset($page == 1 ? 0 : ($page - 1) * $limit)
                 ->get();
@@ -88,6 +91,7 @@ class MessagesController extends Controller
             $data = [];
             $user = Confide::user();
             foreach ($this->threads as $thread) {
+
                     $data[] = [
                         'thread_id' => e($thread->id),
                         'subject' => e($thread->subject),

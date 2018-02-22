@@ -2,11 +2,16 @@
 @section('content')
 @include('messenger.partials.flash')
 <?php $page = isset($_GET['page']) ? (int) $_GET['page'] : 1; ?>
-    
-	
 	<div style="margin:4%;">
         <div style="margin-bottom:1%;">
             <a href="{{route("messages.create")}}">Create new message</a>
+            <div>
+            <form id="search_form" action="javascript:void(0);">
+                <input type="text" id="search_text" placeholder="Search...">
+                <button id="search_action">Search</button>
+                <input type="hidden" id="search_bound" value="0">
+            </form>
+            </div>
         </div>
         <div id="nf">
             @include("messenger.partials.no-threads")
@@ -16,6 +21,13 @@
     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
     <script src="{{ asset('assets/js/bootstrap-pagination.js') }}"></script>
     <script type="text/javascript">
+        $('#search_text')[0].value = "<?php print isset($_GET['search']) ? $_GET['search'] : ''; ?>";
+        $('#search_text')[0].addEventListener("input", function () {
+            search_handler();
+        });
+        $('#search_form')[0].addEventListener("submit", function () {
+            search_handler();
+        });
         $('.pagination').pagination({
             page: {{$page}}, 
             lastPage: {{ceil($that->countIndexMessage() / env("THREADS_PAGINATION_LIMIT"))}},
@@ -47,9 +59,14 @@
     	};
     	message_index.prototype.getChat = function() {
     		var that = this;
+            if ($("#search_bound")[0].value == 1) {
+                var ajax_url = "?ajax_request=1&search="+encodeURIComponent($("#search_text")[0].value)+"&<?php print isset($_GET['page']) ? "&page=". ((int) $_GET['page']) : 0; ?>";
+            } else {
+                var ajax_url = "?ajax_request=1<?php print isset($_GET['page']) ? "&page=". ((int) $_GET['page']) : 0; ?>";
+            }
     		$.ajax({
     			type: "GET",
-    			url: "?ajax_request=1<?php print isset($_GET['page']) ? "&page=". ((int) $_GET['page']) : 0; ?>",
+    			url: ajax_url,
     			datatype: "json",
     			success: function (response) {
     				that.buildChatContext(response);
@@ -158,6 +175,16 @@
     	};
     	var st = new message_index;
     		st.listen();
+        function search_handler()
+        {
+            var query = $('#search_text')[0].value.trim();
+            if (query !== "") {
+                $("#search_bound")[0].value = 1;
+            } else {
+                $("#search_bound")[0].value = 0;
+            }
+            st.getChat();
+        }
     </script>
 	
 	
