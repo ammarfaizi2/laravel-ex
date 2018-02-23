@@ -76,6 +76,9 @@ class MessagesController extends Controller
             }
             return $rr;
         };
+        if (isset($_GET['search_type'], $_GET['search']) && strlen($_GET['search']) < 3) {
+            return response()->json("w");
+        }
         if (isset($_GET['search_type'], $_GET['search']) && $_GET['search_type'] == "message") {
             // "SELECT * FROM messenger_messages AS ms INNER JOIN messenger_threads AS tr ON ms.thread_id = tr.id INNER JOIN messenger_participants AS pr ON pr.thread_id = tr.id WHERE ms.body LIKE '%abc%' LIMIT 20 OFFSET 0;";
             $this->threads = DB::table("{$ms}")

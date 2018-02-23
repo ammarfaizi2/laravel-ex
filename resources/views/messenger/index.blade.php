@@ -157,6 +157,9 @@
                     url: ajax_url,
                     success: function (res) {
                         var sb = $("#search_bound")[0], x;
+                        if (JSON.stringify(res) == "\"w\"") {
+                            sb.innerHTML = "{{trans('msg.min_chars')}}";
+                        } else
                         if (JSON.stringify(res) == "[]") {
                             sb.innerHTML = "<ul><li>Not Found!</li></ul>";
                         } else {
@@ -173,6 +176,9 @@
                     url: ajax_url,
                     success: function (res) {
                         var sb = $("#search_bound")[0], x;
+                        if (JSON.stringify(res) == "\"w\"") {
+                            sb.innerHTML = "{{trans('msg.min_chars')}}";
+                        } else
                         if (JSON.stringify(res) == "[]") {
                             sb.innerHTML = "<ul><li>Not Found!</li></ul>";
                         } else {

@@ -15,5 +15,6 @@ return [
 	"add_success" => "Added successfuly",
 	"user_already_joined" => "Error: :username already joined",
 	"back" => "Back to messages",
-	"no_check" => "No one thread to :action"
+	"no_check" => "No one thread to :action",
+	"min_chars" => "Please enter 3 chars minimum",
 ];
