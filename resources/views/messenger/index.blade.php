@@ -28,14 +28,24 @@
     <script src="{{ asset('assets/js/bootstrap-pagination.js') }}"></script>
     <style type="text/css">
         .search_data {
-            background-color: #000;
+        }
+        .search_data_bind {
+            background-color: #c9ffe7;
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+        .search_data_bind:hover {
+            background-color: #a3ce9f;
         }
     </style>
     <script type="text/javascript">
-        $('#search_text')[0].value = "<?php print isset($_GET['search']) ? $_GET['search'] : ''; ?>";
-        $('#search_cage')[0].addEventListener("mouseleave", function () {
+        window.addEventListener("click", function () {
             $('#search_bound')[0].style.display = 'none';
         });
+        document.addEventListener("click", function () {
+            $('#search_bound')[0].style.display = 'none';
+        });
+        $('#search_text')[0].value = "<?php print isset($_GET['search']) ? $_GET['search'] : ''; ?>";
         $('#search_text')[0].addEventListener("click", function () {
             $('#search_bound')[0].style.display = '';
         });
@@ -49,7 +59,6 @@
         });
         $('#search_text')[0].addEventListener("blur", function () {
             $('#search_cage')[0].style.position = '';
-            $('#search_bound')[0].style.display = 'none';
             $('#messages_bound')[0].style['margin-top'] = "0%";
             search_handler();
         });
@@ -73,7 +82,7 @@
                         } else {
                             sb.innerHTML = "";
                             for(x in res) {
-                                sb.innerHTML += "<a style=\"color:inherit;\" href=\""+st.routeBound.replace("~~route~~", res[x]['thread_id'])+"\"<div class=\"search_data\"><ul><li>Subject : "+res[x]['subject']+"</li><li>Creator : "+res[x]['creator']+"</li><li>Participants : "+(res[x]['participants'].join(','))+"</ul></div></a>";
+                                sb.innerHTML += "<a style=\"color:inherit;\" href=\""+st.routeBound.replace("~~route~~", res[x]['thread_id'])+"\"<div class=\"search_data\"><ul class=\"search_data_bind\"><li>Subject : "+res[x]['subject']+"</li><li>Creator : "+res[x]['creator']+"</li><li>Participants : "+(res[x]['participants'].join(','))+"</ul></div></a>";
                             }
                         }
                     }
@@ -89,7 +98,7 @@
                         } else {
                             sb.innerHTML = "";
                             for(x in res) {
-                                sb.innerHTML += "<a style=\"color:inherit;\" href=\""+st.routeBound.replace("~~route~~", res[x]['thread_id'])+"\"<div class=\"search_data\"><ul><li>Message: "+res[x]['body']+"</li><li>Subject : "+res[x]['subject']+"</li><li>Creator : "+res[x]['creator']+"</li><li>Participants : "+(res[x]['participants'].join(','))+"</ul></div></a>";
+                                sb.innerHTML += "<a style=\"color:inherit;\" href=\""+st.routeBound.replace("~~route~~", res[x]['thread_id'])+"\"<div class=\"search_data\"><ul class=\"search_data_bind\"><li>Message: "+res[x]['body']+"</li><li>Subject : "+res[x]['subject']+"</li><li>Creator : "+res[x]['creator']+"</li><li>Participants : "+(res[x]['participants'].join(','))+"</ul></div></a>";
                             }
                         }
                     }
