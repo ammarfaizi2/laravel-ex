@@ -86,6 +86,13 @@ class BeforeMiddleware
                 Confide::logout();
                 session(["google2fa" => null]);
                 return Redirect::to('/login');
+            } else {
+                DB::table("users")
+                    ->where("id", $user->id)
+                    ->limit(1)
+                    ->update([
+                        "lastest_login" => date("Y-m-d H:i:s")
+                    ]);
             }
         }
 
