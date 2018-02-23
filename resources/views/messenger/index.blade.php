@@ -5,9 +5,15 @@
 	<div style="margin:4%;">
         <div style="margin-bottom:1%;">
             <a href="{{route("messages.create")}}">Create new message</a>
-            <div>
+            <div id="search_cage">
             <form id="search_form" action="javascript:void(0);">
+                <select>
+                    <option value="subject">Subject</option>
+                    <option value="message">Message</option>
+                </select>
                 <input type="text" id="search_text" placeholder="Search...">
+                <div id="search_bound" style="display:none;background:#e2e2e2;position:fixed;width:30%;height:45%;overflow-y:scroll;">
+                </div>
                 <button id="search_action">Search</button>
                 <input type="hidden" id="search_bound" value="0">
             </form>
@@ -22,8 +28,13 @@
     <script src="{{ asset('assets/js/bootstrap-pagination.js') }}"></script>
     <script type="text/javascript">
         $('#search_text')[0].value = "<?php print isset($_GET['search']) ? $_GET['search'] : ''; ?>";
-        $('#search_text')[0].addEventListener("input", function () {
-            search_handler();
+        $('#search_text')[0].addEventListener("focus", function () {
+            $('#search_cage')[0].style.position = 'fixed';
+            $('#search_bound')[0].style.display = '';
+        });
+        $('#search_text')[0].addEventListener("blur", function () {
+            $('#search_cage')[0].style.position = '';
+            $('#search_bound')[0].style.display = 'none';
         });
         $('#search_form')[0].addEventListener("submit", function () {
             search_handler();
