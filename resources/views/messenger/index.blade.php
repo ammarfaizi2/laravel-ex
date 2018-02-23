@@ -22,6 +22,11 @@
         <div id="nf">
             @include("messenger.partials.no-threads")
         </div>
+        <div class="mass_action" style="margin-bottom:4px;margin-top:-10px;">
+            <p>Mass Action: </p>
+            <button onclick="mass_leave();" class="btn btn-warning">Leave Thread</button>
+            <button onclick="mass_delete();" class="btn btn-danger">Delete Thread</button>
+        </div>
         <div id="messages_bound" style=""></div><div class="pagination"></div>
     </div>
     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
@@ -39,6 +44,81 @@
         }
     </style>
     <script type="text/javascript">
+        function listenCheckBox()
+        {
+            var ac = document.getElementsByClassName("mass_checkbox"), iq = 0;
+            for(; iq < ac.length ; iq++) {
+                ac[iq].addEventListener("click", function () {
+                    
+                });
+            }
+        }
+        function mass_delete()
+        {
+            var list = [];
+            var ac = document.getElementsByClassName("mass_checkbox"), iq = 0;
+            for(; iq < ac.length ; iq++) {
+                if (ac[iq].checked) {
+                    list[iq] = ac[iq].value;
+                }
+            }
+            if (! list.length) {
+                bootbox.alert("{{ trans('msg.no_check', ['action' =>'delete']) }}!");
+            } else {
+                var name = "", x;
+                bootbox.confirm(("{!! trans('msg.delete_confirm') !!}").replace("~~name~~", '<b>'+list.length+'</b>'), function(result){
+                    if (result) {
+                        for(x in list) {
+                            var postContext = new postContextMaker('delete', list[x], name);
+                                postContext.make();
+                            $.ajax({
+                                type: "POST",
+                                url:"{!! route('messages.delete_thread') !!}",
+                                data: postContext.getContext(),
+                                dataType: 'json',
+                                success: function (response) {
+                                    bootbox.alert(response['message']);
+                                }
+                            });
+                        }
+                        st.getChat();
+                    }
+                });
+            }
+        }
+        function mass_leave()
+        {
+            var list = [];
+            var ac = document.getElementsByClassName("mass_checkbox"), iq = 0;
+            for(; iq < ac.length ; iq++) {
+                if (ac[iq].checked) {
+                    list[iq] = ac[iq].value;
+                }
+            }
+            if (! list.length) {
+                bootbox.alert("{{ trans('msg.no_check', ['action' =>'leave']) }}!");
+            } else {
+                var name = "", x;
+                bootbox.confirm(("{!! trans('msg.leave_confirm') !!}").replace("~~name~~", '<b>'+list.length+'</b>'), function(result){
+                    if (result) {
+                        for(x in list) {
+                            var postContext = new postContextMaker('leave', list[x], name);
+                                postContext.make();
+                            $.ajax({
+                                type: "POST",
+                                url:"{!! route('messages.leave_thread') !!}",
+                                data: postContext.getContext(),
+                                dataType: 'json',
+                                success: function (response) {
+                                    bootbox.alert(response['message']);
+                                }
+                            });
+                        }
+                        st.getChat();
+                    }
+                });
+            }
+        }
         window.addEventListener("click", function () {
             $('#search_bound')[0].style.display = 'none';
         });
@@ -176,6 +256,7 @@
                             bootbox.alert(response['message']);
                         }
                     });
+                    st.getChat();
                 }
             });
         }
@@ -193,6 +274,7 @@
                             bootbox.alert(response['message']);
                         }
                     });
+                    st.getChat();
                 }
             });
         }
@@ -222,11 +304,11 @@
         }
     	message_index.prototype.buildChatContext = function(data) {
     		var x, that = this, nf = $("#nf")[0];
-            this.bound.innerHTML = "";
+            this.bound.innerHTML = "<form id=\"mass_action\" action=\"javascript:void(0);\">";
             if (data.length) {
         		for (x in data) {
         			this.bound.innerHTML +=
-                        '<div style="border:1px solid #000;margin-bottom:3px;" '+(data[x]['unread_count'] ? 'class="alert-info"' : '')+'>'+
+                        '<div style="border:1px solid #000;margin-bottom:3px;" '+(data[x]['unread_count'] ? 'class="alert-info"' : '')+'><input type="checkbox" value="'+data[x]['thread_id']+'" class="mass_checkbox">'+
         				'<div class="media alert">' +
         				'<a href="'+that.routeBound.replace('~~route~~', data[x]['thread_id'])+'"><h2 style="margin-top:-3px;">'+data[x]['subject']+'</h2></a>'+
                         (data[x]['unread_count'] != 0 ? ' ('+data[x]['unread_count']+' unread)' : '')+
@@ -240,6 +322,8 @@
                         '</div>'+
         				'</div></div>';
                 }
+                this.bound.innerHTML += "</form>";
+                listenCheckBox();
                 nf.style.display = "none";
             } else {
                 nf.style.display = "";
