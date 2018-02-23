@@ -717,19 +717,21 @@ class UserController extends Controller
     public function updateSetting()
     {
         Session2FA::check();
-        $update= array('timeout'=>Request::get('timeout'),'updated_at'=>date("Y-m-d H:i:s"));
+        $update= ['timeout'=>Request::get('timeout'),'updated_at'=>date("Y-m-d H:i:s")];
         $fullname = Request::get('fullname');
         $password = Request::get('password');
         //$password2 = Request::get('password2');
-        $user = User::find((int)Confide::user()->id);
         if ($password!='' && !Hash::check($password, Confide::user()->password)) {
             $update['password'] = Hash::make($password);
         }
         if (!empty($fullname)) {
             $update['fullname'] = $fullname;
         }
-
-        User::where('id', $user->id)->update($update);
+        $user = Confide::user();
+        DB::table("users")
+            ->where("id", $user->id)
+            ->limit(1)
+            ->update($update);
         return Redirect::to(route('user.view_profile'))
                             ->with('notice', "Profile updated successfully.");
     }
