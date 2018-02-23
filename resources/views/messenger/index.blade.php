@@ -7,11 +7,11 @@
             <a href="{{route("messages.create")}}">Create new message</a>
             <div id="search_cage">
             <form id="search_form" action="javascript:void(0);">
-                <select>
+                <select id="search_type">
                     <option value="subject">Subject</option>
                     <option value="message">Message</option>
                 </select>
-                <input type="text" id="search_text" placeholder="Search...">
+                <input autocomplete="off" type="text" id="search_text" placeholder="Search...">
                 <div id="search_bound" style="display:none;background:#e2e2e2;position:fixed;width:30%;height:45%;overflow-y:scroll;">
                 </div>
                 <button id="search_action">Search</button>
@@ -22,23 +22,80 @@
         <div id="nf">
             @include("messenger.partials.no-threads")
         </div>
-        <div id="messages_bound"></div><div class="pagination"></div>
+        <div id="messages_bound" style=""></div><div class="pagination"></div>
     </div>
     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
     <script src="{{ asset('assets/js/bootstrap-pagination.js') }}"></script>
+    <style type="text/css">
+        .search_data {
+            background-color: #000;
+        }
+    </style>
     <script type="text/javascript">
         $('#search_text')[0].value = "<?php print isset($_GET['search']) ? $_GET['search'] : ''; ?>";
+        $('#search_cage')[0].addEventListener("mouseleave", function () {
+            $('#search_bound')[0].style.display = 'none';
+        });
+        $('#search_text')[0].addEventListener("click", function () {
+            $('#search_bound')[0].style.display = '';
+        });
         $('#search_text')[0].addEventListener("focus", function () {
             $('#search_cage')[0].style.position = 'fixed';
             $('#search_bound')[0].style.display = '';
+            $('#messages_bound')[0].style['margin-top'] = "3.4%";
+        });
+        $('#search_text')[0].addEventListener("input", function () {
+            search_handler();
         });
         $('#search_text')[0].addEventListener("blur", function () {
             $('#search_cage')[0].style.position = '';
             $('#search_bound')[0].style.display = 'none';
-        });
-        $('#search_form')[0].addEventListener("submit", function () {
+            $('#messages_bound')[0].style['margin-top'] = "0%";
             search_handler();
         });
+        $('#search_form')[0].addEventListener("submit", function () {
+            $('#search_bound')[0].style.display = '';
+            search_handler();
+        });
+        function fillSearch()
+        {
+            var s = $("#search_text")[0].value.trim();
+            var type = $("#search_type")[0].value;
+            var ajax_url = "?ajax_request=1&search_type="+(type)+"&search="+encodeURIComponent(s)+"&<?php print isset($_GET['page']) ? "&page=". ((int) $_GET['page']) : 0; ?>";
+            if (type == "subject") {
+                $.ajax({
+                    type: "GET",
+                    url: ajax_url,
+                    success: function (res) {
+                        var sb = $("#search_bound")[0], x;
+                        if (JSON.stringify(res) == "[]") {
+                            sb.innerHTML = "<ul><li>Not Found!</li></ul>";
+                        } else {
+                            sb.innerHTML = "";
+                            for(x in res) {
+                                sb.innerHTML += "<a style=\"color:inherit;\" href=\""+st.routeBound.replace("~~route~~", res[x]['thread_id'])+"\"<div class=\"search_data\"><ul><li>Subject : "+res[x]['subject']+"</li><li>Creator : "+res[x]['creator']+"</li><li>Participants : "+(res[x]['participants'].join(','))+"</ul></div></a>";
+                            }
+                        }
+                    }
+                });
+            } else {
+                $.ajax({
+                    type: "GET",
+                    url: ajax_url,
+                    success: function (res) {
+                        var sb = $("#search_bound")[0], x;
+                        if (JSON.stringify(res) == "[]") {
+                            sb.innerHTML = "<ul><li>Not Found!</li></ul>";
+                        } else {
+                            sb.innerHTML = "";
+                            for(x in res) {
+                                sb.innerHTML += "<a style=\"color:inherit;\" href=\""+st.routeBound.replace("~~route~~", res[x]['thread_id'])+"\"<div class=\"search_data\"><ul><li>Message: "+res[x]['body']+"</li><li>Subject : "+res[x]['subject']+"</li><li>Creator : "+res[x]['creator']+"</li><li>Participants : "+(res[x]['participants'].join(','))+"</ul></div></a>";
+                            }
+                        }
+                    }
+                });
+            }
+        }
         $('.pagination').pagination({
             page: {{$page}}, 
             lastPage: {{ceil($that->countIndexMessage() / env("THREADS_PAGINATION_LIMIT"))}},
@@ -70,14 +127,9 @@
     	};
     	message_index.prototype.getChat = function() {
     		var that = this;
-            if ($("#search_bound")[0].value == 1) {
-                var ajax_url = "?ajax_request=1&search="+encodeURIComponent($("#search_text")[0].value)+"&<?php print isset($_GET['page']) ? "&page=". ((int) $_GET['page']) : 0; ?>";
-            } else {
-                var ajax_url = "?ajax_request=1<?php print isset($_GET['page']) ? "&page=". ((int) $_GET['page']) : 0; ?>";
-            }
     		$.ajax({
     			type: "GET",
-    			url: ajax_url,
+    			url: "?ajax_request=1<?php print isset($_GET['page']) ? "&page=". ((int) $_GET['page']) : 0; ?>",
     			datatype: "json",
     			success: function (response) {
     				that.buildChatContext(response);
@@ -194,7 +246,7 @@
             } else {
                 $("#search_bound")[0].value = 0;
             }
-            st.getChat();
+            fillSearch();
         }
     </script>
 	

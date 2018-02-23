@@ -33,19 +33,8 @@ class MessagesController extends Controller
         $pr = config("messenger.participants_table");
         $tr = config("messenger.threads_table");
         $ms = config("messenger.messages_table");
-
         /*"SELECT * FROM messenger_participants AS pr INNER JOIN messenger_threads AS tr ON pr.thread_id = tr.id WHERE pr.user_id = 194 LIMIT 4 OFFSET 4";*/
-        $limit = env("THREADS_PAGINATION_LIMIT");
-        $this->threads = DB::table($pr)
-                ->join($tr, "{$pr}.thread_id", "=", "{$tr}.id", "inner")
-                ->where("{$pr}.user_id", "=", $user->id);
-                if (isset($_GET['search'])) {
-                    $this->threads = $this->threads->where("{$tr}.subject", "LIKE", "%{$_GET['search']}%");
-                }
-                $this->threads = $this->threads->orderBy("{$tr}.updated_at", "desc")
-                ->limit($limit)
-                ->offset($page == 1 ? 0 : ($page - 1) * $limit)
-                ->get();
+        
         $unreadCount = function ($id, $lastRead = false) use ($user, $pr, $tr, $ms) {
             $d = DB::table($pr)
                 ->select([DB::raw("COUNT(*) AS count_data")])
@@ -87,6 +76,46 @@ class MessagesController extends Controller
             }
             return $rr;
         };
+        if (isset($_GET['search_type'], $_GET['search']) && $_GET['search_type'] == "message") {
+            // "SELECT * FROM messenger_messages AS ms INNER JOIN messenger_threads AS tr ON ms.thread_id = tr.id INNER JOIN messenger_participants AS pr ON pr.thread_id = tr.id WHERE ms.body LIKE '%abc%' LIMIT 20 OFFSET 0;";
+            $this->threads = DB::table("{$ms}")
+                            ->select(["{$tr}.id as id", "{$tr}.subject", "{$pr}.last_read", "{$ms}.body"])
+                            ->join("{$tr}", "{$tr}.id", "=", "{$ms}.thread_id")
+                            ->join("{$pr}", "{$pr}.thread_id", "=", "{$tr}.id")
+                            ->where("{$pr}.user_id", "=", $user->id)
+                            ->where("{$ms}.body", "like", "%{$_GET['search']}%")
+                            ->limit(20)
+                            ->offset(0)
+                            ->get();
+                            $data = [];
+            foreach ($this->threads as $thread) {
+
+                    $data[] = [
+                        'thread_id' => e($thread->id),
+                        'subject' => e($thread->subject),
+                        'unread_count' => $unreadCount($thread->id, $thread->last_read),
+                        'body' => e($thread->body),
+                        'creator' => $creator($thread->id),
+                        'participants' => $participants($thread->id)
+                    ];
+            }
+
+            return response()->json($data);
+        } else {
+            $limit = env("THREADS_PAGINATION_LIMIT");
+                    $this->threads = DB::table($pr)
+                    ->join($tr, "{$pr}.thread_id", "=", "{$tr}.id", "inner")
+                    ->where("{$pr}.user_id", "=", $user->id);
+                    if (isset($_GET['search'])) {
+                        $this->threads = $this->threads->where("{$tr}.subject", "LIKE", "%{$_GET['search']}%");
+                    }
+                    $this->threads = $this->threads->orderBy("{$tr}.updated_at", "desc")
+                    ->limit($limit)
+                    ->offset($page == 1 ? 0 : ($page - 1) * $limit)
+                    ->get();
+        }
+
+        
         if (isset($_GET["ajax_request"])) {
             $data = [];
             $user = Confide::user();
