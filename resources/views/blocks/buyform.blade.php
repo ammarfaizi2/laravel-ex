@@ -186,93 +186,6 @@
 
 <script type="text/javascript">
 
-$('#modal_ConfirmOrder').on('shown.bs.modal', function () {
-  
-
-  
-})
-
-//------// START - SLIDER CODE //------//
-//Buy Slider Init
-
-	var buyOrderSlider = document.getElementById('buy_slider');
-
-	noUiSlider.create(buyOrderSlider, {
-		start: 0,
-		connect: [true, false],
-		range: {
-		  'min': 0,
-		  'max': 100
-		},
-		tooltips: true
-	});
-	
-	//Buy Input-handler for the Slider
-	var buyInputFormat = document.getElementById('b_amount');
-	
-	buyOrderSlider.noUiSlider.on('update', function( values, handle ) {
-		buyInputFormat.value = values[handle];
-		updateDataBuy();
-	});
-	
-	buyInputFormat.addEventListener('change', function(){
-		buyOrderSlider.noUiSlider.set(this.value);
-	});
-	
-	
-	
-	// If the checkbox is checked, disabled the slider.
-	// Otherwise, re-enable it.
-	/*
-	if ( this.checked ) {
-		element.setAttribute('disabled', true);
-	} else {
-		element.removeAttribute('disabled');
-	}
-	*/
-	/*
-	origins = buyInputFormat.getElementsByClassName('noUi-origin');
-	console.log("origins: ");
-	console.log(origins);
-	*/
-	
-	
-	//Disable BUY when user is not logged in 
-	@if ( Auth::guest() ) 
-		document.getElementById('b_price').setAttribute('disabled', true);
-		document.getElementById('do_buy').setAttribute('disabled', true);
-	@endif
-	
-	//Function for updating Slider range
-	function updateSliderRange ( el, max=1, min=0 ) {
-		/*
-		min = (min >= max) ? 0: min;
-		if(min => max){
-			min = 0; max=1;
-		}else{
-		}
-		*/
-
-	}
-//------// STOP - SLIDER CODE //------//
-	
-	
-function updateDataBuy(){
-    var amount = $('#b_amount').val(); 
-    var price = $('#b_price').val();
-    var fee = $('#fee_buy').html();
-    var total = amount*price;
-    var fee_amount = total*(fee/100);
-
-    $('#b_all').html(total.toFixed(8)); 
-    $('#b_fee').html(fee_amount.toFixed(8));
-	
-	$('#b_net_total').html( parseFloat(total+fee_amount).toFixed(8));
-    
-	var newAmount = +amount+0;
-	$('#b_amount').val(newAmount); 
-  }
-  
 function doPostTradeOrder(tradeArray){
 
 		var price, amount, market_id;
@@ -436,18 +349,118 @@ function doPostTradeOrder(tradeArray){
 			return callback;
         };
 		
-$(function(){  
-  $('#buy_coin_link').click(function(e) {
+$(function(){
+	
+//------// START - SLIDER CODE //------//
+//Buy Slider Init
+
+	console.log(document.getElementById('buy_slider'));
+	var buyOrderSlider = document.getElementById('buy_slider');
+	
+	noUiSlider.create(buyOrderSlider, {
+		start: 0,
+		connect: [true, false],
+		range: {
+		  'min': 0,
+		  'max': 100
+		},
+		pips: {
+			mode: 'positions',
+			values: [0,25,50,75,100],
+			density: 2,
+			stepped: true
+		},
+		tooltips: true
+	});
+	
+	//Buy Input-handler for the Slider
+	var buyInputAmount = document.getElementById('b_amount');
+	
+	buyOrderSlider.noUiSlider.on('update', function( values, handle ) {
+		buyInputAmount.value = values[handle];
+		updateDataBuy();
+	});
+	
+	buyInputAmount.addEventListener('change', function(){
+		buyOrderSlider.noUiSlider.set(this.value);
+	});
+	
+	
+	//Disable BUY when user is not logged in 
+	@if ( Auth::guest() ) 
+		//buyOrderSlider.setAttribute('disabled', true);
+		//buyInputAmount.setAttribute('disabled', true);
+		//document.getElementById('b_price').setAttribute('disabled', true);
+		//document.getElementById('do_buy').setAttribute('disabled', true);
+	@endif
+	
+	//Function for updating Slider range
+	function updateSliderRange ( el, max=1, min=0 ) {
+
+		min = (min >= max) ? 0: min;
+		max = (max <= min) ? 1: max;
+
+		//if(min => max){min = 0; max=1;}else{}
+		//update the min and max in range slider
+		/*
+		el.noUiSlider.updateOptions({
+			range: {
+				'min': min,
+				'max': max
+			}
+		});
+		*/
+	}
+//------// STOP - SLIDER CODE //------//
+	
+
+function updateDataBuy(){
+    
+
+	
+	var amount = $('#b_amount').val(); 
+    var price = $('#b_price').val();
+    var fee = $('#fee_buy').html();
+    var total = parseFloat(amount*price);
+    var fee_amount = total*(fee/100);
+
+    $('#b_all').html(total.toFixed(8)); 
+    $('#b_fee').html(fee_amount.toFixed(8));
+
+	$('#b_net_total').html( parseFloat(total+fee_amount).toFixed(8));
+	
+
+	var newAmount = +amount+0;
+	$('#b_amount').val(newAmount); 
+
+	//->Calc the max slider range 
+	var total_base = parseFloat($('#cur_to').html()) ; //balance
+	var slider_range_max = +(total_base/price)+0;
+	
+	//updateSliderRange(buyOrderSlider, sliderRangeMax);
+	console.log('sliderRangeMax: '+slider_range_max);
+	
+	var buyOrderSlider = document.getElementById('buy_slider');
+	buyOrderSlider.noUiSlider.updateOptions({
+		range: {
+			'min': 0,
+			'max': slider_range_max
+		}
+	});
+	
+	
+	//buyOrderSlider.noUiSlider.set(newAmount);
+}
+updateDataBuy();
+  
+	$('#buy_coin_link').click(function(e) {
     e.preventDefault();
 
-    //var total = parseFloat($(this).data('amount'));
-    //var total = parseFloat($('#cur_to').html()) /1.001; //balance
     var total = parseFloat($('#cur_to').html()) ; //balance
     var price = $('#b_price').val();
     var amount = total/price;
     var fee = $('#fee_buy').html();   
     var fee_amount = total*(fee/100);
-    //var amount = total/fee;
 
     $('#b_all').html(total.toFixed(8)); 
     $('#b_net_total').html( parseFloat(total+fee_amount).toFixed(8));
@@ -456,18 +469,22 @@ $(function(){
 	var newAmount = +amount+0;
 	$('#b_amount').val(newAmount); 
 	
-	
-	//updateDataBuy();
+	updateDataBuy();
 	//Update Slider Range 
-	//updateSliderRange(buyOrderSlider, newAmount)
-	//buyOrderSlider.noUiSlider.set(newAmount);
+	updateSliderRange(buyOrderSlider, newAmount)
+	buyOrderSlider.noUiSlider.set(newAmount);
 
   });
 
-  updateDataBuy();
+  //updateDataBuy();
   $('#b_amount, #b_price').keyup(function(event) {
-    updateDataBuy();
+	//alert(event.target.id); id of the triggered element
+	if (event.target.id == 'b_amount')
+		updateDataBuy();
+	if (event.target.id == 'b_price')
+		updateDataBuy();
   });
+
 
   $('#do_buy').click(function(e) {
      e.preventDefault(); 
@@ -509,8 +526,8 @@ else
 	  //else if(parseFloat(balance.toFixed(8)) < parseFloat(net_total.toFixed(8))){
       else if(balance < net_total  ){
 		//Not enough Balance
-        showMessage(['{{trans('messages.buy_not_enough')}}'],'error'); 
-        showMessage(['balance: '+balance + ' < ' +net_total + ' net_total'],'error'); 
+        showMessage(['{{trans('messages.buy_not_enough')}} <br />balance: '+balance + ' < ' +net_total + ' net_total'],'error'); 
+        //showMessage(['balance: '+balance + ' < ' +net_total + ' net_total'],'error'); 
        
       }
       /*else if((amount*price)>10){

@@ -1732,14 +1732,14 @@ Only showing tooltips when sliding is active
 
 
 #market_place .noUi-horizontal .noUi-handle{
-	height: 20px;
+	height: 22px;
 	width: 30px;
 }
 #market_place .noUi-horizontal .noUi-handle::before {
     content: "";
     display: block;
     position: absolute;
-    height: 10px;
+    height: 11px;
     width: 1px;
     background: #E8E7E6;
     left: 12px;
@@ -1749,7 +1749,7 @@ Only showing tooltips when sliding is active
     content: "";
     display: block;
     position: absolute;
-    height: 10px;
+    height: 11px;
     width: 1px;
     background: #E8E7E6;
     left: 16px;

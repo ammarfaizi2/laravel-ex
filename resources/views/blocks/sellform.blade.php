@@ -143,12 +143,14 @@ function updateDataSell(){
 	*/
 	
 	
-	//Disable BUY when user is not logged in 
+	//Disable Sell when user is not logged in 
 	@if ( Auth::guest() ) 
-		buyOrderSlider.setAttribute('disabled', true);
-		buyInputFormat.setAttribute('disabled', true);
+		/*
+		sellOrderSlider.setAttribute('disabled', true);
+		sellInputFormat.setAttribute('disabled', true);
 		document.getElementById('s_price').setAttribute('disabled', true);
 		document.getElementById('do_sell').setAttribute('disabled', true);
+		*/
 	@endif
 
 //------// STOP - SLIDER CODE //------//
