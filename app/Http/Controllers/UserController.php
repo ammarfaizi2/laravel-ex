@@ -101,6 +101,64 @@ class UserController extends Controller
         }
     }
 
+    public function reset_password_action()
+    {
+        if (isset($_GET["token"])) {
+            $st = DB::table("password_reminders")
+                    ->select(["token", "created_at"])
+                    ->where("token", "=", $_GET["token"])
+                    ->first();
+            if (isset($st->token) && isset($st->created_at)) {
+                $expired = env("PASSWORD_RESET_CODE_EXPIRED");
+                if (strtotime($st->created_at)+$expired < time()) {
+                    echo "<html><head><script>alert(\"Expired password reset code\");window.location=\"".route("user.login")."\";</script></head></html>";
+                    exit(1);
+                }
+                return view("forgotpassaction");
+            }
+        }
+        abort(404);
+    }
+
+    public function reset_password_action_post()
+    {
+        if (isset($_GET["token"])) {
+            $st = DB::table("password_reminders")
+                    ->select(["token", "created_at"])
+                    ->where("token", "=", $_GET["token"])
+                    ->first();
+            if (isset($st->token) && isset($st->created_at)) {
+                $expired = env("PASSWORD_RESET_CODE_EXPIRED");
+                if (strtotime($st->created_at)+$expired < time()) {
+                    echo "<html><head><script>alert(\"Expired password reset code\");window.location=\"".route("user.login")."\";</script></head></html>";
+                    exit(1);
+                }
+                if (isset($_POST['password'], $_POST['password_confirmation'])) {
+                    if ($_POST['password'] !== $_POST['password_confirmation']) {
+                        return Redirect::to(url()->current()."?token=".$_GET["token"])->with("error", trans("user_texts.password_not_match"));
+                    } else {
+                        $st = DB::table("password_reminders")
+                                ->select("user_id")
+                                ->where("token", "=", $_GET["token"])
+                                ->first();
+                        $st = DB::table("users")
+                                ->where("id", "=", $st->user_id)
+                                ->limit(1)
+                                ->update([
+                                    "password" => password_hash($_POST["password"], PASSWORD_BCRYPT)
+                                ]);
+                        $st = DB::table("password_reminders")
+                                ->where("token", "=", $_GET["token"])
+                                ->limit(1)
+                                ->delete();
+                        return Redirect::to(route("user.login"))->with("notice", trans("user_texts.password_reset_success"));
+                    }   
+                }
+            }
+        }
+        abort(404);
+    }
+
     /**
      * Displays the form for account creation
      */
@@ -608,7 +666,7 @@ class UserController extends Controller
     private function forgotPasswordAction($email)
     {
         $user = DB::table("users")
-                ->select(["username", "email"])
+                ->select(["username", "email", "id"])
                 ->where("email", "=", $email)
                 ->first();
         if (isset($user->username) && isset($user->email)) {
@@ -616,7 +674,8 @@ class UserController extends Controller
             ->send(new \App\Mail\ForgotPassword(
                 [
                     "username" => $user->username,
-                    "email" => $user->email
+                    "email" => $user->email,
+                    "user_id" => $user->id
                 ]
             ));
             return true;

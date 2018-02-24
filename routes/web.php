@@ -162,7 +162,6 @@ Route::get('user/login', function () {
 Route::get( 'user/confirm/{code}',         'UserController@confirm');
 Route::get( 'user/forgot_password',        'UserController@forgot_password')->name('forgot_password');
 Route::post('user/forgot_password',        'UserController@do_forgot_password');
-Route::get( 'user/reset_password/{token}', 'UserController@reset_password');
 Route::post('user/reset_password',         'UserController@do_reset_password');
 Route::any( 'user/logout',                 'UserController@logout')->name('logout');
 Route::post( 'check-captcha',               'UserController@checkCaptcha');
@@ -256,7 +255,8 @@ Route::post('get-orderdepth-chart', 'OrderController@getOrderDepthChart');
 //end correct here
 
 
-
+Route::get('user/reset_password/action', 'UserController@reset_password_action');
+Route::post('user/reset_password/action', 'UserController@reset_password_action_post');
 
 
 

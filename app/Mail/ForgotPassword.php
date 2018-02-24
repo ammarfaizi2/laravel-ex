@@ -44,7 +44,7 @@ class ForgotPassword extends Mailable
         DB::table("password_reminders")
             ->insert(
                 [
-                    "email" => $this->userInfo["email"],
+                    "user_id" => $this->userInfo["user_id"],
                     "token" => $token,
                     "created_at" => date("Y-m-d H:i:s")
                 ]
