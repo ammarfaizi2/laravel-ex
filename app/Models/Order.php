@@ -53,6 +53,7 @@ class Order extends Eloquent
     */
     public function getOrders($market_id, $type = 'sell', $limit = 0)
     {
+
         if ($type == 'sell') {
             $desc = 'asc';
         } else {
@@ -66,7 +67,25 @@ class Order extends Eloquent
         $a = DB::connection()->getPdo();
         $a->exec("SET sql_mode = ''; ");
         $a->exec("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
-        $orders = DB::select("select * ,sum(`from_value`) as total_from_value, sum(`to_value`) as total_to_value from `".$this->table."` where `market_id` = '".$market_id."' and `type` = '".$type."' and `status` in (".$status.") group by `price` order by `price` ".$desc.$str_limit);
+
+        // pure query
+        // $orders = DB::select("select * ,sum(`from_value`) as total_from_value, sum(`to_value`) as total_to_value from `".$this->table."` where `market_id` = '".$market_id."' and `type` = '".$type."' and `status` in (".$status.") group by `price` order by `price` ".$desc.$str_limit);
+        //var_dump("select * ,sum(`from_value`) as total_from_value, sum(`to_value`) as total_to_value from `".$this->table."` where `market_id` = '".$market_id."' and `type` = '".$type."' and `status` in (".$status.") group by `price` order by `price` ".$desc.$str_limit);
+
+        // prepared statement
+        //var_dump("select *, sum(`from_value`) as total_from_value, sum(`to_value`) as total_to_value from `orders` where `market_id` = ? and `type` = ? and `status` in (?, ?) group by `price` order by `price` asc limit 25");
+
+        // query builder
+        $orders = DB::table($this->table)
+                ->select(["*", DB::raw("sum(`from_value`) as total_from_value"), DB::raw("sum(`to_value`) as total_to_value")])
+                ->where("market_id", "=", $market_id)
+                ->where("type", "=", $type)
+                ->whereIn("status", $this->status_active)
+                ->groupBy("price")
+                ->orderBy("price")
+                ->limit($limit)
+                ->get();
+
         return $orders;
     }
 
@@ -74,9 +93,35 @@ class Order extends Eloquent
     {
         $status = "'".implode("','", $this->status_active)."'";
         if ($type=='sell') {
-            $total = DB::select("select sum(`from_value`) as total_from_value from `".$this->table."` where `market_id` = '".$market_id."' and `type` = 'sell' and `status` in (".$status.")");
+            // pure query
+            // $total = DB::select("select sum(`from_value`) as total_from_value from `".$this->table."` where `market_id` = '".$market_id."' and `type` = 'sell' and `status` in (".$status.")");
+            // var_dump("select sum(`from_value`) as total_from_value from `".$this->table."` where `market_id` = '".$market_id."' and `type` = 'sell' and `status` in (".$status.")");
+            
+            // prepared statement
+            // select sum(`from_value`) as total_from_value from `orders` where `market_id` = ? and `type` = ? and `status` in (?, ?)
+
+            // query builder
+            $total = DB::table($this->table)
+                    ->select([DB::raw("sum(`from_value`) as total_from_value")])
+                    ->where("market_id", "=", $market_id)
+                    ->where("type", "=", "sell")
+                    ->whereIn("status", $this->status_active)
+                    ->get();
         } else {
-            $total= DB::select("select sum(`to_value`) as total_to_value from `".$this->table."` where `market_id` = '".$market_id."' and `type` = 'buy' and `status` in (".$status.")");
+            // pure query
+            // $total= DB::select("select sum(`to_value`) as total_to_value from `".$this->table."` where `market_id` = '".$market_id."' and `type` = 'buy' and `status` in (".$status.")");
+            // var_dump("select sum(`to_value`) as total_to_value from `".$this->table."` where `market_id` = '".$market_id."' and `type` = 'buy' and `status` in (".$status.")");
+
+            // prepared statement
+            // var_dump("select sum(`to_value`) as total_to_value from `orders` where `market_id` = ? and `type` = ? and `status` in (?, ?)");
+
+            // query builder
+            $total = DB::table($this->table)
+                    ->select([DB::raw("sum(`to_value`) as total_to_value")])
+                    ->where("market_id", "=", $market_id)
+                    ->where("type", "=", "buy")
+                    ->whereIn("status", $this->status_active)
+                    ->get();
         }
         if (isset($total[0])) {
             if ($type=='sell') {

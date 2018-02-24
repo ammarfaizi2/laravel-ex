@@ -252,7 +252,7 @@ class MessagesController extends Controller
                 ];
             }
             return response()->json($data);*/
-            "SELECT ms.id,users.username,ms.body,ms.created_at FROM messenger_messages AS ms INNER JOIN messenger_threads AS tr ON ms.thread_id = tr.id INNER JOIN users ON ms.user_id = users.id WHERE tr.id = 17 ORDER BY ms.created_at DESC LIMIT 3 OFFSET 0";
+            // "SELECT ms.id,users.username,ms.body,ms.created_at FROM messenger_messages AS ms INNER JOIN messenger_threads AS tr ON ms.thread_id = tr.id INNER JOIN users ON ms.user_id = users.id WHERE tr.id = 17 ORDER BY ms.created_at DESC LIMIT 3 OFFSET 0";
             $st = DB::table($ms)
                 ->select(["{$ms}.id as msg_id", "users.username", "{$ms}.body", "{$ms}.created_at"])
                 ->join("{$tr}", "{$ms}.thread_id", "=", "{$tr}.id")

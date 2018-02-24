@@ -829,7 +829,19 @@ class UserController extends Controller
             }
             $data['cur_page'] = $pager_page;
             $offset_start = ($pager_page-1)*$record_per_page;
+
+            // pure query
             $select = "select a.*, b.wallet_from as `from`, b.wallet_to as `to` from orders a left join market b on a.market_id=b.id where a.user_id='".$user_id."' ";
+
+            $select2 = DB::table(DB::raw("orders a"))
+                        ->select([
+                            DB::raw("a.*"),
+                            DB::raw("b.wallet_from as `from`"),
+                            DB::raw("b.wallet_to as `to`")
+                        ])
+                        ->join(DB::raw("market b"), DB::raw("a.market_id"), "=", DB::raw("b.id"), "left")
+                        ->where("a.user_id", $user_id);
+
             if ($filter!='') {
                 $data['current_coin'] = $wallet->getType($filter);
                 $select .= " AND (b.wallet_to='".$filter."' OR b.wallet_from='".$filter."') ";
@@ -837,14 +849,18 @@ class UserController extends Controller
 			
 			if (isset($_GET['market']) && !empty($_GET['market'])) {
 				$select .= " AND a.market_id='".$_GET['market']."'";
+                $select2 = $select2->where("a.market_id", "=", $_GET['market']);
 			}
 			if (isset($_GET['status']) && $_GET['status']!='') {
 				$status_ = str_replace('_', ' ', $_GET['status']);
 				$select .= " AND a.status='".$status_."'";
+                $select2 = $select2->where("a.status", "=", $status_);
 			}
 			if (isset($_GET['type']) && $_GET['type']!='') {
 				$select .= " AND a.type='".$_GET['type']."'";
+                $select2 = $select2->where("a.type", "=", $_GET['type']);
 			}
+
 			/*
             if (isset($_GET['do_filter'])) {
                 if (!empty($_GET['market'])) {
@@ -861,7 +877,8 @@ class UserController extends Controller
 			*/
 
             $select_count = $select;
-            $total_records = DB::select($select_count);
+            // $total_records = DB::select($select_count);
+            $total_records = $select2->get();
 
             $data['total_pages'] = ceil(count($total_records)/$record_per_page);
 
@@ -1209,7 +1226,20 @@ class UserController extends Controller
         } else {
             $allowed = true;
             //check giveaway
-            $check = DB::select("SELECT *, TIMESTAMPDIFF(HOUR, date_created, NOW()) as hdiff FROM giveaway_claims WHERE user_id = {$user_id} AND giveaway_id = {$giveaway->id} ORDER BY date_created DESC LIMIT 1");
+
+            // pure query
+            // $check = DB::select("SELECT *, TIMESTAMPDIFF(HOUR, date_created, NOW()) as hdiff FROM giveaway_claims WHERE user_id = {$user_id} AND giveaway_id = {$giveaway->id} ORDER BY date_created DESC LIMIT 1");
+            // var_dump("SELECT *, TIMESTAMPDIFF(HOUR, date_created, NOW()) as hdiff FROM giveaway_claims WHERE user_id = {$user_id} AND giveaway_id = {$giveaway->id} ORDER BY date_created DESC LIMIT 1");
+
+            // query builder
+            $check = DB::table("giveaway_claims")
+                    ->select(["*", DB::raw("TIMESTAMPDIFF(HOUR, date_created, NOW()) as hdiff")])
+                    ->where("user_id", "=", $user_id)
+                    ->where("giveaway_id", "=", $giveaway->id)
+                    ->orderBy("date_created", "desc")
+                    ->limit(1)
+                    ->get();
+
             if (isset($check[0])) {
                 if ($check[0]->hdiff < $giveaway->time_interval) {
                     $allowed = false;
@@ -1219,10 +1249,32 @@ class UserController extends Controller
             if ($allowed) {
                 //check user
                 $ga_user_id = 100;  //giveaway has user id 100
-                $ga_user = DB::select("SELECT amount FROM balance WHERE user_id = {$ga_user_id} AND wallet_id = {$giveaway->wallet_id} LIMIT 1");
+
+                // pure query
+                // $ga_user = DB::select("SELECT amount FROM balance WHERE user_id = {$ga_user_id} AND wallet_id = {$giveaway->wallet_id} LIMIT 1");
+                // var_dump("SELECT amount FROM balance WHERE user_id = {$ga_user_id} AND wallet_id = {$giveaway->wallet_id} LIMIT 1");
+
+                // query builder
+                $ga_user = DB::table("balance")
+                        ->select("amount")
+                        ->where("user_id", "=", $ga_user_id)
+                        ->where("wallet_id", "=", $giveaway->wallet_id)
+                        ->limit(1)
+                        ->get();
+
                 if (isset($ga_user[0])) {
                     if ($ga_user[0]->amount >= $giveaway->amount) {
-                        $total = DB::select("SELECT count(*) as total FROM trade_history WHERE buyer_id = {$user_id} OR seller_id = {$user_id}");
+
+                        // pure query
+                        // $total = DB::select("SELECT count(*) as total FROM trade_history WHERE buyer_id = {$user_id} OR seller_id = {$user_id}");
+                        // var_dump("SELECT count(*) as total FROM trade_history WHERE buyer_id = {$user_id} OR seller_id = {$user_id}");
+
+                        // query builder
+                        $total = DB::table("trade_history")
+                                    ->select([DB::raw("count(*) as total")])
+                                    ->orwhere("buyer_id", "=", $user_id)
+                                    ->orwhere("seller_id", "=", $user_id)
+                                    ->get();
 
                         if ($total[0]->total >= 1) {
                             $claims = new Giveawayclaims();

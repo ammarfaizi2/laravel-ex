@@ -207,6 +207,7 @@ class HomeController extends Controller
 
             
             $datachart = $trade->getDatasChart($market_id, '6 hour');
+            
             $news = Post::where('type', 'news')->orderby('created_at', 'desc')->get();
             $data['news'] = $news;
 

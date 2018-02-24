@@ -303,6 +303,7 @@ class Trade extends Eloquent
         return $close_price;
     }
         public function getBlockPrice($market_id){
+            
         //price
         $previous_day = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s') . " -1 day")); 
         $latest = Trade::where('market_id',$market_id)->orderby('id','desc')->first();
@@ -330,14 +331,28 @@ AND created_at >= '2015-08-01 23:37:53'
 		
 		$change = ($previous_day_price!=0)? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100):0;
 		*/
-		
-		$select = "SELECT max(price) as max, min(price) as min, price as opening_price, sum(amount*price) as volume, sum(amount) as coin_volume, created_at from trade_history where market_id='".$market_id."' AND created_at>='".$previous_day."' ";
+		// pure query
+		// $select = "SELECT max(price) as max, min(price) as min, price as opening_price, sum(amount*price) as volume, sum(amount) as coin_volume, created_at from trade_history where market_id='".$market_id."' AND created_at>='".$previous_day."' ";
 		//exit ($select);
         //echo "SQL: ".$select;
-		
+        // $get_price = DB::select($select);
 
-		
-        $get_price = DB::select($select);
+        // prepared statement
+        // var_dump("select max(price) as max, min(price) as min, price as opening_price, sum(amount*price) as volume, sum(amount) as coin_volume, `created_at` from `trade_history` where `market_id` = ? and `created_at` >= ?");
+
+        // query builder
+        $get_price = DB::table("trade_history")
+                ->select([
+                    DB::raw("max(price) as max"), 
+                    DB::raw("min(price) as min"), 
+                    DB::raw("price as opening_price"), 
+                    DB::raw("sum(amount*price) as volume"), 
+                    DB::raw("sum(amount) as coin_volume"), "created_at"
+                ])
+                ->where("market_id", "=", $market_id)
+                ->where("created_at", ">=", $previous_day)
+                ->get()->toArray();
+        
         $data["get_prices"] = $get_price[0];
         //echo "<pre>"; print_r($get_price); echo "</pre>";
 		//echo '<pre> '.print_r($latest).'</pre>';
@@ -377,13 +392,32 @@ AND created_at >= '2015-08-01 23:37:53'
 		
         $change = ($previous_day_price!=0)? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100):0;
         */
-        
-        $select = "SELECT max(price) as max, min(price) as min, price as opening_price, sum(amount*price) as volume, sum(amount) as coin_volume, created_at from trade_history where market_id='".$market_id."' AND created_at>='".$previous_day."' GROUP BY id";
+
+        // pure query
+        // $select = "SELECT max(price) as max, min(price) as min, price as opening_price, sum(amount*price) as volume, sum(amount) as coin_volume, created_at from trade_history where market_id='".$market_id."' AND created_at>='".$previous_day."' GROUP BY id";
         //exit ($select);
         //echo "SQL: ".$select;
-        
-        
-        $get_price = DB::select($select);
+        // $get_pricex = DB::select($select);
+        // var_dump(strtolower($select));
+
+        // prepared statement
+        // var_dump("select max(price) as max, min(price) as min, price as opening_price, sum(amount*price) as volume, sum(amount) as coin_volume, `created_at` from `trade_history` where `market_id` = ? and `created_at` >= ? group by `id`");
+
+        // query builder
+        $get_price = DB::table("trade_history")
+                    ->select([
+                        DB::raw("max(price) as max"),
+                        DB::raw("min(price) as min"),
+                        DB::raw("price as opening_price"),
+                        DB::raw("sum(amount*price) as volume"),
+                        DB::raw("sum(amount) as coin_volume"),
+                        "created_at"
+                    ])->where("market_id", "=", $market_id)
+                    ->where("created_at", ">=", $previous_day)
+                    ->groupBy("id")
+                    ->get()
+                    ->toArray();
+
         /*
         icee- a lot of changes here recently, 20171213
         */
@@ -489,8 +523,23 @@ AND created_at >= '2015-08-01 23:37:53'
         $pre_price = isset($data_trade[1]['price'])? $data_trade[1]['price']:0;
         $change = ($pre_price!=0)? sprintf('%.2f', (($curr_price-$pre_price)/$pre_price)*100) :  0;
 
-        $select="SELECT SUM( amount * price ) AS total FROM trade_history WHERE `market_id`='".$market_id."' GROUP BY market_id";
-        $total_btc = DB::select($select);
+        // $select="SELECT SUM( amount * price ) AS total FROM trade_history WHERE `market_id`='".$market_id."' GROUP BY market_id";
+        // $total_btc = DB::select($select);
+
+        // prepared statement
+        // var_dump("select SUM( amount * price ) as total from `trade_history` where `market_id` = ? group by `market_id`");
+
+        // query builder
+        $total_btc = DB::table("trade_history")
+                    ->select(
+                        [
+                            DB::raw("SUM( amount * price ) as total")
+                        ]
+                    )->where("market_id", "=", $market_id)
+                    ->groupBy("market_id")
+                    ->get();
+        
+
         if (isset($total_btc[0])) {
             $total_volume = $total_btc[0]->total;
         } else {
@@ -534,26 +583,27 @@ AND created_at >= '2015-08-01 23:37:53'
         $change = ($previous_day_price!=0)? sprintf('%.2f',(($curr_price-$pre_price)/$pre_price)*100):0;
         */
         
-        $select = "
-		SELECT 
-			max(price) AS price_high, min(price) AS price_low, price as opening_price, sum(amount*price) as base_bavolume, sum(amount) as coin_volume, created_at 
-			SUBSTRING_INDEX( GROUP_CONCAT( price ORDER BY created_at DESC ) , ',', 1 ) AS last_price
-		FROM 
-			trade_history 
-		WHERE 
-			market_id='".$market_id."' 
-			AND 
-			created_at>='".$previous_day."' ";
-        //exit ($select);
-        //echo "SQL: ".$select;
+
+  //       $select = "
+		// SELECT 
+		// 	max(price) AS price_high, min(price) AS price_low, price as opening_price, sum(amount*price) as base_bavolume, sum(amount) as coin_volume, created_at 
+		// 	SUBSTRING_INDEX( GROUP_CONCAT( price ORDER BY created_at DESC ) , ',', 1 ) AS last_price
+		// FROM 
+		// 	trade_history 
+		// WHERE 
+		// 	market_id='".$market_id."' 
+		// 	AND 
+		// 	created_at>='".$previous_day."' ";
+  //       //exit ($select);
+  //       //echo "SQL: ".$select;
         
 
         
-        $get_price = DB::select($select);
-        $data["get_prices"] = $get_price[0];
-        echo '<hr />';
-        echo '<pre> '.print_r($get_price).'</pre>';
-        echo '<hr />';
+  //       $get_price = DB::select($select);
+  //       $data["get_prices"] = $get_price[0];
+  //       echo '<hr />';
+  //       echo '<pre> '.print_r($get_price).'</pre>';
+  //       echo '<hr />';
         exit;
         
         return $data;
