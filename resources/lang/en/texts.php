@@ -205,4 +205,5 @@ return array(
 	"notice" => "Notice",
 	"error" => "Error",
 	"success" => "Success",
+	"reset_password" => "Reset Password",
 );
