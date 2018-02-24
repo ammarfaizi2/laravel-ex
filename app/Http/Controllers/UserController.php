@@ -377,6 +377,16 @@ class UserController extends Controller
         die;*/
         
         if (isset($user->password) && password_verify(Request::get('password'), $user->password)) {
+
+            if (! $user->confirmed) {
+                $this->reverify($user);
+                $ww = [
+                    "redirect" => route("user.login")
+                ];
+                session(["error" => trans("user_texts.re_confirm")]);
+                return response()->json($ww, 200);
+            }
+            
             session(["_identificator" => [
                 "ip_address" => $this->get_client_ip(),
                 "user_agent" => $_SERVER["HTTP_USER_AGENT"]
@@ -400,15 +410,6 @@ class UserController extends Controller
 				//exit;
 				
             }
-        }
-
-        if (! $user->confirmed) {
-            $this->reverify($user);
-            $ww = [
-                "redirect" => route("user.login")
-            ];
-            session(["error" => trans("user_texts.re_confirm")]);
-            return response()->json($ww, 200);
         }
     
         
