@@ -17,4 +17,5 @@ return [
 	"back" => "Back to messages",
 	"no_check" => "No one thread to :action",
 	"min_chars" => "Please enter 3 chars minimum",
+	"user_not_confirmed" => "Cannot add :username, because this account is not confirmed yet."
 ];

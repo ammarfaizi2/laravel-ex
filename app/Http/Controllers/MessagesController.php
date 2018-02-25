@@ -158,11 +158,14 @@ class MessagesController extends Controller
                     foreach ($s as $val) {
                         $val = trim($val);
                         $st = DB::table("users")
-                            ->select(["id"])
+                            ->select(["id", "confirmed"])
                             ->where("username", "like", $val)
                             ->first();
                         if (! $st) {
                             return response()->json(["message" => trans("msg.user_not_found", ["username" => $val])]);
+                        }
+                        if (! $st->confirmed) {
+                            return response()->json(["message" => trans("msg.user_not_confirmed", ["username" => $val])]);
                         }
                         $st2 = DB::table($pr) 
                             ->select([DB::raw("COUNT(id) as count_data")])
@@ -344,7 +347,7 @@ class MessagesController extends Controller
             foreach ($re as $val) {
                 $val = trim($val);
                 $st = DB::table("users")
-                      ->select("id")
+                      ->select(["id", "confirmed"])
                       ->where("username", "like", $val)
                       ->first();
                 if ($val === $user->username) {
@@ -352,6 +355,9 @@ class MessagesController extends Controller
                 }
                 if (! $st) {
                     return \Redirect::to(url()->previous())->with("error", trans("msg.user_not_found", ["username" => trim($val)]));
+                }
+                if (! $st->confirmed) {
+                    return \Redirect::to(url()->previous())->with("error", trans("msg.user_not_confirmed", ["username" => trim($val)]));
                 }
                 $id[] = $st->id;
             }

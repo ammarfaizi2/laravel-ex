@@ -891,7 +891,7 @@ class UserController extends Controller
             $offset_start = ($pager_page-1)*$record_per_page;
 
             // pure query
-            $select = "select a.*, b.wallet_from as `from`, b.wallet_to as `to` from orders a left join market b on a.market_id=b.id where a.user_id='".$user_id."' ";
+            // $select = "select a.*, b.wallet_from as `from`, b.wallet_to as `to` from orders a left join market b on a.market_id=b.id where a.user_id='".$user_id."' ";
 
             $select2 = DB::table(DB::raw("orders a"))
                         ->select([
@@ -904,20 +904,20 @@ class UserController extends Controller
 
             if ($filter!='') {
                 $data['current_coin'] = $wallet->getType($filter);
-                $select .= " AND (b.wallet_to='".$filter."' OR b.wallet_from='".$filter."') ";
+                // $select .= " AND (b.wallet_to='".$filter."' OR b.wallet_from='".$filter."') ";
             }
 			
 			if (isset($_GET['market']) && !empty($_GET['market'])) {
 				$select .= " AND a.market_id='".$_GET['market']."'";
-                $select2 = $select2->where("a.market_id", "=", $_GET['market']);
+                // $select2 = $select2->where("a.market_id", "=", $_GET['market']);
 			}
 			if (isset($_GET['status']) && $_GET['status']!='') {
 				$status_ = str_replace('_', ' ', $_GET['status']);
-				$select .= " AND a.status='".$status_."'";
+				// $select .= " AND a.status='".$status_."'";
                 $select2 = $select2->where("a.status", "=", $status_);
 			}
 			if (isset($_GET['type']) && $_GET['type']!='') {
-				$select .= " AND a.type='".$_GET['type']."'";
+				// $select .= " AND a.type='".$_GET['type']."'";
                 $select2 = $select2->where("a.type", "=", $_GET['type']);
 			}
 
@@ -964,20 +964,46 @@ class UserController extends Controller
             $data['cur_page'] = $pager_page;
             $offset_start = ($pager_page-1)*$record_per_page;
 
-            $select = "select a.*, b.wallet_from as `from`, b.wallet_to as `to` from trade_history a left join market b on a.market_id=b.id where (a.seller_id='".$user_id."' OR a.buyer_id ='".$user_id."') ";
+            // pure query
+            // $select = "select a.*, b.wallet_from as `from`, b.wallet_to as `to` from trade_history a left join market b on a.market_id=b.id where (a.seller_id='".$user_id."' OR a.buyer_id ='".$user_id."') ";
+
+            // prepared statement
+            // var_dump("select `a`.*, `b`.`wallet_from` as `from`, `b`.`wallet_to` as `to` from trade_history a left join market b on `a`.`market_id` = `b`.`id` where `a`.`seller_id` = ? or `a`.`buyer_id` = ?");
+
+            // query builder
+            $user_id = (int) $user_id;
+            $select2 = DB::table(DB::raw("trade_history a"))
+                        ->select([
+                            "a.*",
+                            "b.wallet_from as from",
+                            "b.wallet_to as to"
+                        ])->join(DB::raw("market b"), "a.market_id", "=", "b.id", "left")
+                        ->where(function($query) use ($user_id) {
+                            $query
+                             ->where("a.seller_id", "=", $user_id)
+                             ->orWhere("a.buyer_id", "=", $user_id);
+                        });
 
             if ($filter!='') {
                 $data['current_coin'] = $wallet->getType($filter);
-                $select .= " AND (b.wallet_to='".$filter."' OR b.wallet_from='".$filter."') ";
+                // $select .= " AND (b.wallet_to='".$filter."' OR b.wallet_from='".$filter."') ";
+                $select2 = $select2->where(function ($query) use ($filter) {
+                    $query
+                    ->where("b.wallet_to", "=", $filter)
+                    ->orWhere("b.wallet_from", "=", $filter);
+                });
             }
 
 			if (isset($_GET['market']) && !empty($_GET['market'])) {
-				$select .= " AND a.market_id='".$_GET['market']."'";
+				// $select .= " AND a.market_id='".$_GET['market']."'";
+                $select2 = $select2->where("a.market_id", "=", $_GET["market"]);
 			}
 			if (isset($_GET['type']) && !empty($_GET['type'])) {
-				$select .= " AND a.type='".$_GET['type']."'";
+				// $select .= " AND a.type='".$_GET['type']."'";
+                $select2 = $select2->where("a.type", "=", $_GET["type"]);
 			}
-				
+		
+
 			/*
             if (isset($_GET['do_filter'])) {
                 if (!empty($_GET['market'])) {
@@ -989,14 +1015,22 @@ class UserController extends Controller
             }
 			*/
 
-            $select_count = $select;
-            $total_records = DB::select($select_count);
+            // $select_count = $select;
+            // $total_records = DB::select($select_count);
+            $total_records = $select2->get();
+
             //echo "<pre>total_records: "; print_r($total_records); echo "</pre>"; exit;
 
             $data['total_pages'] = ceil(count($total_records)/$record_per_page);
 
-            $select .= " order by `created_at` desc limit ".$offset_start.",".$record_per_page;
-            $trades = DB::select($select);
+            // $select .= " order by `created_at` desc limit ".$offset_start.",".$record_per_page;
+            // $trades = DB::select($select);
+
+            $trades = $select2
+                        ->orderBy("created_at", "desc")
+                        ->limit($record_per_page)
+                        ->offset($offset_start)
+                        ->get();
             $data['tradehistories'] = $trades;
             $markets = Market::get();
             $market_wallet = array();
@@ -1101,16 +1135,44 @@ class UserController extends Controller
             $offset_start = ($pager_page-1)*$record_per_page;
             //$offset_end = ($pager_page*$record_per_page)-1;
 
-            $select = "select a.*, b.type, b.name , c.username from transfer_history a left join wallets b on a.wallet_id=b.id left join users c on a.receiver=c.id where a.receiver='".$user_id."'";
-            $select_count = "select count(*) as total from transfer_history a where a.receiver='".$user_id."'";
+            // pure query
+            // $select = "select a.*, b.type, b.name, c.username from transfer_history a left join wallets b on a.wallet_id=b.id left join users c on a.receiver=c.id where a.receiver='".$user_id."'";
+            // $select_count = "select count(*) as total from transfer_history a where a.receiver='".$user_id."'";
+            
+            // prepared statement
+            // var_dump("select a.*, b.type, b.name, c.username from transfer_history a left join wallets b on `a`.`wallet_id` = `b`.`id` left join users c on `a`.`receiver` = `c`.`id` where `a`.`receiver` = ?");
+
+            // query builder
+            $select2 = DB::table(DB::raw("transfer_history a"))
+                        ->select([
+                            DB::raw("a.*"),
+                            DB::raw("b.type"),
+                            DB::raw("b.name"),
+                            DB::raw("c.username")
+                        ])
+                        ->join(DB::raw("wallets b"), "a.wallet_id", "=", "b.id", "left")
+                        ->join(DB::raw("users c"), "a.receiver", "=", "c.id", "left")
+                        ->where("a.receiver", "=", $user_id);
+
+            // prepared statement
+            // var_dump("select count(*) as total from transfer_history a where a.receiver = ?");
+
+            // query builder
+            $select_count2 = DB::table(DB::raw("transfer_history a"))
+                            ->select(DB::raw("count(*) as total"))
+                            ->where(DB::raw("a.receiver"), "=", $user_id);
+
             if ($filter!='') {
                 $data['current_coin'] = $wallet->getType($filter);
-                $select .= " AND a.wallet_id='".$filter."'";
+                // $select .= " AND a.wallet_id='".$filter."'";
+                $select2 = $select2->where("a.wallet_id", "=", $filter);
             }
 			$where = '';
 			if ($where=='') {
 				if (isset($_GET['wallet']) && !empty($_GET['wallet'])) {
-					$where = $where." AND a.wallet_id='".$_GET['wallet']."'";
+					// $where = $where." AND a.wallet_id='".$_GET['wallet']."'";
+                    $select_count2 = $select_count2->where("a.wallet_id", "=", $_GET["wallet"]);
+                    $select2 = $select2->where("a.wallet_id", "=", $_GET["wallet"]);
 				}
 			}
 			
@@ -1124,14 +1186,25 @@ class UserController extends Controller
                 }
             }
 			*/
-            $select_count = $select_count." ".$where." order by `created_at` desc";
-            $total_records = DB::select($select_count);
+
+            // $select_count = $select_count." ".$where." order by `created_at` desc";
+            $select_count2 = $select_count2->orderBy("created_at", "desc");
+
+
+            //$total_records = DB::select($select_count); 
+            $total_records = $select_count2->get();
             //echo "<pre>total_records: "; print_r($total_records); echo "</pre>"; exit;
 
             $data['total_pages'] = ceil($total_records[0]->total/$record_per_page);
 
-            $select .= " ".$where." order by `created_at` desc limit ".$offset_start.",".$record_per_page;
-            $transferins = DB::select($select);
+            // $select .= " ".$where." order by `created_at` desc limit ".$offset_start.",".$record_per_page;
+            $select2 = $select2
+                        ->orderBy("created_at", "desc")
+                        ->limit($record_per_page)
+                        ->offset($offset_start);
+
+            // $transferins = DB::select($select);
+            $transferins = $select2->get();
             $data['transferins'] = $transferins;
 
             $wallets_temp = Wallet::get();
@@ -1152,16 +1225,38 @@ class UserController extends Controller
             $offset_start = ($pager_page-1)*$record_per_page;
             //$offset_end = ($pager_page*$record_per_page)-1;
 
-            $select = "select a.*, b.type, b.name , c.username from transfer_history a left join wallets b on a.wallet_id=b.id left join users c on a.sender=c.id where a.sender='".$user_id."'";
-            $select_count = "select count(*) as total from transfer_history a where a.sender='".$user_id."'";
+            // pure query
+            // $select = "select a.*, b.type, b.name , c.username from transfer_history a left join wallets b on a.wallet_id=b.id left join users c on a.sender=c.id where a.sender='".$user_id."'";
+            // $select_count = "select count(*) as total from transfer_history a where a.sender='".$user_id."'";
+
+            $select2 = DB::table(DB::raw("transfer_history a"))
+                        ->select([
+                            DB::raw("a.*"),
+                            DB::raw("b.type"),
+                            DB::raw("b.name"),
+                            DB::raw("c.username")
+                        ])
+                        ->join(DB::raw("wallets b"), "a.wallet_id", "=", "b.id", "left")
+                        ->join(DB::raw("users c"), "a.sender", "=", "c.id", "left")
+                        ->where("a.sender", "=", $user_id);
+
+            $select_count2 = DB::table(DB::raw("transfer_history a"))
+                            ->select([
+                                DB::raw("count(*) as total")
+                            ])
+                            ->where("a.sender", "=", $user_id);
+
             if ($filter!='') {
                 $data['current_coin'] = $wallet->getType($filter);
-                $select .= " AND a.wallet_id='".$filter."'";
+                // $select .= " AND a.wallet_id='".$filter."'";
+                $select2 = $select2->where("a.wallet_id", "=", $filter);
             }
 			$where = '';
 			if ($where=='') {
 				if (isset($_GET['wallet']) && !empty($_GET['wallet'])) {
-					$where = $where." AND a.wallet_id='".$_GET['wallet']."'";
+					// $where = $where." AND a.wallet_id='".$_GET['wallet']."'";
+                    $select2 = $select2->where("a.wallet_id", "=", $_GET["wallet"]);
+                    $select_count2 = $select_count2->where("wallet_id", "=", $_GET["wallet"]);
 				}
 			}
 			
@@ -1175,14 +1270,23 @@ class UserController extends Controller
                 }
             }
 			*/
-            $select_count = $select_count." ".$where." order by `created_at` desc";
-            $total_records = DB::select($select_count);
+            // $select_count = $select_count." ".$where." order by `created_at` desc";
+            $select_count2 = $select_count2->orderBy("created_at", "desc");
+            
+            // $total_records = DB::select($select_count);
+            $total_records = $select_count2->get();
             //echo "<pre>total_records: "; print_r($total_records); echo "</pre>";
 
             $data['total_pages'] = ceil($total_records[0]->total/$record_per_page);
+            // $select .= " ".$where." order by `created_at` desc limit ".$offset_start.",".$record_per_page;
+            $select2 = $select2
+                        ->orderBy("created_at", "desc")
+                        ->limit($record_per_page)
+                        ->offset($offset_start);
 
-            $select .= " ".$where." order by `created_at` desc limit ".$offset_start.",".$record_per_page;
-            $transferouts = DB::select($select);
+
+            // $transferouts = DB::select($select);
+            $transferouts = $select2->get();
             $data['transferouts'] = $transferouts;
 
             $wallets_temp = Wallet::get();
@@ -1243,8 +1347,20 @@ class UserController extends Controller
                 $giveaways[$i]['coins_left'] = isset($coins[$g['wallet_id']]) ? $coins[$g['wallet_id']] : 0;
                 $giveaways[$i]['hdiff'] = -1;
                 $giveaways[$i]['claim'] = true;
+                // pure query
+                // $check = DB::select("SELECT *, TIMESTAMPDIFF(HOUR, date_created, NOW()) as hdiff FROM giveaway_claims WHERE user_id = {$user_id} AND giveaway_id = {$g['id']} ORDER BY date_created DESC LIMIT 1");
 
-                $check = DB::select("SELECT *, TIMESTAMPDIFF(HOUR, date_created, NOW()) as hdiff FROM giveaway_claims WHERE user_id = {$user_id} AND giveaway_id = {$g['id']} ORDER BY date_created DESC LIMIT 1");
+                // query builder
+                $check = DB::table("giveaway_claims")
+                        ->select([
+                            DB::raw("*"),
+                            DB::raw("TIMESTAMPDIFF(HOUR, date_created, NOW()) as hdiff")
+                        ])
+                        ->where("user_id", "=", $user_id)
+                        ->where("giveaway_id", "=", $g["id"])
+                        ->orderBy("date_created", "desc")
+                        ->limit(1)
+                        ->get();
                 if (isset($check[0])) {
                     if ($check[0]->hdiff < $g['time_interval']) {
                         $giveaways[$i]['claim'] = false;
@@ -1353,7 +1469,12 @@ class UserController extends Controller
                             }
                             
                             $subtract = DB::select("UPDATE balance SET amount = amount - {$giveaway->amount} WHERE user_id = {$ga_user_id} AND wallet_id = {$giveaway->wallet_id}");
-
+                            $subtract = DB::table("balance")
+                                        ->where("user_id", "=", $ga_user_id)
+                                        ->where("wallet_id", "=", $giveaway->wallet_id)
+                                        ->update([
+                                            "amount" => DB::raw("amount - {$giveaway->amount}")
+                                        ]);
                             echo json_encode(array('status'=>'success','message'=> "We have sent you {$giveaway->amount} free {$giveaway->wallet_type}, reload the page to see your balance" ));
                             exit;
                         } else {
