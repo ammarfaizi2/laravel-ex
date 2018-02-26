@@ -908,8 +908,8 @@ class UserController extends Controller
             }
 			
 			if (isset($_GET['market']) && !empty($_GET['market'])) {
-				$select .= " AND a.market_id='".$_GET['market']."'";
-                // $select2 = $select2->where("a.market_id", "=", $_GET['market']);
+				// $select .= " AND a.market_id='".$_GET['market']."'";
+                $select2 = $select2->where("a.market_id", "=", $_GET['market']);
 			}
 			if (isset($_GET['status']) && $_GET['status']!='') {
 				$status_ = str_replace('_', ' ', $_GET['status']);
@@ -936,14 +936,17 @@ class UserController extends Controller
             }
 			*/
 
-            $select_count = $select;
+            // $select_count = $select;
             // $total_records = DB::select($select_count);
             $total_records = $select2->get();
 
             $data['total_pages'] = ceil(count($total_records)/$record_per_page);
 
-            $select .= " order by `created_at` desc limit ".$offset_start.",".$record_per_page;
-            $ordershistory = DB::select($select);
+            // $select .= " order by `created_at` desc limit ".$offset_start.",".$record_per_page;
+            // $ordershistory = DB::select($select);
+            $ordershistory = $select2->orderBy("created_at", "desc")
+                                ->limit($record_per_page)
+                                ->offset($offset_start)->get();
             //echo "<pre>ordershistory: "; print_r($ordershistory); echo "</pre>";
             //echo "<pre>".dd(DB::getQueryLog())."</pre>";
             $data['ordershistories'] = $ordershistory;
