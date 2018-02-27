@@ -1703,59 +1703,27 @@ form.inblock, .order_header{
 @ Slider Settings 
 Only showing tooltips when sliding is active
 */
-#market_place #buy_slider .noUi-connect {
-	background-color: #449d44;
+
+.slider.slider-horizontal {
+	width: 100%;
 }
-#market_place #sell_slider .noUi-connect {
-	background-color: #d9534f;
-}
-#market_place .noUi-horizontal{
-	height: 12px !important;
+.slider.slider-horizontal .slider-tick, 
+.slider.slider-horizontal .slider-handle {
+	cursor: pointer;
 }
 
-#market_place .noUi-tooltip  {
-	top: 120%;
+.slider.slider-horizontal .slider-tick-label-container .slider-tick-label {
 }
-
-#market_place .noUi-tooltip  {
-	height: 25px;
-	padding: 0 5px;
-	z-index: 101;
+.slider.slider-horizontal .slider-tick-label-container .slider-tick-label:first-child{
+	position: absolute;
+	left: -5px;
+	text-align: left;
 }
-
-#market_place .noUi-tooltip {
-    display: none;
+.slider.slider-horizontal .slider-tick-label-container .slider-tick-label:last-child{
+	position: absolute;
+	right: -5px;
+	text-align: right;
 }
-#market_place .noUi-origin .noUi-active .noUi-tooltip {
-    display: block;
-}
-
-
-#market_place .noUi-horizontal .noUi-handle{
-	height: 22px;
-	width: 30px;
-}
-#market_place .noUi-horizontal .noUi-handle::before {
-    content: "";
-    display: block;
-    position: absolute;
-    height: 11px;
-    width: 1px;
-    background: #E8E7E6;
-    left: 12px;
-    top: 4px;
-}
-#market_place .noUi-horizontal .noUi-handle::after{
-    content: "";
-    display: block;
-    position: absolute;
-    height: 11px;
-    width: 1px;
-    background: #E8E7E6;
-    left: 16px;
-    top: 4px;
-}
-
 
 table.market_table tr.mainCoin > td > a > i{
 	float: left;

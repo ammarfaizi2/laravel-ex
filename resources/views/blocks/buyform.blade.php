@@ -352,38 +352,27 @@ function doPostTradeOrder(tradeArray){
 $(function(){
 	
 //------// START - SLIDER CODE //------//
-//Buy Slider Init
+	//Buy Slider Init
+	//console.log(document.getElementById('buy_slider'));
+	//var buyOrderSlider = document.getElementById('buy_slider');
+	
 
-	console.log(document.getElementById('buy_slider'));
-	var buyOrderSlider = document.getElementById('buy_slider');
-	
-	noUiSlider.create(buyOrderSlider, {
-		start: 0,
-		connect: [true, false],
-		range: {
-		  'min': 0,
-		  'max': 100
-		},
-		pips: {
-			mode: 'positions',
-			values: [0,25,50,75,100],
-			density: 2,
-			stepped: true
-		},
-		tooltips: true
+	var buyOrderSlider = new Slider("#buy_slider", {
+		value: 0,
+		ticks: [0, 25, 50, 75, 100],
+		ticks_labels: [0, '', '', '', 100],
+		step: 1
 	});
 	
-	//Buy Input-handler for the Slider
-	var buyInputAmount = document.getElementById('b_amount');
-	
-	buyOrderSlider.noUiSlider.on('update', function( values, handle ) {
-		buyInputAmount.value = values[handle];
-		updateDataBuy();
+	buyOrderSlider.on('change', function( values) {
+		console.log('values: ');
+		console.log('oldVal: '+values.oldValue);
+		console.log('newVal: '+values.newValue);
+		$('#b_amount').val(values.newValue); 
+		//updateSliderDataBuy();
+		console.log(this);
 	});
 	
-	buyInputAmount.addEventListener('change', function(){
-		buyOrderSlider.noUiSlider.set(this.value);
-	});
 	
 	
 	//Disable BUY when user is not logged in 
@@ -395,96 +384,124 @@ $(function(){
 	@endif
 	
 	//Function for updating Slider range
-	function updateSliderRange ( el, max=1, min=0 ) {
+	function updateSliderRange (max=1) {
 
-		min = (min >= max) ? 0: min;
-		max = (max <= min) ? 1: max;
-
+		max = (max <= 0) ? 1: max;
+		
+		//max=200;
+		var splittedRange = (max / 4);
+		var snap_bound_val = (max * 0.03).toFixed(8);
+		var rangeArr = [0, splittedRange*1, splittedRange*2, splittedRange*3, max];
+		console.log('splittedRange min: '+rangeArr[0]);
+		console.log('splittedRange: '+rangeArr[1]);
+		console.log('splittedRange: '+rangeArr[2]);
+		console.log('splittedRange: '+rangeArr[3]);
+		console.log('splittedRange max: '+rangeArr[4]);
 		//if(min => max){min = 0; max=1;}else{}
 		//update the min and max in range slider
-		/*
-		el.noUiSlider.updateOptions({
-			range: {
-				'min': min,
-				'max': max
-			}
+		
+		//if(newSliderValue > 0) $('#b_amount').val(newSliderValue);
+			
+
+		//buyOrderSlider.destroy();
+		
+		console.log('getValue: '+buyOrderSlider.getValue());
+		
+		buyOrderSlider
+		.setAttribute("ticks", [rangeArr[0], rangeArr[1], rangeArr[2], rangeArr[3], rangeArr[4]])
+		//.setAttribute("ticks_labels", [rangeArr[0], rangeArr[1], rangeArr[2], rangeArr[3], rangeArr[4]])
+		.setAttribute("ticks_labels", [rangeArr[0], '', '', '', rangeArr[4]])
+		.setAttribute("ticks_snap_bounds", snap_bound_val)
+		.setAttribute("step", 0.01)
+		.refresh();
+		
+		console.log('===========================');
+		console.log('buyOrderSlider 2: ');
+		console.log(buyOrderSlider);
+			
+		//Re-initiate the on change since we did a refresf of the slider above
+		buyOrderSlider.on('change', function( values) {
+			console.log('values2: ');
+			console.log('oldVal2: '+values.oldValue);
+			console.log('newVal2: '+values.newValue);
+			$('#b_amount').val(values.newValue); 
+			//updateSliderDataBuy();
+			console.log(this);
 		});
-		*/
+			
+		
 	}
+	updateSliderDataBuy();	//initiate the buyslider
+	$('#buy_coin_link').click(function(e) {
+		updateSliderDataBuy();
+	});
 //------// STOP - SLIDER CODE //------//
-	
+function updateSliderDataBuy(){
+			
+		var amount = $('#b_amount').val(); 
+		var price = $('#b_price').val();
+		var fee = $('#fee_buy').html();
+		var total = parseFloat(amount*price);
+		var fee_amount = total*(fee/100);
 
-function updateDataBuy(){
-    
+		$('#b_all').html(total.toFixed(8)); 
+		$('#b_fee').html(fee_amount.toFixed(8));
+		$('#b_net_total').html( parseFloat(total+fee_amount).toFixed(8));
+		
 
-	
-	var amount = $('#b_amount').val(); 
-    var price = $('#b_price').val();
-    var fee = $('#fee_buy').html();
-    var total = parseFloat(amount*price);
-    var fee_amount = total*(fee/100);
+		var newAmount = +amount+0;
+		//$('#b_amount').val(newAmount); 
+		
 
-    $('#b_all').html(total.toFixed(8)); 
-    $('#b_fee').html(fee_amount.toFixed(8));
+		//->Calc the max slider range 
+		var total_base = parseFloat($('#cur_to').html()) ; //balance
+		var slider_range_max = (+(total_base/price)+0).toFixed(8);
+		
+		//if(newSliderValue>0) updateSliderRange(slider_range_max, newSliderValue);		//issue
+		//else updateSliderRange(slider_range_max);		//issue
+		
+		$('#b_amount').val(slider_range_max); 
+		console.log('b_amount: '+$('#b_amount').val());
+		
+		updateSliderRange(slider_range_max);
+		buyOrderSlider.setValue(slider_range_max, true, true);
+		//console.log('sliderRangeMax: '+slider_range_max);
+		
+		//var buyOrderSlider = document.getElementById('buy_slider');
 
-	$('#b_net_total').html( parseFloat(total+fee_amount).toFixed(8));
-	
 
-	var newAmount = +amount+0;
-	$('#b_amount').val(newAmount); 
-
-	//->Calc the max slider range 
-	var total_base = parseFloat($('#cur_to').html()) ; //balance
-	var slider_range_max = +(total_base/price)+0;
-	
-	//updateSliderRange(buyOrderSlider, sliderRangeMax);
-	console.log('sliderRangeMax: '+slider_range_max);
-	
-	var buyOrderSlider = document.getElementById('buy_slider');
-	buyOrderSlider.noUiSlider.updateOptions({
-		range: {
-			'min': 0,
-			'max': slider_range_max
-		}
+		
+	}
+	$('#b_price').keyup(function(event) {
+		//console.log(event);
+		//this.value = parseFloat(this.value).toFixed(8);
+		//var price = parseFloat(this.value).toFixed(8);
+		var price = this.value;
+		var total_base = parseFloat($('#cur_to').html()).toFixed(8) ; //balance
+		var slider_range_max = (+(total_base/price)+0).toFixed(8);
+		var oldValue = buyOrderSlider.getValue();
+		updateSliderRange(slider_range_max);
+		
+		buyOrderSlider.setValue(parseFloat(oldValue).toFixed(8), true, true);
 	});
 	
-	
-	//buyOrderSlider.noUiSlider.set(newAmount);
-}
-updateDataBuy();
-  
-	$('#buy_coin_link').click(function(e) {
-    e.preventDefault();
-
-    var total = parseFloat($('#cur_to').html()) ; //balance
-    var price = $('#b_price').val();
-    var amount = total/price;
-    var fee = $('#fee_buy').html();   
-    var fee_amount = total*(fee/100);
-
-    $('#b_all').html(total.toFixed(8)); 
-    $('#b_net_total').html( parseFloat(total+fee_amount).toFixed(8));
-    $('#b_fee').html(fee_amount.toFixed(8));
-    
-	var newAmount = +amount+0;
-	$('#b_amount').val(newAmount); 
-	
-	updateDataBuy();
-	//Update Slider Range 
-	updateSliderRange(buyOrderSlider, newAmount)
-	buyOrderSlider.noUiSlider.set(newAmount);
-
-  });
-
-  //updateDataBuy();
-  $('#b_amount, #b_price').keyup(function(event) {
+	$('#b_amount, #b_price').change(function() {
+		this.value = parseFloat(this.value).toFixed(8);
+	});
+	$('#b_amount').keyup(function(event) {
 	//alert(event.target.id); id of the triggered element
-	if (event.target.id == 'b_amount')
-		updateDataBuy();
-	if (event.target.id == 'b_price')
-		updateDataBuy();
-  });
+		//this.value = parseFloat(this.value).toFixed(8);
+		buyOrderSlider.setValue( parseFloat(this.value).toFixed(8), true, true);
+	
+  });	
 
+
+/*	
+if(balance < net_total)
+    alert('print ok');
+else
+    alert('print false');
+*/
 
   $('#do_buy').click(function(e) {
      e.preventDefault(); 
@@ -500,15 +517,7 @@ updateDataBuy();
       //var net_total = prettyFloat(total+fee_amount, 8);
       var net_total = total+fee_amount;
      
-	console.log('do_buy -> total : '+ total + ' || amount : ' +amount);
-
-/*	
-if(balance < net_total)
-    alert('print ok');
-else
-    alert('print false');
-*/
-
+	  console.log('do_buy -> total : '+ total + ' || amount : ' +amount);
 
       if(!$('body').hasClass('logged')) {
         showMessage(["{{trans('messages.login_to_trade')}}"],'error'); 

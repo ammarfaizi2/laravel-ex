@@ -642,6 +642,12 @@ var windowIsDefined = (typeof window === "undefined" ? "undefined" : _typeof(win
 					this._removeClass(tooltip, 'left');
 					this._removeClass(tooltip, 'top');
 				}, this);
+				
+				if (Array.isArray(this.options.ticks_labels) && this.options.ticks_labels.length > 0) { 
+					for (i = 0; i < this.options.ticks_labels.length; i++) {        
+						this.tickLabels[i].innerHTML = this.options.ticks_labels[i]
+					}
+				}
 			}
 
 			if (this.options.orientation === 'vertical') {
@@ -1242,7 +1248,8 @@ var windowIsDefined = (typeof window === "undefined" ? "undefined" : _typeof(win
 							percentage = 100 - percentage;
 						}
 
-						this.ticks[i].style[this.stylePos] = percentage + "%";
+						if(this.ticks[i] !== undefined)
+							this.ticks[i].style[this.stylePos] = percentage + "%";
 
 						/* Set class labels to denote whether ticks are in the selection */
 						this._removeClass(this.ticks[i], 'in-selection');

@@ -74,7 +74,8 @@
 				  <li class=""><a href="#orderdepth" data-toggle="tab" aria-expanded="false" data="order-chart" onclick="javascript: drawOrderDepthChart();">Order Depth</a></li>
 				  <li class="active"><a href="#chartdiv" data-toggle="tab" aria-expanded="true" data="price-volume-chart">Chart</a></li>
 				  <li class="pull-left header"><i class="fa fa-bar-chart"></i>
-					<!--<img width="32" border=0 height="32" src="{{asset('')}}/{{$coinmain_logo}}" /> --> {{$market_from}} - {{ $coinmain }}/{{ $coinsecond }}
+					<!--<img width="32" border=0 height="32" src="{{asset('')}}/{{$coinmain_logo}}" /> --> 
+					<span data-toggle="tooltip" data-placement="top" title="{{$market_from}}">{{ $coinmain }}/{{ $coinsecond }}</span>
 				  </li>
 				</ul>
 				<div class="tab-content chart_marketdepth">

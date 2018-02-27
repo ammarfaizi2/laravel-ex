@@ -102,30 +102,6 @@ function updateDataSell(){
   //------// START - SLIDER CODE //------//
 //Sell Slider Init
 
-	var sellOrderSlider = document.getElementById('sell_slider');
-
-	noUiSlider.create(sellOrderSlider, {
-		start: 0,
-		connect: [true, false],
-		range: {
-		  'min': 0,
-		  'max': 100
-		},
-		tooltips: true
-	});
-	
-	//Buy Input-handler for the Slider
-	var sellInputFormat = document.getElementById('s_amount');
-	
-	sellOrderSlider.noUiSlider.on('update', function( values, handle ) {
-		sellInputFormat.value = values[handle];
-		updateDataSell();
-	});
-	
-	sellInputFormat.addEventListener('change', function(){
-		sellOrderSlider.noUiSlider.set(this.value);
-	});
-	
 	
 	// If the checkbox is checked, disabled the slider.
 	// Otherwise, re-enable it.
@@ -212,8 +188,8 @@ $(function(){
           $('#sell_loader').fadeIn();
         });
 		*/
-		  $('#do_sell').fadeOut(500);
-		  $('#sell_loader').fadeIn();
+		  //$('#do_sell').fadeOut(500);
+		  $('#sell_loader').removeClass("hide");
 
 			var tradeArray = [price,amount,market_id, 'sell'];
 			BootstrapDialog.confirmTrade(tradeArray);

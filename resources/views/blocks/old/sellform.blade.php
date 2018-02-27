@@ -1,21 +1,22 @@
-<h3>{{{ trans('texts.sell')}}} {{{ $coinmain }}}</h3>
+<form class="form-horizontal">
+	<div class="box box-danger">
+        <div class="box-header with-border">
+          <h3 class="box-title">{{{ trans('texts.sell')}}} {{{ $coinmain }}}</h3>
 
-  <form class="form-horizontal inblock">
-		<div class="inblock order_header">
-			<div class="header-left">
+          <div class="box-tools pull-right">
 				{{{ trans('texts.your_balance')}}}: 
 				<!-- <a id="buy_coin_link" data-amount="{{{ $balance_coinsecond }}}" href="javascript:void(0)" onclick="a_calc(17)"><b><span id="cur_to" class="money_rur">{{{ $balance_coinsecond }}}</span> {{{ $coinsecond }}}</b></a> -->
 				<a id="sell_coin_link" data-amount="{{{ $balance_coinmain }}}" href="#"><b><span id="cur_from" class="money_rur">{{{ $balance_coinmain }}}</span> {{{ $coinmain }}}</b></a>
-			</div>
-		</div>
-		@if($enable_trading != 1)
-			<div class="notice notice-danger">
-				<strong><i class="fa fa-exclamation-triangle fa-2x left"></i> {{ trans('texts.notice') }}</strong> {{ trans('texts.market_disabled') }}
-			</div>
-		@endif
-		<hr />
-		
-		<div class="form-group">
+          </div>
+        </div>
+        <div class="box-body inblock">
+			@if($enable_trading != 1)
+				<div class="notice notice-danger">
+					<strong><i class="fa fa-exclamation-triangle fa-2x left"></i> {{ trans('texts.notice') }}</strong> {{ trans('texts.market_disabled') }}
+				</div>
+			@endif
+			
+			<div class="form-group">
 		  <label class="col-lg-2 control-label" for="s_amount">{{{ trans('texts.amount') }}} </label>
 		  <div class="col-lg-10 input-group">      
 			<input id="s_amount" name="s_amount" class="form-control" type="text" value="0">
@@ -71,13 +72,18 @@
 		<div class="form-group">
 		  <span id="s_message"></span>
 		</div>
-		
-		<div class="control-group"> 			
+			
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
 			<input type="hidden" name="sell_market_id" id="sell_market_id" value="{{{Session::get('market_id')}}}">  
 			<!-- <button type="button" class="btn" id="calc_sell">{{trans('texts.caculate')}}</button> -->
 			<button type="button" class="btn btn-primary btn-danger btn-block" id="do_sell">{{trans('texts.sell')}} {{{ $coinmain }}} <i class="fa fa-circle-o-notch fa-spin fa-1x hide" id="sell_loader"></i></button>
-		</div>
-  </form> 
+        </div>
+        <!-- /.box-footer-->
+</div>
+</form>
+
 
 <script type="text/javascript">
 function updateDataSell(){
@@ -137,12 +143,14 @@ function updateDataSell(){
 	*/
 	
 	
-	//Disable BUY when user is not logged in 
+	//Disable Sell when user is not logged in 
 	@if ( Auth::guest() ) 
-		buyOrderSlider.setAttribute('disabled', true);
-		buyInputFormat.setAttribute('disabled', true);
+		/*
+		sellOrderSlider.setAttribute('disabled', true);
+		sellInputFormat.setAttribute('disabled', true);
 		document.getElementById('s_price').setAttribute('disabled', true);
 		document.getElementById('do_sell').setAttribute('disabled', true);
+		*/
 	@endif
 
 //------// STOP - SLIDER CODE //------//
