@@ -53,6 +53,7 @@
                     <th>{{{ trans('texts.price')}}}</th>
                     <th>{{{ trans('texts.amount')}}}</th>
                     <th>{{{ trans('texts.total')}}}</th>
+                    <th>{{{ trans('texts.remaining_amount')}}}</th>
                     <th>{{{ trans('texts.status')}}}</th>
                     <th>{{{ trans('texts.action')}}}</th> 
                 </tr>
@@ -72,8 +73,9 @@
                             <td><b style="color:green">{{ ucwords($ordershistory->type) }}</b></td>
                          @endif
                         <td>{{sprintf('%.8f',$ordershistory->price)}}</td>
-                        <td>{{sprintf('%.8f',$ordershistory->from_value)}}</td>
+                        <td>{{sprintf('%.8f',$ordershistory->amount)}}</td>
                         <td>{{sprintf('%.8f',$ordershistory->to_value)}}</td>
+                         <td>{{sprintf('%.8f',$ordershistory->from_value)}}</td>
                         <td><?php
                             //str_replace(' ', '_', $ordershistory->status);
                         if ($ordershistory->status =='partly_filled' || $ordershistory->status =='partly filled') {

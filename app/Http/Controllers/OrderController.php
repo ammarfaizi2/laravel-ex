@@ -150,6 +150,7 @@ class OrderController extends Controller
                 $orders_buy->price = $price_buy;
                 $orders_buy->status = 'active';
                 $orders_buy->from_value = $amount_buy;
+                $orders_buy->amount = $amount_buy;
                 $orders_buy->to_value = $total_buy;
                 $orders_buy->market_id = $market_id;
                 $orders_buy->user_id = $user->id;
@@ -567,6 +568,7 @@ class OrderController extends Controller
                 $orders_sell = new Order();
                 $orders_sell->price = $price_sell;
                 $orders_sell->status = 'active';
+                $orders_sell->amount = $amount_sell;
                 $orders_sell->from_value = $amount_sell;
                 $orders_sell->to_value = $total_sell;
                 $orders_sell->market_id = $market_id;

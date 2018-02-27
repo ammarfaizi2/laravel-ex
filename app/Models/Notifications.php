@@ -23,7 +23,8 @@ class Notifications extends Eloquent
 				),
 				"b.status",
 				"b.price",
-				"b.from_value as amount",
+				"b.amount",
+				"b.from_value as remaining_amount",
 				"b.to_value as total",
 				"b.type"
 			])
@@ -75,7 +76,8 @@ class Notifications extends Eloquent
 				),
 				"b.status",
 				"b.price",
-				"b.from_value as amount",
+				"b.amount",
+				"b.from_value as remaining_amount",
 				"b.to_value as total",
 				"b.type"
 			])

@@ -38,6 +38,7 @@ return array(
     "your_balance" => "Your balance",
     "highest_price" => "Highest Bid Price",
     "amount" => "Amount",
+    "remaining_amount" => "Remaining Amount",
     "price_per" => "Price per",
     "total" => "Total",
     "fee" => "Fee",

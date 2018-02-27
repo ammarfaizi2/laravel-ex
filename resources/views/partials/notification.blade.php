@@ -13,7 +13,7 @@
 		  <span class="label label-warning" id="notification-count"></span>
 		</a>
 		<ul class="dropdown-menu">
-			<div style="width:300px;height:400px;overflow-y:scroll;" id="notif_field">
+			<div style="width:350px;height:400px;overflow-y:scroll;" id="notif_field">
 				<!-- <li>
 					<div style="border-bottom:1px solid #000;border-top: 1px solid #000;">
 						<p class="notif ca">Your order GIV/BTC has been Partially Filled.</p>
@@ -127,6 +127,7 @@
 											'<p class="notif">Type: '+response["order_notification"][x]["type"]+'</p>'+
 											'<p class="notif">Price: '+response["order_notification"][x]["price"]+'</p>'+
 											'<p class="notif">Amount: '+response["order_notification"][x]["amount"]+'</p>'+
+											'<p class="notif">Remaining Amount: '+response["order_notification"][x]["remaining_amount"]+'</p>'+
 											'<p class="notif">Total: '+response["order_notification"][x]["total"]+'</p>'+
 										'</div>'+
 										'<div class="gh ax">'+
@@ -174,6 +175,7 @@
 								'<p class="notif">Type: '+this.readNotification[x]["type"]+'</p>'+
 								'<p class="notif">Price: '+this.readNotification[x]["price"]+'</p>'+
 								'<p class="notif">Amount: '+this.readNotification[x]["amount"]+'</p>'+
+								'<p class="notif">Remaining Amount: '+this.readNotification[x]["remaining_amount"]+'</p>'+
 								'<p class="notif">Total: '+this.readNotification[x]["total"]+'</p>'+
 							'</div>'+
 							'<div class="gh ax">'+
