@@ -204,6 +204,15 @@ class OrderController extends Controller
                                         
 
                                     Order::where('id', $sell_matching['id'])->update(array('status' => 'filled'));
+                                    DB::table("order_notification")
+                                        ->where("order_id", "=", $sell_matching['id'])
+                                        ->limit(1)
+                                        ->update(
+                                            [
+                                                "status" => "pending",
+                                                "updated_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
                                     $status = 'success';
                                     $message1 .= '<p>'.Lang::get('messages.filled').' <br />Bought '.$amount_buy .' '.$from.' at price '.$price_sell.' Fee buy: '.$fee_buy.' '.$from.'. Received: '.($amount_buy-$fee_buy).' '.$from. ' - Total amount paid: '.($total_sell).' '.$to.'</p>';
                                     $message = array('message' => $message1, 'status' => 'success');
@@ -243,6 +252,15 @@ class OrderController extends Controller
                                     
                                     
                                     Order::where('id', $sell_matching['id'])->update(array('status' => 'filled'));
+                                    DB::table("order_notification")
+                                        ->where("order_id", "=", $sell_matching['id'])
+                                        ->limit(1)
+                                        ->update(
+                                            [
+                                                "status" => "pending",
+                                                "updated_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
                                     $status = 'success';
 
                                     $message1 .='<p>'.Lang::get('messages.partially_filled').' <br />Buy '.$amount_sell .' '.$from.' @  '.sprintf('%.8f', $price_sell).' Fee buy: '.$fee_buy.' '.$from.'. Received: '.($amount_sell-$fee_buy).' '.$from. ' - Total amount paid: : '.($total_sell).' '.$to.'</p>';
@@ -288,6 +306,15 @@ class OrderController extends Controller
                                     
                                     
                                     Order::where('id', $sell_matching['id'])->update(array('status' => 'partly filled', 'from_value'=>$amount_rest, 'to_value'=>$total_rest));
+                                    DB::table("order_notification")
+                                        ->where("order_id", "=", $sell_matching['id'])
+                                        ->limit(1)
+                                        ->update(
+                                            [
+                                                "status" => "pending",
+                                                "updated_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
                                     $status = 'success';
                                     
                                     $message1 .= '<p>'.Lang::get('messages.filled').' : Bought '.$amount_buy .' '.$from.' at price '.$price_sell.' Fee buy: '.$fee_buy.' '.$from. ' - Total amount paid: : '.($total_sell).' '.$to.'</p>';
@@ -332,7 +359,7 @@ class OrderController extends Controller
                         DB::table("order_notification")->insert(
                             [
                                 "order_id" => $orders_buy->id,
-                                "status" => "self::notifHandle($orders_buy->status)",
+                                "status" => self::notifHandle($orders_buy->status),
                                 "created_at" => date("Y-m-d H:i:s")
                             ]
                         );
@@ -597,6 +624,15 @@ class OrderController extends Controller
                                                                     
 
                                     Order::where('id', $buy_matching['id'])->update(array('status' => 'filled'));
+                                    DB::table("order_notification")
+                                        ->where("order_id", "=", $buy_matching['id'])
+                                        ->limit(1)
+                                        ->update(
+                                            [
+                                                "status" => "pending",
+                                                "updated_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
                                     $status = 'success';
                                     //$message .= "\n".Lang::get('messages.filled').' : Fee buy: '.sprintf('%.8f',$fee_buy).' - Fee Sell: '.sprintf('%.8f',$fee_sell).' - Total buy: '.(sprintf('%.8f',$amount_buy)) . ' - Total sell: '.sprintf('%.8f',($total_sell-$fee_sell));
                                     $message1 .= '<p>'.Lang::get('messages.filled').' <br />Sold '.$amount_buy .' '.$from.' at price '.$price_buy.' Fee sell: '.$fee_sell.' '.$to. ' - Received: '.($total_sell-$fee_sell).' '.$to.'</p>';
@@ -641,6 +677,15 @@ class OrderController extends Controller
 
                                     
                                     Order::where('id', $buy_matching['id'])->update(array('status' => 'partly filled', 'from_value'=>$amount_rest, 'to_value'=>$total_rest));
+                                    DB::table("order_notification")
+                                        ->where("order_id", "=", $buy_matching['id'])
+                                        ->limit(1)
+                                        ->update(
+                                            [
+                                                "status" => "pending",
+                                                "updated_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
                                     //Log::info('amount_buy > amount_sell Update sell orders: ', array('status' => 'partly filled', 'from_value'=>$amount_rest, 'to_value'=>$total_rest));
                                     $status = 'success';
 
@@ -679,6 +724,15 @@ class OrderController extends Controller
                                     
                                     
                                     Order::where('id', $buy_matching['id'])->update(array('status' => 'filled'));
+                                    DB::table("order_notification")
+                                        ->where("order_id", "=", $buy_matching['id'])
+                                        ->limit(1)
+                                        ->update(
+                                            [
+                                                "status" => "pending",
+                                                "updated_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
                                     $status = 'success';
                                     
                                     //$message .= "\n".Lang::get('messages.partially_filled').' : Fee buy: '.sprintf('%.8f',$fee_buy).' - Fee Sell: '.sprintf('%.8f',$fee_sell).' - Total buy: '.(sprintf('%.8f',$amount_buy)) . ' - Total sell: '.sprintf('%.8f',($total_sell-$fee_sell));

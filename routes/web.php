@@ -184,6 +184,7 @@ Route::any("/2fa_check_code", "UserController@check2facode")->name("2fa_check_co
 Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
 
     Route::get("ajax_notification", "NotificationController@ajaxNotification")->name("ajax.notif");
+    Route::post("ajax_notification/read", "NotificationController@readNotification")->name("ajax.notif.read");
 
     Route::group(['prefix' => 'messages', 'middleware' => ['2fa', 'App\Http\Middleware\user']], function () {
         Route::get('/', ['as' => 'messages', 'uses' => 'MessagesController@index']);
