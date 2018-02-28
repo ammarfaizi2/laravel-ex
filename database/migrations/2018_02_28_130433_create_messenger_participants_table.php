@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateCustomFieldsTable extends Migration {
+class CreateMessengerParticipantsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,13 +12,12 @@ class CreateCustomFieldsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('custom_fields', function(Blueprint $table)
+		Schema::create('messenger_participants', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('market_id')->index('market_id');
-			$table->string('name');
-			$table->string('value');
-			$table->enum('type', array('text','number','link'));
+			$table->integer('thread_id')->unsigned()->index('thread_id');
+			$table->integer('user_id')->unsigned()->index('user_id');
+			$table->dateTime('last_read')->nullable();
 			$table->timestamps();
 			$table->softDeletes();
 		});
@@ -32,7 +31,7 @@ class CreateCustomFieldsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('custom_fields');
+		Schema::drop('messenger_participants');
 	}
 
 }
