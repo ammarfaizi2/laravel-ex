@@ -1839,6 +1839,21 @@ class UserController extends Controller
         return view('user.profile', $data);
     }
 
+    private function notificationHandler()
+    {
+        // select `a`.`id`,`b`.`id` as `order_id` 
+        // from `order_notification` as `a` inner join `orders` as `b`
+        // on `a`.`order_id` = `b`.`id`
+        // where `a`.`status` = 'prepared' and
+        // `b`.`user_id` = 214
+        // order by 
+        // case when
+        //   `a`.`updated_at` is null then `a`.`created_at`
+        //    else `a`.`updated_at`
+        // end;
+        DB::table();
+    }
+
     public function doTransfer()
     {
         $trade_key = Request::get('trade_key');
@@ -1878,6 +1893,8 @@ class UserController extends Controller
             return Redirect::to('user/transfer-coin/'.$wallet->id)->with('error', "Password invalid.");
         }
     }
+
+
 
     public function completeTwoFactorAuth(\Illuminate\Http\Request $request)
     {

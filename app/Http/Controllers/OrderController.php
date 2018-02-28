@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Log;
 use Auth;
 use Lang;
@@ -38,7 +39,7 @@ use App\Models\UserSecurityQuestion;
 
 class OrderController extends Controller
 {
-    
+
     public function doBuy()
     {
         //if ( Auth::guest() ){
@@ -153,7 +154,7 @@ class OrderController extends Controller
                 $orders_buy->market_id = $market_id;
                 $orders_buy->user_id = $user->id;
                 $orders_buy->type = 'buy';
-
+                
                 
                 
                 $amount_real = 0;
@@ -325,7 +326,16 @@ class OrderController extends Controller
                     }
                     //Log::info('-------amount_buy final: '.$amount_buy);
                     if ($amount_buy>0) {
+
                         $orders_buy->save();
+                        // notif
+                        DB::table("order_notification")->insert(
+                            [
+                                "order_id" => $orders_buy->id,
+                                "status" => "self::notifHandle($orders_buy->status)",
+                                "created_at" => date("Y-m-d H:i:s")
+                            ]
+                        );
                         $message_socket_user['user_orders'][$orders_buy->id]['order_b'] = array('action'=>"insert","id"=>$orders_buy->id,"amount"=>$amount_buy,"price"=>$price_buy,"total"=>$total_rest,'type'=>'buy','created_at'=>$orders_buy->created_at);
                         $message_socket['message_socket'][$orders_buy->id]['order_b'] = array('action'=>"insert","id"=>$orders_buy->id,"amount"=>$amount_buy,"price"=>$price_buy,"total"=>$total_rest,'type'=>'buy','created_at'=>$orders_buy->created_at);
                         /*
@@ -370,7 +380,7 @@ class OrderController extends Controller
                     }
                     //Correct-end
                     
-                    $message_socket['history_trade'] = $history_trade;
+                    $message_socket['history_trade-'] = $history_trade;
                     //$message_socket['trade_live'] = $history_trade;
                     /*
                     $message_socket['history_trade1'] = $history_trade;
@@ -405,6 +415,15 @@ class OrderController extends Controller
                     */
                 } else {
                     $orders_buy->save();
+
+                    // notif
+                    DB::table("order_notification")->insert(
+                        [
+                            "order_id" => $orders_buy->id,
+                            "status" => self::notifHandle($orders_buy->status),
+                            "created_at" => date("Y-m-d H:i:s")
+                        ]
+                    );
                     $status = 'success';
                     $message1 = Lang::get('messages.order_created');
                     $message = array('message' => $message1, 'status' => 'notice');
@@ -703,7 +722,14 @@ class OrderController extends Controller
                     //Log::info('-------amount_sell final: '.$amount_sell);
                     if ($amount_sell>0) {
                         $orders_sell->save();
-                        
+                        // notif
+                        DB::table("order_notification")->insert(
+                            [
+                                "order_id" => $orders_sell->id,
+                                "status" => self::notifHandle($orders_sell->status),
+                                "created_at" => date("Y-m-d H:i:s")
+                            ]
+                        );
                         $message_socket_user['user_orders'][$orders_sell->id]['order_s'] = array('action'=>"insert","id"=>$orders_sell->id,"amount"=>$amount_sell,"price"=>$price_sell,"total"=>$total_rest,'type'=>'sell','created_at'=>$orders_sell->created_at);
                         $message_socket['message_socket'][$orders_sell->id]['order_s'] = array('action'=>"insert","id"=>$orders_sell->id,"amount"=>$amount_sell,"price"=>$price_sell,"total"=>$total_rest,'type'=>'sell','created_at'=>$orders_sell->created_at);
                         
@@ -764,6 +790,13 @@ class OrderController extends Controller
                     // Get all new orders
                 } else {
                     $orders_sell->save();
+                    DB::table("order_notification")->insert(
+                            [
+                                "order_id" => $orders_sell->id,
+                                "status" => self::notifHandle($orders_sell->status),
+                                "created_at" => date("Y-m-d H:i:s")
+                            ]
+                        );
                     $status = 'success';
                     $message1 = Lang::get('messages.order_created');
                     $message = array('message' => $message1, 'status' => 'notice');
@@ -953,4 +986,17 @@ class OrderController extends Controller
         exit;
     }
     //end correct here
+
+    private static function notifHandle($status)
+    {
+        switch (trim($status)) {
+            case 'filled':
+            case 'partly filled':
+                return 'pending';
+            case 'active':
+                return 'prepared';
+            default:
+                break;
+        }
+    }
 }
