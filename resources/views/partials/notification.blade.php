@@ -68,7 +68,7 @@
 					setTimeout(function(){
 						var el = document.getElementsByClassName("new-notification"), i = el.length;
 						for(;i--;) {
-							el[i].style["background-color"] = "";
+							el[i].style["background-color"] = "#d3d3d3";
 						}
 					}, 3000);
 				}
@@ -92,48 +92,53 @@
 				}
 				if (response["order_notification"]) {
 					var nvt = $("#notif_field")[0], x, id = [];
-					nvt.innerHTML = "";
 					$("#notification-count")[0].innerHTML = response["order_notification"].length > 0 ? response["order_notification"].length : "";
+					nvt.innerHTML = "";
 					for(x in response["order_notification"]) {
 						id[x] = response["order_notification"][x]["id"];
-						nvt.innerHTML = '<li>'+
-				'<div class="new-notification" style="border-bottom:1px solid #000;border-top: 1px solid #000;background-color:#6bea7a;">'+
-					'<p class="notif ca">Your order '+response["order_notification"][x]['coin_name']+' has been '+that.getStatus(response["order_notification"][x]['status'])+'.</p>'+
-					'<div class="gh">'+
-						'<p class="notif">Type: '+response["order_notification"][x]["type"]+'</p>'+
-						'<p class="notif">Price: '+response["order_notification"][x]["price"]+'</p>'+
-						'<p class="notif">Amount: '+response["order_notification"][x]["amount"]+'</p>'+
-						'<p class="notif">Total: '+response["order_notification"][x]["total"]+'</p>'+
-					'</div>'+
-					'<div class="gh ax">'+
-						'<center><a href="'+that.getLink(response["order_notification"][x]["status"])+'"><button style="margin-left:80px;">Check Order</button></a></center>'+
-					'</div>'+
-				'</div>'+
-			'</li>';
+						nvt.innerHTML += '<li>'+
+							'<div class="new-notification" style="border-bottom:1px solid #000;border-top: 1px solid #000;background-color:#6bea7a;">'+
+								'<p class="notif ca">Your order '+response["order_notification"][x]['coin_name']+' has been '+that.getStatus(response["order_notification"][x]['status'])+'.</p>'+
+								'<div class="gh">'+
+									'<p class="notif">Type: '+response["order_notification"][x]["type"]+'</p>'+
+									'<p class="notif">Price: '+response["order_notification"][x]["price"]+'</p>'+
+									'<p class="notif">Amount: '+response["order_notification"][x]["amount"]+'</p>'+
+									'<p class="notif">Total: '+response["order_notification"][x]["total"]+'</p>'+
+								'</div>'+
+								'<div class="gh ax">'+
+									'<center><a href="'+that.getLink(response["order_notification"][x]["status"])+'"><button style="margin-left:80px;">Check Order</button></a></center>'+
+								'</div>'+
+							'</div>'+
+						'</li>';
 					}
-					var tmp = response["order_notification"];
-					response["order_notification"] = that.readNotification;
-					for(x in response["order_notification"]) {
-						id[x] = response["order_notification"][x]["id"];
-						nvt.innerHTML = '<li>'+
-				'<div style="border-bottom:1px solid #000;border-top: 1px solid #000;">'+
-					'<p class="notif ca">Your order '+response["order_notification"][x]['coin_name']+' has been '+that.getStatus(response["order_notification"][x]['status'])+'.</p>'+
-					'<div class="gh">'+
-						'<p class="notif">Type: '+response["order_notification"][x]["type"]+'</p>'+
-						'<p class="notif">Price: '+response["order_notification"][x]["price"]+'</p>'+
-						'<p class="notif">Amount: '+response["order_notification"][x]["amount"]+'</p>'+
-						'<p class="notif">Total: '+response["order_notification"][x]["total"]+'</p>'+
-					'</div>'+
-					'<div class="gh ax">'+
-						'<center><a href="'+that.getLink(response["order_notification"][x]["status"])+'"><button style="margin-left:80px;">Check Order</button></a></center>'+
-					'</div>'+
-				'</div>'+
-			'</li>';
-					}
-					$("#unread_bound")[0].value = encodeURIComponent(JSON.stringify(id));
 				}
+				that.buildOldNotification();
+				$("#unread_bound")[0].value = JSON.stringify(id);
+				that.readNotification = that.readNotification.concat(response["order_notification"]);
 			}
 		});	
+	};
+
+	notification_handler.prototype.buildOldNotification = function() {
+		if (this.readNotification) {
+			var nvt = $("#notif_field")[0], x, id = [];
+			for(x in this.readNotification) {
+				nvt.innerHTML += '<li>'+
+					'<div style="border-bottom:1px solid #000;'+(x==0?'border-top: 1px solid #000':'margin-top:-1px')+';background-color:#d3d3d3;">'+
+						'<p class="notif ca">Your order '+this.readNotification[x]['coin_name']+' has been '+this.getStatus(this.readNotification[x]['status'])+'.</p>'+
+						'<div class="gh">'+
+							'<p class="notif">Type: '+this.readNotification[x]["type"]+'</p>'+
+							'<p class="notif">Price: '+this.readNotification[x]["price"]+'</p>'+
+							'<p class="notif">Amount: '+this.readNotification[x]["amount"]+'</p>'+
+							'<p class="notif">Total: '+this.readNotification[x]["total"]+'</p>'+
+						'</div>'+
+						'<div class="gh ax">'+
+							'<center><a href="'+this.getLink(this.readNotification[x]["status"])+'"><button style="margin-left:80px;">Check Order</button></a></center>'+
+						'</div>'+
+					'</div>'+
+				'</li>';
+			}
+		}
 	};
 
 	notification_handler.prototype.getLink = function(status) {

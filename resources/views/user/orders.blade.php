@@ -97,8 +97,6 @@
 
         <script type="text/javascript">
         function cancelOrder(order_id){
-
-
                 var title = '{{{ trans('user_texts.market_order')}}}';
                 var msg ='';
                 
@@ -132,7 +130,6 @@
                         showMessageSingle('{{{ trans('texts.error') }}}', 'error');
                     }
                 });
-                
         }
         </script>
         {{ HTML::script('assets/js/bootstrap-paginator.js') }}

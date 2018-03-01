@@ -82,7 +82,7 @@ class Order extends Eloquent
                 ->where("type", "=", $type)
                 ->whereIn("status", $this->status_active)
                 ->groupBy("price")
-                ->orderBy("price")
+                ->orderBy("price", $desc)
                 ->limit($limit)
                 ->get();
 

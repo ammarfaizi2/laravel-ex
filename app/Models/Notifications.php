@@ -37,7 +37,10 @@ class Notifications extends Eloquent
 				DB::raw(
 					"(CASE WHEN `a`.`updated_at` IS NULL THEN `a`.`created_at` ELSE `a`.`updated_at` END)"
 				), "desc"
-			)->get();
+			)
+			->limit(10)
+			->offset(0)
+			->get();
 	}
 
     public static function getOrderNotification()
