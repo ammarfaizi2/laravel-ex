@@ -53,6 +53,7 @@
 	class notification_handler {
 		constructor() {
 			this.readNotification = {!! json_encode(\App\Models\Notifications::getOldNotification()) !!};
+			this.tmpRead = [];
 		}
 	}
 
@@ -65,6 +66,28 @@
 				data: "data="+$("#unread_bound")[0].value+"&_token={!! csrf_token() !!}",
 				success: function (res) {
 					$("#notification-count")[0].innerHTML = "";
+					that.readNotification = that.readNotification.concat(that.tmpRead);
+					var i = that.readNotification.length, te = [], re = [], u = 0;
+					for(;i--;) {
+						if (te.indexOf(that.readNotification[i]["id"]) == -1) {
+							te[u] = that.readNotification[i]["id"];
+							re[u++] = that.readNotification[i];
+						}
+					}
+					that.readNotification = re.sort(function(a,b){
+					  // Turn your strings into dates, and then subtract them
+					  // to get a value that is either negative, positive, or zero.
+					  if (a.updated_at == null && b.updated_at == null) {
+					  	return new Date(b.created_at) - new Date(a.created_at);
+					  } else if (a.updated_at == null && b.updated_at != null) {
+					  	return new Date(b.updated_at) - new Date(a.created_at);
+					  } else if (a.updated_at != null && b.updated_at == null) {
+					  	return new Date(b.created_at) - new Date(a.updated_at);
+					  }
+					  return new Date(b.updated_at) - new Date(a.updated_at);
+					});;
+					that.readNotification.sort()
+					that.tmpRead = [];
 					setTimeout(function(){
 						var el = document.getElementsByClassName("new-notification"), i = el.length;
 						for(;i--;) {
@@ -90,31 +113,33 @@
 				} else {
 					$("#messages-unread-count")[0].innerHTML = "";
 				}
+				var nvt = $("#notif_field")[0], x, id = [];
+				nvt.innerHTML = "";
 				if (response["order_notification"]) {
-					var nvt = $("#notif_field")[0], x, id = [];
 					$("#notification-count")[0].innerHTML = response["order_notification"].length > 0 ? response["order_notification"].length : "";
-					nvt.innerHTML = "";
 					for(x in response["order_notification"]) {
-						id[x] = response["order_notification"][x]["id"];
-						nvt.innerHTML += '<li>'+
-							'<div class="new-notification" style="border-bottom:1px solid #000;border-top: 1px solid #000;background-color:#6bea7a;">'+
-								'<p class="notif ca">Your order '+response["order_notification"][x]['coin_name']+' has been '+that.getStatus(response["order_notification"][x]['status'])+'.</p>'+
-								'<div class="gh">'+
-									'<p class="notif">Type: '+response["order_notification"][x]["type"]+'</p>'+
-									'<p class="notif">Price: '+response["order_notification"][x]["price"]+'</p>'+
-									'<p class="notif">Amount: '+response["order_notification"][x]["amount"]+'</p>'+
-									'<p class="notif">Total: '+response["order_notification"][x]["total"]+'</p>'+
+						if (response["order_notification"][x] != null) {
+							id[x] = response["order_notification"][x]["id"];
+							nvt.innerHTML += '<li>'+
+								'<div class="new-notification" style="border-bottom:1px solid #000;border-top: 1px solid #000;background-color:#6bea7a;">'+
+									'<p class="notif ca">Your order '+response["order_notification"][x]['coin_name']+' has been '+that.getStatus(response["order_notification"][x]['status'])+'.</p>'+
+									'<div class="gh">'+
+										'<p class="notif">Type: '+response["order_notification"][x]["type"]+'</p>'+
+										'<p class="notif">Price: '+response["order_notification"][x]["price"]+'</p>'+
+										'<p class="notif">Amount: '+response["order_notification"][x]["amount"]+'</p>'+
+										'<p class="notif">Total: '+response["order_notification"][x]["total"]+'</p>'+
+									'</div>'+
+									'<div class="gh ax">'+
+										'<center><a href="'+that.getLink(response["order_notification"][x]["status"])+'"><button style="margin-left:80px;">Check Order</button></a></center>'+
+									'</div>'+
 								'</div>'+
-								'<div class="gh ax">'+
-									'<center><a href="'+that.getLink(response["order_notification"][x]["status"])+'"><button style="margin-left:80px;">Check Order</button></a></center>'+
-								'</div>'+
-							'</div>'+
-						'</li>';
+							'</li>';
+						}
 					}
 				}
 				that.buildOldNotification();
 				$("#unread_bound")[0].value = JSON.stringify(id);
-				that.readNotification = that.readNotification.concat(response["order_notification"]);
+				that.tmpRead = that.tmpRead.concat(response["order_notification"]);
 			}
 		});	
 	};
