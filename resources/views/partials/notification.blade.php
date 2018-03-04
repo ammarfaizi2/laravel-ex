@@ -85,8 +85,7 @@
 					  	return new Date(b.created_at) - new Date(a.updated_at);
 					  }
 					  return new Date(b.updated_at) - new Date(a.updated_at);
-					});;
-					that.readNotification.sort()
+					});
 					that.tmpRead = [];
 					setTimeout(function(){
 						var el = document.getElementsByClassName("new-notification"), i = el.length;
@@ -147,6 +146,25 @@
 	notification_handler.prototype.buildOldNotification = function() {
 		if (this.readNotification) {
 			var nvt = $("#notif_field")[0], x, id = [];
+			var i = this.readNotification.length, te = [], re = [], u = 0;
+			for(;i--;) {
+				if (te.indexOf(this.readNotification[i]["id"]) == -1) {
+					te[u] = this.readNotification[i]["id"];
+					re[u++] = this.readNotification[i];
+				}
+			}
+			this.readNotification = re.sort(function(a,b){
+			  // Turn your strings into dates, and then subtract them
+			  // to get a value this is either negative, positive, or zero.
+			  if (a.updated_at == null && b.updated_at == null) {
+			  	return new Date(b.created_at) - new Date(a.created_at);
+			  } else if (a.updated_at == null && b.updated_at != null) {
+			  	return new Date(b.updated_at) - new Date(a.created_at);
+			  } else if (a.updated_at != null && b.updated_at == null) {
+			  	return new Date(b.created_at) - new Date(a.updated_at);
+			  }
+			  return new Date(b.updated_at) - new Date(a.updated_at);
+			});
 			for(x in this.readNotification) {
 				nvt.innerHTML += '<li>'+
 					'<div style="border-bottom:1px solid #000;'+(x==0?'border-top: 1px solid #000':'margin-top:-1px')+';background-color:#d3d3d3;">'+
