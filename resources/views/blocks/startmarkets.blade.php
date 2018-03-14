@@ -16,11 +16,11 @@
 				<div style="background-color: rgba(0,0,0,0.25); padding: 10px; border-radius: 4px;">
 					<a class="button button-green btn btn-lg" href="{{{ URL::to('/user/register') }}}">
 					  <i class="fa fa-user-plus"></i>
-					  <span>{{trans('user_texts.register')}}</span>
+					  <span> {{trans('user_texts.register')}}</span>
 					</a>
 					<a class="button button-blue btn btn-lg" href="{{{ URL::to('/login') }}}">
-					  <i class="fa fa-sign-in "></i>
-					  <span>{{trans('user_texts.login')}}</span>
+					  <i class="fa fa-sign-in-alt "></i>
+					  <span> {{trans('user_texts.login')}}</span>
 					</a>
 				</div>
 				@endif

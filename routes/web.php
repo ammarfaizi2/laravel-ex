@@ -217,8 +217,6 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa
     //Normal route
     Route::get('profile', 'UserController@viewProfile')->name('user.view_profile');
     
-	//Connect Clef to account. //Install 2fa
-	Route::get('profile/two-factor-auth/clef', 'ClefController@first_authentication');	
 
     Route::get('profile/{page}', 'UserController@viewProfile')->name('user.profile_page');
     Route::post('profile/{page}', 'UserController@viewProfile');
@@ -259,9 +257,6 @@ Route::get('user/reset_password/action', 'UserController@reset_password_action')
 Route::post('user/reset_password/action', 'UserController@reset_password_action_post');
 
 
-
-//Route::post('dotest', 'HomeController@doTest');
-
 //deposit
 Route::post('generate-addr-deposit', 'DepositController@generateNewAddrDeposit');
 Route::get('cron-update-deposit', 'DepositController@cronUpdateDeposit');
@@ -285,12 +280,3 @@ Route::filter('csrf', function()
 */
 
 
-
-//Connect Clef to account	(added in user group above)
-//Route::get('user/profile/two-factor-auth/clef', 'ClefController@first_authentication');	//Install 2fa
-
-//2fa two-factor-auth
-Route::post( '/two-factor-auth/first_auth', 'UserController@firstAuth' );
-
-//Route::post( 'user/verify_token', 'AuthController@ajVerifyToken' );
-Route::post( '/two-factor-auth/disable', 'AuthController@removeTwoFactorAuth' );	

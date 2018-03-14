@@ -63,11 +63,14 @@
 				
 				
 				<div class="control-group"> 
-					<input id="login_button" tabindex="4" class="btn btn-lg btn-success btn-block" type="submit" value="{{ trans('texts.login')}}" >
+					<!-- <input id="login_button" tabindex="4" class="btn btn-lg btn-success btn-block" type="submit" value="{{ trans('texts.login')}}" >
+					-->
+					
 					
 					<button id="login_ajax" tabindex="4" class="button button-blue btn btn-lg btn-block" type="button" >
-						<i class="fa fa-sign-in fa-2x"></i> 
-						<span>AJAX {{ trans('texts.login')}}</span>
+						<i class="fa fa-sign-in-alt fa-2x"></i> 
+						<span> {{ trans('texts.login')}}</span>
+						<i class="fa fa-circle-notch fa-spin fa-2x hide"  id="login_loader"></i>
 					</button>
 				
 				</div>
@@ -94,25 +97,74 @@
 	
 	$(document).ready(function() {
 		
+		/*
+		// jQuery plugin to prevent double submission of forms
+		//https://stackoverflow.com/questions/2830542/prevent-double-submission-of-forms-in-jquery
+	jQuery.fn.preventDoubleSubmission = function() {
+	  $(this).on('submit',function(e){
+		var $form = $(this);
+
+		if ($form.data('submitted') === true) {
+		  // Previously submitted - don't submit again
+		  e.preventDefault();
+		  console.log('submitted');
+		} else {
+		  // Mark it so that the next submit can be ignored
+		  $form.data('submitted', true);
+		  console.log('submitted - but ignored');
+		}
+		
+		//USE LIKE: 
+		//$('form').preventDoubleSubmission();
+	  });
+
+	  // Keep chainability
+	  return this;
+	};
+	//https://thepugautomatic.com/2008/07/jquery-double-submission/
+	jQuery.fn.preventDoubleSubmit = function() {
+		jQuery(this).submit(function() {
+			if (this.beenSubmitted)
+			  return false;
+			else
+			  this.beenSubmitted = true;
+		  });
+		  //USE LIKE 
+		  //jQuery('#my_form').preventDoubleSubmit();
+	};
+	//https://network.convergenceservices.in/forum/50-javascript-and-ajax/2930-submit-form-only-once-after-multiple-clicking-on-submit.html
+	
+	*/
+
+
+
 		$("#login_ajax").on( "click", function(e) {
+			e.preventDefault(); 
+			
+			var this_btn =$(this);
+			this_btn.prop("disabled", true);
+			$("#login_loader").removeClass("hide");
+			$("form input").prop('readonly', true);
+			
 			
 			$.ajax({
 				type: 'post',
 				//url: ' action('UserController@firstAuth')',
-				//url: 'action("UserController@do_login")',
-				url: '{{route("user.do_login")}}',
+				url: '{{action("UserController@do_login")}}',
+				//url: '{{route("user.do_login")}}',
 				datatype: 'json',
 				//data: {isAjax: 1, user: $('#email').val(), email: $('#email').val(), password: $('#password').val(), remember:  $('#remember').val(), token: $("#_token").val() },
-				data: {isAjax: 1, email: $('#email').val(), password: $('#password').val(), remember:  $('#remember').val(), token: $("#_token").val() },
+				data: {isAjax: 1, email: $('#email').val(), password: $('#password').val(), remember:  $('#remember').val(), token: "{{csrf_token()}}" },
 				beforeSend: function(request) {
-					return request.setRequestHeader('X-CSRF-Token', $("#_token").val());
+					return request.setRequestHeader('X-CSRF-Token', "{{csrf_token()}}");
 				},
 				success:function(response) {
 					var obj = JSON.parse(response);
 					
-					console.log(obj);
+					//console.log(obj);
+					//console.log('obj.status:'+obj.status);
 					if(obj.status == "success"){
-//STOP...............I am not finished with the AJAX porting.............
+
 						if (obj.callnext === "2fa") {
 							
 							//Message UI
@@ -124,45 +176,118 @@
 								title: "{{trans('user_texts.tfa_3')}}",
 								callback: function (result) {
 									if (result !== null) {
-										try	
-										{
-											var a = JSON.parse(this.responseText);
-											if (a["redirect"]) {
-												window.location = a["redirect"];
-											} else {
-												bootbox.alert({ 
-												  size: "small",
-												  title: "Error",
-												  message: "{{trans("user_texts.error_tfa_1")}}", 
-												  callback: function(){}
-												});
+										
+										//ch2.send("_token={{csrf_token()}}&user="+encodeURIComponent(document.getElementById("email").value)+"&code="+result);
+										$.post('{{route("2fa_check_code")}}?login=1', {_token: "{{csrf_token()}}", user: $("#email").val(), code: result}, function(data_2fa) {
+											//console.log('data_2fa: ');
+											//console.log(data_2fa);
+											try	{
+												
+												
+												//var a = JSON.parse(data_2fa);
+												var a = data_2fa;
+												if (a == "throttled") {
+													bootbox.alert({ 
+													  size: "small",
+													  title: "Error",
+													  message: "{{trans("user_texts.error_tfa_throttled")}}", 
+													  callback: function(){}
+													});
+													return false;
+												}
+												if (a["redirect"]) {
+													window.location = a["redirect"];
+												} else {
+													bootbox.alert({ 
+													  size: "small",
+													  title: "Error",
+													  message: "{{trans("user_texts.error_tfa_1")}}", 
+													  callback: function(){}
+													});
+												}
+											} catch (e) {
+												alert('data_2fa: '+data_2fa);
+
 											}
-										} catch (e) {
-											alert(this.responseText);
-										}
+											
+										})
+										.done(function(data_2fa) {
+										})
+										.fail(function(data_2fa) {
+											$("#form_callback").addClass("notice-danger").removeClass("hide");
+											$("#form_callback_msg").text("{{trans('texts.error')}}")
+											$("#form_callback_title").text("{{trans('texts.error')}}")
+						
+											//this_btn.prop('disabled', false);
+											//$("#login_loader").addClass("hide");
+										})
+										.always(function(data_2fa) {
+											this_btn.prop('disabled', false);
+											$("#login_loader").addClass("hide");
+											$("form input").prop('readonly', false);
+										});
+
+										
 									}
 								}
 							});
+							
+						} else if (obj.callnext === "login") {
+							window.location = "/";
+						} else if (this.responseURL === "{{url()->current()}}") {
+							alert("ERROR - Update the page to login! ERROR 1");
+							/*
+							var html = document.getElementsByTagName("html");
+								html[0].innerHTML = this.responseText;
+								frm.onsubmit = fx;
+								listen();
+								*/
+						} else {
+							alert("ERROR - Update the page to login! ERROR 2");
+							//window.location = this.responseURL<?php echo defined("LARAVEL_HTTPS") ? (LARAVEL_HTTPS ? "" : ".replace(\"https\", \"http\")") : ".replace(\"https\", \"http\")" ?>;
 						}
-//STOP...............I am not finished with the AJAX porting.............
+						
 					}else{
 						$("#form_callback").addClass("notice-danger").removeClass("hide");
 						$("#form_callback_msg").text(obj.message)
 						$("#form_callback_title").text("{{trans('texts.error')}}")
-						//Handle Data Error
-						//NOT SUCCESS
+						//Handle Callback Error
+						//Error logging in
+						
+						this_btn.prop('disabled', false);
+						$("#login_loader").addClass("hide");
+						$("form input").prop('readonly', false);
+						
+						//$("#login_ajax").prop('disabled', false);
+						
 					}
 
 
 				
 			}, error:function(response) {
-					//Handle Error
+					//Handle AJAX Error
+					this_btn.prop('disabled', false);
+					$("#login_loader").addClass("hide");
+					$("form input").prop('readonly', false);
 				}
 			});
 		});
+		
+		$('form').keypress(function (e) {
+			//e.preventDefault();
+			var key = e.which;
+			if(key == 13)  // the enter key code
+			{
+				
+				
+				$("#login_ajax").click();
+				return false;  
+			}
+		});   
+
 	});
 	
-	
+	/*
 	
 		var frm = document.getElementById("loginForm");
 		var fx = function () {
@@ -266,6 +391,8 @@
 			document.getElementById("loginForm").addEventListener("submit", fx);
 		}
 		listen();
+		*/
+		
 	
 	</script>
 	

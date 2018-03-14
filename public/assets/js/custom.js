@@ -4,6 +4,21 @@ $(function() {
 	$('[data-toggle="tooltip"]').tooltip();
 	$('[data-toggle="popover"]').popover({trigger: "hover"}); 
 
+	//RIGHT SIDEBAR SLIDER
+	var sideslider = $('[data-toggle=collapse-side]');
+	var sel = sideslider.attr('data-target');
+	var sel2 = sideslider.attr('data-target-content');
+	sideslider.click(function(event){
+		$(sel).toggleClass('in');
+		$(sel2).toggleClass('out');
+		$( ".side-content-overlay" ).toggleClass('hide');
+	});
+
+	$( ".side-content-overlay" ).click(function(event){
+		sideslider.click();
+		console.log('clicked overlay');
+	});
+	
 //Sidebar
 	/*
 	//Open

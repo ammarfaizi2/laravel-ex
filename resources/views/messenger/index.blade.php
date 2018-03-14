@@ -4,7 +4,7 @@
 <?php $page = isset($_GET['page']) ? (int) $_GET['page'] : 1; ?>
 	<div style="margin:4%;">
         <div style="margin-bottom:1%;">
-            <a href="{{route("messages.create")}}">Create new message</a>
+            <a href="{{route('messages.create')}}">Create new message</a>
             <div id="search_cage">
             <form id="search_form" action="javascript:void(0);">
                 <select id="search_type">
@@ -16,21 +16,22 @@
                 </div>
                 <button id="search_action">Search</button>
                 <input type="hidden" id="search_bound" value="0">
+				
+				
             </form>
             </div>
         </div>
         <div id="nf">
             @include("messenger.partials.no-threads")
         </div>
-        <div class="mass_action" style="margin-bottom:4px;margin-top:-10px;">
-            <p>Mass Action: </p>
-            <button onclick="mass_leave();" class="btn btn-warning">Leave Thread</button>
-            <button onclick="mass_delete();" class="btn btn-danger">Delete Thread</button>
-        </div>
-        <div id="messages_bound" style=""></div><div class="pagination"></div>
+        <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
+        <!-- <div id="messages_bound" style=""></div> -->
+		
+		
     </div>
-    <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
-    <script src="{{ asset('assets/js/bootstrap-pagination.js') }}"></script>
+    
+	
+    
     <style type="text/css">
         .search_data {
         }
@@ -191,13 +192,7 @@
                 });
             }
         }
-        $('.pagination').pagination({
-            page: {{$page}}, 
-            lastPage: {{ceil($that->countIndexMessage() / env("THREADS_PAGINATION_LIMIT"))}},
-            url: function (page) {
-                return '?page='+page;
-            }
-        });
+        
     	class message_index {
     		constructor () {
     			this.bound = $("#messages_bound")[0];
@@ -308,6 +303,7 @@
                 }
             });
         }
+		/*
     	message_index.prototype.buildChatContext = function(data) {
     		var x, that = this, nf = $("#nf")[0];
             this.bound.innerHTML = "<form id=\"mass_action\" action=\"javascript:void(0);\">";
@@ -335,6 +331,64 @@
                 nf.style.display = "";
             }
     	};
+		*/
+		message_index.prototype.buildChatContext = function(data) {
+    		var x, that = this, nf = $("#nf")[0];
+            //this.bound.innerHTML = "<form id=\"mass_action\" action=\"javascript:void(0);\">";
+			var msg_content;
+            if (data.length) {
+        		for (x in data) {
+        			 msg_content +=
+                        '<tr class="'+(data[x]['unread_count'] ? 'alert-info' : '')+'">'+
+						'<td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input type="checkbox" value="'+data[x]['thread_id']+'" class="mass_checkbox"></div></td>'+
+						'<td>'+(data[x]['unread_count'] != 0 ? ' ('+data[x]['unread_count']+' unread)' : '')+'</td>'+
+						'<td class="mailbox-name"><small><strong>Participants:</strong> '+data[x]['participants'].join(", ")+'</small></td>'+
+						'<td class="mailbox-subject"><a href="'+that.routeBound.replace('~~route~~', data[x]['thread_id'])+'"><strong>'+data[x]['subject']+'</strong></a> - '+data[x]['latest_message']+'</td>'+
+						
+        				//'<td><small><strong>Creator:</strong> '+data[x]['creator']+'</small></td>'+
+        				
+						'<td><div class="dropdown">'+
+							'<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Menu'+
+							'<span class="caret"></span></button>'+
+							'<ul class="dropdown-menu">'+
+							  '<li><a href="#" onclick="leaveThread('+data[x]['thread_id']+', \''+data[x]['subject']+'\')"><i class="fa fa-sign-out-alt"></i> Leave</a></li>'+
+							  '<li><a href="#" onclick="addParticipants('+data[x]['thread_id']+', \''+data[x]['subject']+'\')"><i class="fa fa-user-plus"></i> Add</a></li>'+
+							  (data[x]['creator'] === that.selfUser ? '<li class="divider"></li><li><a href="#" onclick="deleteThread('+data[x]['thread_id']+', \''+data[x]['subject']+'\')"><i class="fa fa-times"></i> Delete</a></li>' : '')+
+							'</ul>'+
+						  '</div></td>'+
+						  
+						'</tr>'
+						;
+						$('#messages_bound').html(msg_content);
+                } 
+				/*
+                  <tr>
+                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input type="checkbox"></div></td>
+                    <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
+                    <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
+                    <td class="mailbox-subject"><b>AdminLTE 2.0 Issue</b> - '+data[x]['latest_message']+'..</td>
+                    <td class="mailbox-date">5 mins ago</td>
+                  </tr>
+                  <button type="button" onclick="mass_leave();" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Leave Thread"><i class="fa fa-sign-out-alt"></i></button>
+				  <button type="button" onclick="mass_delete();" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete Thread"><i class="fa fa-times"></i></button>
+
+				
+				'<td>'+
+                            '<button onclick="leaveThread('+data[x]['thread_id']+', \''+data[x]['subject']+'\')" class="btn btn-warning btn-sm"><i class="fa fa-sign-out-alt"></i> Leave</button> '+
+                            (data[x]['creator'] === that.selfUser ? '<button onclick="deleteThread('+data[x]['thread_id']+', \''+data[x]['subject']+'\')" class="btn btn-danger btn-sm"><i class="fa fa-times"></i> Delete</button> ' : '')+
+                            '<button onclick="addParticipants('+data[x]['thread_id']+', \''+data[x]['subject']+'\')" class="btn btn-primary btn-sm"><i class="fa fa-user-plus"></i> Add</button>'+
+                        '</td>'+
+						
+				
+				*/
+                //this.bound.innerHTML += "</form>";
+                listenCheckBox();
+                nf.style.display = "none";
+            } else {
+                nf.style.display = "";
+            }
+    	};
+		
     	var st = new message_index;
     		st.listen();
         function search_handler()
@@ -353,7 +407,7 @@
 	<div class="row">
 		<div class="col-12-xs col-sm-12 col-lg-12">
         <div class="col-md-3">
-          <a href="compose.html" class="btn btn-primary btn-block margin-bottom">Compose</a>
+          <a href="{{route('messages.create')}}" class="btn btn-primary btn-block margin-bottom">Create new message</a>
 
           <div class="box box-solid">
             <div class="box-header with-border">
@@ -368,11 +422,11 @@
               <ul class="nav nav-pills nav-stacked">
                 <li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox
                   <span class="label label-primary pull-right">12</span></a></li>
-                <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
-                <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
+                <li><a href="#"><i class="fa fa-envelope"></i> Sent</a></li>
+                <li><a href="#"><i class="fa fa-file-text"></i> Drafts</a></li>
                 <li><a href="#"><i class="fa fa-filter"></i> Junk <span class="label label-warning pull-right">65</span></a>
                 </li>
-                <li><a href="#"><i class="fa fa-trash-o"></i> Trash</a></li>
+                <li><a href="#"><i class="fa fa-trash"></i> Trash</a></li>
               </ul>
             </div>
             <!-- /.box-body -->
@@ -389,9 +443,9 @@
             </div>
             <div class="box-body no-padding">
               <ul class="nav nav-pills nav-stacked">
-                <li><a href="#"><i class="fa fa-circle-o text-red"></i> Important</a></li>
-                <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> Promotions</a></li>
-                <li><a href="#"><i class="fa fa-circle-o text-light-blue"></i> Social</a></li>
+                <li><a href="#"><i class="fa fa-circle text-red"></i> Important</a></li>
+                <li><a href="#"><i class="fa fa-circle text-yellow"></i> Promotions</a></li>
+                <li><a href="#"><i class="fa fa-circle text-light-blue"></i> Social</a></li>
               </ul>
             </div>
             <!-- /.box-body -->
@@ -416,30 +470,28 @@
             <div class="box-body no-padding">
               <div class="mailbox-controls">
                 <!-- Check all button -->
-                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-                </button>
-                <div class="btn-group">
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
+                <button type="button" class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" data-placement="top" title="Mass Check/Uncheck"><i class="fa fa-square"></i></button>
+                
+				<!-- Mass Action buttons -->
+				<div class="btn-group mass_action" role="group">
+                  <button type="button" onclick="mass_leave();" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Leave Thread"><i class="fa fa-sign-out-alt"></i></button>
+				  <button type="button" onclick="mass_delete();" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete Thread"><i class="fa fa-times"></i></button>
+                  
                 </div>
                 <!-- /.btn-group -->
-                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
+		
+		
                 <div class="pull-right">
-                  1-50/200
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                  </div>
+                  Somewhere over the Rainbow ...
                   <!-- /.btn-group -->
                 </div>
                 <!-- /.pull-right -->
               </div>
-              <div class="table-responsive mailbox-messages">
+              <div class="table-responsive2 mailbox-messages">
                 <table class="table table-hover table-striped">
-                  <tbody>
+                  <tbody id="messages_bound">
                   <tr>
-                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input style="position: absolute; opacity: 0;" type="checkbox"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div></td>
+                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input type="checkbox"></div></td>
                     <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
                     <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
                     <td class="mailbox-subject"><b>AdminLTE 2.0 Issue</b> - Trying to find a solution to this problem...
@@ -447,23 +499,23 @@
                     <td class="mailbox-date">5 mins ago</td>
                   </tr>
                   <tr>
-                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input style="position: absolute; opacity: 0;" type="checkbox"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div></td>
-                    <td class="mailbox-star"><a href="#"><i class="fa fa-star-o text-yellow"></i></a></td>
+                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input type="checkbox"></div></td>
+                    <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
                     <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
                     <td class="mailbox-subject"><b>AdminLTE 2.0 Issue</b> - Trying to find a solution to this problem...
                     </td>
                     <td class="mailbox-date">28 mins ago</td>
                   </tr>
                   <tr>
-                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input style="position: absolute; opacity: 0;" type="checkbox"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div></td>
-                    <td class="mailbox-star"><a href="#"><i class="fa fa-star-o text-yellow"></i></a></td>
+                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input type="checkbox"></div></td>
+                    <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
                     <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
                     <td class="mailbox-subject"><b>AdminLTE 2.0 Issue</b> - Trying to find a solution to this problem...
                     </td>
                     <td class="mailbox-date">11 hours ago</td>
                   </tr>
                   <tr>
-                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input style="position: absolute; opacity: 0;" type="checkbox"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div></td>
+                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input type="checkbox"></div></td>
                     <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
                     <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
                     <td class="mailbox-subject"><b>AdminLTE 2.0 Issue</b> - Trying to find a solution to this problem...
@@ -471,7 +523,7 @@
                     <td class="mailbox-date">15 hours ago</td>
                   </tr>
                   <tr>
-                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input style="position: absolute; opacity: 0;" type="checkbox"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div></td>
+                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input type="checkbox"></div></td>
                     <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
                     <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
                     <td class="mailbox-subject"><b>AdminLTE 2.0 Issue</b> - Trying to find a solution to this problem...
@@ -479,16 +531,16 @@
                     <td class="mailbox-date">Yesterday</td>
                   </tr>
                   <tr>
-                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input style="position: absolute; opacity: 0;" type="checkbox"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div></td>
-                    <td class="mailbox-star"><a href="#"><i class="fa fa-star-o text-yellow"></i></a></td>
+                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input type="checkbox"></div></td>
+                    <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
                     <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
                     <td class="mailbox-subject"><b>AdminLTE 2.0 Issue</b> - Trying to find a solution to this problem...
                     </td>
                     <td class="mailbox-date">2 days ago</td>
                   </tr>
                   <tr>
-                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input style="position: absolute; opacity: 0;" type="checkbox"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;"></ins></div></td>
-                    <td class="mailbox-star"><a href="#"><i class="fa fa-star-o text-yellow"></i></a></td>
+                    <td><div class="icheckbox_flat-blue" style="position: relative;" aria-checked="false" aria-disabled="false"><input type="checkbox"></div></td>
+                    <td class="mailbox-star"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
                     <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
                     <td class="mailbox-subject"><b>AdminLTE 2.0 Issue</b> - Trying to find a solution to this problem...
                     </td>
@@ -505,22 +557,9 @@
             <!-- /.box-body -->
             <div class="box-footer no-padding">
               <div class="mailbox-controls">
-                <!-- Check all button -->
-                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-                </button>
-                <div class="btn-group">
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
-                </div>
-                <!-- /.btn-group -->
-                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
+
                 <div class="pull-right">
-                  1-50/200
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-                  </div>
+                  <div class="pagination margin-none"></div>
                   <!-- /.btn-group -->
                 </div>
                 <!-- /.pull-right -->
@@ -533,5 +572,18 @@
       </div>
 	  <!-- /.col-12 -->
      </div>
-	  
+
+<script src="{{ asset('assets/js/bootstrap-pagination.js') }}"></script>
+<script>
+$(document).ready(function() {
+	//Pagination
+	$('.pagination').pagination({
+		page: {{$page}}, 
+		lastPage: {{ceil($that->countIndexMessage() / env("THREADS_PAGINATION_LIMIT"))}},
+		url: function (page) {
+			return '?page='+page;
+		}
+	});
+});
+</script>	 
 @stop

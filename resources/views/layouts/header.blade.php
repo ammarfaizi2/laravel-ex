@@ -4,16 +4,26 @@
 			<a class="navbar-brand" href="{{ url('/') }}">
 				{{{ Config::get('config_custom.company_name') }}}
 			</a>
+			
+			<!-- >NAVBAR ICONS--> 
+			<div class="navbar-custom-menu pull-left" >
+				@if (! $authGuest = Auth::guest())
+					@include('partials.notification')
+				@endif
+			</div>
+			<!-- <NAVBAR ICONS--> 
+			
 			<!-- <button data-target="#navbar-main" data-toggle="collapse" type="button" class="navbar-toggle collapsed" aria-expanded="false"> -->
 			<button data-toggle="collapse-side" data-target=".side-collapse" data-target-content=".side-collapse-container" type="button" class="navbar-toggle pull-right">
-
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
 			</button>
 		</div>
         
-        <div class="navbar-inverse side-collapse in" id="navbar-main">
+		
+		<!-- >NAVBAR MENU--> 
+        <div class="navbar-inverse side-collapse in pull-right" id="navbar-main">
             <nav class="navbar-collapse">
 				<ul class="nav navbar-nav">
 					<li @if(Request::is('page/voting')) {!! 'class="active"' !!} @endif>{{ HTML::link('page/voting', trans('user_texts.voting'), array('class' => Request::is('page/voting')?'active':'')) }}</li>
@@ -68,9 +78,7 @@
 						BTC = $
 					</span>
 				</li>
-				@if (! $authGuest = Auth::guest())
-				@include('partials.notification')
-				@endif
+
                 @if ( $authGuest )
 					<li class="nav-btn register {{Request::is('register')?'active':''}}">
 						<span class="">
@@ -111,6 +119,7 @@
             </ul>
 			</nav>
         </div>
+		<!-- <NAVBAR MENU--> 
     </div>
 </div>
 <?php

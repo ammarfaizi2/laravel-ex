@@ -453,10 +453,9 @@ class UserController extends Controller
                 session(["tmp_login" => $input]);
 				
 				if (Request::get('isAjax')) {
-					echo json_encode(array('status'=>'success','c'=>true,'message'=>trans("user_texts.tfa_3"), 'callnext'=>'2fa'));
-					exit;
-					// response()->json
-					//means send back as json object, JS no need to convert to json object
+					return json_encode(array('status'=>'success','c'=>true,'message'=>trans("user_texts.tfa_3"), 'callnext'=>'2fa'));
+					//exit;
+					//response()->json = means send back as json object, JS no need to convert to json object
 				} else {
 					return response()->json(["2fa"], 200);
 				}
@@ -485,8 +484,10 @@ class UserController extends Controller
             $this->sendMailIPUser($user, $ip);
             User::where('id', $user->id)->update(array('lastest_login' => date("Y-m-d H:i:s"), 'ip_lastlogin'=>$ip));
             if (Request::get('isAjax')) {
-                echo 1;
-                exit;
+                //echo 1;
+				//exit;
+				return json_encode(array('status'=>'success','c'=>$c,'message'=>'', 'callnext'=>'login'));
+				//return Redirect::to("/user/profile");
             } else {
                 if (User::_hasRole('admin')) {
                     return Redirect::to("/admin");
@@ -550,6 +551,7 @@ class UserController extends Controller
 
             }
             if (isset($_GET["login"])) {                
+
                 if ($ww && Confide::logAttempt(session()->get("tmp_login"), Config::get('confide::signup_confirm'))) {
                     $user = Confide::user();
                     $ip=$this->get_client_ip();
@@ -588,7 +590,7 @@ class UserController extends Controller
     }
 
     /**
-     * Displays the forgot password form
+     * Displays the forgot password form - VIEW
      */
     public function forgot_password()
     {
