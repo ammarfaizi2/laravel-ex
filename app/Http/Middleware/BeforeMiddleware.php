@@ -33,6 +33,18 @@ class BeforeMiddleware
     public function handle($request, Closure $next)
     {
         
+        if (preg_match('/ajax/i', url()->current())) {
+            if ($user = Confide::user()) {
+                DB::table("users")
+                    ->where("id", $user->id)
+                    ->limit(1)
+                    ->update([
+                        "lastest_login" => date("Y-m-d H:i:s")
+                    ]);
+            }
+            return $next($request);
+        }
+
         if ($request->getMethod() === 'POST') {
             //exit ('asas');
             //Route::callRouteFilter('csrf', [], '', $request);
@@ -52,11 +64,8 @@ class BeforeMiddleware
                 echo '<hr />';
                 echo 'Auth::id: '.(Auth::id());
                 echo '<hr />';
-                
                 //exit ( var_dump($user) );
-                
                 */
-                
                 //if(Auth::id()->hasRole('Admin')) $maintenance_check=false;
                 if (User::find($user->id)->hasRole('Admin')) {
                     $maintenance_check=false;
@@ -84,7 +93,7 @@ class BeforeMiddleware
             if (strtotime($cur_date) >= strtotime($new_date)) {
                 // var_dump($lastest_login, $new_date, $cur_date);exit();
                 Confide::logout();
-                session(["google2fa" => null]);
+                session(["google2fa" => null, "error" => trans("user_texts.session_expired")]);
                 return Redirect::to('/login');
             } else {
                 if (! preg_match('/ajax/i', url()->current())) {
@@ -124,12 +133,6 @@ class BeforeMiddleware
                     }
                     $view->with('available_balances', $available_balances);
                 }
-            
-
-
-
-
-
 
                 $btc_wallet = Wallet::where('type', 'BTC')->first();
                 $ltc_wallet = Wallet::where('type', 'LTC')->first();
@@ -235,10 +238,6 @@ class BeforeMiddleware
                 $view->with('menu_pages', $menu_pages);
             }
         );
-
-
-
-
         return $next($request);
     }
 }

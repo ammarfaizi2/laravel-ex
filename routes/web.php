@@ -50,7 +50,7 @@ Route::post('page/submit-coin', 'HomeController@submitCoin');
 
 //pages , news
 Route::get('post/{post}', 'HomeController@viewPost');
-#################################################################################
+
 Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middleware' => ['App\Http\Middleware\admin', '2fa_admin']), function()
 {
     Route::get('/', 'admin\\AdminSettingController@routePage');
@@ -179,12 +179,13 @@ Route::any('/2fa', function () {
 Route::any("/2fa_check_code", "UserController@check2facode")->name("2fa_check_code");
 
 
+Route::get("/user/ajax_notification", "NotificationController@ajaxNotification")->name("ajax.notif");
+Route::post("/user/ajax_notification/read", "NotificationController@readNotification")->name("ajax.notif.read");
 
 //user profile
 Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
 
-    Route::get("ajax_notification", "NotificationController@ajaxNotification")->name("ajax.notif");
-    Route::post("ajax_notification/read", "NotificationController@readNotification")->name("ajax.notif.read");
+    
 
     Route::group(['prefix' => 'messages', 'middleware' => ['2fa', 'App\Http\Middleware\user']], function () {
         Route::get('/', ['as' => 'messages', 'uses' => 'MessagesController@index']);

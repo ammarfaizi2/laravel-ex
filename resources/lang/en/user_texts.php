@@ -70,5 +70,6 @@ return array(
     "new_password_placeholder2" => "Confirm New Password",
     "reset_password_button" => "Reset Password",
     "password_not_match" => "Confirm password does not match!",
-    "password_reset_success" => "Your password has been reset successfuly!"
+    "password_reset_success" => "Your password has been reset successfuly!",
+    "session_expired" => "The page has expired due to inactivity. \n\nPlease refresh and try again."
 );
