@@ -32,18 +32,6 @@ class BeforeMiddleware
      */
     public function handle($request, Closure $next)
     {
-        
-        if (preg_match('/ajax/i', url()->current())) {
-            if ($user = Confide::user()) {
-                DB::table("users")
-                    ->where("id", $user->id)
-                    ->limit(1)
-                    ->update([
-                        "lastest_login" => date("Y-m-d H:i:s")
-                    ]);
-            }
-            return $next($request);
-        }
 
         if ($request->getMethod() === 'POST') {
             //exit ('asas');

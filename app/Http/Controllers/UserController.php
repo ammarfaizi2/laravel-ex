@@ -318,6 +318,9 @@ class UserController extends Controller
             
             return Redirect::to("/");
         } else {
+            if (isset($_SERVER["HTTP_X_REQUESTED_WITH"])) {
+                exit;
+            }
             $a = Config::get('confide::login_form');
             //var_dump($a);die;
             return view('login');
