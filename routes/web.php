@@ -60,6 +60,9 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middl
 
     Route::get('statistic/{page}', 'admin\\AdminSettingController@routePage');
 
+    Route::get("invite", "admin\\AdminSettingController@inviteUser")->name("admin.invite");
+    Route::get("invite-list", "admin\\AdminSettingController@inviteUser")->name("admin.invite_list");
+
     //content
     Route::get('content/{page}', 'admin\\AdminSettingController@routePage');
     Route::get('content/{page}/{pager_page}', 'admin\\AdminSettingController@routePage');

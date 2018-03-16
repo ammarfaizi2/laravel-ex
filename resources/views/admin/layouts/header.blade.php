@@ -39,6 +39,9 @@
 			{{ HTML::link('admin/manage/users', trans('admin_texts.manage')) }}
 			<ul>
 				<li>
+					{{ HTML::link(route('admin.invite_list'), trans('admin_texts.invite')) }}
+				</li>
+				<li>
 					{{ HTML::link(route('admin.custom_fields'), trans('admin_texts.custom_fields')) }}
 				</li>
 				<li>

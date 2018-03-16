@@ -2132,4 +2132,9 @@ class AdminSettingController extends Controller
             ->select(["id", "type" ,"name"])
             ->get();
     }
+
+    public function inviteUser()
+    {
+        return view("admin.invite_list");
+    }
 }

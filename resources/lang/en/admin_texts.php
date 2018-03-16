@@ -142,5 +142,7 @@ return array(
     "permalink" => "Permalink",
     "coin_giveaway" => "Coin Giveaway",
     "featured_market" => "Featured Market",
-    "custom_fields" => "Custom Fields"
+    "custom_fields" => "Custom Fields",
+    "invite" => "Invite User",
+    "all_invitation" => "All Invitation",
 );
