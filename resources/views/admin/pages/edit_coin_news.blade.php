@@ -2,7 +2,7 @@
 @section('content')	
 {{ HTML::script('ckeditor/ckeditor.js') }}
 {{ HTML::script('ckfinder/ckfinder.js') }}
-<h2>Edit Coin News</h2>
+<h2>Edit Market News</h2>
 @if ( is_array(Session::get('error')) )
         <div class="alert alert-danger">{{ head(Session::get('error')) }}</div>
 	@elseif ( Session::get('error') )
@@ -15,14 +15,14 @@
 	@if ( Session::get('notice') )
 	      <div class="alert">{{{ Session::get('notice') }}}</div>
 	@endif
-
-<form class="form-horizontal" role="form" method="POST" action="{{{ Auth::check('admin\\AdminSettingController@doEditCoinNews') ?: URL::to('/admin/edit-coin-news') }}}" id="add_post">	
+<?php // dd($news, $that->getWalletList()->toArray()); ?>
+<form class="form-horizontal" role="form" method="POST" action="{{ route('admin.edit_market_news') }}" id="add_post">	
     <div class="form-group">
-        <label for="market_id" class="col-sm-2 control-label">Market</label>
+        <label for="market_id" class="col-sm-2 control-label">Coin</label>
         <div class="col-sm-10">
             <select class="form-control" name="market_id" id="market_id">
-                @foreach ($market_list as $key => $val)
-                <option value="{{{$key}}}" @if ($key == $news->market_id) selected="selected" @endif>{{{$val}}}</option>
+                @foreach ($that->getWalletList() as $key => $val)
+                    <option value="{{$val->id}}" @if($val->id === $news->wallet_id) selected @endif>{{$val->type." - ".$val->name}}</option>
                 @endforeach
             </select>
         </div>

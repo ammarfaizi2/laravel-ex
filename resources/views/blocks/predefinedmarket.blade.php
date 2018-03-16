@@ -44,11 +44,16 @@
 
 	
 	<!-- NEWS -->
+	@php
+		$news = $that->getNews($market_id);
+	@endphp
 	@if (isset($news) && $news)
+		@foreach($news as $news)
 		<div class="alert alert-info">
 			<strong>{{ $news->title }}</strong>
 			{{ $news->content }}
 		</div>
+		@endforeach
 	@endif
 	@if ( is_array(Session::get('error')) )
 		<div class="alert alert-error">{{ head(Session::get('error')) }}</div>

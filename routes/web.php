@@ -96,10 +96,10 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middl
     Route::post('delete-post', 'admin\\AdminSettingController@deletePost');
 
     //coin news
-    Route::post('add-coin-news', 'admin\\AdminSettingController@addCoinNews');
-    Route::get('edit-coin-news/{post}', 'admin\\AdminSettingController@editCoinNews');
-    Route::post('edit-coin-news', 'admin\\AdminSettingController@doEditCoinNews');
-    Route::post('delete-coin-news', 'admin\\AdminSettingController@deleteCoinNews');
+    Route::post('add-market-news', 'admin\\AdminSettingController@addCoinNews')->name('admin.add_market_news');
+    Route::get('edit-market-news/{post}', 'admin\\AdminSettingController@editCoinNews');
+    Route::post('edit-market-news', 'admin\\AdminSettingController@doEditCoinNews')->name("admin.edit_market_news");
+    Route::post('delete-market-news', 'admin\\AdminSettingController@deleteCoinNews')->name("admin.delete_market_news");
 
     //withdraw limits
     Route::post('add-withdraw-limit', 'admin\\AdminSettingController@addWithdrawLimit');

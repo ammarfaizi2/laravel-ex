@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 @section('content') 
 
-<h2>Add Coin News</h2>
+<h2>Add Market News</h2>
 @if ( is_array(Session::get('error')) )
         <div class="alert alert-danger">{{ head(Session::get('error')) }}</div>
     @elseif ( Session::get('error') )
@@ -15,13 +15,13 @@
           <div class="alert alert-info">{{{ Session::get('notice') }}}</div>
     @endif
 
-<form class="form-horizontal" role="form" method="POST" action="/admin/add-coin-news" id="add_post">    
+<form class="form-horizontal" role="form" method="POST" action="{{ route('admin.add_market_news') }}" id="add_post">    
     <div class="form-group">
-        <label for="market_id" class="col-sm-2 control-label">Market</label>
+        <label for="market_id" class="col-sm-2 control-label">Coin</label>
         <div class="col-sm-10">
             <select class="form-control" name="market_id" id="market_id">
-                @foreach ($market_list as $key => $val)
-                <option value="{{{$key}}}">{{{$val}}}</option>
+                @foreach ($that->getWalletList() as $val)
+                    <option value="{{$val->id}}">{{$val->type." - ".$val->name}}</option>
                 @endforeach
             </select>
         </div>

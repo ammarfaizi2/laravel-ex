@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 @section('content')	
 {{ HTML::script('assets/js/bootstrap-paginator.js') }}
-<h2>All Coin News</h2>
+<h2>All Market News</h2>
 @if ( is_array(Session::get('error')) )
         <div class="alert alert-danger">{{ head(Session::get('error')) }}</div>
     @elseif ( Session::get('error') )
@@ -14,21 +14,23 @@
     @if ( Session::get('notice') )
           <div class="alert">{{{ Session::get('notice') }}}</div>
     @endif
-<div><a href="{{URL::to('admin/content/add-coin-news')}}">Add Coin News</a></div>
+<div><a href="{{URL::to('admin/content/add-coin-news')}}">Add Market News</a></div>
 <table class="table table-striped" id="list-fees">
 	<tr>
 	 	<th>ID</th>
+        <th>Coin</th>
 	 	<th>{{trans('admin_texts.title')}}</th>	
-        <th>Market Type</th>   	
+        <th>Content</th>
 	 	<th>{{trans('admin_texts.action')}}</th>
 	</tr> 	
 	@foreach($news as $page)
 		<tr>
             <td>{{$page->id}}</td>
-            <td>{{$page->market_type}}</td>
+            <td>{{$page->type." - ".$page->name}}</td>
             <td>{{$page->title}}</td>
+            <td>{{substr($page->content, 0, 10).(strlen($page->content) > 10 ? "..." : "")}}</td>
             <td>
-                <a href="{{URL::to('admin/edit-coin-news')}}/{{$page->id}}" class="edit_page">{{trans('admin_texts.edit')}}</a>  | 
+                <a href="{{URL::to('admin/edit-market-news')}}/{{$page->id}}" class="edit_page">{{trans('admin_texts.edit')}}</a>  | 
                 <a href="#" onclick="deletePost({{$page->id}})" class="delete_page">{{trans('admin_texts.delete')}}</a>
             </td>
         </tr>
@@ -47,7 +49,7 @@
 <script type='text/javascript'>
 
 function deletePost(news_id){
-    $.post('/admin/delete-coin-news', {isAjax: 1, news_id: news_id }, function(response){
+    $.post('/admin/delete-market-news', {isAjax: 1, news_id: news_id }, function(response){
         var obj = $.parseJSON(response);
         console.log('obj: ',obj);
         if(obj.status == 'success'){

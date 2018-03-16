@@ -294,7 +294,7 @@ class AdminSettingController extends Controller
                 $market_list[$market->id] = "{$from}/{$to}";
             }
             $data['market_list'] = $market_list;
-
+            $data["that"] = $this;
             return view('admin.pages.add_coin_news', $data);
                 break;
         case 'all-coin-news':
@@ -306,8 +306,14 @@ class AdminSettingController extends Controller
             $data['total_pages'] = ceil($total/$record_per_page);//15 user per page
             $data['cur_page'] = $pager_page;
             $offset_start = ($pager_page-1)*$record_per_page;
-            $news = News::skip($offset_start)->take($record_per_page)->get();
-            $data['news'] = $news;
+            // $news = News::skip($offset_start)->take($record_per_page)->get();
+            // $data['news'] = $news;
+            $data["news"] = DB::table("market_news")
+                ->select(
+                    ["market_news.id", "market_news.title", "market_news.content", "wallets.type", "wallets.name"]
+                )
+                ->join("wallets", "wallets.id", "=", "market_news.wallet_id")
+                ->get();
             return view('admin.pages.all_coin_news', $data);
                 break;
         case 'withdraw-limits':
@@ -1437,126 +1443,191 @@ class AdminSettingController extends Controller
 
     public function addCoinNews()
     {
-        $market_id = Request::get('market_id');
-        $title = Request::get('title');
-        $content = Request::get('content');
+        // dd($_POST);
 
-        $market = Market::find($market_id);
-
-        $wallet_from = Wallet::where('id', $market->wallet_from)->first();
-        $wallet_to = Wallet::where('id', $market->wallet_to)->first();
-
-        $market_from_name= isset($wallet_from->name) ? $wallet_from->name : '';
-        $market_to_name= isset($wallet_to->name) ? $wallet_to->name : '';
-
-        $market_from_type= isset($wallet_from->type) ? $wallet_from->type : '';
-        $market_to_type= isset($wallet_to->type) ? $wallet_to->type : '';
-
-        $market_type = "{$market_from_type}/{$market_to_type}";
-        $market_name = "{$market_from_name}/{$market_to_name}";
-
-        if (!empty($market_id) && !empty($title) && !empty($content)) {
-            $news = new News();
-            $news->title = $title;
-            $news->content = $content;
-            $news->market_id = $market_id;
-            $news->market_type = $market_type;
-            $news->market_name = $market_name;
-            $news->save();
-            if ($news->id) {
-                return Redirect::to('admin/content/all-coin-news')->with('success', Lang::get('messages.created_success_param', array('object'=>'Coin News')));
-            } else {
-                $error = $user->errors()->all(':message');
-                return Redirect::to('admin/content/add-coin-news')->with('error', $error);
+        if (isset($_POST["market_id"], $_POST["title"], $_POST["content"])) {
+            if (is_numeric($_POST["market_id"])) {
+                if (! empty($_POST["title"])) {
+                    if (! empty($_POST["content"])) {
+                        DB::table("market_news")
+                        ->insert(
+                            [
+                                "wallet_id" => $_POST["market_id"],
+                                "title" => $_POST["title"],
+                                "content" => $_POST["content"], 
+                                "created_at" => date("Y-m-d H:i:s")
+                            ]
+                        );
+                        return Redirect::to('admin/content/all-coin-news')->with('success', Lang::get('messages.created_success_param', array('object'=>'Coin News')));
+                    }
+                }
             }
-        } else {
             return Redirect::to('admin/content/add-coin-news')->with('error', Lang::get('messages.fill_all_fields'));
         }
+        abort(404);
+
+        // $market_id = Request::get('market_id');
+        // $title = Request::get('title');
+        // $content = Request::get('content');
+
+        // $market = Market::find($market_id);
+
+        // $wallet_from = Wallet::where('id', $market->wallet_from)->first();
+        // $wallet_to = Wallet::where('id', $market->wallet_to)->first();
+
+        // $market_from_name= isset($wallet_from->name) ? $wallet_from->name : '';
+        // $market_to_name= isset($wallet_to->name) ? $wallet_to->name : '';
+
+        // $market_from_type= isset($wallet_from->type) ? $wallet_from->type : '';
+        // $market_to_type= isset($wallet_to->type) ? $wallet_to->type : '';
+
+        // $market_type = "{$market_from_type}/{$market_to_type}";
+        // $market_name = "{$market_from_name}/{$market_to_name}";
+
+        // if (!empty($market_id) && !empty($title) && !empty($content)) {
+        //     $news = new News();
+        //     $news->title = $title;
+        //     $news->content = $content;
+        //     $news->market_id = $market_id;
+        //     $news->market_type = $market_type;
+        //     $news->market_name = $market_name;
+        //     $news->save();
+        //     if ($news->id) {
+        //         return Redirect::to('admin/content/all-coin-news')->with('success', Lang::get('messages.created_success_param', array('object'=>'Coin News')));
+        //     } else {
+        //         $error = $user->errors()->all(':message');
+        //         return Redirect::to('admin/content/add-coin-news')->with('error', $error);
+        //     }
+        // } else {
+        //     return Redirect::to('admin/content/add-coin-news')->with('error', Lang::get('messages.fill_all_fields'));
+        // }
     }
     public function editCoinNews($news_id)
     {
-        $markets = Market::get();
+        // $markets = Market::get();
 
-        $wallets = Wallet::orderby('type')->get();
-        $market_list = array();
-        foreach ($markets as $market) {
-            $from = $to = "";
-            foreach ($wallets as $wallet) {
-                if ($market->wallet_from == $wallet->id) {
-                    $from = $wallet->type;
-                }
-                if ($market->wallet_to == $wallet->id) {
-                    $to = $wallet->type;
-                }
-            }
-            $market_list[$market->id] = "{$from}/{$to}";
+        // $wallets = Wallet::orderby('type')->get();
+        // $market_list = array();
+        // foreach ($markets as $market) {
+        //     $from = $to = "";
+        //     foreach ($wallets as $wallet) {
+        //         if ($market->wallet_from == $wallet->id) {
+        //             $from = $wallet->type;
+        //         }
+        //         if ($market->wallet_to == $wallet->id) {
+        //             $to = $wallet->type;
+        //         }
+        //     }
+        //     $market_list[$market->id] = "{$from}/{$to}";
+        // }
+        // $data['market_list'] = $market_list;
+
+        // $data['news'] = News::find($news_id);
+        $data["that"] = $this;
+        $data["news"] = DB::table("market_news")
+            ->select(["market_news.id", "market_news.title", "market_news.content", "wallets.id as wallet_id"])
+            ->join("wallets", "wallets.id", "=", "market_news.wallet_id")
+            ->where("market_news.id", "=", $news_id)
+            ->first();
+        if (! $data) {
+            abort(404);
         }
-        $data['market_list'] = $market_list;
-
-        $data['news'] = News::find($news_id);
         return view('admin.pages.edit_coin_news', $data);
     }
     public function doEditCoinNews()
     {
-        $market_id = Request::get('market_id');
-        $title = Request::get('title');
-        $content = Request::get('content');
-        $news_id = Request::get('news_id');
-
-        $market = Market::find($market_id);
-
-        $wallet_from = Wallet::where('id', $market->wallet_from)->first();
-        $wallet_to = Wallet::where('id', $market->wallet_to)->first();
-
-        $market_from_name= isset($wallet_from->name) ? $wallet_from->name : '';
-        $market_to_name= isset($wallet_to->name) ? $wallet_to->name : '';
-
-        $market_from_type= isset($wallet_from->type) ? $wallet_from->type : '';
-        $market_to_type= isset($wallet_to->type) ? $wallet_to->type : '';
-
-        $market_type = "{$market_from_type}/{$market_to_type}";
-        $market_name = "{$market_from_name}/{$market_to_name}";
-
-        if (!empty($news_id) && !empty($title) && !empty($content)) {
-            $news = News::find($news_id);
-            $news->title = $title;
-            $news->content = $content;
-            $news->market_id = $market_id;
-            $news->market_type = $market_type;
-            $news->market_name = $market_name;
-            $news->save();
-            if ($news->id) {
-                return Redirect::to('admin/content/all-coin-news')->with('success', Lang::get('messages.updated_success_param', array('object'=>'Coin News')));
-            } else {
-                $error = $user->errors()->all(':message');
-                return Redirect::to('admin/content/add-coin-news')->with('error', $error);
+        if (isset($_POST["market_id"])) {
+            if (isset($_POST["title"])) {
+                if (isset($_POST["content"])) {
+                    if (isset($_POST["news_id"])) {
+                        DB::table("market_news")
+                        ->where("id", "=", $_POST["news_id"])
+                        ->limit(1)
+                        ->update(
+                            [
+                                "wallet_id" => $_POST["market_id"],
+                                "title" => $_POST["title"],
+                                "content" => $_POST["content"],
+                                "updated_at" => date("Y-m-d H:i:s")
+                            ]
+                        );
+                        return Redirect::to('admin/content/all-coin-news')->with('success', Lang::get('messages.updated_success_param', array('object'=>'Coin News')));
+                    }
+                }
             }
-        } else {
             return Redirect::to('admin/content/add-coin-news')->with('error', Lang::get('messages.fill_all_fields'));
         }
+        abort(404);
+        // $market_id = Request::get('market_id');
+        // $title = Request::get('title');
+        // $content = Request::get('content');
+        // $news_id = Request::get('news_id');
+
+        // $market = Market::find($market_id);
+
+        // $wallet_from = Wallet::where('id', $market->wallet_from)->first();
+        // $wallet_to = Wallet::where('id', $market->wallet_to)->first();
+
+        // $market_from_name= isset($wallet_from->name) ? $wallet_from->name : '';
+        // $market_to_name= isset($wallet_to->name) ? $wallet_to->name : '';
+
+        // $market_from_type= isset($wallet_from->type) ? $wallet_from->type : '';
+        // $market_to_type= isset($wallet_to->type) ? $wallet_to->type : '';
+
+        // $market_type = "{$market_from_type}/{$market_to_type}";
+        // $market_name = "{$market_from_name}/{$market_to_name}";
+
+        // if (!empty($news_id) && !empty($title) && !empty($content)) {
+        //     $news = News::find($news_id);
+        //     $news->title = $title;
+        //     $news->content = $content;
+        //     $news->market_id = $market_id;
+        //     $news->market_type = $market_type;
+        //     $news->market_name = $market_name;
+        //     $news->save();
+        //     if ($news->id) {
+        //         return Redirect::to('admin/content/all-coin-news')->with('success', Lang::get('messages.updated_success_param', array('object'=>'Coin News')));
+        //     } else {
+        //         $error = $user->errors()->all(':message');
+        //         return Redirect::to('admin/content/add-coin-news')->with('error', $error);
+        //     }
+        // } else {
+        //     return Redirect::to('admin/content/add-coin-news')->with('error', Lang::get('messages.fill_all_fields'));
+        // }
     }
     public function deleteCoinNews()
     {
         $news_id = Request::get('news_id');
-        $news = News::find($news_id);
-        if (isset($news->id)) {
-            News::where('id', $news_id)->delete();
-            $message = $news->title." ".Lang::get('messages.delete_success');
-            if (Request::get('isAjax')) {
-                echo json_encode(array('status'=>'success', 'message'=>$message ));
-                exit;
-            } else {
-                return Redirect::to('admin/content/all-coin-news')->with('success', $message);
-            }
+        DB::table("market_news")
+            ->where("id", "=", $news_id)
+            ->limit(1)
+            ->delete();
+        $message = Lang::get('messages.delete_success');
+        if (Request::get('isAjax')) {
+            echo json_encode(array('status'=>'success', 'message'=>$message ));
+            exit;
         } else {
-            $message = "Entry does not exist";
-            if (Request::get('isAjax')) {
-                echo json_encode(array('status'=>'error', 'message'=>$message ));
-                exit;
-            } else {
-                return Redirect::to('admin/content')->with('error', $message);
-            }
+            return Redirect::to('admin/content/all-coin-news')->with('success', $message);
         }
+        // $news = News::find($news_id);
+        // if (isset($news->id)) {
+        //     News::where('id', $news_id)->delete();
+        //     $message = $news->title." ".Lang::get('messages.delete_success');
+        //     if (Request::get('isAjax')) {
+        //         echo json_encode(array('status'=>'success', 'message'=>$message ));
+        //         exit;
+        //     } else {
+        //         return Redirect::to('admin/content/all-coin-news')->with('success', $message);
+        //     }
+        // } else {
+        //     $message = "Entry does not exist";
+        //     if (Request::get('isAjax')) {
+        //         echo json_encode(array('status'=>'error', 'message'=>$message ));
+        //         exit;
+        //     } else {
+        //         return Redirect::to('admin/content')->with('error', $message);
+        //     }
+        // }
     }
 
     public function doSendCoin()
@@ -2053,5 +2124,12 @@ class AdminSettingController extends Controller
             }
         }
         abort(404);
+    }
+
+    public function getWalletList()
+    {
+        return DB::table("wallets")
+            ->select(["id", "type" ,"name"])
+            ->get();
     }
 }

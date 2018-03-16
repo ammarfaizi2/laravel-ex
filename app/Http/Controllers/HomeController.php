@@ -323,7 +323,7 @@ class HomeController extends Controller
         //coin news
         $data['news'] = false;
         if ($data['show_all_markets'] === false) {
-            $data['news'] = News::where('market_id', intval($market_id))->orderBy('created_at', 'desc')->first();
+            $data['news'] = News::where('market_id', intval($market_id))->orderBy('created_at', 'desc')->get();
         }
         
         //site news
@@ -654,4 +654,19 @@ class HomeController extends Controller
         return $dec;
     }
     */
+
+    public function getNews($market_id)
+    {
+        $w1 = DB::table("market")
+            ->select(["wallet_from", "wallet_to"])
+            ->where("id", "=", $market_id)
+            ->first();
+        $w2 = $w1->wallet_from;
+        $w1 = $w1->wallet_to;
+        return DB::table("market_news")
+            ->select(["title", "content"])
+            ->where("wallet_id", "=", $w1)
+            ->orWhere("wallet_id", "=", $w2)
+            ->get();
+    }
 }
