@@ -28,6 +28,7 @@ return array(
     "fullname"              => "Full Name",
     "your_details"          => "Your Details",
     "register_account"      => "Register Account",
+    "login_history" => "Login History",
     'security' => 'Security',
     'not_install_two_factor_auth' => "You haven't install Two-factor authentication.",
     'install' => "Install",

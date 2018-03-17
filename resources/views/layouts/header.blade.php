@@ -112,6 +112,7 @@
 						<li @if(Request::is('user/profile/two-factor-auth')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/two-factor-auth', trans('user_texts.security')) }}</li>
 						<li @if(Request::is('user/profile/orders')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/orders', trans('user_texts.orders')) }}</li>
 						<li @if(Request::is('user/profile/trade-history')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/trade-history', trans('user_texts.trade_history')) }}</li>
+						<li @if(Request::is('user/profile/login-history')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/login-history', trans('user_texts.login_history')) }}</li>
 						<li>{{ HTML::link('user/logout', trans('user_texts.logout')) }}</li>
 					</ul>
 				</li>

@@ -1386,6 +1386,12 @@ class UserController extends Controller
             View::composer('laravel-notify::notification', 'Ipunkt\LaravelNotify\Composers\ViewComposer');
                 
             break;
+        case 'login-history':
+                return view("user.login_history");
+            break;
+        default:
+            abort(404);
+            break;
         }
         $data["that"] = $this;
 
