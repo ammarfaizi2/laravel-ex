@@ -11,15 +11,15 @@
                     <th>{{ trans('user_texts.login_history_2fa') }}</th>
                     <th>{{ trans('user_texts.login_history_datetime') }}</th>
                 </tr>
-                <tr>
-                    @foreach($login_history as $h)
+                @foreach($login_history as $h)
+                    <tr>
                         <td>{{ $h->id }}</td>
                         <td>{{ $h->ip_address }}</td>
                         <td>{{ $h->user_agent }}</td>
                         <td>{{ $h->{'2fa'} }}</td>
                         <td>{{ $h->created_at }}</td>
-                    @endforeach
-                </tr>
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
         </div>
