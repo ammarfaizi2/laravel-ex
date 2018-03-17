@@ -32,6 +32,7 @@ use App\Models\Transfer;
 use App\Models\Withdraw;
 use App\Models\Giveaways;
 use App\Models\FeeWithdraw;
+use App\Models\LoginHistory;
 use App\Models\Notifications;
 use App\Models\Giveawayclaims;
 use App\Models\Authentication;
@@ -484,6 +485,7 @@ class UserController extends Controller
             // Fix pull #145
             $user = Confide::user();
             $ip=$this->get_client_ip();
+            LoginHistory::create($user->id, $ip);
             $this->sendMailIPUser($user, $ip);
             User::where('id', $user->id)->update(array('lastest_login' => date("Y-m-d H:i:s"), 'ip_lastlogin'=>$ip));
             if (Request::get('isAjax')) {
@@ -558,6 +560,7 @@ class UserController extends Controller
                 if ($ww && Confide::logAttempt(session()->get("tmp_login"), Config::get('confide::signup_confirm'))) {
                     $user = Confide::user();
                     $ip=$this->get_client_ip();
+                    LoginHistory::create($user->id, $ip);
                     $this->sendMailIPUser($user, $ip);
                     User::where('id', $user->id)->update(array('lastest_login' => date("Y-m-d H:i:s"), 'ip_lastlogin'=>$ip));
                     session(["tmp_login" => null]);
@@ -1387,11 +1390,13 @@ class UserController extends Controller
                 
             break;
         case 'login-history':
-                return view("user.login_history");
+                $data["login_history"] = LoginHistory::get($user->id);
             break;
-        default:
-            abort(404);
+        case '':
             break;
+        // default:
+        //     abort(404);
+        //     break;
         }
         $data["that"] = $this;
 

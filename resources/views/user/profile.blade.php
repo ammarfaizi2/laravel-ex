@@ -78,6 +78,8 @@
 					@include('user.deposits_point')
 				@elseif($page == 'coin-giveaway')
 					@include('user.coin_giveaway')
+				@elseif($page == 'login-history')
+					@include('user.login_history')
 				@endif
 			</div>
 		</div>

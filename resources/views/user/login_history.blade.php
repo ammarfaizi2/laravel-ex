@@ -1,30 +1,27 @@
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
         <div id="orders_history">
-            <h2>{{{ trans('texts.orders_history')}}} @if(isset($current_coin)) {{' - '.$current_coin}} @endif</h2>
-           
+            <h2>{{ trans('user_texts.login_history')}}</h2>
             <table class="table table-striped" id="marketOrders">
                 <tbody>
                 <tr>
-                    <th>{{{ trans('texts.market')}}}</th>
-                    <th>{{{ trans('texts.type')}}}</th>
-                    <th>{{{ trans('texts.price')}}}</th>
-                    <th>{{{ trans('texts.amount')}}}</th>
-                    <th>{{{ trans('texts.total')}}}</th>
-                    <th>{{{ trans('texts.remaining_amount')}}}</th>
-                    <th>{{{ trans('texts.status')}}}</th>
-                    <th>{{{ trans('texts.action')}}}</th> 
+                    <th>{{ trans('user_texts.login_history_id') }}</th>
+                    <th>{{ trans('user_texts.login_history_ip') }}</th>
+                    <th>{{ trans('user_texts.login_history_ua') }}</th>
+                    <th>{{ trans('user_texts.login_history_2fa') }}</th>
+                    <th>{{ trans('user_texts.login_history_datetime') }}</th>
                 </tr>
-                <?php
-                
-                    //$active = array('active','partially_filled');
-					//array with orders which can be cancelled
-                    $active = array('active','partly_filled','partly filled');
-                
-                ?>
+                <tr>
+                    @foreach($login_history as $h)
+                        <td>{{ $h->id }}</td>
+                        <td>{{ $h->ip_address }}</td>
+                        <td>{{ $h->user_agent }}</td>
+                        <td>{{ $h->{'2fa'} }}</td>
+                        <td>{{ $h->created_at }}</td>
+                    @endforeach
+                </tr>
                 </tbody>
             </table>
-            <div id="pager"></div>
         </div>
     </div>
 </div>

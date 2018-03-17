@@ -72,5 +72,10 @@ return array(
     "reset_password_button" => "Reset Password",
     "password_not_match" => "Confirm password does not match!",
     "password_reset_success" => "Your password has been reset successfuly!",
-    "session_expired" => "The page has expired due to inactivity. \n\nPlease refresh and try again."
+    "session_expired" => "The page has expired due to inactivity. \n\nPlease refresh and try again.",
+    "login_history_id" => "ID",
+    "login_history_ip" => "IP Address",
+    "login_history_ua" => "User Agent",
+    "login_history_2fa" => "2FA",
+    "login_history_datetime" => "Date Time",
 );
