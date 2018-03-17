@@ -31,20 +31,20 @@
 			
 				<strong>General Market Data (All Markets):</strong> <br />
 
-				<?=url('/', $parameters = array(), $secure = null);?>/page/api?method=allmarket <br /><br />
+				<?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=allmarket <br /><br />
 
 				<strong>General Market Data (Single Market):</strong> <br />
 
-				<?=url('/', $parameters = array(), $secure = null);?>/page/api?method=singlemarket&marketid={MARKET ID} <br /><br />
+				<?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=singlemarket&marketid={MARKET ID} <br /><br />
 
 				<strong>Get last price (Single Market):</strong> <br />
-				<?=url('/', $parameters = array(), $secure = null);?>/page/api?method=lastprice&marketid={MARKET ID}  <br /><br />
+				<?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=lastprice&marketid={MARKET ID}  <br /><br />
 				
 				<strong>Last 24 hour stats:</strong> <br />
-				<?=url('/', $parameters = array(), $secure = null);?>/page/api?method=allmarket24h  <br /><br />
+				<?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=allmarket24h  <br /><br />
 
 				<strong>Last 24 hour stats (Single Market):</strong> <br />
-				<?=url('/', $parameters = array(), $secure = null);?>/page/api?method=singlemarket24h&marketid={MARKET ID}  <br /><br />
+				<?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=singlemarket24h&marketid={MARKET ID}  <br /><br />
 			  </div>
 			</div>
 		  </div>
@@ -65,8 +65,8 @@
 				 <br >
 							Authenticated methods require the use of an API key and can only be accessed via the POST method.<br /><br />
 
-							<strong>URL</strong> - The URL you will be posting to is:<strong> <?=url('/', $parameters = array(), $secure = null);?>/page/api?method=METHOD&amp;key=KEY&amp;sign=SIGN </strong><br />
-							Ex: <?=url('/', $parameters = array(), $secure = null);?>/page/api?method=getmarkets&amp;sign=USERNAME&amp;key=PASSWORD <br />
+							<strong>URL</strong> - The URL you will be posting to is:<strong> <?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=METHOD&amp;key=KEY&amp;sign=SIGN </strong><br />
+							Ex: <?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=getmarkets&amp;sign=USERNAME&amp;key=PASSWORD <br />
 
 							
 							<strong>sign</strong> - Your username<br />
@@ -201,7 +201,7 @@
 					// generate the POST data string
 					$post_data = http_build_query($req, '', '&amp;');
 
-					$re = file_get_contents('<?=url('/', $parameters = array(), $secure = null);?>/page/api?'. $post_data, true);
+					$re = file_get_contents('<?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?'. $post_data, true);
 
 					$dec = json_decode($re, true);
 					return $dec;

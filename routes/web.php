@@ -35,7 +35,6 @@ Route::get('testLocate','BaseController@testLocate');
 
 Route::get('/', 'HomeController@index'); // call index page
 Route::get('market/{market}', 'HomeController@index')->name('market');
-Route::get('page/{page}', 'HomeController@routePage');
 Route::post('get-chart', 'HomeController@getChart');
 Route::post('voting', 'VoteCoinController@doVoting');
 Route::get('maintenance', 'HomeController@maintenanceMode');
@@ -50,6 +49,18 @@ Route::post('page/submit-coin', 'HomeController@submitCoin');
 
 //pages , news
 Route::get('post/{post}', 'HomeController@viewPost');
+
+Route::group(["prefix" => "page/api"], function () {
+    Route::group(["prefix" => "v1.0"], function () {
+        Route::get("/", function () {
+            if (isset($_GET["method"])) {
+                $api_response = \App\Http\Controllers\ApiController::api($_GET["method"]);
+            }
+        });
+    });
+});
+
+Route::get('page/{page}', 'HomeController@routePage');
 
 Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middleware' => ['App\Http\Middleware\admin', '2fa_admin']), function()
 {
