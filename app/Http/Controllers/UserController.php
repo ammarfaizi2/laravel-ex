@@ -1392,6 +1392,27 @@ class UserController extends Controller
         case 'login-history':
                 $data["login_history"] = LoginHistory::get($user->id);
             break;
+        case 'ip-whitelist':
+            if (! isset($_GET["p"])) {
+                abort(404);
+            }
+            switch ($_GET["p"]) {
+                case 'login':
+                    $data["w_ip"] = DB::table("whitelist_login_ip")
+                                    ->select("*")
+                                    ->where("user_id", "=", $user->id)
+                                    ->orderBy("created_at", "desc")
+                                    ->get();
+                    $data["w_status"] = "";
+                    break;
+                
+                default:
+                    abort(404);
+                    break;
+            }
+            $data["type"] = $_GET["p"];
+
+            break;
         case '':
             break;
         // default:

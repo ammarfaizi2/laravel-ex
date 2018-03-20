@@ -28,6 +28,19 @@
 					  <li @if($page == 'viewtranferin') class="active" @endif>{{ HTML::link('user/profile/viewtranferin', trans('user_texts.view_transfer_in')) }}</li>
 					</ul>
 				</li>
+				<li @if($page == 'login-history') class="active" @endif>{{ HTML::link('user/profile/login-history', trans('user_texts.login_history')) }}</li>
+				<li @if($page == 'ip-whitelist' || $page == 'ip-whitelist') class="active" @endif>
+					<a aria-expanded="false" class="dropdown-toggle" data-toggle="dropdown" href="#">
+					  {{trans('user_texts.ip_whitelist')}} <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+					  <li @if($page == 'ip-whitelist' && isset($_GET["p"]) && $_GET["p"] === "login") class="active" @endif>{{ HTML::link('user/profile/ip-whitelist?p=login', trans('user_texts.ip_whitelist_login')) }}</li> 
+					  <li class="divider"></li>
+					  <li @if($page == 'ip-whitelist' && isset($_GET["p"]) && $_GET["p"] === "trade") class="active" @endif>{{ HTML::link('user/profile/ip-whitelist?p=trade', trans('user_texts.ip_whitelist_trade')) }}</li>
+					  <li class="divider"></li>
+					   <li @if($page == 'ip-whitelist' && isset($_GET["p"]) && $_GET["p"] === "withdraw") class="active" @endif>{{ HTML::link('user/profile/ip-whitelist?p=withdraw', trans('user_texts.ip_whitelist_withdraw')) }}</li>
+					</ul>
+				</li>
 								  
 
 				 
@@ -80,6 +93,8 @@
 					@include('user.coin_giveaway')
 				@elseif($page == 'login-history')
 					@include('user.login_history')
+				@elseif($page == 'ip-whitelist')
+					@include('user.ip_whitelist')
 				@endif
 			</div>
 		</div>
