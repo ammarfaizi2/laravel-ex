@@ -199,7 +199,7 @@ Route::post("/user/ajax_notification/read", "NotificationController@readNotifica
 //user profile
 Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
 
-    
+    Route::post("add-whitelist-ip", "WhitelistIpController@add")->name("ip_whitelist_add");
 
     Route::group(['prefix' => 'messages', 'middleware' => ['2fa', 'App\Http\Middleware\user']], function () {
         Route::get('/', ['as' => 'messages', 'uses' => 'MessagesController@index']);

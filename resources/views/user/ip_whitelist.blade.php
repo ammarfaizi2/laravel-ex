@@ -18,7 +18,7 @@
                 @else
                     <button>{{ trans('user_texts.turn_on_whitelist', ["type" => ucwords($type)]) }}</button>
                 @endif
-                <button>{{ trans('user_texts.add_ip') }}</button>
+                <button id="new_ip">{{ trans('user_texts.add_ip') }}</button>
             </div>
             <table class="table table-striped">
                 <tbody>
@@ -26,18 +26,66 @@
                     <th>{{ trans('user_texts.login_history_id') }}</th>
                     <th>{{ trans('user_texts.login_history_ip') }}</th>
                     <th>{{ trans('user_texts.created_at') }}</th>
-                    <th>{{ trans('user_texts.updated_at') }}</th>
+                    <th>{{ trans('user_texts.action') }}</th>
                 </tr>
                 @foreach($w_ip as $ip)
                 <tr>
                     <td>{{ $ip->id }}</td>
                     <td>{{ $ip->ip }}</td>
                     <td>{{ $ip->created_at }}</td>
-                    <td>{{ $ip->updated_at }}</td>
+                    <td><button class="btn-danger btn" onclick="deleteIp({!! $ip->id.','.$ip->ip !!})">{{ trans('user_texts.delete_ip') }}</button></td>
                 </tr>
                 @endforeach
                 </tbody>
             </table>
         </div>
+        <script type="text/javascript">
+            function deleteIp(id,ip)
+            {
+                bootbox.confirm({ 
+                  size: "small",
+                  message: (("{{ trans('user_texts.delete_ip_confirm') }}").replace("~~ip~~", ip)), 
+                  callback: function(result){ 
+                    if (result) {
+                        promptCode();
+                    }
+                  }
+                });
+            }
+            $("#new_ip")[0].addEventListener("click", function () {
+                setTimeout(function() {
+                    $(".bootbox-input")[0].placeholder = "192.168.100.1,192.168.100.2,192.168.100.3,192.168.100.4,192.168.100.5,...";
+                }, 300);
+                bootbox.prompt({
+                        title: "{{ trans('user_texts.add_ip_w') }}",
+                        inputType: "text",
+                        callback: function (result) {
+                            if (result !== null) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "{{ route('ip_whitelist_add') }}",
+                                    success: function (res) {
+                                        if (typeof res["alert"] != "undefined") {
+                                            bootbox.alert({ 
+                                              size: "small",
+                                              title: "",
+                                              message: res["alert"], 
+                                              callback: function(){}
+                                            });
+                                        }
+
+                                        if (typeof res["redirect"] != "undefined") {
+                                            window.location = res["redirect"];
+                                        }
+                                    },
+                                    data: "_token={!! csrf_token() !!}&type=login&data="+encodeURIComponent(result)
+                                });
+                            }
+
+                        }
+                    }
+                );
+            });
+        </script>
     </div>
 </div>

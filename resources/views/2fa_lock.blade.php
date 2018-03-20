@@ -55,7 +55,7 @@
 										  		window.location = "{{route("logout")}}";
 										  	}
 										  }
-										})
+										});
 									}
 								}
 							};
