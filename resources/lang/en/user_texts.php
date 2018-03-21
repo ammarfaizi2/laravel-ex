@@ -45,7 +45,7 @@ return array(
     "add_ip_success"        => "Success!",
     "delete_ip"             => "Delete",
     "action"                => "Action",
-    "delete_ip_confirm"     => "Are you sure to delete ~~ip~~ from whitelist?"
+    "delete_ip_confirm"     => "Are you sure to delete ~~ip~~ from whitelist?",
     "login_history" => "Login History",
     'security' => 'Security',
     'not_install_two_factor_auth' => "You haven't install Two-factor authentication.",
