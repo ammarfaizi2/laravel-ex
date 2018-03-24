@@ -1437,7 +1437,22 @@ class UserController extends Controller
                                     ->get();
                     $data["w_status"] = isset($e->login) && $e->login === "on";
                     break;
-                
+                case 'trade':
+                    $data["w_ip"] = DB::table("whitelist_trade_ip")
+                                    ->select("*")
+                                    ->where("user_id", "=", $user->id)
+                                    ->orderBy("created_at", "desc")
+                                    ->get();
+                    $data["w_status"] = isset($e->trade) && $e->trade === "on";
+                    break;
+                case 'withdraw':
+                    $data["w_ip"] = DB::table("whitelist_withdraw_ip")
+                                    ->select("*")
+                                    ->where("user_id", "=", $user->id)
+                                    ->orderBy("created_at", "desc")
+                                    ->get();
+                    $data["w_status"] = isset($e->withdraw) && $e->withdraw === "on";
+                    break;
                 default:
                     abort(404);
                     break;

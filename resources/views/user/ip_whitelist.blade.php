@@ -59,7 +59,7 @@
                                     window.location = res["redirect"];
                                 }
                             },
-                    data: "_token={!! csrf_token() !!}&type=login"
+                    data: "_token={!! csrf_token() !!}&type={!! $_GET['p'] !!}"
                 });
             }
             function turnOff()
@@ -81,7 +81,7 @@
                                     window.location = res["redirect"];
                                 }
                             },
-                    data: "_token={!! csrf_token() !!}&type=login"
+                    data: "_token={!! csrf_token() !!}&type={!! $_GET['p'] !!}"
                 });
             }
             function deleteIp(id,ip)
@@ -108,7 +108,7 @@
                                             window.location = res["redirect"];
                                         }
                                     },
-                            data: "_token={!! csrf_token() !!}&type=login&data="+encodeURIComponent(JSON.stringify({
+                            data: "_token={!! csrf_token() !!}&type={!! $_GET['p'] !!}&data="+encodeURIComponent(JSON.stringify({
                                 "ip": ip,
                                 "id": id
                             }))
@@ -143,7 +143,7 @@
                                             window.location = res["redirect"];
                                         }
                                     },
-                                    data: "_token={!! csrf_token() !!}&type=login&data="+encodeURIComponent(result)
+                                    data: "_token={!! csrf_token() !!}&type={!! $_GET['p'] !!}&data="+encodeURIComponent(result)
                                 });
                             }
 
