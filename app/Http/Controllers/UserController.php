@@ -448,11 +448,39 @@ class UserController extends Controller
                 session(["error" => trans("user_texts.re_confirm")]);
                 return response()->json($ww, 200);
             }
-            
+            $cip = $this->get_client_ip();
             session(["_identificator" => [
-                "ip_address" => $this->get_client_ip(),
+                "ip_address" => $cip,
                 "user_agent" => $_SERVER["HTTP_USER_AGENT"]
             ]]);
+            $wh = DB::table("whitelist_ip_state")
+                ->select("login")
+                ->where("user_id", "=", $user->id)
+                ->first();
+            if (isset($wh->login) && $wh->login === "on") {
+                $rr = DB::table("whitelist_login_ip")
+                    ->select("ip")
+                    ->where("user_id", "=", $user->id)
+                    ->get();
+                if ($rr) {
+                    $f = false;
+                    foreach ($rr as $ip) {
+                        if (preg_match("/$ip->ip/i", $cip)) {
+                            $f = true;
+                            break;
+                        }
+                    }
+                    if (! $f) {
+                        if (Request::get("isAjax")) {
+                            echo json_encode(array('status'=>'error','c'=>1,'message'=>trans("user_texts.blocked_ip", ["type" => "Login"])));
+                            exit();
+                        }
+                        return Redirect::action('UserController@login')
+                            ->withInput(Request::except('password'))
+                            ->with('error', trans("user_texts.blocked_ip"));
+                    }
+                }
+            }
             if (isset($user->google2fa_secret) && $user->google2fa_secret) {
                 session(["tmp_login" => $input]);
 				
@@ -1396,6 +1424,10 @@ class UserController extends Controller
             if (! isset($_GET["p"])) {
                 abort(404);
             }
+            $e = DB::table("whitelist_ip_state")
+                ->select(["trade", "login", "withdraw"])
+                ->where("user_id", "=", $user->id)
+                ->first();
             switch ($_GET["p"]) {
                 case 'login':
                     $data["w_ip"] = DB::table("whitelist_login_ip")
@@ -1403,7 +1435,7 @@ class UserController extends Controller
                                     ->where("user_id", "=", $user->id)
                                     ->orderBy("created_at", "desc")
                                     ->get();
-                    $data["w_status"] = "";
+                    $data["w_status"] = isset($e->login) && $e->login === "on";
                     break;
                 
                 default:

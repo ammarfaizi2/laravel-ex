@@ -14,9 +14,9 @@
             </div>
             <div style="margin-bottom: 5px;">
                 @if($w_status)
-                    <button>{{ trans('user_texts.turn_off_whitelist', ["type" => ucwords($type)]) }}</button>
+                    <button onclick="turnOff();">{{ trans('user_texts.turn_off_whitelist', ["type" => ucwords($type)]) }}</button>
                 @else
-                    <button>{{ trans('user_texts.turn_on_whitelist', ["type" => ucwords($type)]) }}</button>
+                    <button onclick="turnOn();">{{ trans('user_texts.turn_on_whitelist', ["type" => ucwords($type)]) }}</button>
                 @endif
                 <button id="new_ip">{{ trans('user_texts.add_ip') }}</button>
             </div>
@@ -32,14 +32,58 @@
                 <tr>
                     <td>{{ $ip->id }}</td>
                     <td>{{ $ip->ip }}</td>
-                    <td>{{ $ip->created_at }}</td>
-                    <td><button class="btn-danger btn" onclick="deleteIp({!! $ip->id.','.$ip->ip !!})">{{ trans('user_texts.delete_ip') }}</button></td>
+                    <td>{{ $ip->created_at }}</td>@php $p = "{$ip->id},'{$ip->ip}'"; @endphp
+                    <td><button class="btn-danger btn" onclick="deleteIp({!! $p !!})">{{ trans('user_texts.delete_ip') }}</button></td>
                 </tr>
                 @endforeach
                 </tbody>
             </table>
         </div>
         <script type="text/javascript">
+            function turnOn()
+            {
+                 $.ajax({
+                    type: "POST",
+                    url: "{{ route('turn_on_ip') }}",
+                    success: function (res) {
+                                if (typeof res["alert"] != "undefined") {
+                                    bootbox.alert({ 
+                                      size: "small",
+                                      title: "",
+                                      message: res["alert"], 
+                                      callback: function(){}
+                                    });
+                                }
+
+                                if (typeof res["redirect"] != "undefined") {
+                                    window.location = res["redirect"];
+                                }
+                            },
+                    data: "_token={!! csrf_token() !!}&type=login"
+                });
+            }
+            function turnOff()
+            {
+                 $.ajax({
+                    type: "POST",
+                    url: "{{ route('turn_off_ip') }}",
+                    success: function (res) {
+                                if (typeof res["alert"] != "undefined") {
+                                    bootbox.alert({ 
+                                      size: "small",
+                                      title: "",
+                                      message: res["alert"], 
+                                      callback: function(){}
+                                    });
+                                }
+
+                                if (typeof res["redirect"] != "undefined") {
+                                    window.location = res["redirect"];
+                                }
+                            },
+                    data: "_token={!! csrf_token() !!}&type=login"
+                });
+            }
             function deleteIp(id,ip)
             {
                 bootbox.confirm({ 
@@ -47,7 +91,28 @@
                   message: (("{{ trans('user_texts.delete_ip_confirm') }}").replace("~~ip~~", ip)), 
                   callback: function(result){ 
                     if (result) {
-                        promptCode();
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('ip_whitelist_remove') }}",
+                            success: function (res) {
+                                        if (typeof res["alert"] != "undefined") {
+                                            bootbox.alert({ 
+                                              size: "small",
+                                              title: "",
+                                              message: res["alert"], 
+                                              callback: function(){}
+                                            });
+                                        }
+
+                                        if (typeof res["redirect"] != "undefined") {
+                                            window.location = res["redirect"];
+                                        }
+                                    },
+                            data: "_token={!! csrf_token() !!}&type=login&data="+encodeURIComponent(JSON.stringify({
+                                "ip": ip,
+                                "id": id
+                            }))
+                        });
                     }
                   }
                 });

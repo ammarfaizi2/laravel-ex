@@ -200,7 +200,14 @@ Route::post("/user/ajax_notification/read", "NotificationController@readNotifica
 Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
 
     Route::post("add-whitelist-ip", "WhitelistIpController@add")->name("ip_whitelist_add");
+    Route::post("remove-whitelist-ip", "WhitelistIpController@remove")->name("ip_whitelist_remove");
+    Route::post("turn-on-ip-whitelisting", "WhitelistIpController@turnOn")->name("turn_on_ip");
+    Route::post("turn-off-ip-whitelisting", "WhitelistIpController@turnOff")->name("turn_off_ip");
 
+    Route::get("settings/whitelist-ip", function (\Illuminate\Http\Request $request) {
+        $st = new \App\Http\Controllers\UserController($request);
+        return $st->viewprofile("ip-whitelist");
+    })->name("whitelist_ip");
     Route::group(['prefix' => 'messages', 'middleware' => ['2fa', 'App\Http\Middleware\user']], function () {
         Route::get('/', ['as' => 'messages', 'uses' => 'MessagesController@index']);
         Route::get('create', ['as' => 'messages.create', 'uses' => 'MessagesController@create']);

@@ -11,8 +11,8 @@ class WhitelistIpController extends Controller
     //
     public function add()
     {
-    	if (isset($_POST["data"], $_POST["type"]) && in_array($_POST["type"], ["login", "trade", "withdraw"])) {
-    		$user = Confide::user();
+    	$user = Confide::user();
+    	if (isset($_POST["data"], $_POST["type"]) && in_array($_POST["type"], ["login", "trade", "withdraw"]) && $user) {
     		header("Content-type:application/json");
     		$ips = explode(",", $_POST["data"]);
     		$valid = [];
@@ -40,8 +40,115 @@ class WhitelistIpController extends Controller
     	}
     }
 
+    public function remove()
+    {
+    	$user = Confide::user();
+    	if (isset($_POST["data"], $_POST["type"]) && in_array($_POST["type"], ["login", "trade", "withdraw"]) && $user) {
+    		header("Content-type:application/json");
+    		if ($user) {
+    			$d = json_decode($_POST["data"], true);
+    			if (! isset($d["id"], $d["ip"])) {
+    				http_response_code(403);
+    				exit; 
+    			}
+    			DB::table("whitelist_".$_POST["type"]."_ip")
+    				->where("id", "=", $d["id"])
+    				->where("ip", "=", $d["ip"])
+    				->where("user_id", "=", $user->id)
+    				->limit(1)
+    				->delete();
+    		}
+    		exit(json_encode(
+    			[
+    				"alert" => trans("user_texts.remove_ip_success", ["ip" => $d["ip"], "from" => ucfirst($_POST["type"])." Whitelist IP"]),
+    				"redirect" => ""
+    			]
+    		));
+    	}
+    }
+
     private function validIp($ip)
     {
-    	return filter_var($ip, FILTER_VALIDATE_IP);
+    	return preg_match("/[\d\*\:]/", $ip);
+    }
+
+    public function turnOff()
+    {
+        $user = Confide::user();
+        if ($user && isset($_POST["type"]) && in_array($_POST["type"], ["login", "trade", "withdraw"])) {
+            header("Content-type:application/json");
+            $g = DB::table("whitelist_ip_state")
+            ->select("user_id")
+            ->where("user_id", "=", $user->id)
+            ->first();
+            if ($g) {
+               DB::table("whitelist_ip_state")
+               ->where("user_id", "=", $user->id)
+               ->limit(1)
+               ->update(
+                    [
+                        $_POST["type"] => "off",
+                        "updated_at" => date("Y-m-d H:i:s")
+                    ]
+               );
+            } else {
+                DB::table("whitelist_ip_state")
+                ->insert(
+                    [
+                        "user_id" => $user->id,
+                        "trade" => ($_POST["type"] === "trade" ? "off" : "on"),
+                        "login" => ($_POST["type"] === "login" ? "off" : "on"),
+                        "withdraw" => ($_POST["type"] === "withdraw" ? "off" : "on"),
+                        "created_at" => date("Y-m-d H:i:s")
+                    ]
+                );
+            }
+            exit(json_encode(
+                [
+                    "alert" => trans("user_texts.turn_off_ipw", ["type" => ucfirst($_POST["type"])]),
+                    "redirect" => ""
+                ]
+            ));
+        }
+    }
+
+    public function turnOn()
+    {
+        $user = Confide::user();
+        if ($user && isset($_POST["type"]) && in_array($_POST["type"], ["login", "trade", "withdraw"])) {
+            header("Content-type:application/json");
+            $g = DB::table("whitelist_ip_state")
+            ->select("user_id")
+            ->where("user_id", "=", $user->id)
+            ->first();
+            if ($g) {
+               DB::table("whitelist_ip_state")
+               ->where("user_id", "=", $user->id)
+               ->limit(1)
+               ->update(
+                    [
+                        $_POST["type"] => "on",
+                        "updated_at" => date("Y-m-d H:i:s")
+                    ]
+               );
+            } else {
+                DB::table("whitelist_ip_state")
+                ->insert(
+                    [
+                        "user_id" => $user->id,
+                        "trade" => ($_POST["type"] === "trade" ? "on" : "off"),
+                        "login" => ($_POST["type"] === "login" ? "on" : "off"),
+                        "withdraw" => ($_POST["type"] === "withdraw" ? "on" : "off"),
+                        "created_at" => date("Y-m-d H:i:s")
+                    ]
+                );
+            }
+            exit(json_encode(
+                [
+                    "alert" => trans("user_texts.turn_on_ipw", ["type" => ucfirst($_POST["type"])]),
+                    "redirect" => ""
+                ]
+            ));
+        }
     }
 }
