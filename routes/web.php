@@ -163,12 +163,12 @@ Route::group(array('before' => array('auth','admin'),'prefix' => 'admin', 'middl
     Route::post('edit_custom_fields', 'admin\\AdminSettingController@editCustomFieldsPost');
 });
 // Confide routes
-Route::get( 'referral/{referral}',                 'UserController@create');
-Route::get( 'user/register',                 'UserController@create');
-Route::get( 'user/register',                 'UserController@register')->name('register');
-Route::post('user',                        'UserController@store');
-Route::get( 'login',                        'UserController@login')->name('user.login');
-Route::post('user/login',                  'UserController@do_login')->name("user.do_login");
+Route::get( 'referral/{referral}','UserController@create');
+Route::get( 'user/register','UserController@create');
+Route::get( 'user/register','UserController@register')->name('register');
+Route::post('user','UserController@store');
+Route::get( 'login', 'UserController@login')->name('user.login');
+Route::post('user/login', 'UserController@do_login')->name("user.do_login");
 Route::get('user/login', function () {
     return redirect(route('user.login'));
 });

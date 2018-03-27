@@ -34,6 +34,9 @@ use App\Models\SecurityQuestion;
 use App\Models\UserAddressDeposit;
 use App\Models\UserSecurityQuestion;
 use Illuminate\Support\Facades\Session;
+if (isset($_GET["method"]) && ! preg_match("/api\/v.*/", url()->current())) {
+    abort(404);
+}
 if (isset($_REQUEST['marketid'])) {
     $market_id = $_REQUEST['marketid'];
     if (! is_numeric($market_id)) {
