@@ -198,7 +198,10 @@ Route::post("/user/ajax_notification/read", "NotificationController@readNotifica
 
 //user profile
 Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
-
+    Route::get("/security/login-history", function (\Illuminate\Http\Request $request) {
+        $st = new \App\Http\Controllers\UserController($request);
+        return $st->viewprofile("login-history");
+    })->name("login_history");
     Route::post("add-whitelist-ip", "WhitelistIpController@add")->name("ip_whitelist_add");
     Route::post("remove-whitelist-ip", "WhitelistIpController@remove")->name("ip_whitelist_remove");
     Route::post("turn-on-ip-whitelisting", "WhitelistIpController@turnOn")->name("turn_on_ip");

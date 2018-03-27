@@ -3,7 +3,9 @@
 
 		<!-- Withdraw -->
 		<div id="form_deposit">
-			<div style="color:red">@if(isset($error_message)) {{$error_message}} @endif</div>
+			<div style="color:red">
+				@if(isset($error_message)) {{$error_message}} @endif
+			</div>
 			<h2>{{{ trans('texts.withdraw')}}} - {{$current_coin}}</h2> 
 			<!-- <div class="warning box">Once submitted, all requests <strong>MUST</strong> be confirmed via email. Please only contact support if you have not received the confirmation email.</div> -->
 			Your current available {{$current_coin}} balance: <strong>{{$balance}}</strong>
@@ -18,6 +20,12 @@
 					@endif
 				</div>
 			@endif
+			@if($dd)
+			<div class="alert alert-error alert-danger">
+				<button type="button" class="close" data-dismiss="alert">×</button>
+				{{trans('user_texts.blocked_ip_wd')}} 
+			</div>
+			@endif
 			@if ( Session::get('notice') )
 				<div class="alert alert-success">
 					<button type="button" class="close" data-dismiss="alert">×</button>
@@ -30,7 +38,7 @@
 					<div class="control-group">
 						<label class="col-lg-2 control-label">{{$current_coin}} Amount</label>
 						<div class="col-lg-10">
-						  <input type="text" class="form-control input-sm" id="amount" name="amount" required="">
+						  <input type="text" class="form-control input-sm" id="amount" name="amount" required="" @if($dd) disabled @endif>
 						</div>
 					</div>
 					<div class="control-group">
@@ -48,14 +56,14 @@
 				  <div class="control-group">
 					<label class="col-lg-2 control-label col-lg-pull-0">Receive Address</label>
 					<div class="col-lg-10">
-					  <input type="text" id="address" class="form-control" name="address" required="">
+					  <input type="text" id="address" class="form-control" name="address" required="" @if($dd) disabled @endif>
 					</div>
 				  </div>
 				 
 				  <div class="control-group">
 					<label class="col-lg-2 control-label col-lg-pull-0">Confirm Password</label>
 					<div class="col-lg-10">
-					  <input type="password" class="form-control" id="inputPassword" name="password" required="">
+					  <input type="password" class="form-control" id="inputPassword" name="password" required="" @if($dd) disabled @endif>
 					</div>
 				  </div>
 				  <div class="control-group col-lg-10 margintop20">
@@ -63,7 +71,7 @@
 					<div class="col-lg-10">	 
 					  <input type="hidden" name="fee_withdraw" id="fee_withdraw" value="{{$fee_withdraw}}"> 	      
 					  <input type="hidden" name="wallet_id" id="wallet_id" value="{{$wallet_id}}">
-					  <button type="submit" class="btn btn-primary">{{trans('texts.withdraw')}}</button>
+					  <button type="submit" class="btn btn-primary" @if($dd) disabled @endif>{{trans('texts.withdraw')}}</button>
 					</div>
 				  </div>
 				</form>

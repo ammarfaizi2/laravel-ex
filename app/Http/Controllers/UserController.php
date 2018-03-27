@@ -1418,9 +1418,15 @@ class UserController extends Controller
                 
             break;
         case 'login-history':
+                if (strpos(url()->current(), "security") === false) {
+                    return Redirect::to(route("login_history"));
+                }
                 $data["login_history"] = LoginHistory::get($user->id);
             break;
         case 'ip-whitelist':
+            if (strpos(url()->current(), "settings") === false) {
+                return Redirect::to(route("whitelist_ip")."?p=".$_GET["p"]);
+            }
             if (! isset($_GET["p"])) {
                 abort(404);
             }
@@ -1651,6 +1657,32 @@ class UserController extends Controller
 
         $data['page'] = 'withdraw';
         $data['current_coin'] = $wallet->getType($wallet->id);
+        $st = DB::table("whitelist_ip_state")
+                ->select("withdraw")
+                ->where("user_id", "=", $user->id)
+                ->first();
+        $data["dd"] = false;
+        if (isset($st->withdraw) && $st->withdraw == "on") {
+            $cip = $this->get_client_ip();
+            $ips = DB::table("whitelist_withdraw_ip")
+                ->select("ip")
+                ->where("user_id", "=", $user->id)
+                ->get();
+            if ($ips) {
+                $flag = false;
+                foreach ($ips as $ip) {
+                    if (@preg_match("/$ip->ip/", $cip)) {
+                        $flag = true;
+                        break;
+                    }
+                }
+                if (! $flag) {
+                    $data["dd"] = true;
+                }
+            }
+        }
+
+
 
         $balance_amount = $balance->getBalance($wallet->id);
         $data['balance'] = sprintf('%.8f', $balance_amount);
