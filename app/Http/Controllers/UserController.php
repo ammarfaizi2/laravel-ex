@@ -2059,12 +2059,28 @@ class UserController extends Controller
             $d = json_decode(urldecode($_POST["data"]), true);
             if (isset($d["email"])) {
                 header("Content-type:application/json");
+                
                 if (! filter_var($d["email"], FILTER_VALIDATE_EMAIL)) {
                     exit(json_encode(
                         [
                             "alert" => trans("user_texts.invalid_email_address")
                         ]
                     ));
+                }
+
+                $st = DB::table("invitation")
+                 ->select("expired_at")
+                 ->where("user_id", "=", $user->id)
+                 ->where("receipent", "=", $d["email"])
+                 ->first();
+                if (isset($st->expired_at)) {
+                    if (strtotime($st->expired_at) >= time()) {
+                        exit(
+                            [
+                                "alert" => trans("user_texts.duplicated_invititation")
+                            ]
+                        );
+                    }
                 }
 
                 DB::table("invitation")->insert(
