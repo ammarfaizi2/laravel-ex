@@ -2059,7 +2059,7 @@ class UserController extends Controller
             $d = json_decode(urldecode($_POST["data"]), true);
             if (isset($d["email"])) {
                 header("Content-type:application/json");
-                
+
                 if (! filter_var($d["email"], FILTER_VALIDATE_EMAIL)) {
                     exit(json_encode(
                         [
@@ -2075,11 +2075,11 @@ class UserController extends Controller
                  ->first();
                 if (isset($st->expired_at)) {
                     if (strtotime($st->expired_at) >= time()) {
-                        exit(
+                        exit(json_encode(
                             [
                                 "alert" => trans("user_texts.duplicated_invititation")
                             ]
-                        );
+                        ));
                     }
                 }
 

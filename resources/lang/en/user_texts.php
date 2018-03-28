@@ -48,6 +48,7 @@ return array(
     "action"                => "Action",
     "invalid_email_address" => "Invalid E-Mail Address",
     "invite_success"        => "Your invitation has been sent",
+    "duplicated_invititation" => "Cannot send invitation to this email since you have sent an invitation to this E-Mail.",
     "blocked_ip"            => "Couldn't login in you since the :type IP Whitelisting is on and your current IP is not registered",
     "blocked_ip_wd"         => "Can't withdraw since the Withdraw IP Whitelisting is on and your current IP is not registered",
     "delete_ip_confirm"     => "Are you sure to delete ~~ip~~ from whitelist?",
