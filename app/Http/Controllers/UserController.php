@@ -2051,4 +2051,40 @@ class UserController extends Controller
         abort(404);
     }
 
+
+    public function inviteUser()
+    {
+        $user = Confide::user();
+        if ($user && isset($_POST["data"])) {
+            $d = json_decode(urldecode($_POST["data"]), true);
+            if (isset($d["email"])) {
+                header("Content-type:application/json");
+                if (! filter_var($d["email"], FILTER_VALIDATE_EMAIL)) {
+                    exit(json_encode(
+                        [
+                            "alert" => trans("user_texts.invalid_email_address")
+                        ]
+                    ));
+                }
+
+                DB::table("invitation")->insert(
+                    [
+                        "user_id" => $user->id,
+                        "receipent" => $d["email"],
+                        "status" => "pending",
+                        "expired_at" => date("Y-m-d H:i:s", time()+3600*24),
+                        "created_at" => date("Y-m-d H:i:s")
+                    ]
+                );
+
+                exit(json_encode(
+                    [
+                        "alert" => trans("user_texts.invite_success"),
+                        "redirect" => ""
+                    ]
+                ));
+            }
+        }
+        abort(404);
+    }
 }

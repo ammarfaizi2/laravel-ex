@@ -198,6 +198,7 @@ Route::post("/user/ajax_notification/read", "NotificationController@readNotifica
 
 //user profile
 Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
+    Route::post("send-invitation", "UserController@inviteUser")->name("invite_user");
     Route::get("/security/login-history", function (\Illuminate\Http\Request $request) {
         $st = new \App\Http\Controllers\UserController($request);
         return $st->viewprofile("login-history");

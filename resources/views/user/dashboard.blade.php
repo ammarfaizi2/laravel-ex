@@ -53,9 +53,30 @@
 	{
 		bootbox.prompt({
 				title: "{{trans("user_texts.send_email_title")}}",
-				inputType: "number",
+				inputType: "text",
 				callback: function (result) {
-
+					if (result !== null) {
+						$.ajax({
+							type: "POST",
+							url: "{!! route('invite_user') !!}",
+							data: "_token={!! csrf_token() !!}&data="+encodeURIComponent(JSON.stringify({
+								"email": result
+							})),
+							success: function (res) {
+								if (typeof res["alert"] != "undefined") {
+									bootbox.alert({ 
+									  size: "small",
+									  title: "Error",
+									  message: res["alert"], 
+									  callback: function(){}
+									});
+								}
+								if (typeof res["redirect"] != "undefined") {
+									window.location = res["redirect"];
+								}
+							}
+						});
+					}
 				}
 		});
 	}
