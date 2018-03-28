@@ -49,6 +49,8 @@ return array(
     "blocked_ip"            => "Couldn't login in you since the :type IP Whitelisting is on and your current IP is not registered",
     "blocked_ip_wd"         => "Can't withdraw since the Withdraw IP Whitelisting is on and your current IP is not registered",
     "delete_ip_confirm"     => "Are you sure to delete ~~ip~~ from whitelist?",
+    "send_invite_email"     => "Send Invitation E-Mail",
+    "send_email_title"      => "",
     "turn_on_ipw"           => ":type IP Whitelisting has been turned on successfully!",
     "turn_off_ipw"           => ":type IP Whitelisting has been turned off successfully!",
     "login_history" => "Login History",

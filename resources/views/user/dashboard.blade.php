@@ -27,6 +27,9 @@
 				</div>
 				<div class="panel-body">        
 					<center><i></i></center>
+					<center>
+						<button onclick="sm();" class="btn btn-primary">{{ trans('user_texts.send_invite_email') }}</button>
+					</center>
 					<h4>Referral Link Code:</h4>
 					
 					<table style="border:1px solid #dddddd;" class="table ">
@@ -45,3 +48,15 @@
 		</div>
 	</div> 
 </div>
+<script type="text/javascript">
+	function sm()
+	{
+		bootbox.prompt({
+				title: "{{trans("user_texts.send_email_title")}}",
+				inputType: "number",
+				callback: function (result) {
+
+				}
+		});
+	}
+</script>
