@@ -102,8 +102,8 @@
 						<li @if(Request::is('user/profile/orders?status=filled')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/orders?status=filled', trans('user_texts.orders_closed')) }}</li>
 					</ul>
 				</li>
-				<li class="">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-2x"></i> {{trans('user_texts.hello')}} {{Confide::user()->username}} <b class="caret"></b></a>
+				<li id="menu_user_profile">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-2x"></i> {{trans('user_texts.hello')}} {{Confide::user()->username}} <span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li @if(Request::is('user/profile/balances')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/balances', trans('user_texts.wallets')) }}</li>
 						<li @if(Request::is('user/profile/dashboard')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/dashboard', trans('user_texts.dashboard')) }}</li>
@@ -114,8 +114,20 @@
 						<li @if(Request::is('user/profile/trade-history')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/trade-history', trans('user_texts.trade_history')) }}</li>
 						<li @if(Request::is('user/profile/login-history')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/login-history', trans('user_texts.login_history')) }}</li>
 						<li>{{ HTML::link('user/logout', trans('user_texts.logout')) }}</li>
+
+						<li class="menu_pos_left">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-2x"></i> {{trans('user_texts.ip_whitelist')}} <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li @if(Request::is('user/profile/ip-whitelist?p=login')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/ip-whitelist?p=login', trans('user_texts.ip_whitelist_login')) }}</li>
+								<li @if(Request::is('user/profile/ip-whitelist?p=trade')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/ip-whitelist?p=trade', trans('user_texts.ip_whitelist_trade')) }}</li>
+								<li @if(Request::is('user/profile/ip-whitelist?p=withdraw')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/ip-whitelist?p=withdraw', trans('user_texts.ip_whitelist_withdraw')) }}</li>
+							</ul>
+						</li>
+						
 					</ul>
 				</li>
+				
+				
                 @endif
             </ul>
 			</nav>

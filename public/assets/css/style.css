@@ -1957,6 +1957,7 @@ margin: 0;
               width:200px;
               position:fixed;
               overflow:hidden;
+			  overflow-y: scroll;
               transition:width .4s;
 			  border-left: 1px solid #282828;
           }

@@ -1,5 +1,31 @@
 $(function() {
 
+	//Navbar Submenus
+	$('.navbar a.dropdown-toggle').on('click', function(e) {
+        var $el = $(this);
+        var $parent = $(this).offsetParent(".dropdown-menu");
+        $(this).parent("li").toggleClass('open');
+
+        if(!$parent.parent().hasClass('nav')) {
+            $el.next().css({"top": $el[0].offsetTop, "left": $parent.outerWidth() - 4});
+        }
+		
+		//console.log($(this).parent()[0]);
+		var s = $(this).parent()[0]['className'];
+		//menu_pos_left
+		
+		
+		if ( s.match(/menu_pos_left.*/) ) {
+			$el.next().css({"top": $el[0].offsetTop, "right": $parent.outerWidth() - 4, "left": "unset"});
+		}
+		
+		
+
+        $('.nav li.open').not($(this).parents("li")).removeClass("open");
+
+        return false;
+	});
+	
 	//General
 	$('[data-toggle="tooltip"]').tooltip();
 	$('[data-toggle="popover"]').popover({trigger: "hover"}); 
