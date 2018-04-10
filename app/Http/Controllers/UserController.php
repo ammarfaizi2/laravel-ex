@@ -65,7 +65,7 @@ class UserController extends Controller
     /**
      * Get ip of client
      */
-    public function get_client_ip()
+    public static function get_client_ip()
     {
         $ipaddress = '';
         if (isset($_SERVER['HTTP_CLIENT_IP'])) {
@@ -1754,7 +1754,35 @@ class UserController extends Controller
         $wallet_id = (int)Request::get('wallet_id');
         $password = Request::get('password');
         $wallet = Wallet::find($wallet_id);
-
+        $user = Confide::user();
+        $st = DB::table("whitelist_ip_state")
+                ->select("withdraw")
+                ->where("user_id", "=", $user->id)
+                ->first();
+        $data["dd"] = false;
+        if (isset($st->withdraw) && $st->withdraw == "on") {
+            $cip = $this->get_client_ip();
+            $ips = DB::table("whitelist_withdraw_ip")
+                ->select("ip")
+                ->where("user_id", "=", $user->id)
+                ->get();
+            if ($ips) {
+                $flag = false;
+                foreach ($ips as $ip) {
+                    if (@preg_match("/$ip->ip/", $cip)) {
+                        $flag = true;
+                        break;
+                    }
+                }
+                if (! $flag) {
+                    $data["dd"] = true;
+                }
+            }
+        }
+        if ($data["dd"]) {
+            return Redirect::to("user/withdraw/".$wallet->id)->with("error", trans('user_texts.blocked_ip_wd'));
+        }
+        
         $setting = new Setting();
         if ($setting->getSetting('disable_withdraw', 0)) {
             return Redirect::to('user/withdraw/'.$wallet->id)

@@ -5,7 +5,10 @@ return array(
     "last_price" => "Last Price",
     "low" => "Low",
     "high" => "High",
-    "volume" => "Volumn",
+    "volume" => "Volume",
+    "volume_short" => "Vol",
+    "24h_volume" => "Volume",
+    "change" => "Change",
     "server_time" => "Server Time",
     "login" => "Login",
     "signup" => "Signup",
@@ -50,7 +53,9 @@ return array(
     //market
     "market_disabled" => "This market is disabled for trading",
     "disabled" => "Disabled",
-    
+    "currency_info" => "Currency Information",
+    "info" => "Information",
+	
     //buy form
     'buy' => "Buy",
     "lowest_price" => "Lowest ask Price",
@@ -62,7 +67,7 @@ return array(
     "top_sell_orders" => "Top sell orders",
     "price" => "Price",
     "trade_history" => "Trade history",
-    "recent_market_history" => "Recent Market History",
+    "market_history" => "Market History",
     "date" => "Date",
     "type" => "Type",
     "your_orders" => "Your Current Orders",
@@ -207,4 +212,6 @@ return array(
 	"error" => "Error",
 	"success" => "Success",
 	"reset_password" => "Reset Password",
+	
+	
 );

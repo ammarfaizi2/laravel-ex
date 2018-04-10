@@ -1,6 +1,11 @@
 <div id="header" class="navbar navbar-default navbar-fixed-top">
 	<div class="container">
 		<div class="navbar-header">
+			<button type="button" id="leftSidebarBtn" class="btn btn-info navbar-btn pull-left">
+				<i class="fas fa-align-left"></i>
+				<span> </span>
+			</button>
+							
 			<a class="navbar-brand" href="{{ url('/') }}">
 				{{{ Config::get('config_custom.company_name') }}}
 			</a>
@@ -14,11 +19,13 @@
 			<!-- <NAVBAR ICONS--> 
 			
 			<!-- <button data-target="#navbar-main" data-toggle="collapse" type="button" class="navbar-toggle collapsed" aria-expanded="false"> -->
-			<button data-toggle="collapse-side" data-target=".side-collapse" data-target-content=".side-collapse-container" type="button" class="navbar-toggle pull-right">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
+			
+			<button type="button" id="rightSidebarBtn" class="btn btn-success navbar-btn pull-right" data-toggle="collapse-side" data-target=".side-collapse" data-target-content=".side-collapse-container" >
+				<i class="fas fa-align-right"></i>
+				<span> </span>
 			</button>
+			
+
 		</div>
         
 		
@@ -118,9 +125,9 @@
 						<li class="menu_pos_left">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-2x"></i> {{trans('user_texts.ip_whitelist')}} <span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li @if(Request::is('user/profile/ip-whitelist?p=login')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/ip-whitelist?p=login', trans('user_texts.ip_whitelist_login')) }}</li>
-								<li @if(Request::is('user/profile/ip-whitelist?p=trade')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/ip-whitelist?p=trade', trans('user_texts.ip_whitelist_trade')) }}</li>
-								<li @if(Request::is('user/profile/ip-whitelist?p=withdraw')) {!! 'class="active"' !!} @endif>{{ HTML::link('user/profile/ip-whitelist?p=withdraw', trans('user_texts.ip_whitelist_withdraw')) }}</li>
+								<li @if(Request::is('user/profile/ip-whitelist?p=login')) {!! 'class="active"' !!} @endif>{{ HTML::link(route('whitelist_ip', ["login"]), trans('user_texts.ip_whitelist_login')) }}</li>
+								<li @if(Request::is('user/profile/ip-whitelist?p=trade')) {!! 'class="active"' !!} @endif>{{ HTML::link(route('whitelist_ip', ["trade"]), trans('user_texts.ip_whitelist_trade')) }}</li>
+								<li @if(Request::is('user/profile/ip-whitelist?p=withdraw')) {!! 'class="active"' !!} @endif>{{ HTML::link(route('whitelist_ip', ["withdraw"]), trans('user_texts.ip_whitelist_withdraw')) }}</li>
 							</ul>
 						</li>
 						

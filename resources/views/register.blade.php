@@ -90,10 +90,10 @@ https://developers.google.com/recaptcha/docs/verify
 
 							
 					<div class="control-group">
-						<button id="register_ajax" tabindex="4" class="button button-green btn btn-lg btn-block " type="submit" >Test</button>
+						<!-- <button id="register_ajax" tabindex="4" class="button button-green btn btn-lg btn-block " type="submit" >Test</button> -->
 						<!-- <button id="login_ajax" tabindex="4" class="button button-green btn btn-lg btn-block g-recaptcha" data-sitekey="6LcdnUUUAAAAALwXU3jX_VrciJdIDmcrN1Q5UVDw" data-callback="onSubmit" type="submit" > -->
 						
-						<button id="login_ajax" tabindex="4" class="button button-green btn btn-lg btn-block " type="submit" >
+						<button id="register_ajax" tabindex="4" class="button button-green btn btn-lg btn-block " type="submit" >
 							<i class="fa fa-user-plus fa-2x"></i> 
 							<span>{{{ Lang::get('confide::confide.signup.submit') }}}</span>
 						</button>
@@ -161,19 +161,24 @@ $('#password_confirmation').on('input', function() {
 $('#password, #password_confirmation').on('keyup', function () {
   var password = String($('#password').val()), password_confirm = String($('#password_confirmation').val());
 
-  if (password === password_confirm) {
-	$('#password').removeClass("invalid").addClass("valid");
-	$('#password_confirmation').removeClass("invalid").addClass("valid");
-	//alert('same password');
-	
-  } else {
-	$('#password').removeClass("invalid").addClass("valid");
-	$('#password_confirmation').removeClass("valid").addClass("invalid");
-	//alert("not same");
-	}
+  if(password.length >= 8){
+	  if ( (password === password_confirm)) {
+		$('#password').removeClass("invalid").addClass("valid");
+		$('#password_confirmation').removeClass("invalid").addClass("valid");
+		//alert('same password');
+		
+	  } else {
+		$('#password').removeClass("invalid").addClass("valid");
+		$('#password_confirmation').removeClass("valid").addClass("invalid");
+		//alert("not same");
+	  }
+  }else{
+	  $('#password').removeClass("valid").addClass("invalid");
+  }
 });
 
-$('#termsofservice').on('input', function() {
+$("#termsofservice").change(function(){
+//$('#termsofservice').on('input', function() {
 	var input=$(this);
 	if( input.is(':checked') ){ input.removeClass("invalid").addClass("valid");}
 	else{input.removeClass("valid").addClass("invalid");}

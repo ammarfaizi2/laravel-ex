@@ -8,41 +8,44 @@
 /* @import url('fonts.css'); */
 /* @import url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');   */
 
-/* @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"; */
-
-
-
-*{
-    /* font-family: 'Poppins', sans-serif;
-	*/
+* {
+    /* font:13px "Open Sans","Lucida Sans Unicode","Lucida Grande",Arial,Helvetica,sans-serif; */
 	
-}
-body {
-    background-color: #f5f5f5;
 }
 html, body {
     margin: 0;
     padding: 0;
 	font:13px Montserrat, "Open Sans","Lucida Sans Unicode","Lucida Grande",Arial,Helvetica,sans-serif !important;
+	/* font: 500 16px "Dosis","Source Sans Pro",Calibri,Candara,Arial,sans-serif; */
 	
 	
 }
 body {
+	height: 100%;
 
+	background-color:#fff;
+	
+	/*
+	font-family: "proxima-nova",sans-serif;
+	font:14px "Lucida Sans Unicode","Lucida Grande",Arial,Helvetica,sans-serif;
+	*/
+	line-height:22px;
+	margin:0;
 }
 
 .wrapper {
-	display: flex;
 	margin: 0 auto;
+	min-height: 100%;
+	position: relative;
+	box-shadow: 0 0 8px rgba(0,0,0,0.5);
+	max-width: 1250px;
 }
-.container {
-	max-width: 1200px;	
+.row {
+	margin:0;
+	padding:0;
 }
 
-.row {
-	margin-left: 0;
-	margin-right: 0;
-}
+
 
 #content .input-append input{height: 34px;}
 input#recaptcha_response_field{ height: 28px; padding: 5px;}
@@ -237,7 +240,9 @@ width: 28%;
 	width: 20%;
 	text-align: right;
 }
-
+#main {
+	background-color: #f5f5f5;
+}
 
 
 .wrapper-trading .col-sm-6:nth-child(2n+1) {
@@ -375,12 +380,10 @@ span.logo {
 }
 .sidebar ul.market li .tooltip-inner {
 	padding: 0;
-	font-size:100%;
-	/*font-family: unset;*/
-	width: 140px;
-	max-width: 150px;
+	font-size:90%;
+	font-family: unset;
+	width: 100px;
 	line-height: 32px;
-	white-space: nowrap;
 }
 .sidebar ul.market li .tooltip-arrow
 .sidebar ul.market li .tooltip-inner {
@@ -479,9 +482,32 @@ span.logo {
 
 
 
+.sidebar-bg{  
+	top: 50px;
+	height: 100%;
+	min-width: 250px;
+	max-width: 250px;
+	background-color:#f5f5f5;
+	border-right: 1px solid #ddd;
+	position: fixed;
 
+}
 .sidebar .panel{
 	border: 0;
+}
+.sidebar {
+  width: 250px;
+  background-color:#f5f5f5;
+  position:absolute;
+  overflow:visible;
+
+  border-right: 1px solid #ddd;
+  
+  height: auto;
+  min-height: 100%;
+  top: 0;
+  left: 0;
+  padding-top: 50px;
 }
 
 
@@ -534,24 +560,29 @@ span.logo {
 	margin-bottom: 0;
 }
 
-.content {
+#content {
+	display: table;
 	padding-top: 50px;
 	width: 100%;
-	margin: 0 auto;
-}
-.content_center {
-	padding-top: 50px;
-	width: 100%;
-	max-width: 1170px;
-	margin: 0 auto;
 }
 /*
  @ START - INDEX
 */
 #main  {
-	background-color: #f5f5f5;
+
+	border-right:1px solid #ddd;
+	padding:0;
 	height: 100%;
-	overflow: auto;
+    overflow: auto;
+	
+	padding: 15px;
+    padding-right: 15px;
+    padding-left: 15px;
+	
+	margin-left: 250px;
+	margin-right: auto;
+
+	
 }
 /*
 
@@ -693,8 +724,6 @@ span.logo {
 	margin: 0;
 	position: relative;
 	bottom: 0;
-	left: 0;
-	right: 0;
 }
 
 /*
@@ -2416,7 +2445,9 @@ input.valid, textarea.valid{
   position: relative;
   
 }
-
+.box-header > .box-tools [data-toggle="tooltip"] {
+  position: relative;
+}
 .box-header > .box-tools.pull-right .dropdown-menu {
   right: 0;
   left: auto;
@@ -3150,69 +3181,4 @@ https://codepen.io/anon/pen/aYjOgv
   cursor: pointer;
   opacity: 0.9;
   display: inline;
-}
- 
- 
-/* LEFT SIDEBAR */
-.sidebar {
-  background-color:#f5f5f5;
-  overflow:visible;
-
-  border-right: 1px solid #ddd;
-  
-  height: auto;
-  min-height: 100%;
-  /*
-  position: absolute;
-  top: 0;
-  left: 0;
-  */
-  float: left;
-}
-
-
-.sidebar {
-    min-width: 250px;
-    max-width: 250px;
-    transition: all 0.3s;
-}
-
-
-.sidebar.active {
-    display: none;
-}
-#leftSidebarBtn {
-	margin-left: 5px;
-	margin-right: 5px;
-}
-#rightSidebarBtn {
-	display: none;
-}
-/*
-.sidebar ul li.active > a, a[aria-expanded="true"] {
-    color: #fff;
-    background: #6d7fcc;
-}
-*/
-/* ---------------------------------------------------
-    LEFT SIDEBAR MEDIAQUERIES
------------------------------------------------------ */
-@media (max-width: 768px) {
-    .sidebar {
-        display: none;
-    }
-    .sidebar.active {
-        display: block;
-    }
-    #leftSidebarBtn span {
-        display: none;
-    }
-	#leftSidebarBtn {
-		margin-left: 5px;
-		/*margin-right: 5px;*/  
-	}
-	#rightSidebarBtn {
-		margin-right: 5px;
-		display: block;
-	}
 }

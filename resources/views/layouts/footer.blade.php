@@ -93,7 +93,7 @@
 	
 		<div class="footer">
 			<hr class="colorgraph"/>
-			<div class="col-12-xs col-sm-12 col-lg-12" >
+			<div class="" >
 				<br />
 				<small><em>Page loaded in {{round(microtime(true) - LARAVEL_START, 2) }}s</em></small>
 				<br />

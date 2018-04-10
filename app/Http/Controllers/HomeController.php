@@ -86,18 +86,19 @@ class HomeController extends Controller
 
         $data['show_all_markets'] = ($market_id == 0) ? true : false;
 
-        
-        
-        
-        $market_predefined = false;
-        ////////////
-        
+
+
+        //Use of Markets page and for CSS classes
+        $market_predefined = false;	
+
+
         $setting = new Setting;
         $trade = new Trade();
         $wallet = new Wallet();
-        
-            $wallets_temp = Wallet::get();
-            $wallets = array();
+
+		$wallets_temp = Wallet::get();
+		$wallets = array();
+
         foreach ($wallets_temp as $wallet) {
             $wallets[$wallet->id] = $wallet;
         }
@@ -122,12 +123,12 @@ class HomeController extends Controller
             //return view('404',$data);
             //exit();
         }
-        
-        ////////////
-        
+
+
         //Get wallet1 and wallet2 only if market is predefined
             //is start-market predefined in backend?
             $data['market_predefined']= $market_predefined;
+
         if (!is_null($market_default)) {
             $wallet_from = isset($market_default->wallet_from) ? $market_default->wallet_from : '';
             $wallet_to = isset($market_default->wallet_to) ? $market_default->wallet_to : '';
@@ -211,12 +212,13 @@ class HomeController extends Controller
             $news = Post::where('type', 'news')->orderby('created_at', 'desc')->get();
             $data['news'] = $news;
 
-            //price
+            //price and market change %
             $data_price = $trade->getBlockPrice($market_id);
             $data["get_prices"] = isset($data_price['get_prices']) ? $data_price['get_prices'] : 0;
             $data['latest_price'] = isset($data_price['latest_price']) ? $data_price['latest_price'] : 0;
 
-
+			$data['market_change'] = $trade->calcMarketChange($data['get_prices']->opening_price, $data['latest_price']);
+			
             //limit trade amount
             $limit_trade = WalletLimitTrade::where('wallet_id', $wallet_from)->first();
             //echo "<pre>limit_trade: "; print_r($limit_trade ); echo "</pre>"; exit;
@@ -227,7 +229,7 @@ class HomeController extends Controller
             }
         }
         
-        //All markets, Home
+        //FetchAll markets Data, Home
         $_markets = Market::get();
         //$_markets = Market::leftJoin('pools', 'pools.coin_id', '=', 'market.id')->select('*')->get();
         
@@ -239,7 +241,7 @@ class HomeController extends Controller
 			//$market_change = $trade->getChange($m->id);
 			$market_current_price = (empty($market_prices['latest_price'])) ? sprintf('%.8f',0) : sprintf('%.8f',$market_prices['latest_price']);
 			
-			$market_change = $trade->calMarketChange($market_prices['get_prices']->opening_price, $market_current_price);
+			$market_change = $trade->calcMarketChange($market_prices['get_prices']->opening_price, $market_current_price);
 			
 			
 			
@@ -277,7 +279,7 @@ class HomeController extends Controller
             $market_prices_opening_price = (!isset($market_prices['get_prices']->opening_price) ? 0 : $market_prices['get_prices']->opening_price );
             $market_prices_volume = (!isset($market_prices['get_prices']->volume) ? 0 : $market_prices['get_prices']->volume );
             
-            $market_change = $trade->calMarketChange($market_prices_opening_price, $market_current_price);
+            $market_change = $trade->calcMarketChange($market_prices_opening_price, $market_current_price);
             
             
             if (isset($wallets[$m->wallet_from]->type)) {
@@ -320,6 +322,7 @@ class HomeController extends Controller
         //print_r($all_markets);
         $data['all_markets'] = $all_markets;
 
+		
         //coin news
         $data['news'] = false;
         if ($data['show_all_markets'] === false) {
@@ -333,6 +336,8 @@ class HomeController extends Controller
         }
         $data['that'] = $this;
         $data['market_id'] = $market_id;
+		
+		//print_r($data);
         return view('index', $data);
     }
 
@@ -536,6 +541,7 @@ class HomeController extends Controller
             break;
         case "apiprivate":
             $value = $this->apiprivate();
+			echo 'API - Private not implemented yet!';
             break;
         case "contact":
             $user = Confide::user();
@@ -549,14 +555,22 @@ class HomeController extends Controller
             return view('contact', $data);
                 break;
         case "submit-coin":
-            $user = Confide::user();
+            /*
+			$user = Confide::user();
             $data = array();
             $setting = new Setting();
 
             $data['recaptcha_publickey'] = $setting->getSetting('recaptcha_publickey', '');
             $data['email'] = ($user) ? $user->email : Input::get('email');
             $data['name'] = ($user) ? $user->fullname : "Unregistered User";
+			*/
+            $data = array();
+            $setting = new Setting();
 
+            $data['recaptcha_publickey'] = $setting->getSetting('recaptcha_publickey', '');
+            $data['email'] = Input::get('email');
+            $data['name'] = "Unregistered User";
+			
             return view('submit-coin', $data);
                 break;
         default:
@@ -570,7 +584,7 @@ class HomeController extends Controller
     }
     public function getChart()
     {
-        $market_id = $_POST['market_id'];
+        $market_id = $_POST['market_id'];	
         $timeSpan = $_POST['timeSpan'];
         $trade = new Trade();
         $datachart = $trade->getDatasChart($market_id, $timeSpan);

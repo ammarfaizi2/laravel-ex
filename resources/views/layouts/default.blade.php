@@ -83,16 +83,27 @@
 		<div class="wrapper">
 
 			
-  
+			<?php
+			//Full width for only Startpage
+			//Get the PAGE
+			//echo '<h3> test is: '.Request::url().'</h3>';
+			//echo '<h3> test is2: '.Route::current()->getName().'</h3>';
+
+			$content_class="content_center";
+			if( Route::current()->getName() == '' )
+				$content_class="content";
+
+			?>
 			<!-- Header -->
 				@include('layouts.header')
 			<!-- End Header -->
 			<!-- Content -->
-			<div id="content" class="side-collapse-container">
-				<div class="row">
+			<div id="content" class="side-collapse-container {{ $content_class }} ">
 					<!-- Sidebar -->
 					@include('layouts.sidebar')
 					<!-- End Sidebar -->
+
+					
 					
 					<!-- Content -->
 					<div id="main">
@@ -100,14 +111,13 @@
 					</div>
 					<!-- End Content -->
 					
-					<!-- Footer -->
-						@include('layouts.footer')
-					<!-- End Footer -->
-					
-				</div>
-				<div class="clear"></div>
+
+
 			</div>
 		</div>
+			<!-- Footer -->
+				@include('layouts.footer')
+			<!-- End Footer -->		
 		
 		@if(isset($need2fa) and $need2fa === true)
 			<!--Google 2fa -->

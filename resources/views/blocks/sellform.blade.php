@@ -78,7 +78,7 @@
         <div class="box-footer">
 			<input type="hidden" name="sell_market_id" id="sell_market_id" value="{{{Session::get('market_id')}}}">  
 			<!-- <button type="button" class="btn" id="calc_sell">{{trans('texts.caculate')}}</button> -->
-			<button type="button" class="btn btn-primary btn-danger btn-block" id="do_sell">{{trans('texts.sell')}} {{{ $coinmain }}} <i class="fa fa-circle-o-notch fa-spin fa-1x hide" id="sell_loader"></i></button>
+			<button type="button" class="btn btn-primary btn-danger btn-block" @if(isset($f_) && $f_ === false) onclick="blocked();" @else id="do_sell" @endif>{{trans('texts.sell')}} {{{ $coinmain }}} <i class="fa fa-circle-o-notch fa-spin fa-1x hide" id="sell_loader"></i></button>
         </div>
         <!-- /.box-footer-->
 </div>

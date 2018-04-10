@@ -208,7 +208,8 @@ Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa
     Route::post("turn-on-ip-whitelisting", "WhitelistIpController@turnOn")->name("turn_on_ip");
     Route::post("turn-off-ip-whitelisting", "WhitelistIpController@turnOff")->name("turn_off_ip");
 
-    Route::get("settings/whitelist-ip", function (\Illuminate\Http\Request $request) {
+    Route::get("settings/whitelist-ip/{page}", function (\Illuminate\Http\Request $request, $page) {
+        $_GET["p"] = $page;
         $st = new \App\Http\Controllers\UserController($request);
         return $st->viewprofile("ip-whitelist");
     })->name("whitelist_ip");

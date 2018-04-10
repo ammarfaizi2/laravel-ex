@@ -1,112 +1,200 @@
 <?php $current_orders_user_count = count($current_orders_user); ?>
 
+<!-- Coin Name/Logo -->
+	<div class="row">
+		<div class="bs-component">
+			<div class="col-12-xs col-sm-12 col-lg-12">
+				<div class="inblock" style="font-size: 18px;">
+					{{{ trans('texts.open_orders')}}} ({{{ $current_orders_user_count }}})
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">		
+		<div class="col-12-xs col-sm-12 col-lg-12">
+			<div class="box box-solid" style="margin-bottom: 5px;">
+				<div class="box-header with-border">
+				  <h3 class="box-title">
+						{{{ trans('texts.open_orders')}}} ({{{ $current_orders_user_count }}})
+				  </h3>
+
+				  <div class="box-tools pull-right">
+				  </div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<div class="col-12-xs col-sm-12 col-lg-12 no-padding">
 <div class="wrapper-trading buysellorders" id="yourorders_market_{{{Session::get('market_id')}}}">
 
-	<div class="col-12-xs col-sm-12 col-lg-12">
-		<h3>{{{ trans('texts.open_orders')}}} ({{{ $current_orders_user_count }}})</h3>
-	</div>
-	
-	
-	<!-- <div class="inblock-left" id="yourorders_buy"> -->
-	<div class="col-xs-12 col-sm-6" id="yourorders_buy">
-		<h3>Your {{{ trans('texts.buy_orders')}}}</h3>
-		<div style="color: #fff; background-color: #666 !important;" class="inblock order_header">
-		  <div class="header-left">
-			Your {{{ trans('texts.buy_orders')}}}
-		  </div>
-		</div>
-	
-			
-				<table class="table table-striped">
-					<thead>
-					  <th>{{{ trans('texts.price')}}} / {{{$coinmain}}}</th><th>{{{ trans('texts.amount')}}} {{{ $coinmain }}}</th><th>{{{ trans('texts.total')}}} {{{$coinsecond}}}</th><th>{{{ trans('texts.date')}}}</th><th>{{{ trans('texts.action')}}}</th></tr>
-					</thead>
-				</table>
-				<div class="scrolltable nano">
-				<table class="table table-striped table-hover ">
-					<tbody>
-					  <?php 
-					  if($current_orders_user_count > 0) : ?>
-					  
-						@foreach($current_orders_user as $order) 
-						
-							@if($order->type == 'buy')
-							  <?php
-								$price = sprintf('%.8f',$order->price);
-								$class_price = str_replace(".", "-", $price);
-								$class_price = str_replace(",", "-", $class_price);
-							  ?>
-							  <tr class="order order-{{$class_price}}" id="yourorder-{{$order->id}}">
-								<td><span class="price">{{{sprintf('%.8f',$order->price)}}}</span></td>
-								<td><span class="amount">{{{sprintf('%.8f',$order->from_value)+0}}}</span></td>
-								<td><span class="total">{{{sprintf('%.8f',$order->to_value)}}}</span></td>
-								<td><span class="date"><small>{{{date('Y-m-d H:m', strtotime($order->created_at))}}}</span></small></td><!-- title="26 sec. ago" -->
-								<td><button type="button" onclick="javascript:cancelOrder(this, {{{$order->id}}});" class="btn btn-danger btn-xs" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">{{trans('texts.cancel')}}</button></td>
-							  </tr>
-							@endif
-						@endforeach 
-					  <?php
-						else: ?>
-						<tr><td class="order empty" colspan="6"></td></tr>
-						  <?php
-						  endif;
-						  ?>
-					</tbody>
-				</table>
+	<div class="col-xs-12 col-sm-6">
+		<div class="box box-success" id="yourorders_buy">
+			<div class="box-header with-border">
+			  <h3 class="box-title">
+					{{{ trans('texts.buy_orders')}}}
+			  </h3>
+
+			  <div class="box-tools pull-right">
+				{{{ trans('texts.total')}}}: <span id="buyorders_amount_all_{{{Session::get('market_id')}}}"></span> <?php echo $coinmain ?>
+			  </div>
 			</div>
-	</div>
-	
-	<!-- <div class="inblock-right" id="yourorders_sell"> -->
-	<div class="col-xs-12 col-sm-6" id="yourorders_sell">
+			<div class="box-body no-padding">
+				
+				<div >
+
 		
-		<h3>Your {{{ trans('texts.sell_orders')}}}</h3>
-		<div style="color: #fff; background-color: #666 !important;" class="inblock order_header">
-		  <div class="header-left">
-			Your {{{ trans('texts.sell_orders')}}}
-		  </div>
+					<div  class="clear">
+					  <table class="table table-striped">
+						<thead>
+						  <tr class="header-tb">
+							<th>{{{ trans('texts.price')}}} / {{{$coinmain}}}</th>
+							<th>{{{ trans('texts.amount')}}} {{{ $coinmain }}}</th>
+							<th>{{{ trans('texts.total')}}} {{{$coinsecond}}}</th>
+							<th>{{{ trans('texts.date')}}}</th>
+							<th>{{{ trans('texts.action')}}}</th>
+						  </tr> 
+						</thead>
+
+						
+					  </table>
+					  
+					  <div class="scrolltable  nano">
+					  <div class="nano-content">
+					
+						  <table class="table table-striped table-hover ">
+							<tbody>
+							  <?php 
+							  if($current_orders_user_count > 0) : ?>
+							  
+								@foreach($current_orders_user as $order) 
+								
+									@if($order->type == 'buy')
+									  <?php
+										$price = sprintf('%.8f',$order->price);
+										$class_price = str_replace(".", "-", $price);
+										$class_price = str_replace(",", "-", $class_price);
+									  ?>
+									  <tr class="order order-{{$class_price}}" id="yourorder-{{$order->id}}">
+										<td><span class="price">{{{sprintf('%.8f',$order->price)}}}</span></td>
+										<td><span class="amount">{{{sprintf('%.8f',$order->from_value)+0}}}</span></td>
+										<td><span class="total">{{{sprintf('%.8f',$order->to_value)}}}</span></td>
+										<td><span class="date"><small>{{{date('Y-m-d H:m', strtotime($order->created_at))}}}</span></small></td><!-- title="26 sec. ago" -->
+										<td><button type="button" onclick="javascript:cancelOrder(this, {{{$order->id}}});" class="btn btn-danger btn-xs" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">{{trans('texts.cancel')}}</button></td>
+									  </tr>
+									@endif
+								@endforeach 
+							  <?php
+								else: ?>
+								<tr><td class="order empty" colspan="6"></td></tr>
+								  <?php
+								  endif;
+								  ?>
+							</tbody>
+						</table>
+					  
+						</div>
+						</div>
+					  </div>
+
+				  </div> 
+			</div>
+			<!-- /.box-body -->
+			<div class="box-footer">
+				Page: 1, 2, 3, 4, 5
+			</div>
+			<!-- /.box-footer-->
 		</div>
 	
-			
-				<table class="table table-striped ">
-					<thead>
-					  <th>{{{ trans('texts.price')}}} / {{{$coinmain}}}</th><th>{{{ trans('texts.amount')}}} {{{ $coinmain }}}</th><th>{{{ trans('texts.total')}}} {{{$coinsecond}}}</th><th>{{{ trans('texts.date')}}}</th><th>{{{ trans('texts.action')}}}</th></tr>
-					</thead>
-				</table>
-				<div class="scrolltable nano">
-				<table class="table table-striped table-hover ">
-					<tbody>
-					  <?php 
-					  if($current_orders_user_count > 0) : ?>
-					  
-						@foreach($current_orders_user as $order) 
-							@if($order->type == 'sell')
-							  <?php
-								$price = sprintf('%.8f',$order->price);
-								$class_price = str_replace(".", "-", $price);
-								$class_price = str_replace(",", "-", $class_price);
-							  ?>
-							  <tr class="order order-{{$class_price}}" id="yourorder-{{$order->id}}">
-								<td><span class="price">{{{sprintf('%.8f',$order->price)}}}</span></td>
-								<td><span class="amount">{{{sprintf('%.8f',$order->from_value)+0}}}</span></td>
-								<td><span class="total">{{{sprintf('%.8f',$order->to_value)}}}</span></td>
-								<td><span class="date"><small>{{{date('Y-m-d H:m', strtotime($order->created_at))}}}</span></small></td><!-- title="26 sec. ago" -->
-								<td><button type="button" onclick="javascript:cancelOrder(this, {{{$order->id}}});" class="btn btn-danger btn-xs" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">{{trans('texts.cancel')}}</button></td>
-								
-								
-								
-							  </tr>
-							@endif
-						@endforeach 
-					  <?php
-						else: ?>
-						<tr><td class="order empty" colspan="6"></td></tr>
-						  <?php
-						  endif;
-						  ?>
-					</tbody>
-				</table>
-			</div>
 	</div>
+	<div class="col-xs-12 col-sm-6" >
+		
+		
+		<div class="box box-danger" id="yourorders_sell">
+			<div class="box-header with-border">
+			  <h3 class="box-title">
+					{{{ trans('texts.sell_orders')}}}
+			  </h3>
+
+			  <div class="box-tools pull-right">
+				{{{ trans('texts.total')}}}: <span id="buyorders_amount_all_{{{Session::get('market_id')}}}"></span> <?php echo $coinmain ?>
+			  </div>
+			</div>
+			<div class="box-body no-padding">
+				
+				<div >
+
+		
+					<div class="clear">
+					  <table class="table table-striped">
+						<thead>
+						  <tr class="header-tb">
+							<th>{{{ trans('texts.price')}}} / {{{$coinmain}}}</th>
+							<th>{{{ trans('texts.amount')}}} {{{ $coinmain }}}</th>
+							<th>{{{ trans('texts.total')}}} {{{$coinsecond}}}</th>
+							<th>{{{ trans('texts.date')}}}</th>
+							<th>{{{ trans('texts.action')}}}</th>
+							
+						  </tr> 
+						</thead>
+
+						
+					  </table>
+					  
+					  <div class="scrolltable  nano">
+					  <div class="nano-content">
+					
+						  <table class="table table-striped table-hover ">
+							<tbody>
+							  <?php 
+							  if($current_orders_user_count > 0) : ?>
+							  
+								@foreach($current_orders_user as $order) 
+									@if($order->type == 'sell')
+									  <?php
+										$price = sprintf('%.8f',$order->price);
+										$class_price = str_replace(".", "-", $price);
+										$class_price = str_replace(",", "-", $class_price);
+									  ?>
+									  <tr class="order order-{{$class_price}}" id="yourorder-{{$order->id}}">
+										<td><span class="price">{{{sprintf('%.8f',$order->price)}}}</span></td>
+										<td><span class="amount">{{{sprintf('%.8f',$order->from_value)+0}}}</span></td>
+										<td><span class="total">{{{sprintf('%.8f',$order->to_value)}}}</span></td>
+										<td><span class="date"><small>{{{date('Y-m-d H:m', strtotime($order->created_at))}}}</span></small></td><!-- title="26 sec. ago" -->
+										<td><button type="button" onclick="javascript:cancelOrder(this, {{{$order->id}}});" class="btn btn-danger btn-xs" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">{{trans('texts.cancel')}}</button></td>
+										
+										
+										
+									  </tr>
+									@endif
+								@endforeach 
+							  <?php
+								else: ?>
+								<tr><td class="order empty" colspan="6"></td></tr>
+								  <?php
+								  endif;
+								  ?>
+							</tbody>
+						</table>
+					  
+						</div>
+						</div>
+					  </div>
+
+				  </div> 
+			</div>
+			<!-- /.box-body -->
+			<div class="box-footer">
+				Page: 1, 2, 3, 4, 5
+			</div>
+			<!-- /.box-footer-->
+		</div>
+
+		
+
+	</div>
+</div>
 </div>
 
 

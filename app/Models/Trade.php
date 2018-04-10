@@ -54,11 +54,13 @@ class Trade extends Eloquent
             
             if (!$setting->getSetting('disable_points', 0)) {
                 //Cong point cho nguoi mua va nguoi da gioi thieu ho
+				// Add point for buyers and sellers
                 $points=new PointsController();
                 if ($this->fee_buy > 0) {
                     $points->addPointsTrade($this->buyer_id, $this->fee_buy, $this->id, $market->wallet_to);
                 }
                 //Cong point cho nguoi ban va nguoi da gioi thieu ho
+				// Add point to the seller and the buyer
                 if ($this->fee_sell > 0) {
                     $points->addPointsTrade($this->seller_id, $this->fee_sell, $this->id, $market->wallet_to);
                 }
@@ -135,6 +137,7 @@ class Trade extends Eloquent
             // echo "<br>new_date + 30minutes: ".$new_date;
 
             //lay du lieu chart trong khung gio hien tai, du lieu nay dc sap xep theo gia tu cao den thap
+			// Get the chart data in the current time frame, this data is arranged in price from high to low
             $data_chart_this_time = array_filter(
                 $data, function ($el) use ($old_date, $new_date) /*use ($temp_time, $temp_time_new)*/ {
                     $created_at_time = strtotime($el['created_at']);
@@ -448,9 +451,24 @@ AND created_at >= '2015-08-01 23:37:53'
         return $data;
     }
     
-    public function calMarketChange($opening_price, $current_price)
+	/*
+	 @ Calculate the Market Change price when opening price and latest price is given.
+	*/
+    public function calcMarketChange($opening_price, $current_price)
     {
-        $change = ($opening_price!=0)? sprintf('%.2f', (($current_price-$opening_price)/$opening_price)*100) : 0;
+		/*
+		change = (latest_price / opening price )
+		if < 1
+			change = (change -1)*100
+		*/
+		if ($opening_price!=0)
+			$change = ( ($current_price / $opening_price) -1 ) * 100;
+		else{
+			$change = 0;
+		}
+		
+        //$change = ($opening_price!=0)? sprintf('%.2f', (($current_price-$opening_price)/$opening_price)*100) : 0;
+		
         $change = sprintf('%.8f', $change);
         return $change+0;
     }
@@ -477,11 +495,10 @@ AND created_at >= '2015-08-01 23:37:53'
         }
         return $pre_price;
 
-        /*
-        echo '<pre>';
-        print_r($data_trade);
-        echo '</pre>';
-        */
+        //echo '<pre>';
+        //print_r($data_trade);
+        //echo '</pre>';
+        
     }
     /*
     @ get the price change for the day

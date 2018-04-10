@@ -79,7 +79,7 @@
         <div class="box-footer">
           	<input type="hidden" name="buy_market_id" id="buy_market_id" value="{{{Session::get('market_id')}}}">     
 			<!-- <button type="button" class="btn" id="calc_buy">{{trans('texts.caculate')}}</button> -->
-			<button type="button" class="btn btn-primary btn-success btn-block" id="do_buy">{{ trans('texts.buy')}} {{{ $coinmain }}} <i class="fa fa-circle-o-notch fa-spin fa-1x hide"  id="buy_loader"></i></button> 
+			<button type="button" class="btn btn-primary btn-success btn-block" @if(isset($f_) && $f_ === false) onclick="blocked();" @else id="do_buy" @endif>{{ trans('texts.buy')}} {{{ $coinmain }}} <i class="fa fa-circle-o-notch fa-spin fa-1x hide"  id="buy_loader"></i></button> 
         </div>
         <!-- /.box-footer-->
 </div>
@@ -188,11 +188,12 @@
 
 function doPostTradeOrder(tradeArray){
 
-		var price, amount, market_id;
+		var price, amount, market_id, market_name;
 			
 		price = tradeArray[0];
 		amount = tradeArray[1];
 		market_id = tradeArray[2];
+		market_name = '{{ $coinmain."_".$coinsecond }}';
 		type = tradeArray[3];
 		var ajax_trade_url;
 		/*
@@ -213,7 +214,7 @@ function doPostTradeOrder(tradeArray){
 		type: 'post',
 		url: ajax_trade_url,
 		datatype: 'json',
-		data: {isAjax: 1, price: price, amount: amount, market_id: market_id },
+		data: {isAjax: 1, price: price, amount: amount, market_id: market_id, market_name: market_name},
 		beforeSend: function(request) {
 			return request.setRequestHeader('X-CSRF-Token', $("meta[name='_token']").attr('content'));
 		},

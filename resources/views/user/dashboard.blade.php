@@ -30,6 +30,19 @@
 					<center>
 						<button onclick="sm();" class="btn btn-primary">{{ trans('user_texts.send_invite_email') }}</button>
 					</center>
+<<<<<<< HEAD
+=======
+					<center>
+					<form method="post" action="javascript:void(0);">
+						<div>
+							<label>E-Mail: </label><br/><input type="text" name="email_invite">
+						</div>
+						<div >
+							<label>Invite Message: </label><br/><textarea>{{ trans('user_texts.default_invite_message') }}</textarea>
+						</div>
+					</form>
+					</center>
+>>>>>>> f79e6f316cfe514c581fb7cb592f2436df547a6a
 					<h4>Referral Link Code:</h4>
 					
 					<table style="border:1px solid #dddddd;" class="table ">

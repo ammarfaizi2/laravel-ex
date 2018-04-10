@@ -27,6 +27,6 @@ return array(
     "select_language"       => "Select Language",
     'en'    => "English",
     'jp'    => "Japan",
-    'sv'    => "Swedish"
+    'sv'    => "Svenska"
     
 );

@@ -42,6 +42,35 @@ class OrderController extends Controller
 
     public function doBuy()
     {
+		//Check IP Trade Whitelisting
+        if ($user = Confide::user()) {
+        $wh = DB::table("whitelist_ip_state")
+                ->select("trade")
+                ->where("user_id", "=", $user->id)
+                ->first();
+        $cip = \App\Http\Controllers\UserController::get_client_ip();
+        if (isset($wh->trade) && $wh->trade === "on") {
+                $rr = DB::table("whitelist_trade_ip")
+                    ->select("ip")
+                    ->where("user_id", "=", $user->id)
+                    ->get();
+                if ($rr) {
+                    $f_ = false;
+                    foreach ($rr as $ip) {
+                        if (preg_match("/$ip->ip/i", $cip)) {
+                            $f_ = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (isset($f_) && $f_ === false) {
+            exit;
+        }
+
+
         //if ( Auth::guest() ){
         if (!Auth::check()) {
             echo json_encode(array('status'=>'error','message'=> Lang::get('messages.login_to_trade'), 'messages'=>array(Lang::get('messages.login_to_trade')) ));
@@ -78,7 +107,8 @@ class OrderController extends Controller
 
         //get info market
         $market_default = Market::find($market_id);
-        
+        //echo ('wallet_from: '.$wallet_from . ' - wallet_to:'.$wallet_to);
+		
         if (!$market_default) {
                 echo json_encode(array('status'=>'error','message'=> Lang::get('messages.error_occured'), 'messages'=>array(Lang::get('messages.error_occured'). ' - 2') ));
             exit;
@@ -89,23 +119,32 @@ class OrderController extends Controller
         //exit ('wallet_from: '.$wallet_from . ' - wallet_to:'.$wallet_to);
         //check if market is disabled
         $wallet1=Wallet::select('enable_trading')->where('id', $wallet_from)->first();
-        
+
+		/*Socket Return Variables*/
+		$message_socket = array();          //Socket - Visible for all users
+		$message_socket['market_id'] = $market_id;
+		
+		$message_socket_user = array();         //Socket - Used for storing new user orders, showing them specifically for the trading the user (the one who has called this request)
+		$message_socket_user['market_id'] = $market_id;
+
+			
         if ($wallet1->enable_trading == 0) {
             $status = 'error';
             $message= Lang::get('messages.trading_is_disabled');
             $messages=array('0'=>Lang::get('messages.trading_is_disabled') );
-            $message_socket = array();          //Socket - Visible for all users
-            $message_socket['market_id'] = $market_id;
-            $message_socket_user = array();         //Socket - Used for storing new user orders, showing them specifically for just the user
-            $message_socket_user['market_id'] = $market_id;
             
             //exit( 'enabled: '.$wallet1->enable_trading );
         } else {
+			//Get Market NAMES, for i.e BAY(from), BTC(to)
             $wallet = new Wallet();
             $from = $wallet->getType($wallet_from);
             $to = $wallet->getType($wallet_to);
+			
+			$market_name = $from.'_'.$to;
 
-            
+			$message_socket['market_name'] = $market_name;
+			$message_socket_user['market_name'] = $market_name;
+		
             //cleck limit trade
             $limit_trade = WalletLimitTrade::where('wallet_id', $wallet_from)->first();
             if ($limit_trade) {
@@ -130,12 +169,9 @@ class OrderController extends Controller
             
             
             $balance = new Balance();
-            $message_socket = array();          //Socket - Visible for all users
-            $message_socket['market_id'] = $market_id;
+
             $history_trade = array();           //Socket - Visible for all users
-            $message_socket_user = array();         //Socket - Used for storing new user orders, showing them specifically for just the user
-            $message_socket_user['market_id'] = $market_id;
-            
+			
             //sub $total_buy money
             /* START added by krm 2014-07-12 */
             $_fee_trade = new FeeTrade();
@@ -378,7 +414,12 @@ class OrderController extends Controller
 
                     $trade = new Trade();
                     $message_socket['data_price'] = $trade->getBlockPrice($market_id);
-                    $message_socket['change_price']=$trade->getChange($market_id);
+                    //$message_socket['change_price']=$trade->getChange($market_id);
+					$message_socket['change_price']=$trade->calcMarketChange($message_socket['data_price']['get_prices']->opening_price, $message_socket['data_price']['latest_price']);
+					
+					//$message_socket['change_price']=round($message_socket['data_price']['latest_price'] / $message_socket['data_price']['get_prices']['opening_price'], 2);
+					//$message_socket['change_price']=round($message_socket['data_price']['latest_price'] / $message_socket['data_price']['get_prices']->opening_price, 2);
+					
                     $balance = new Balance();
                     //$message_socket_user['data_price']['balance_coinmain'] = sprintf('%.8f',$balance->getBalance($wallet_from,0));
                     //$message_socket_user['data_price']['balance_coinmain']['wallet_id'] = $wallet_from;
@@ -481,6 +522,33 @@ class OrderController extends Controller
 
     public function doSell()
     {
+        if ($user = Confide::user()) {
+        $wh = DB::table("whitelist_ip_state")
+                ->select("trade")
+                ->where("user_id", "=", $user->id)
+                ->first();
+        $cip = \App\Http\Controllers\UserController::get_client_ip();
+        if (isset($wh->trade) && $wh->trade === "on") {
+                $rr = DB::table("whitelist_trade_ip")
+                    ->select("ip")
+                    ->where("user_id", "=", $user->id)
+                    ->get();
+                if ($rr) {
+                    $f_ = false;
+                    foreach ($rr as $ip) {
+                        if (preg_match("/$ip->ip/i", $cip)) {
+                            $f_ = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (isset($f_) && $f_ === false) {
+            exit;
+        }
+        
         //if ( Auth::guest() ){
         if (!Auth::check()) {
             echo json_encode(array('status'=>'error','message'=> Lang::get('messages.login_to_trade')));
@@ -517,17 +585,21 @@ class OrderController extends Controller
         $wallet_from = $market_default->wallet_from;
         $wallet_to = $market_default->wallet_to;
 
+		
                 //check if market is disabled
         $wallet1=Wallet::select('enable_trading')->where('id', $wallet_from)->first();
         
+		/*Socket Return Variables*/
+		$message_socket = array();          //Socket - Visible for all users
+		$message_socket['market_id'] = $market_id;
+		
+		$message_socket_user = array();         //Socket - Used for storing new user orders, showing them specifically for the trading the user (the one who has called this request)
+		$message_socket_user['market_id'] = $market_id;
+		
         if ($wallet1->enable_trading == 0) {
             $status = 'error';
             $message= Lang::get('messages.trading_is_disabled');
             $messages=array('0'=>Lang::get('messages.trading_is_disabled') );
-            $message_socket = array();          //Socket - Visible for all users
-            $message_socket['market_id'] = $market_id;
-            $message_socket_user = array();         //Socket - Used for storing new user orders, showing them specifically for just the user
-            $message_socket_user['market_id'] = $market_id;
             
             //exit( 'enabled: '.$wallet1->enable_trading );
         } else {
@@ -535,6 +607,11 @@ class OrderController extends Controller
             $from = $wallet->getType($wallet_from);
             $to = $wallet->getType($wallet_to);
 
+			$market_name = $from.'_'.$to;
+
+			$message_socket['market_name'] = $market_name;
+			$message_socket_user['market_name'] = $market_name;
+			
             //cleck limit trade
             $limit_trade = WalletLimitTrade::where('wallet_id', $wallet_from)->first();
             if ($limit_trade) {
@@ -558,11 +635,9 @@ class OrderController extends Controller
             $amount_real_trading_total = $total_sell;
             
             $balance = new Balance();
-            $message_socket = array();
-            $message_socket['market_id'] = $market_id;
-            $history_trade = array();
-            $message_socket_user = array();
-            $message_socket_user['market_id'] = $market_id;
+			
+			$history_trade = array();           //Socket - Visible for all users
+
             //sub $total_buy money
             if ($balance->takeMoney($amount_sell, $wallet_from, $user->id)) {
                 $orders_sell = new Order();
@@ -800,7 +875,22 @@ class OrderController extends Controller
                         
                     $trade = new Trade();
                     $message_socket['data_price'] = $trade->getBlockPrice($market_id);
-                    $message_socket['change_price']=$trade->getChange($market_id);
+                    //$message_socket['change_price']=$trade->getChange($market_id);
+                    $message_socket['change_price']=$trade->calcMarketChange($message_socket['data_price']['get_prices']->opening_price, $message_socket['data_price']['latest_price']);
+					
+					/*
+					change = (latest_price / opening price )
+					if < 1
+						change = (change -1)*100
+					*/
+					/*
+					var_dump($message_socket['data_price']['get_prices']->opening_price);
+					exit();
+					*/
+					//$message_socket['change_price']=round($message_socket['data_price']['latest_price'] / $message_socket['data_price']['get_prices']['opening_price'], 2);
+					//$message_socket['change_price']=round($message_socket['data_price']['latest_price'] / $message_socket['data_price']->get_prices['opening_price'], 2);
+					//$message_socket['change_price']=round($message_socket['data_price']['latest_price'] / $message_socket['data_price']['get_prices']->opening_price, 2);
+					
                     $balance = new Balance();
                     $message_socket_user['data_price']['balance_coinmain'] = array('balance'=> sprintf('%.8f', $balance->getBalance($wallet_from, 0)), "wallet_id" => $wallet_from);
                     //$message_socket_user['data_price']['balance_coinmain'] = sprintf('%.8f',$balance->getBalance($wallet_from,0));

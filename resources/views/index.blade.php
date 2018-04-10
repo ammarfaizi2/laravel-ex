@@ -1,19 +1,18 @@
 @extends('layouts.default')
-	<?php
-	// Set individual Market title
-	if ($market_predefined) :?>
-	@section('title')
-		<?php echo Config::get('config_custom.company_name_domain') . ' - ' . $market_from . ' / ' . $market_to . ' ' . trans('texts.market') ?>
-	@stop
-	@section('description')
-		<?php echo Config::get('config_custom.company_name_domain') . ' - '. Config::get('config_custom.company_slogan') ?>
-	@stop
+	<?php // Set individual Market title ?>
+	@if ($market_predefined) 
+		@section('title')
+			<?php echo Config::get('config_custom.company_name_domain') . ' - ' . $market_from . ' / ' . $market_to . ' ' . trans('texts.market') ?>
+		@stop
+		@section('description')
+			<?php echo Config::get('config_custom.company_name_domain') . ' - '. Config::get('config_custom.company_slogan') ?>
+		@stop
+	@endif
 	<?php
 	/*
 		//@section('title', 'This is an individual page title')
 		//@section('description', 'This is a description')
 		*/
-	endif;
 	/*
 	if(Auth::check()) {
 	echo "<h4>Logged in</h4>";
@@ -26,17 +25,22 @@
 @section('content')
 	<div class="row">
 		<div id="market_place">
-			<div>
+			@if(isset($show_all_markets) && $show_all_markets === true)
 				<!-- #Startpage Markets -->
-				@if(isset($show_all_markets) && $show_all_markets === true)
+				<div class="startpage">
 					@include('blocks.startmarkets')
-				@endif
-				<!-- #Specifik/Predefined Markets -->
-				@if($market_predefined)
-					@include('blocks.predefinedmarket')
-				@endif
-				
-			</div>			
+				</div>
+			@endif
+
+			@if($market_predefined)
+				<!-- #Specific/Predefined Markets -->
+				<div class="marketspage">
+					<div class="">
+						@include('blocks.predefinedmarket')
+					</div>
+				</div>
+			@endif
+
 		</div>
 	</div>
 	{{ HTML::script('assets/js/jquery.tablesorter.js') }}
@@ -100,7 +104,7 @@
 			});
 			
 			socket.on('users_count', function(data){
-				$('#client_count').text(data).addClassDelayRemoveClass({'elemclass': 'blue'});
+				$('.client_count').text(data).addClassDelayRemoveClass({'elemclass': 'blue'});
 				
 			});		
 
@@ -110,6 +114,7 @@
 
 				//console.log('data socket:',data);
 				var market_id=data.market_id;
+				var market_name=data.market_name;
 
 					//Update balance
 				if(data.data_price !== undefined){
@@ -278,6 +283,7 @@ homes.sort(function(a,b) { return parseFloat(a.price) - parseFloat(b.price) } );
 				console.log('=========subscribeAllMarkets Socket '+ data);
 
 				var market_id=data.market_id;
+				var market_name=data.market_name;
 				
             	
 				$.each(data.message_socket, function(key, value){
@@ -402,23 +408,34 @@ homes.sort(function(a,b) { return parseFloat(a.price) - parseFloat(b.price) } );
 	           					}
 	               		}
 	               	}
-	               	
+
 				});              	
-	            
-				
-				
-					
-					
+
+
+
                	//update % change price
                	//console.log('change_price init: ',data.change_price);
                	if(data.change_price !== undefined){
                		//console.log('change init: ',data.change_price.change);
-              		var change=parseFloat(data.change_price.change);
+              		var change=parseFloat(data.change_price).toFixed(2);
               		//console.log('curr_price: ',parseFloat(data.change_price.curr_price).toFixed(8));
-              		$('#spanPrice-'+market_id).text(parseFloat(data.change_price.curr_price).toFixed(8));
-              		$('#spanPrice-'+market_id).attr('yesterdayPrice',parseFloat(data.change_price.pre_price).toFixed(8));
 
-					$('#volume-'+market_id).attr('data-original-title', (parseFloat(data.data_price.get_prices.volume).toFixed(8)) );
+					
+					$('.sidebar li[data-markets-currency="'+market_name+'"] span[data-markets-currency="price"]').text(parseFloat(data.data_price.latest_price).toFixed(8));
+					//$('#spanPrice-'+market_name).text(parseFloat(data.data_price.latest_price).toFixed(8));
+
+					//$('#spanPrice-'+market_name).attr('data-yesterdayPrice',parseFloat(data.change_price.pre_price).toFixed(8));
+
+					$('.sidebar li[data-markets-currency="'+market_name+'"] div[data-markets-currency="volume"]').attr('data-original-title', 'Vol: '+(parseFloat(data.data_price.get_prices.volume).toFixed(8)) + ' ' +market_name.split("_")[1] );
+					//$('.sidebar li[data-markets-currency="'+market_name+'"] div[data-markets-currency="volume"]').data('original-title', (parseFloat(data.data_price.get_prices.volume).toFixed(8)) );
+
+					//$('#volume-'+market_name+' div[data-toggle="tooltip"]').attr('data-original-title', (parseFloat(data.data_price.get_prices.volume).toFixed(8)) );
+
+
+
+					//$(".sidebar_tabs ul.market li[data-side-market-volume='"+ market_name +"']").html('test');
+					//$(".sidebar_tabs ul.market li[data-side-market-volume='" + current +"']");
+
               		//console.log('change: ',change);
               		//console.log('change 1: ',data.change_price.change);
 
@@ -440,67 +457,169 @@ homes.sort(function(a,b) { return parseFloat(a.price) - parseFloat(b.price) } );
 					else
 						balance_coinsecond_sidebar = '<span class="change" id="spanChange-'+data.data_price.balance_coinsecond.wallet_id+'">'+data.data_price.balance_coinmain.balance+'% </span>';
 					*/
+
+					$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').removeClass('up down btn-warning btn-danger btn-success');
+					$('.startpage div[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').removeClass('up down btn-warning btn-danger btn-success');
 					
+					$('.sidebar li[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').removeClass('up down');
+					$('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="change"]').removeClass('up down btn-warning btn-danger btn-success');
+					
+					
+					$('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="price"]').removeClass('up down');
+
 					if(change==0){  
-               			$('#spanChange-'+market_id).removeClass('up down');
-               			$('#spanChange-'+market_id).html('+'+data.change_price.change+'%');
+               			$('.sidebar li[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').html(change+'%');
+
+						$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').addClass('btn-warning');
+						$('.startpage div[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').addClass('btn-warning');
+						//$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"] i').removeClass('fa-arrow-up fa-arrow-down');
+
+						$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').html(change+'%');
+						$('.startpage div[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').html(change+'%');
+						
+						$('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="change"]').addClass('btn-warning');
+						$('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="change"]').html(change+'%');
+						
+						
+						//$('#spanChange-'+market_name).removeClass('up down');
+               			//$('#spanChange-'+market_name).html('+'+change+'%');
 					}else if(change>0){  
-               			//console.log('Up ');           			
-               			$('#spanChange-'+market_id).removeClass('up down').addClass('up');
-               			$('#spanChange-'+market_id).html('+'+data.change_price.change+'% <i class="fa fa-arrow-up"></i>');
+               			//console.log('Up ');
+               			$('.sidebar li[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').addClass('up');
+               			$('.sidebar li[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').html('+'+change+'% <i class="fa fa-arrow-up"></i>');
+
+						$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').addClass('up btn-success');
+						$('.startpage div[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').addClass('up btn-success');
+						//$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"] i').removeClass('fa-arrow-up fa-arrow-up').addClass('fa-arrow-up');
+
+						$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').html('+'+change+'% <i class="fa fa-arrow-up"></i>');
+						$('.startpage div[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').html('+'+change+'% <i class="fa fa-arrow-up"></i>');
+
+						$('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="change"]').addClass('up btn-success');
+						$('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="change"]').html('+'+change+'% <i class="fa fa-arrow-up"></i>');
+						
+						$('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="price"]').addClass('up');
+               			//$('#spanChange-'+market_name).removeClass('up down').addClass('up');
+               			//$('#spanChange-'+market_name).html('+'+change+'% <i class="fa fa-arrow-up"></i>');
                			//console.log('Up 1a ');   
                		}else{
-               			//console.log('Down ');               			 
-               			$('#spanChange-'+market_id).removeClass('up down').addClass('down');
-               			$('#spanChange-'+market_id).html(''+data.change_price.change+'% <i class="fa fa-arrow-down"></i>');
+               			//console.log('Down ');
+						$('.sidebar li[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').addClass('down');
+               			$('.sidebar li[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').html(change+'% <i class="fa fa-arrow-down"></i>');
+
+						$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').addClass('down btn-danger');
+						$('.startpage div[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').addClass('down btn-danger');
+						//$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"] i').removeClass('fa-arrow-up fa-arrow-up').addClass('fa-arrow-down');
+
+						$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').html(change+'% <i class="fa fa-arrow-down"></i>');
+						$('.startpage div[data-markets-currency="'+market_name+'"] span[data-markets-currency="change"]').html(change+'% <i class="fa fa-arrow-down"></i>');
+						
+						$('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="change"]').addClass('down btn-danger');
+						$('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="change"]').html(change+'% <i class="fa fa-arrow-down"></i>');
+						
+						$('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="price"]').addClass('down');
+               			//$('#spanChange-'+market_name).removeClass('up down').addClass('down');
+               			//$('#spanChange-'+market_name).html(''+change+'% <i class="fa fa-arrow-down"></i>');
                			//console.log('Down a');
                		}               		
                	}
-               	//update block price
+               	//update block price, Markets & Market Data (Startpage and Sidebar and spec. Market)
                	if(data.data_price !== undefined){
                		//console.log('data_price',data.data_price);
                		if(data.data_price.latest_price!==undefined){
 						//Set High,Low and Volume for viewed MarketID coin
-						
-               			var old_lastprice = parseFloat( $('#spanLastPrice-'+market_id).text() ).toFixed(8);
-               			//var old_lastprice = $('#spanLastPrice-'+market_id).text();
+
+
+						var old_lastprice = parseFloat( $('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="price"]').text() ).toFixed(8);
+
+               			//var old_lastprice = parseFloat( $('#spanLastPrice-'+market_name).text() ).toFixed(8);
 	               		var new_lastprice = parseFloat(data.data_price.latest_price).toFixed(8);
-						
+
 	               		console.log("if(new_lastprice<old_lastprice) "+ new_lastprice+'<'+old_lastprice );
+						
+						// Market & Markets UI animate changes upon price change
 						if(new_lastprice<old_lastprice){
-							$('#lastprice-'+market_id).addClass('red');
+							//$('#lastprice-'+market_name).addClass('red');
+							//$('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="change"]').removeClass('up').addClass('down');
+
+
+							if( $('.startpage tr[data-markets-currency="'+market_name+'"]').length )
+								$('.startpage tr[data-markets-currency="'+market_name+'"]').addClassDelayRemoveClass({'elemclass': 'red'});
 							
-								//Set High,Low and Volume for index MarketID coin	
-							if( $('#mainLastPrice-'+market_id).length )
-								$('#mainCoin-'+market_id).addClassDelayRemoveClass({'elemclass': 'red'});
+							if( $('.startpage div[data-markets-currency="'+market_name+'"]').length )
+								$('.startpage div[data-markets-currency="'+market_name+'"]').addClassDelayRemoveClass({'elemclass': 'red'});
+
+							if( $('.sidebar li[data-markets-currency="'+market_name+'"]').length )
+								$('.sidebar li[data-markets-currency="'+market_name+'"]').addClassDelayRemoveClass({'elemclass': 'red'});
+							
+							//if( $('#mainLastPrice-'+market_name).length )
+								//$('#mainCoin-'+market_name).addClassDelayRemoveClass({'elemclass': 'red'});
 	               		}else{ 
-							$('#lastprice-'+market_id).addClass('blue');
-							
+							//$('#lastprice-'+market_name).addClass('blue');
+							//$('div[data-market-currency="'+market_name+'"] span[data-market-currency="price"]').removeClass('down').addClass('up');
+
 								//Set High,Low and Volume for index MarketID coin	
-							if( $('#mainLastPrice-'+market_id).length )
-								$('#mainCoin-'+market_id).addClassDelayRemoveClass({'elemclass': 'blue'});
+							if( $('.startpage tr[data-markets-currency="'+market_name+'"]').length )
+								$('.startpage tr[data-markets-currency="'+market_name+'"]').addClassDelayRemoveClass({'elemclass': 'blue'});
+							
+							if( $('.startpage div[data-markets-currency="'+market_name+'"]').length )
+								$('.startpage div[data-markets-currency="'+market_name+'"]').addClassDelayRemoveClass({'elemclass': 'blue'});
+							
+							if( $('.sidebar li[data-markets-currency="'+market_name+'"]').length )
+								$('.sidebar li[data-markets-currency="'+market_name+'"]').addClassDelayRemoveClass({'elemclass': 'blue'});
+							//if( $('#mainLastPrice-'+market_name).length )
+								//$('#mainCoin-'+market_name).addClassDelayRemoveClass({'elemclass': 'blue'});
 						}
-	               		$('#spanLastPrice-'+market_id).text(new_lastprice);
+						if(new_lastprice==old_lastprice){
+							//$('div[data-market-currency="'+market_name+'"] span[data-market-currency="price"]').removeClass('down up');
+						}
+
 						
-						if( $('#mainLastPrice-'+market_id).length )
-							$('#mainLastPrice-'+market_id).text(new_lastprice);
+						$('.marketspage div[data-market-currency="'+market_name+'"] span[data-market-currency="price"]').text(new_lastprice);
 						
+	               		//$('#spanLastPrice-'+market_name).text(new_lastprice);
+
+
+						if( $('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="price"]').length )
+							$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="price"]').text(new_lastprice);
+						
+						if( $('.startpage div[data-markets-currency="'+market_name+'"] span[data-markets-currency="price"]').length )
+							$('.startpage div[data-markets-currency="'+market_name+'"] span[data-markets-currency="price"]').text(new_lastprice);
+						//if( $('#mainLastPrice-'+market_name).length )
+							//$('#mainLastPrice-'+market_name).text(new_lastprice);
+
 						//Set High,Low and Volume for index MarketID coin
                		}               		
                		if(data.data_price.get_prices!==undefined){
-							//Set High,Low and Volume for viewed MarketID coin
-               			$('#spanHighPrice-'+market_id).text(parseFloat(data.data_price.get_prices.max).toFixed(8));
-	               		$('#spanLowPrice-'+market_id).text(parseFloat(data.data_price.get_prices.min).toFixed(8));
-	               		$('#spanVolume-'+market_id).text(parseFloat(data.data_price.get_prices.volume).toFixed(8));
+						//Set High,Low and Volume for viewed MarketID coin
 
-							//Set High,Low and Volume for index MarketID coin
-						if( $('#mainHighPrice-'+market_id).length )
-							$('#mainHighPrice-'+market_id).text(parseFloat(data.data_price.get_prices.max).toFixed(8));
-						if( $('#mainHighPrice-'+market_id).length )
-							$('#mainLowPrice-'+market_id).text(parseFloat(data.data_price.get_prices.min).toFixed(8));
-						if( $('#mainHighPrice-'+market_id).length )
-							$('#mainVolume-'+market_id).text(parseFloat(data.data_price.get_prices.volume).toFixed(8));
+
+						$('div[data-market-currency="'+market_name+'"] span[data-market-currency="high"]').text(parseFloat(data.data_price.get_prices.max).toFixed(8));
+						//$('#spanHighPrice-'+market_name).text(parseFloat(data.data_price.get_prices.max).toFixed(8));
+	               		$('div[data-market-currency="'+market_name+'"] span[data-market-currency="low"]').text(parseFloat(data.data_price.get_prices.min).toFixed(8));
+	               		//$('#spanLowPrice-'+market_name).text(parseFloat(data.data_price.get_prices.min).toFixed(8));
+	               		$('div[data-market-currency="'+market_name+'"] span[data-market-currency="volume"]').text(parseFloat(data.data_price.get_prices.volume).toFixed(8));
+						//$('#spanVolume-'+market_name).text(parseFloat(data.data_price.get_prices.volume).toFixed(8));
+
+							//Update Coin Data for Startpage and Sidebar - High,Low and Volume 
+						if( $('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="high"]').length )
+							$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="high"]').text(parseFloat(data.data_price.get_prices.max).toFixed(8));
+						if( $('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="low"]').length )
+							$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="low"]').text(parseFloat(data.data_price.get_prices.min).toFixed(8));
+						if( $('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="volume"]').length )
+							$('.startpage tr[data-markets-currency="'+market_name+'"] span[data-markets-currency="volume"]').text(parseFloat(data.data_price.get_prices.volume).toFixed(8));
 						
+						if( $('.startpage div[data-markets-currency="'+market_name+'"] span[data-markets-currency="volume"]').length )
+							$('.startpage div[data-markets-currency="'+market_name+'"] span[data-markets-currency="volume"]').text(parseFloat(data.data_price.get_prices.volume).toFixed(8));
+						/*
+						if( $('#mainHighPrice-'+market_name).length )
+							$('#mainHighPrice-'+market_name).text(parseFloat(data.data_price.get_prices.max).toFixed(8));
+						if( $('#mainLowPrice-'+market_name).length )
+							$('#mainLowPrice-'+market_name).text(parseFloat(data.data_price.get_prices.min).toFixed(8));
+						if( $('.mainVolume-'+market_name).length )
+							$('.mainVolume-'+market_name).text(parseFloat(data.data_price.get_prices.volume).toFixed(8));
+						*/
+						//spanLastPrice-PINK_BTC
 
                		}
                	}
@@ -543,3 +662,83 @@ $(function () {
 });
 </script>
 @stop
+
+<?php
+/*
+https://jsfiddle.net/pco60ap2/6/
+
+HTML:
+//---------------------------------------------------------------------//
+<a class="slide-link" href="#" data-slide="BAY_BTC">BAY/BTC</a>
+<a class="slide-link" href="#" data-slide="PINK_BTC">PINK/BTC</a>
+<a class="slide-link" href="#" data-slide="BEX_BTC" data-you="Hello">BEX/BTC</a>
+
+CSS: 
+//---------------------------------------------------------------------//
+.active{
+    background:red;
+}
+
+JAVASCRIPT:
+//---------------------------------------------------------------------//
+$('.slide-link[data-slide="BEX_BTC"]').addClass('active');
+$('.slide-link[data-slide="BEX_BTC"]').text('BEX/BTC choosen');
+$('.slide-link[data-slide="BEX_BTC"]').text('BEX/BTC choosen');
+
+//HTML5 WAY
+alert ( $('.slide-link[data-slide="BEX_BTC"]').data("you") );
+$('.slide-link[data-slide="BEX_BTC"]').data("you", "Good Bye!")
+alert ( $('.slide-link[data-slide="BEX_BTC"]').data("you") );
+
+//JQUERY WAY
+alert($('.slide-link[data-slide="BEX_BTC"]').attr("data-you")); // Hello mean
+
+$('.slide-link[data-slide="BEX_BTC"]').attr("data-you", "yes change you atribute");
+
+alert($('.slide-link[data-slide="BEX_BTC"]').attr("data-you")); // Hello mean
+*/
+//---------------------------------------------------------------------//
+/*
+===Market - When Trading
+
+#spanLastPrice-PINK_BTC
+#spanVolume-PINK_BTC
+#spanHighPrice-PINK_BTC
+#spanLowPrice-PINK_BTC
+
+id="lastprice-{{ $coinmain.'_'.$coinsecond }}"
+???
+-->
+data-market-coin="price"
+data-market-coin="volume"
+data-market-coin="high"
+data-market-coin="low"
+data-market-coin="change"
+
+#marketCoinPrice-PINK_BTC
+#marketCoinVolume-PINK_BTC
+#marketCoinHigh-PINK_BTC
+#marketCoinLow-PINK_BTC
+
+===Sidebar Markets
+#spanPrice-BAY_BTC
+#spanChange-BAY_BTC
+
+#volume-PINK_BTC div.data-toggle
+	change attribute: data-original-title
+
+===Startpage
+
+#mainLastPrice-PINK_BTC
+#mainHighPrice-PINK_BTC
+#mainLowPrice-PINK_BTC
+.mainVolume-PINK_BTC
+
+data-markets-coin="PINK_BTC"
+data-markets-coin="price"
+data-markets-coin="volume"
+data-markets-coin="high"
+data-markets-coin="low"
+data-markets-coin-change="change"
+*/
+?>

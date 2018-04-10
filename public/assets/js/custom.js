@@ -1,5 +1,13 @@
 $(function() {
 
+	//Left Sidebar
+
+	$('#leftSidebarBtn').on('click', function () {
+		//$('.sidebar').toggleClass('active');
+		$('.sidebar').toggle();
+		//$('.sidebar').fadeToggle();
+	});
+			 
 	//Navbar Submenus
 	$('.navbar a.dropdown-toggle').on('click', function(e) {
         var $el = $(this);
