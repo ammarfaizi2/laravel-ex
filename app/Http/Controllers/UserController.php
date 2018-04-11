@@ -2085,7 +2085,7 @@ class UserController extends Controller
         $user = Confide::user();
         if ($user && isset($_POST["data"])) {
             $d = json_decode(urldecode($_POST["data"]), true);
-            if (isset($d["email"])) {
+            if (isset($d["email"], $d["msg"])) {
                 header("Content-type:application/json");
 
                 if (! filter_var($d["email"], FILTER_VALIDATE_EMAIL)) {
@@ -2115,11 +2115,21 @@ class UserController extends Controller
                     [
                         "user_id" => $user->id,
                         "receipent" => $d["email"],
+                        "invite_message" => $d["msg"],
                         "status" => "pending",
                         "expired_at" => date("Y-m-d H:i:s", time()+3600*24),
                         "created_at" => date("Y-m-d H:i:s")
                     ]
                 );
+
+                Mail::to($d["email"])
+                    ->send(new \App\Mail\Invitation(
+                        [
+                            "email" => $d["email"],
+                            "invite_message" => $d["msg"],
+                            "username" => $user->username
+                        ]
+                    ));
 
                 exit(json_encode(
                     [
