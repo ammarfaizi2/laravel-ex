@@ -435,7 +435,7 @@ AND created_at >= '2015-08-01 23:37:53'
                 $data->min = 0;
                 $data->max = 0;
                 $data['latest_price'] = isset($latest->price)? $latest->price:0;
-                $data["get_prices"] = 0;
+                $data["get_prices"] = 0; 
             }
         }
 

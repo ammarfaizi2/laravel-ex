@@ -31,19 +31,11 @@
 					  {{trans('user_texts.ip_whitelist')}} <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-<<<<<<< HEAD
-					  <li @if($page == 'ip-whitelist' && isset($_GET["p"]) && $_GET["p"] === "login") class="active" @endif>{{ HTML::link(route('whitelist_ip').'?p=login', trans('user_texts.ip_whitelist_login')) }}</li> 
-					  <li class="divider"></li>
-					  <li @if($page == 'ip-whitelist' && isset($_GET["p"]) && $_GET["p"] === "trade") class="active" @endif>{{ HTML::link(route('whitelist_ip').'?p=trade', trans('user_texts.ip_whitelist_trade')) }}</li>
-					  <li class="divider"></li>
-					   <li @if($page == 'ip-whitelist' && isset($_GET["p"]) && $_GET["p"] === "withdraw") class="active" @endif>{{ HTML::link(route('whitelist_ip').'?p=withdraw', trans('user_texts.ip_whitelist_withdraw')) }}</li>
-=======
 					  <li @if($page == 'ip-whitelist' && isset($_GET["p"]) && $_GET["p"] === "login") class="active" @endif>{{ HTML::link(route('whitelist_ip', ["login"]), trans('user_texts.ip_whitelist_login')) }}</li> 
 					  <li class="divider"></li>
 					  <li @if($page == 'ip-whitelist' && isset($_GET["p"]) && $_GET["p"] === "trade") class="active" @endif>{{ HTML::link(route('whitelist_ip', ["trade"]), trans('user_texts.ip_whitelist_trade')) }}</li>
 					  <li class="divider"></li>
 					   <li @if($page == 'ip-whitelist' && isset($_GET["p"]) && $_GET["p"] === "withdraw") class="active" @endif>{{ HTML::link(route('whitelist_ip', ["withdraw"]), trans('user_texts.ip_whitelist_withdraw')) }}</li>
->>>>>>> f79e6f316cfe514c581fb7cb592f2436df547a6a
 					</ul>
 				</li>
 								  

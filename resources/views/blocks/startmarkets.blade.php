@@ -333,10 +333,30 @@
 							echo '<pre>';
 							var_dump($all_markets);
 							echo '</pre>';
-							*/
+							*/ 
 						?>
 						@foreach($all_markets as $am)
 						@if ($am['to'] == 'BTC')
+							
+						<?php
+							//Get and Format Price High and Low for Currency
+							$coin_price_high = '-';
+							$coin_price_low = '-'; 
+							if (isset($am['prices']->max)) $coin_price_high=sprintf('%.8f',$am['prices']->max);
+							if (isset($am['prices']->min)) $coin_price_low=sprintf('%.8f',$am['prices']->min);
+									/*
+									if ( sprintf('%.8f',$am['prices']->max)+0 == 0 )
+										$coin_max_ = '';
+									else
+										$coin_max_ = sprintf('%.8f',$am['prices']->max);
+									
+									if ( sprintf('%.8f',$am['prices']->min)+0 == 0 )
+										$coin_min_ = '';
+									else
+										$coin_min_ = sprintf('%.8f',$am['prices']->min);
+									*/
+								
+						?>
 						<tr id="mainCoin-{{$am['from'].'_'.$am['to']}}" class="mainCoin" data-markets-currency="{{$am['from'].'_'.$am['to']}}">
 							<td>
 								<a href="{{$marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($am['market']->id).'_BTC')}}">
@@ -370,30 +390,22 @@
 							</td>
 							<td>
 								<a href="{{$marketUrl}}" class="nostrong">
-									<span data-markets-currency="high">@if(empty($coin_max_)) - @else {{$coin_max_}} @endif</span>
+									<div>
+									<span class="first_assist" data-markets-currency="high">{{$coin_price_high}}</span>
+									</div>
 								</a>
 							</td>
 							<td>
 								<a href="{{$marketUrl}}" class="nostrong" >
-									<span data-markets-currency="low">@if(empty($coin_min_)) - @else {{$coin_min_}} @endif</span>
+									<div>
+									<span class="first_assist" data-markets-currency="low">{{$coin_price_low}}</span>
+									</div>
 								</a>
 							</td>
 							<td class="market_change">
 								
 								
 								<?php
-								if (isset($am['prices']->max)){
-									if ( sprintf('%.8f',$am['prices']->max)+0 == 0 )
-										$coin_max_ = '';
-									else
-										$coin_max_ = sprintf('%.8f',$am['prices']->max);
-									
-									if ( sprintf('%.8f',$am['prices']->min)+0 == 0 )
-										$coin_min_ = '';
-									else
-										$coin_min_ = sprintf('%.8f',$am['prices']->min);
-								}
-
 								/*
 								echo '<pre>';
 								print_r($am);

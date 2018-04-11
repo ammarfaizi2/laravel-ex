@@ -1,3 +1,10 @@
+<?php
+//Get and Format Price High and Low for Currency
+$coin_price_high = '-';
+$coin_price_low = '-'; 
+if (isset($am['prices']->max)) $coin_price_high=sprintf('%.8f',$am['prices']->max);
+if (isset($am['prices']->min)) $coin_price_low=sprintf('%.8f',$am['prices']->min);
+?>
 <div class="row">
 	<div class="market_info">
 
@@ -66,10 +73,10 @@
 												<div ><span aria-hidden="true" class="glyphicon glyphicon-stats"></span> 24H Vol:<br><strong><span data-market-currency="volume">@if(empty($get_prices->volume)) {{{sprintf('%.8f',0)}}} @else {{sprintf('%.8f',$get_prices->volume)}} @endif</span> </strong></div>
 									</div>
 									<div class="col-xs-6 col-sm-3">
-												<div ><span aria-hidden="true" class="glyphicon glyphicon-export" style="color: #6bbf46;"></span> High:<br><strong><span data-market-currency="high">@if(empty($get_prices->max)) {{{sprintf('%.8f',0)}}} @else {{sprintf('%.8f',$get_prices->max)}} @endif</span></strong></div>
+												<div ><span aria-hidden="true" class="glyphicon glyphicon-export" style="color: #6bbf46;"></span> High:<br><strong><span data-market-currency="high">{{$coin_price_high}}</span></strong></div>
 									</div>
 									<div class="col-xs-6 col-sm-3">
-												<div ><span aria-hidden="true" class="glyphicon glyphicon-import" style="color: #cc0000;"></span> Low:<br><strong><span data-market-currency="low">@if(empty($get_prices->min)) {{{sprintf('%.8f',0)}}} @else {{sprintf('%.8f',$get_prices->min)}} @endif</span></strong></div>
+												<div ><span aria-hidden="true" class="glyphicon glyphicon-import" style="color: #cc0000;"></span> Low:<br><strong><span data-market-currency="low">{{$coin_price_low}}</span></strong></div>
 									</div>
 								</div>
 							
