@@ -203,13 +203,13 @@ $trade = new Trade();
 
 														?>
 															<li class="volume" data-markets-currency="{{$btc_market->type}}_BTC">
-																<div data-markets-currency="volume" data-toggle="tooltip" data-placement="right" title="{{trans('texts.volume_short')}}: {{round(sprintf('%.8f',$total_btc), 5)}} BTC">
+																<div data-markets-currency="volume" data-toggle="popover" data-placement="right" data-content="{{trans('texts.volume_short')}}: {{round(sprintf('%.8f',$total_btc), 5)}} BTC" >
 																	<span class="mark_fav" >
 																		  <i class="fa fa-star text-yellow"></i>
 																	</span> 
 																	<a href="{{$marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($btc_market->id).'_BTC')}}">
 																		<span class="name">
-																			@if($btc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="right" title="{{$btc_market->type}}" data-content="{{trans('texts.market_disabled')}}" ></i> @endif
+																			@if($btc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="bottom" data-content="<i class='fa fa-exclamation-triangle red'></i>{{trans('texts.market_disabled')}}" data-html="true" ></i> @endif
 																			{{$btc_market->type}}
 																		</span>
 																		<span class="hide">{{$btc_market->name}}</span>
@@ -277,11 +277,11 @@ $trade = new Trade();
 																echo '</pre>';
 																*/
 															?>
-																<li class="volume" id="volume-{{$ltc_market->type}}_LTC" data-markets-currency="{{$btc_market->type}}_LTC" data-toggle="popover" data-placement="right" title="{{trans('texts.volume')}}" data-content="{{sprintf('%.8f',$total_ltc)}} LTC">
+																<li class="volume" id="volume-{{$ltc_market->type}}_LTC" data-markets-currency="{{$btc_market->type}}_LTC" data-toggle="popover" data-placement="right" data-content="{{sprintf('%.8f',$total_ltc)}} LTC">
 																	<span class="mark_fav"><i class="fa fa-star text-yellow"></i></span> 
 																	<a href="{{ $marketUrl = route('market', \App\Http\Controllers\HomeController::buildMarketUrl($ltc_market->id).'_LTC')}}">
 																	<span class="name">
-																		@if($ltc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="bottom" title="{{$ltc_market->type}}" data-content="{{trans('texts.market_disabled')}}"></i> @endif
+																		@if($ltc_market->enable_trading == 0) <i class="fa fa-exclamation-triangle red" data-toggle="popover" data-placement="bottom" data-content="<i class='fa fa-exclamation-triangle red'></i> {{trans('texts.market_disabled')}}" data-html="true"></i> @endif
 																		{{$ltc_market->type}}
 																	</span>
 																	<span class="price" data-yesterdayPrice="{{sprintf('%.8f',$pre_price)}}" data-markets-currency="price">{{sprintf('%.8f',$curr_price)}}</span>

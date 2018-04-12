@@ -426,7 +426,7 @@ homes.sort(function(a,b) { return parseFloat(a.price) - parseFloat(b.price) } );
 
 					//$('#spanPrice-'+market_name).attr('data-yesterdayPrice',parseFloat(data.change_price.pre_price).toFixed(8));
 
-					$('.sidebar li[data-markets-currency="'+market_name+'"] div[data-markets-currency="volume"]').attr('data-original-title', 'Vol: '+(parseFloat(data.data_price.get_prices.volume).toFixed(8)) + ' ' +market_name.split("_")[1] );
+					$('.sidebar li[data-markets-currency="'+market_name+'"] div[data-markets-currency="volume"]').attr('data-content', 'Vol: '+(parseFloat(data.data_price.get_prices.volume).toFixed(8)) + ' ' +market_name.split("_")[1] );
 					//$('.sidebar li[data-markets-currency="'+market_name+'"] div[data-markets-currency="volume"]').data('original-title', (parseFloat(data.data_price.get_prices.volume).toFixed(8)) );
 
 					//$('#volume-'+market_name+' div[data-toggle="tooltip"]').attr('data-original-title', (parseFloat(data.data_price.get_prices.volume).toFixed(8)) );
