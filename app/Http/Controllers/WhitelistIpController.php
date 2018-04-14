@@ -12,6 +12,18 @@ class WhitelistIpController extends Controller
     public function add()
     {
     	$user = Confide::user();
+        if ($user->google2fa_secret) {
+            if ($s = session()->get("2fa_payload")) {
+                
+                if ($s != url()->current()) {
+                    abort(404);   
+                } else {
+                    session(["2fa_payload" => null]);
+                }
+            } else {
+                abort(404);
+            }
+        }
     	if (isset($_POST["data"], $_POST["type"]) && in_array($_POST["type"], ["login", "trade", "withdraw"]) && $user) {
     		header("Content-type:application/json");
     		$ips = explode(",", $_POST["data"]);
@@ -43,6 +55,17 @@ class WhitelistIpController extends Controller
     public function remove()
     {
     	$user = Confide::user();
+        if ($user->google2fa_secret) {
+            if ($s = session()->get("2fa_payload")) {
+                if ($s != url()->current()) {
+                    abort(404);   
+                } else {
+                    session(["2fa_payload" => null]);
+                }
+            } else {
+                abort(404);
+            }
+        }
     	if (isset($_POST["data"], $_POST["type"]) && in_array($_POST["type"], ["login", "trade", "withdraw"]) && $user) {
     		header("Content-type:application/json");
     		if ($user) {
@@ -75,6 +98,17 @@ class WhitelistIpController extends Controller
     public function turnOff()
     {
         $user = Confide::user();
+        if ($user->google2fa_secret) {
+            if ($s = session()->get("2fa_payload")) {
+                if ($s != url()->current()) {
+                    abort(404);   
+                } else {
+                    session(["2fa_payload" => null]);
+                }
+            } else {
+                abort(404);
+            }
+        }
         if ($user && isset($_POST["type"]) && in_array($_POST["type"], ["login", "trade", "withdraw"])) {
             header("Content-type:application/json");
             $g = DB::table("whitelist_ip_state")
@@ -115,6 +149,18 @@ class WhitelistIpController extends Controller
     public function turnOn()
     {
         $user = Confide::user();
+        if ($user->google2fa_secret) {
+            if ($s = session()->get("2fa_payload")) {
+
+                if ($s != url()->current()) {
+                    abort(404);   
+                } else {
+                    session(["2fa_payload" => null]);
+                }
+            } else {
+                abort(404);
+            }
+        }
         if ($user && isset($_POST["type"]) && in_array($_POST["type"], ["login", "trade", "withdraw"])) {
             header("Content-type:application/json");
             $g = DB::table("whitelist_ip_state")

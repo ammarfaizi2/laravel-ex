@@ -198,6 +198,7 @@ Route::post("/user/ajax_notification/read", "NotificationController@readNotifica
 
 //user profile
 Route::group(array('before' => 'auth', 'prefix' => 'user', 'middleware' => ['2fa', 'App\Http\Middleware\user']), function () {
+    Route::post("two-factor-auth/submit", "Google2FAHandler@submit")->name("2fa_submit");
     Route::post("send-invitation", "UserController@inviteUser")->name("invite_user");
     Route::get("/security/login-history", function (\Illuminate\Http\Request $request) {
         $st = new \App\Http\Controllers\UserController($request);
