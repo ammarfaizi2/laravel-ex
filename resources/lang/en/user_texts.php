@@ -111,4 +111,11 @@ return array(
     "send" => "Send",
     "default_invite_message" => "Hello, let's join bitbase The Fast, Secure and Reliable Crypto Exchange with Low Fees!",
     "email_invite_1" => ":username invite you to join Bitbase!",
+    "referred_user" => "Referred User",
+    "no" => "No.",
+    "email" => "Email",
+    "username" => "Username",
+    "joined_at" => "Joined at",
+    "total_referred_user" => "Total referred user",
+    "commission_fees" => "Commission Fees"
 );

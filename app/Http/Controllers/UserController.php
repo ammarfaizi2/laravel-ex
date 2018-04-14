@@ -1336,6 +1336,10 @@ class UserController extends Controller
             $data['wallets'] = $wallets;
             break;
         case 'dashboard':
+            $data['referred_user'] = DB::table("users")
+                ->select([DB::raw("count(`username`) as c")])
+                ->where("referral", "=", $user->username)
+                ->get()[0]->c;
             $total_trades=Trade::where('seller_id', $user_id)->orwhere('buyer_id', $user_id)->get()->toArray();
             $data['total_trades']=count($total_trades);
 
@@ -1466,6 +1470,17 @@ class UserController extends Controller
             $data["type"] = $_GET["p"];
 
             break;
+        case 'referred-user':
+            $data['referred_users'] = DB::table("users")
+                ->select(["username", "email", "created_at as joined_at"])
+                ->where("referral", "=", $user->username)
+                ->get();
+            $data['referred_user'] = DB::table("users")
+                ->select([DB::raw("count(`username`) as c")])
+                ->where("referral", "=", $user->username)
+                ->get()[0]->c;
+            $data['commission_fees'] = $this->buildCommissionFees($data['referred_user']);
+            break;
         case '':
             break;
         // default:
@@ -1475,6 +1490,21 @@ class UserController extends Controller
         $data["that"] = $this;
 
         return view('user.profile', $data);
+    }
+
+    private function buildCommissionFees($r)
+    {
+        $c = json_decode(env("COMMISSION_FEES"), true);
+        foreach ($c as $key => $v) {
+            $key = explode("-", $key);
+            if (in_array($r, range($key[0], $key[1]))) {
+                return $v;
+            }
+        }
+        if ($r > $key[1]) {
+            return $v;
+        }
+        return 0;
     }
 
     public function doCoinGiveaway()
