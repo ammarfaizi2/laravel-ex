@@ -255,6 +255,36 @@ class UserController extends Controller
         // Save if valid. Password field will be hashed before save
         $user->save();
 
+        if (! empty($user->referral)) {
+            $st = DB::table("referral")
+            ->select(["referral.user_id", "referral.count"])
+            ->join("users", "users.id", "=", "referral.user_id")
+            ->where("users.username", "=", $user->referral)
+            ->first();
+            if (isset($st->user_id)) {
+                DB::table("referral")
+                    ->where("user_id", "=", $st->user_id)
+                    ->update(
+                        [
+                            "count" => $st->count + 1,
+                            "updated_at" => date("Y-m-d H:i:s")
+                        ]
+                    );
+            } else {
+                $st = DB::table("users")
+                    ->select("id")
+                    ->where("username", "=", $user->referral)
+                    ->first();
+                DB::table("referral")
+                    ->insert(
+                        [
+                            "user_id" => $st->id,
+                            "count" => 1,
+                            "created_at" => date("Y-m-d H:i:s")
+                        ]
+                    );
+            }
+        }
 
         if ($user->id) {
             Mail::to(Request::get('email'))
@@ -1470,7 +1500,7 @@ class UserController extends Controller
             $data["type"] = $_GET["p"];
 
             break;
-        case 'referred-user':
+        case 'referred-users':
             $data['referred_users'] = DB::table("users")
                 ->select(["username", "email", "created_at as joined_at"])
                 ->where("referral", "=", $user->username)
@@ -1504,7 +1534,7 @@ class UserController extends Controller
         if ($r > $key[1]) {
             return $v;
         }
-        return 0;
+        return [0, ""];
     }
 
     public function doCoinGiveaway()

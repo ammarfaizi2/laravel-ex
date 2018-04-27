@@ -17,7 +17,7 @@ https://developers.google.com/recaptcha/docs/verify
 				<span class="fa fa-lock fa-lg"></span> <a href="{{ url('/') }}">{{{ Config::get('config_custom.company_name') }}}</a> - <span>{{trans('user_texts.register')}}</span></div> 
 				<div class="panel-body"> 
  
-					<form class="form-horizontal" id="registerForm" method="POST" action="{{{ (Auth::check('UserController@store')) ?: URL::to('user')  }}}" accept-charset="UTF-8">
+					<form class="form-horizontal" id="registerForm" method="POST" action="{{{  URL::to('user')  }}}" accept-charset="UTF-8">
 						<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
 											
 						<div class="notice notice-danger hide alert_field_js" >
@@ -136,8 +136,7 @@ $('#username').on('input', function() {
 $('#email').on('input', function() {
 	var input=$(this);
 	var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	//var is_email=re.test(input.val());
-	var is_email=re.test(input.val().toLowerCase());
+	var is_email=re.test(input.val());
 	if(is_email){input.removeClass("invalid").addClass("valid");}
 	else{input.removeClass("valid").addClass("invalid");}
 });

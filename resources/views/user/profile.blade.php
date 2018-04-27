@@ -92,8 +92,8 @@
 					@include('user.login_history')
 				@elseif($page == 'ip-whitelist')
 					@include('user.ip_whitelist')
-				@elseif($page == 'referred-user')
-					@include('user.referred_user')
+				@elseif($page == 'referred-users')
+					@include('user.referred_users')
 				@endif
 			</div>
 		</div>

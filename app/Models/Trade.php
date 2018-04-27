@@ -52,22 +52,17 @@ class Trade extends Eloquent
                 $pusher->trigger('trade.'.$this->market_id, 'message', $message);
             }
             
-			
             if (!$setting->getSetting('disable_points', 0)) {
                 //Cong point cho nguoi mua va nguoi da gioi thieu ho
-				// Add points to the (seller) and the buyer
+				// Add point for buyers and sellers
                 $points=new PointsController();
                 if ($this->fee_buy > 0) {
                     $points->addPointsTrade($this->buyer_id, $this->fee_buy, $this->id, $market->wallet_to);
-					//For handling the Commission fees
-					$points->addCommissionsTrade($this->buyer_id, $this->fee_buy, $this->id, $market->wallet_to);
                 }
                 //Cong point cho nguoi ban va nguoi da gioi thieu ho
-				// Add points to the seller and the (buyer)
+				// Add point to the seller and the buyer
                 if ($this->fee_sell > 0) {
                     $points->addPointsTrade($this->seller_id, $this->fee_sell, $this->id, $market->wallet_to);
-					//For handling the Commission fees
-					$points->addCommissionsTrade($this->seller_id, $this->fee_sell, $this->id, $market->wallet_to);
                 }
             }
         }
