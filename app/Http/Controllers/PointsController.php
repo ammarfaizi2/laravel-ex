@@ -33,15 +33,16 @@ class PointsController extends Controller
 {
     /*
     **$amount_fee is fee of trade
-    ** $wallet_id wallet of amount_fee (BTC or LTC)
+    ** $wallet_id wallet of amount_fee (BTC or LTC or any base Currency)
     */
+
     public function addPointsTrade($user_id, $amount_fee, $trade_id, $wallet_init)
     {
         $logFile = 'points.log';
         //Log::useDailyFiles(storage_path().'/logs/points/'.$logFile);
         $setting= new Setting();
         $balance=new Balance();
-        $wallet=wallet::where('type', 'CTP')->first();
+        $wallet=wallet::where('type', 'BEX')->first();
         $user=User::find($user_id);
         //Log::info("\n".'------------------------- Add Point Trade -----------------------------');
         //Log::info("\n".'amount_fee '.$amount_fee.' . trade_id: '.$trade_id." -- wallet_init: ".$wallet_init);
@@ -68,6 +69,7 @@ class PointsController extends Controller
                 }
             }
             //cong point cho nguoi da gioi thieu $user_id nay neu co
+			// add points to the referrer $ user_id if set
             if (!empty($user->referral) && $percent_point_reward_referred_trade>0) {
                 $user_referred=User::where('username', $user->referral)->first();
                 $amount_reward=($amount_fee*$percent_point_reward_referred_trade)/100;
@@ -89,4 +91,22 @@ class PointsController extends Controller
             //Log::info("\n".'No wallet POINTS');
         }
     }
+	
+    /*
+    **
+	* @ Handling the Commission Fees
+    ** 
+    */
+	
+	public function addCommissionsTrade($user_id, $amount_fee, $trade_id, $wallet_init)
+	{
+		
+		//traded_id is refferred to the DB table trade_history id 
+		//user_id is either buyer_id or seller_id
+		//amount_fee is either buy_fee or sell_fee
+		//wallet_init is the base currency wallet id, in our example BAY/BTC, it is BTC!
+		
+		//The coding part, check on the function above, it is more or less functional as the refferral (commission fee) program
+	}
+	
 }
