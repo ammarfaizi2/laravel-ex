@@ -17,7 +17,7 @@
 					<tr><td width="50%" align="right">Deposits Last 24 Hrs</td><td width="50%">{{ HTML::link('user/profile/deposits', $deposit_twentyfourhours) }}</td></tr>
 					<tr><td width="50%" align="right">Withdrawals Last 24 Hrs</td><td width="50%">{{ HTML::link('user/profile/withdrawals', $withdraw_twentyfourhours) }}</td></tr>
 					<tr><td width="50%" align="right">Pending Deposits</td><td width="50%">{{ HTML::link('user/profile/deposits', $deposit_pendings) }}</td></tr>
-					<tr><td width="50%" align="right">Referred User</td><td width="50%">{{ HTML::link('user/profile/referred-user', $referred_user) }}</td></tr>
+					<tr><td width="50%" align="right">Referred User</td><td width="50%">{{ HTML::link('user/profile/referred-users', $referred_user) }}</td></tr>
 				  </tbody>
 				</table>
 			  </div>

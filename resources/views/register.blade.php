@@ -17,7 +17,7 @@ https://developers.google.com/recaptcha/docs/verify
 				<span class="fa fa-lock fa-lg"></span> <a href="{{ url('/') }}">{{{ Config::get('config_custom.company_name') }}}</a> - <span>{{trans('user_texts.register')}}</span></div> 
 				<div class="panel-body"> 
  
-					<form class="form-horizontal" id="registerForm" method="POST" action="{{{ (Auth::check('UserController@store')) ?: URL::to('user')  }}}" accept-charset="UTF-8">
+					<form class="form-horizontal" id="registerForm" method="POST" action="{{{  URL::to('user')  }}}" accept-charset="UTF-8">
 						<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
 											
 						<div class="notice notice-danger hide alert_field_js" >
