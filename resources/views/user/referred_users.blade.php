@@ -65,9 +65,19 @@ $data = 'data:image/png;base64,'.base64_encode($data);
                     <th>{{ trans('user_texts.username') }}</th>
                     <th>{{ trans('user_texts.date') }}</th>
                 </tr>
+                @if($latest_commission_fees)
+                    @foreach($latest_commission_fees as $d)
+                        <tr>
+                            <td>{{ $d->amount." ".$d->type }}</td>
+                            <td>{{ substr($d->username, 0, 3).str_repeat("*", strlen($d->username) - 3) }}</td>
+                            <td>{{ $d->created_at }}</td>
+                        </tr>
+                    @endforeach
+                @else
                 <tr>
                     <td colspan="3" align="center"><h6>No Commission History</h2></td>
                 </tr>
+                @endif
                 </tbody>
             </table>
             </div>

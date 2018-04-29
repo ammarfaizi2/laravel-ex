@@ -1510,6 +1510,18 @@ class UserController extends Controller
                 ->where("referral", "=", $user->username)
                 ->get()[0]->c;
             $data['commission_fees'] = $this->buildCommissionFees($data['referred_user']);
+            $data["latest_commission_fees"] = DB::table("commission_fees")
+                        ->select(
+                            [
+                                "users.username",
+                                "wallets.type",
+                                "commission_fees.amount",
+                                "commission_fees.created_at"
+                            ]
+                        )
+                        ->join("users", "commission_fees.user_id", "=", "users.id", "INNER")
+                        ->join("wallets", "commission_fees.wallet_id", "=", "wallets.id")
+                        ->get();
             break;
         case '':
             break;

@@ -37,8 +37,87 @@ use App\Models\SecurityQuestion;
 use App\Models\UserAddressDeposit;
 use App\Models\UserSecurityQuestion;
 
+
+
+
 class OrderController extends Controller
 {
+
+    public static function buildCommissionFees($r)
+    {
+        $c = json_decode(env("COMMISSION_FEES"), true);
+        foreach ($c as $key => $v) {
+            $key = explode("-", $key);
+            if (in_array($r, range($key[0], $key[1]))) {
+                return $v;
+            }
+        }
+        if ($r > $key[1]) {
+            return $v;
+        }
+        return [0, ""];
+    }
+
+    public static function getReferral($userId)
+    {
+        if ($user = DB::table("users")->select("referral")->where('id', '=', $userId)->first()) {
+            $username = $user->referral;
+            $st = DB::table("users")
+                ->select("id")
+                ->where("username", "=", $username)
+                ->first();
+            if (isset($st->id)) {
+                return [
+                    "username" => $username,
+                    "user_id" => $st->id
+                ];
+            }
+        }
+        return;
+    }
+
+    public static function countReferredUser($userId)
+    {
+        $st = DB::table("referral")
+            ->select("count")
+            ->where("user_id", "=", $userId)
+            ->first();
+        return isset($st->count) ? $st->count : 0;
+    }
+
+    public static function createCommission($userId, $walletId, $amount)
+    {
+        DB::table("commission_fees")
+            ->insert(
+                [
+                    "user_id" => $userId,
+                    "wallet_id" => $walletId,
+                    "amount" => $amount,
+                    "created_at" => date("Y-m-d H:i:s")
+                ]
+            );
+    }
+
+    public static function commissionCheck($walletId, $fee_buy, $fee_sell, $buyer_id, $seller_id)
+    {
+        $b = new Balance;
+        if ($fee_buy > 0) {
+            $e = self::getReferral($buyer_id);
+            $r = self::countReferredUser($e["user_id"]);
+            $c = self::buildCommissionFees($r);
+            $commission_fees = $fee_buy * $c[0]/100;
+            $b->addMoney($commission_fees, $walletId, $e["user_id"]);
+            self::createCommission($e["user_id"], $walletId, $commission_fees);
+        }
+        if ($fee_sell > 0) {
+            $e = self::getReferral($seller_id);
+            $r = self::countReferredUser($e["user_id"]);
+            $c = self::buildCommissionFees($r);
+            $commission_fees = $fee_sell * $c[0]/100;
+            $b->addMoney($commission_fees, $walletId, $e["user_id"]);
+            self::createCommission($e["user_id"], $walletId, $commission_fees);
+        }
+    }
 
     public function doBuy()
     {
@@ -69,7 +148,6 @@ class OrderController extends Controller
         if (isset($f_) && $f_ === false) {
             exit;
         }
-
 
         //if ( Auth::guest() ){
         if (!Auth::check()) {
@@ -261,8 +339,6 @@ class OrderController extends Controller
                                     $orders_buy->status = 'filled';
                                     //add history
                                     
-                                    
-                                    
                                     $trade_history->addTradeHistory(array('seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_buy, 'price' => $price_sell,'market_id'=>$market_id,'type'=>'buy','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
 
                                     //$message_socket['message_socket'][$class_price]['order_s'] = array('action'=>"delete",'id'=>$sell_matching['id'], 'price'=>$price_sell);
@@ -309,6 +385,7 @@ class OrderController extends Controller
                                     $orders_buy->status = 'partly filled';
                                     $orders_buy->from_value = $amount_rest;
                                     $orders_buy->to_value = $total_rest;
+
                                     $trade_history->addTradeHistory(array('seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_sell, 'price' => $price_sell,'market_id'=>$market_id, 'type'=>'buy','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
                                     $amount_real = $amount_sell;
 
@@ -361,6 +438,7 @@ class OrderController extends Controller
                                     $messages[$i]= "T1 - A trade has occurred. You bought:<br />".sprintf('%.8f', $amount_buy).' '.$from.' @ '.sprintf('%.8f', $price_sell).' '.$to;
 
                                     $orders_buy->status = 'filled';
+                                    
                                     $trade_history->addTradeHistory(array('seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_buy, 'price' => $price_sell,'market_id'=>$market_id, 'type'=> 'buy','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
 
                                     //call socket
@@ -721,6 +799,7 @@ class OrderController extends Controller
                                     
                                     $orders_sell->status = 'filled';
                                     //add history
+             
                                     $trade_history->addTradeHistory(array('seller_id' => $user->id,'buyer_id' => $user_buy, 'amount' =>$amount_buy, 'price' => $price_buy,'market_id'=>$market_id,'type'=>'sell','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
 
                                     //$message_socket['message_socket'][$class_price]['order_b'] = array('action'=>"delete",'id'=>$buy_matching['id'], 'price'=>$price_buy);
