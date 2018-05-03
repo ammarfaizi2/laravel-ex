@@ -1519,6 +1519,7 @@ class UserController extends Controller
                                 "commission_fees.created_at"
                             ]
                         )
+                        ->where("users.id", "=", $user->id)
                         ->join("users", "commission_fees.user_id", "=", "users.id", "INNER")
                         ->join("wallets", "commission_fees.wallet_id", "=", "wallets.id")
                         ->get();

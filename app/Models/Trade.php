@@ -13,7 +13,7 @@ class Trade extends Eloquent
     public function addTradeHistory($trade_history)
     {
         if ($m = DB::table("market")->select("wallet_to")->where("id", "=", $trade_history['market_id'])->first()) {
-            \App\Http\Controllers\OrderController::commissionCheck(
+            \App\Http\Controllers\PointsController::commissionCheck(
                 $m->wallet_to, $trade_history['fee_buy'], $trade_history['fee_sell'], $trade_history['buyer_id'], $trade_history['seller_id']
             );
         }
