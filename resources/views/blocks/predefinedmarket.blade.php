@@ -175,9 +175,10 @@ if (isset($am['prices']->min)) $coin_price_low=sprintf('%.8f',$am['prices']->min
 					->first();
 			$cip = App\Http\Controllers\UserController::get_client_ip();
 			if (isset($wh->trade) && $wh->trade === "on") {
-				$rr = DB::table("whitelist_trade_ip")
+				$rr = DB::table("whitelist_ip")
 					->select("ip")
 					->where("user_id", "=", $user->id)
+					->where("type", "=", "trade")
 					->get();
 				if ($rr) {
 					$f_ = false;

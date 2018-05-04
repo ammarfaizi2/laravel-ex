@@ -39,10 +39,11 @@ class WhitelistIpController extends Controller
     			$valid[] = [
     				"user_id" => $user->id,
     				"ip"	=> $ip,
+                    "type" => $_POST["type"],
     				"created_at" => date("Y-m-d H:i:s")
     			];
     		}
-    		DB::table("whitelist_".$_POST["type"]."_ip")->insert($valid);
+    		DB::table("whitelist_ip")->insert($valid);
     		exit(json_encode(
     			[
     				"alert" => trans("user_texts.add_ip_success"),
@@ -74,10 +75,11 @@ class WhitelistIpController extends Controller
     				http_response_code(403);
     				exit; 
     			}
-    			DB::table("whitelist_".$_POST["type"]."_ip")
+    			DB::table("whitelist_ip")
     				->where("id", "=", $d["id"])
     				->where("ip", "=", $d["ip"])
     				->where("user_id", "=", $user->id)
+                    ->where("type", "=", $_POST["type"])
     				->limit(1)
     				->delete();
     		}

@@ -488,9 +488,10 @@ class UserController extends Controller
                 ->where("user_id", "=", $user->id)
                 ->first();
             if (isset($wh->login) && $wh->login === "on") {
-                $rr = DB::table("whitelist_login_ip")
+                $rr = DB::table("whitelist_ip")
                     ->select("ip")
                     ->where("user_id", "=", $user->id)
+                    ->where("type", "=", "login")
                     ->get();
                 if ($rr) {
                     $f = false;
@@ -1470,25 +1471,29 @@ class UserController extends Controller
                 ->first();
             switch ($_GET["p"]) {
                 case 'login':
-                    $data["w_ip"] = DB::table("whitelist_login_ip")
+                    $data["w_ip"] = DB::table("whitelist_ip")
                                     ->select("*")
                                     ->where("user_id", "=", $user->id)
+                                    ->where("type", "=", "login")
                                     ->orderBy("created_at", "desc")
                                     ->get();
+
                     $data["w_status"] = isset($e->login) && $e->login === "on";
                     break;
                 case 'trade':
-                    $data["w_ip"] = DB::table("whitelist_trade_ip")
+                    $data["w_ip"] = DB::table("whitelist_ip")
                                     ->select("*")
                                     ->where("user_id", "=", $user->id)
+                                    ->where("type", "=", "trade")
                                     ->orderBy("created_at", "desc")
                                     ->get();
                     $data["w_status"] = isset($e->trade) && $e->trade === "on";
                     break;
                 case 'withdraw':
-                    $data["w_ip"] = DB::table("whitelist_withdraw_ip")
+                    $data["w_ip"] = DB::table("whitelist_ip")
                                     ->select("*")
                                     ->where("user_id", "=", $user->id)
+                                    ->where("type", "=", "withdraw")
                                     ->orderBy("created_at", "desc")
                                     ->get();
                     $data["w_status"] = isset($e->withdraw) && $e->withdraw === "on";
@@ -1737,9 +1742,10 @@ class UserController extends Controller
         $data["dd"] = false;
         if (isset($st->withdraw) && $st->withdraw == "on") {
             $cip = $this->get_client_ip();
-            $ips = DB::table("whitelist_withdraw_ip")
+            $ips = DB::table("whitelist_ip")
                 ->select("ip")
                 ->where("user_id", "=", $user->id)
+                ->where("type", "=", "withdraw")
                 ->get();
             if ($ips) {
                 $flag = false;
