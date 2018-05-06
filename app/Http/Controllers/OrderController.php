@@ -78,7 +78,7 @@ class OrderController extends Controller
             exit;
         }
         
-        $market_id = (int)$_POST['market_name'];//Session::get('market_id');
+        $market_id = $_POST['market_name'];//Session::get('market_id');
 
         if (! is_numeric($market_id)) {
             $success = 0;
@@ -600,7 +600,7 @@ class OrderController extends Controller
         $total_sell = $price_sell*$amount_sell;//sprintf('%.8f',$price_sell*$amount_sell);
         
         
-        $market_id = (int)$_POST['market_name'];//Session::get('market_id');
+        $market_id = $_POST['market_name'];//Session::get('market_id');
 
         if (! is_numeric($market_id)) {
             $success = 0;
