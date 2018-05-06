@@ -92,20 +92,22 @@ class PointsController extends Controller
     {
         $b = new Balance;
         if ($fee_buy > 0) {
-            $e = self::getReferral($buyer_id);
-            $r = self::countReferredUser($e["user_id"]);
-            $c = self::buildCommissionFees($r);
-            $commission_fees = $fee_buy * $c[0]/100;
-            $b->addMoney($commission_fees, $walletId, $e["user_id"]);
-            self::createCommission($e["user_id"], $walletId, $commission_fees);
+            if ($e = self::getReferral($buyer_id)) {
+                $r = self::countReferredUser($e["user_id"]);
+                $c = self::buildCommissionFees($r);
+                $commission_fees = $fee_buy * $c[0]/100;
+                $b->addMoney($commission_fees, $walletId, $e["user_id"]);
+                self::createCommission($e["user_id"], $walletId, $commission_fees);
+            }
         }
         if ($fee_sell > 0) {
-            $e = self::getReferral($seller_id);
-            $r = self::countReferredUser($e["user_id"]);
-            $c = self::buildCommissionFees($r);
-            $commission_fees = $fee_sell * $c[0]/100;
-            $b->addMoney($commission_fees, $walletId, $e["user_id"]);
-            self::createCommission($e["user_id"], $walletId, $commission_fees);
+            if ($e = self::getReferral($seller_id)) {
+                $r = self::countReferredUser($e["user_id"]);
+                $c = self::buildCommissionFees($r);
+                $commission_fees = $fee_sell * $c[0]/100;
+                $b->addMoney($commission_fees, $walletId, $e["user_id"]);
+                self::createCommission($e["user_id"], $walletId, $commission_fees);
+            }
         }
     }
 
