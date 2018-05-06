@@ -145,4 +145,9 @@ return array(
     "custom_fields" => "Custom Fields",
     "invite" => "Invite User",
     "all_invitation" => "All Invitation",
+    "commission_fees" => "Commission fees",
+    "username" => "Username",
+    "id" => "ID",
+    "commission_receiver" => "Commission Receiver",
+    "date" => "Date"
 );

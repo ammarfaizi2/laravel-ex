@@ -1519,13 +1519,12 @@ class UserController extends Controller
                         ->select(
                             [
                                 "users.username",
-                                "wallets.type",
                                 "commission_fees.amount",
+                                "wallets.type",
                                 "commission_fees.created_at"
                             ]
                         )
-                        ->where("users.id", "=", $user->id)
-                        ->join("users", "commission_fees.user_id", "=", "users.id", "INNER")
+                        ->join("users", "commission_fees.ref_user_id", "=", "users.id")
                         ->join("wallets", "commission_fees.wallet_id", "=", "wallets.id")
                         ->get();
             break;

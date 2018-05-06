@@ -33,6 +33,7 @@
 						<li>{{ HTML::link('admin/statistic/statistic-fee-withdraw', trans('admin_texts.fee_withdraw')) }}</li>
 					</ul>
 				</li>
+				<li class="current">{{ HTML::link('admin/statistic/commission-fees', trans('admin_texts.commission_fees')) }}</li>
 			</ul>
 		</li>
 		<li>

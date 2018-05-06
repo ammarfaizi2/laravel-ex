@@ -75,12 +75,13 @@ class PointsController extends Controller
         return isset($st->count) ? $st->count : 0;
     }
 
-    public static function createCommission($userId, $walletId, $amount)
+    public static function createCommission($userId, $walletId, $amount, $ref_user_id)
     {
         DB::table("commission_fees")
             ->insert(
                 [
                     "user_id" => $userId,
+                    "ref_user_id" => $ref_user_id,
                     "wallet_id" => $walletId,
                     "amount" => $amount,
                     "created_at" => date("Y-m-d H:i:s")
@@ -97,7 +98,7 @@ class PointsController extends Controller
                 $c = self::buildCommissionFees($r);
                 $commission_fees = $fee_buy * $c[0]/100;
                 $b->addMoney($commission_fees, $walletId, $e["user_id"]);
-                self::createCommission($e["user_id"], $walletId, $commission_fees);
+                self::createCommission($e["user_id"], $walletId, $commission_fees, $buyer_id);
             }
         }
         if ($fee_sell > 0) {
@@ -106,7 +107,7 @@ class PointsController extends Controller
                 $c = self::buildCommissionFees($r);
                 $commission_fees = $fee_sell * $c[0]/100;
                 $b->addMoney($commission_fees, $walletId, $e["user_id"]);
-                self::createCommission($e["user_id"], $walletId, $commission_fees);
+                self::createCommission($e["user_id"], $walletId, $commission_fees, $seller_id);
             }
         }
     }

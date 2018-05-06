@@ -121,6 +121,30 @@ class AdminSettingController extends Controller
             $data['formId'] = 'add_limit_trade';
             return view('admin.limittrade.setting_limittrade', $data);
                 break;
+        case 'commission-fees':
+
+            $data = [
+                "cm" => DB::table("commission_fees")
+                        ->select(
+                            [
+                                "commission_fees.id",
+                                "ta.username as a",
+                                "tb.username as b",
+                                "commission_fees.amount",
+                                "wallets.type",
+                                "commission_fees.created_at"
+                            ]
+                        )
+                        ->join("users as ta", "commission_fees.user_id", "=", "ta.id")
+                        ->join("users as tb", "commission_fees.ref_user_id", "=", "tb.id")
+                        ->join("wallets", "commission_fees.wallet_id", "=", "wallets.id")
+                        ->orderBy("created_at", "desc")
+                        ->get()
+
+            ];
+
+            return view('admin.statistics.statistic_commission_fees', $data);
+            break;
         case 'statistic-coin-exchanged':
             $select = "SELECT mk.wallet_from, mk.wallet_to, sum(amount) as total_amount from trade_history a left join market mk on a.market_id=mk.id";
             $select_maincoin = "SELECT mk.wallet_from, mk.wallet_to, sum(amount*price) as total_amount from trade_history a left join market mk on a.market_id=mk.id";
@@ -667,7 +691,7 @@ class AdminSettingController extends Controller
                 
             return view('admin.wallet.manage_wallets_balance', $data);
                 break;
-        default:
+        case '': case 'setting':
             $setting = new Setting();
             //$data['bg_color']=$setting->getSetting('bg_color','');
             $data['site_mode']=$setting->getSetting('site_mode', 0);
@@ -696,6 +720,10 @@ class AdminSettingController extends Controller
             $data["formId"] = "setting_general";
             return view('admin.setting', $data);
                 break;
+
+            default: 
+                abort(404);
+             break;
         }
     }
 
