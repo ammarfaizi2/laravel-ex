@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Models\News;
 use App\Models\Post;
 use App\Models\Role;
