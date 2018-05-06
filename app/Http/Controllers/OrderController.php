@@ -78,7 +78,39 @@ class OrderController extends Controller
             exit;
         }
         
-        $market_id = (int)$_POST['market_id'];//Session::get('market_id');
+        $market_id = (int)$_POST['market_name'];//Session::get('market_id');
+
+        if (! is_numeric($market_id)) {
+            $success = 0;
+            $a = explode('_', $market_id, 2);
+            if (count($a) === 2) {
+                $b = DB::table('wallets')
+                    ->select(['market.id', 'market.wallet_to'])
+                    ->join('market', 'market.wallet_from', '=', 'wallets.id')
+                    ->where('wallets.type', '=', strtoupper($a[0]))
+                    ->get();
+                if ($b) {
+                    foreach ($b as $b) {
+                        $c = DB::table('wallets')
+                        ->select(['type'])
+                        ->where('id', '=', $b->wallet_to)
+                        ->first();
+                        if (isset($c->type) && strtoupper($a[1]) === $c->type) {
+                            $market_id = $b->id;
+                            $success = 1;
+                            break;
+                        }
+                    }
+                    if (! $success) {
+                        abort(404);
+                    }
+                } else {
+                    abort(404);
+                }
+            } else {
+                abort(404);
+            }
+        }
         
         //return json_encode(array('market_id'=>$_POST['market_id'],'amount_buy'=> $amount_buy ));
         
@@ -568,7 +600,39 @@ class OrderController extends Controller
         $total_sell = $price_sell*$amount_sell;//sprintf('%.8f',$price_sell*$amount_sell);
         
         
-        $market_id = (int)$_POST['market_id'];//Session::get('market_id');
+        $market_id = (int)$_POST['market_name'];//Session::get('market_id');
+
+        if (! is_numeric($market_id)) {
+            $success = 0;
+            $a = explode('_', $market_id, 2);
+            if (count($a) === 2) {
+                $b = DB::table('wallets')
+                    ->select(['market.id', 'market.wallet_to'])
+                    ->join('market', 'market.wallet_from', '=', 'wallets.id')
+                    ->where('wallets.type', '=', strtoupper($a[0]))
+                    ->get();
+                if ($b) {
+                    foreach ($b as $b) {
+                        $c = DB::table('wallets')
+                        ->select(['type'])
+                        ->where('id', '=', $b->wallet_to)
+                        ->first();
+                        if (isset($c->type) && strtoupper($a[1]) === $c->type) {
+                            $market_id = $b->id;
+                            $success = 1;
+                            break;
+                        }
+                    }
+                    if (! $success) {
+                        abort(404);
+                    }
+                } else {
+                    abort(404);
+                }
+            } else {
+                abort(404);
+            }
+        }
         
         if ($market_id === 0) {
             echo json_encode(array('status'=>'error','message'=> Lang::get('messages.error_occured'), 'messages'=>array(Lang::get('messages.error_occured'). ' - 3') ));
