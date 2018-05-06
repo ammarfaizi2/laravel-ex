@@ -27,7 +27,7 @@
             <td>{{ $m->id }}</td>
             <td>{{ $m->b }}</td>
             <td>{{ $m->a }}</td>
-            <td>{{ $m->amount }}</td>
+            <td>{{ ((string)$m->amount)." ".$m->type }}</td>
             <td>{{ $m->created_at }}</td>
         </tr>
     @endforeach
