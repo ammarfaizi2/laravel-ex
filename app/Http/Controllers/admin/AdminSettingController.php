@@ -150,7 +150,7 @@ class AdminSettingController extends Controller
             }
 
             if (isset($_GET["commission_receiver"]) && !empty($_GET["commission_receiver"])) {
-                $cm = $cm->where("ta.username", "=", $_GET["commission_receiver"]);
+                $cm = $cm->where("tb.username", "=", $_GET["commission_receiver"]);
             }
 
             $total_page = $cm->select(
