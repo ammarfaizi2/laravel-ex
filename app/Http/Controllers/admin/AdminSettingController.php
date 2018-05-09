@@ -123,23 +123,62 @@ class AdminSettingController extends Controller
                 break;
         case 'commission-fees':
 
+            $cm = DB::table("commission_fees")
+                ->join("users as ta", "commission_fees.user_id", "=", "ta.id")
+                ->join("users as tb", "commission_fees.ref_user_id", "=", "tb.id")
+                ->join("wallets", "commission_fees.wallet_id", "=", "wallets.id")
+                ->orderBy("commission_fees.id", "desc");
+
+            if (
+                isset($_GET["start_date"], $_GET["end_date"]) && 
+                !empty($_GET["start_date"]) &&
+                !empty($_GET["end_date"])
+            ) {
+                if ($_GET["start_date"] === $_GET["end_date"]) {
+                    $cm = $cm
+                        ->where("commission_fees.created_at", ">=", $_GET["start_date"])
+                        ->where("commission_fees.created_at", "<", date("Y-m-d", strtotime($_GET["end_date"])+3600*24));
+                } else {
+                    $cm = $cm
+                        ->where("commission_fees.created_at", ">=", $_GET["start_date"])
+                        ->where("commission_fees.created_at", "<=", $_GET["end_date"]);
+                }
+            }
+// 
+            if (isset($_GET["username"]) && !empty($_GET["username"])) {
+                $cm = $cm->where("tb.username", "=", $_GET["username"]);
+            }
+
+            if (isset($_GET["commission_receiver"]) && !empty($_GET["commission_receiver"])) {
+                $cm = $cm->where("tb.username", "=", $_GET["commission_receiver"]);
+            }
+
+            $total_page = $cm->select(
+                [
+                    DB::raw("COUNT(*) as b")
+                ]
+            )->get();
+
+            $cm = $cm->select(
+                    [
+                        "commission_fees.id",
+                        "ta.username as a",
+                        "tb.username as b",
+                        "commission_fees.amount",
+                        "wallets.type",
+                        "commission_fees.created_at"
+                    ]
+                );
+
+            $cm = $cm
+                    ->limit(10)
+                    ->offset($pager_page === "" ? 0 : ($pager_page-1)*10)
+                    ->get();
+
             $data = [
-                "cm" => DB::table("commission_fees")
-                        ->select(
-                            [
-                                "commission_fees.id",
-                                "ta.username as a",
-                                "tb.username as b",
-                                "commission_fees.amount",
-                                "wallets.type",
-                                "commission_fees.created_at"
-                            ]
-                        )
-                        ->join("users as ta", "commission_fees.user_id", "=", "ta.id")
-                        ->join("users as tb", "commission_fees.ref_user_id", "=", "tb.id")
-                        ->join("wallets", "commission_fees.wallet_id", "=", "wallets.id")
-                        ->orderBy("created_at", "desc")
-                        ->get()
+                "cm" => $cm,
+                "pager_page" => $pager_page,
+                "total_page" => $total_page
 
             ];
 
