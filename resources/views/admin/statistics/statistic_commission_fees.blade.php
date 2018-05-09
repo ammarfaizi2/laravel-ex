@@ -14,6 +14,47 @@
     @if ( Session::get('notice') )
           <div class="alert">{{{ Session::get('notice') }}}</div>
     @endif
+<div style="margin-top: 3px; margin-bottom: 10px;">
+    <form action="" method="GET">
+        <button id="filter" type="button" onclick="filter();">{{trans('admin_texts.filter_data')}}</button>
+        <div style="display: none;" id="filter_wd">
+            <h3>Filter Data:</h3>
+            <table>
+                <tr><td>Start Date</td><td>:</td><td><select name="start_date">
+                        <option></option>
+                        <?php
+                        $y = time();
+                        for ($i=0; $i < 100; $i++) { 
+                            ?>
+                            <option value="<?php print date("Y-m-d", $y-(3600*24*$i)); ?>"><?php print date("d F Y", $y-(3600*24*$i)); ?></option>
+                            <?php
+                        }
+                        ?>
+                    </select></td></tr>
+                <tr><td>End Date</td><td>:</td><td><select name="end_date">
+                        <option></option>
+                        <?php
+                        $y = time();
+                        for ($i=0; $i < 100; $i++) { 
+                            ?>
+                            <option value="<?php print date("Y-m-d", $y-(3600*24*$i)); ?>"><?php print date("d F Y", $y-(3600*24*$i)); ?></option>
+                            <?php
+                        }
+                        ?>
+                    </select></td></tr>
+                <tr><td>{{trans('admin_texts.username')}}</td><td>:</td><td><input type="text" name="username"></td></tr>
+                <tr><td>{{trans('admin_texts.commission_receiver')}}</td><td>:</td><td><input type="text" name="commission_receiver"></td></tr>
+            </table>
+            <button>Search</button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $("#filter")[0].addEventListener("click", function(a) {
+        $("#filter")[0].style.display = "none";
+        $("#filter_wd")[0].style.display = "";
+    });
+</script>
 <table class="table table-striped" id="list-fees">
 	<tr>
 	 	<th>{{trans('admin_texts.id')}}</th>
@@ -43,29 +84,14 @@
 </div>
 
 <script type='text/javascript'>
-
-// function deletePost(limit_id){
-//     $.post('<?php echo action('admin\\AdminSettingController@deleteWithdrawLimit')?>', {isAjax: 1, limit_id: limit_id }, function(response){
-//         var obj = $.parseJSON(response);
-//         console.log('obj: ',obj);
-//         if(obj.status == 'success'){
-//             location.reload();
-//         }else{
-//             alert(obj.message);
-//             //$('#messageModal .modal-body').html('<p style="color:red; font-weight:bold;text-align:center;">'+obj.message+'</p>');
-//         }
-//         //$('#messageModal').modal({show:true, keyboard:false}); 
-//     });
-//     return false;
-// }
-//     var options = {
-//         currentPage: <?php // echo $cur_page ?>,
-//         totalPages: <?php // echo $total_pages ?>,
-//         alignment:'right',
-//         pageUrl: function(type, page, current){
-//             return "<?php echo URL::to('admin/content/all-news'); ?>"+'/'+page; 
-//         }
-//     }
-//     $('#pager').bootstrapPaginator(options);
+    var options = {
+        currentPage: <?php print !$pager_page ? 1 : $pager_page; ?>,
+        totalPages: <?php print ceil($total_page[0]->b/10); ?>,
+        alignment:'right',
+        pageUrl: function(type, page, current){
+            return "<?php echo URL::to('admin/statistic/commission-fees'); ?>"+'/'+page+"<?php print "?". http_build_query($_GET); ?>"; 
+        }
+    }
+    $('#pager').bootstrapPaginator(options);
 </script>
 @stop

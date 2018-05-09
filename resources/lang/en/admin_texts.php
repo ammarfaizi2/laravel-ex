@@ -149,5 +149,6 @@ return array(
     "username" => "Username",
     "id" => "ID",
     "commission_receiver" => "Commission Receiver",
-    "date" => "Date"
+    "date" => "Date",
+    "filter_data" => "Filter Data"
 );

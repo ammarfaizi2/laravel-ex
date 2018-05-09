@@ -154,7 +154,7 @@
 				//url: '{{route("user.do_login")}}',
 				datatype: 'json',
 				//data: {isAjax: 1, user: $('#email').val(), email: $('#email').val(), password: $('#password').val(), remember:  $('#remember').val(), token: $("#_token").val() },
-				data: {isAjax: 1, email: $('#email').val(), password: $('#password').val(), remember:  $('#remember').val(), token: "{{csrf_token()}}" },
+				data: {isAjax: 1, email: $('#email').val(), password: $('#password').val(), remember:  $('#remember').val(), _token: "{{csrf_token()}}" },
 				beforeSend: function(request) {
 					return request.setRequestHeader('X-CSRF-Token', "{{csrf_token()}}");
 				},
