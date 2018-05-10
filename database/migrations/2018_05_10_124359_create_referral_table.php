@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateNotificationsTable extends Migration {
+class CreateReferralTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,13 +12,11 @@ class CreateNotificationsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('notifications', function(Blueprint $table)
+		Schema::create('referral', function(Blueprint $table)
 		{
-			$table->increments('id');
-			$table->text('data', 65535);
+			$table->integer('user_id')->unsigned()->index('user_id');
+			$table->integer('count');
 			$table->timestamps();
-			$table->softDeletes();
-			$table->string('context')->nullable()->index();
 		});
 	}
 
@@ -30,7 +28,7 @@ class CreateNotificationsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('notifications');
+		Schema::drop('referral');
 	}
 
 }

@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration {
 			$table->integer('id', true);
 			$table->integer('market_id')->nullable();
 			$table->integer('user_id')->nullable();
+			$table->float('amount', 10, 0)->nullable();
 			$table->float('price', 10, 0)->nullable();
 			$table->float('from_value', 10, 0)->nullable();
 			$table->float('to_value', 10, 0)->nullable()->comment('price * from_value');
