@@ -225,7 +225,7 @@
             <td>{{ $m->id }}</td>
             <td>{{ $m->b }}</td>
             <td>{{ $m->a }}</td>
-            <td>{{ number_format($m->amount, 13)." ".$m->type }}</td>
+            <td>{{ number_format($m->amount, 8)." ".$m->type }}</td>
             <td>{{ $m->created_at }}</td>
         </tr>
     @endforeach
