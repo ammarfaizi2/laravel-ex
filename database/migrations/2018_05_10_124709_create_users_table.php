@@ -27,7 +27,7 @@ class CreateUsersTable extends Migration {
 			$table->timestamps();
 			$table->dateTime('lastest_login')->nullable();
 			$table->string('timeout', 50);
-			$table->string('referral', 100)->nullable();
+			$table->integer('referral')->nullable();
 			$table->string('trade_key');
 			$table->string('ip_lastlogin');
 			$table->string('remember_token')->nullable();
