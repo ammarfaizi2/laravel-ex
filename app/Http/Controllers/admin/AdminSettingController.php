@@ -126,8 +126,32 @@ class AdminSettingController extends Controller
             $cm = DB::table("commission_fees")
                 ->join("users as ta", "commission_fees.user_id", "=", "ta.id")
                 ->join("users as tb", "commission_fees.ref_user_id", "=", "tb.id")
-                ->join("wallets", "commission_fees.wallet_id", "=", "wallets.id")
-                ->orderBy("commission_fees.id", "desc");
+                ->join("wallets", "commission_fees.wallet_id", "=", "wallets.id");
+
+            if (!empty($_GET["order_by"]) && is_string($_GET["order_by"])) {
+                if (!empty($_GET["sr"])) {
+                    if ($_GET["sr"] === "desc") {
+                        $sr = "desc";
+                    } else {
+                        $sr = "asc";
+                    }
+                }
+                if (in_array($_GET["order_by"], ["id", "username", "commission_receiver", "date", "amount"])) {
+                    if ($_GET["order_by"] === "username") {
+                        $cm = $cm->orderBy("tb.username", $sr);
+                    } elseif ($_GET["order_by"] === "commission_receiver") {
+                        $cm = $cm->orderBy("ta.username", $sr);
+                    } elseif ($_GET["order_by"] === "date") {
+                        $cm = $cm->orderBy("commission_fees.created_at", $sr);
+                    } else {
+                        $cm = $cm->orderBy("commission_fees.".$_GET["order_by"], $sr);
+                    }
+                } else {
+                    $cm = $cm->orderBy("commission_fees.id", "desc");    
+                }
+            } else {
+                $cm = $cm->orderBy("commission_fees.id", "desc");
+            }
 
             if (
                 // Without end_date
@@ -136,7 +160,7 @@ class AdminSettingController extends Controller
                 empty($_GET["end_date"]) && 
                 is_int($_GET["start_date"] = @strtotime($_GET["start_date"]))
             ) {
-                $cm = $cm->where("commission_fees.created_at", ">=", date("Y-m-d", $_GET["start_date"])." 00:00:00");
+                $cm = $cm->where("commission_fees.created_at", ">=", ($_GET["start_date"] = date("Y-m-d", $_GET["start_date"]))." 00:00:00");
             }
 
             if (
@@ -149,8 +173,8 @@ class AdminSettingController extends Controller
                 is_int($_GET["end_date"] = @strtotime($_GET["end_date"]))
             ) {
                 $cm = $cm
-                    ->where("commission_fees.created_at", ">=", date("Y-m-d", $_GET["start_date"])." 00:00:00")
-                    ->where("commission_fees.created_at", "<=", date("Y-m-d", $_GET["end_date"])." 23:59:59");
+                    ->where("commission_fees.created_at", ">=", ($_GET["start_date"] = date("Y-m-d", $_GET["start_date"]))." 00:00:00")
+                    ->where("commission_fees.created_at", "<=", ($_GET["end_date"] = date("Y-m-d", $_GET["end_date"]))." 23:59:59");
             }
 
             if (!empty($_GET["id"]) && is_string($_GET["id"])) {

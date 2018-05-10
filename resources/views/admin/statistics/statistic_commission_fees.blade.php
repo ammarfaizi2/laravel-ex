@@ -36,10 +36,22 @@
                         <?php
                         $y = time();
                         for ($i=0; $i < 100; $i++) { 
-                            ?><option value="<?php print $s = date("Y-m-d", $y-(3600*24*$i)); ?>" <?php if(isset($_GET["start_date"]) && $_GET["end_date"] === $s) print "selected";?>><?php print date("d F Y", $y-(3600*24*$i)); ?></option><?php
+                            ?><option value="<?php print $s = date("Y-m-d", $y-(3600*24*$i)); ?>" <?php if(isset($_GET["end_date"]) && $_GET["end_date"] === $s) print "selected";?>><?php print date("d F Y", $y-(3600*24*$i)); ?></option><?php
                         }
                         ?></select></td>
                 </tr>
+                <tr><td>Order By<div style="width: 200px;"></div></td><td>:</td><td><select id="order_by" autocomplete="off">
+                    <option></option>
+                    <option value="id" <?php if(isset($_GET["order_by"]) && $_GET["order_by"] == "id") print "selected"; ?>>{{trans('admin_texts.id')}}</option>
+                    <option value="username" <?php if(isset($_GET["order_by"]) && $_GET["order_by"] == "username") print "selected"; ?>>{{trans('admin_texts.username')}}</option>
+                    <option value="commission_receiver" <?php if(isset($_GET["order_by"]) && $_GET["order_by"] == "commission_receiver") print "selected"; ?>>{{trans('admin_texts.commission_receiver')}}</option>
+                    <option value="amount" <?php if(isset($_GET["order_by"]) && $_GET["order_by"] == "amount") print "selected"; ?>>{{trans('admin_texts.amount')}}</option>
+                    <option value="date" <?php if(isset($_GET["order_by"]) && $_GET["order_by"] == "date") print "selected"; ?>>{{trans('admin_texts.date')}}</option>
+                </select></td><td><select id="sr"><option></option><option value="asc" <?php if (isset($_GET["order_by"], $_GET["sr"]) && $_GET["sr"] == "asc") {
+                    print "selected";
+                } ?>>Ascending</option><option value="desc" <?php if (isset($_GET["order_by"], $_GET["sr"]) && $_GET["sr"] === "desc") {
+                    print "selected";
+                } ?>>Descending</option></select></td></tr>
                 </tbody>
             </table>
             <input type="hidden" id="filter_val" value="1"><br/>
@@ -50,9 +62,41 @@
 </div>
 <script type="text/javascript">
     $("#filter_val")[0].value = 1;
+    <?php
+    if (!empty($_GET["id"]) && is_string($_GET["id"])) {
+        foreach (explode(",", trim($_GET["id"], ",")) as $v) {
+            if (! empty($v)) {
+                ?>createFilter("id", "<?php print $v; ?>");<?php
+            }
+        }
+    }
+    ?>
+    <?php
+    if (!empty($_GET["username"]) && is_string($_GET["username"])) {
+        foreach (explode(",", trim($_GET["username"], ",")) as $v) {
+            if (! empty($v)) {
+                ?>createFilter("username", "<?php print $v; ?>");<?php
+            }
+        }
+    }
+    ?>
+    <?php
+    if (!empty($_GET["commission_receiver"]) && is_string($_GET["commission_receiver"])) {
+        foreach (explode(",", trim($_GET["commission_receiver"], ",")) as $v) {
+            if (! empty($v)) {
+                ?>createFilter("commission_receiver", "<?php print $v; ?>");<?php
+            }
+        }
+    }
+    ?>  
     $("#filter_form")[0].addEventListener("submit", function() {
-         var num        = parseInt($("#filter_val")[0].value);
-         var http_query = "start_date="+encodeURIComponent($("#start_date")[0].value)+"&end_date="+encodeURIComponent($("#end_date")[0].value)+"&";
+         var num        = parseInt($("#filter_val")[0].value), http_query = "";
+         if ($("#start_date")[0].value != "") {
+            http_query += "start_date="+encodeURIComponent($("#start_date")[0].value);
+         }
+         if ($("#end_date")[0].value) {
+            http_query += "&end_date="+encodeURIComponent($("#end_date")[0].value)+"&";
+         }
          var context = {
             "id": "",
             "username": "",
@@ -63,13 +107,67 @@
          }
 
          http_query += ""
-                    +"id="+encodeURIComponent(context["id"].trim(","))
-                    +"&username="+encodeURIComponent(context["username"].trim(","))
-                    +"&commission_receiver="+encodeURIComponent(context["commission_receiver"].trim(","));
-
+                    +(context["id"] != "" ? "id="+encodeURIComponent(context["id"].trim(",")) : "")
+                    +(context["username"] != "" ? "&username="+encodeURIComponent(context["username"].trim(",")) : "")
+                    +(context["commission_receiver"] != "" ? "&commission_receiver="+encodeURIComponent(context["commission_receiver"].trim(",")) : "");
+        if ($("#order_by")[0].value != "") {
+            http_query+="&order_by="+$("#order_by")[0].value+"&";
+            if ($("#sr")[0].value == "") {
+                http_query+="sr=asc";
+            } else {
+                http_query+="sr="+$("#sr")[0].value;
+            }
+        }
         window.location = "?"+http_query;
 
     });
+    function createFilter(field, value) {
+        var num = parseInt($("#filter_val")[0].value);
+        var select  = document.createElement("select");
+        var op0     = document.createElement("option");
+        var op1     = document.createElement("option");
+        op1.setAttribute("value", "id");
+        op1.appendChild(document.createTextNode("{{trans('admin_texts.id')}}"));
+        var op2     = document.createElement("option");
+        op2.setAttribute("value", "username");
+        op2.appendChild(document.createTextNode("{{trans('admin_texts.username')}}"));
+        var op3     = document.createElement("option");
+        op3.setAttribute("value", "commission_receiver");
+        op3.appendChild(document.createTextNode("{{trans('admin_texts.commission_receiver')}}"));
+        switch (field) {
+            case 'id':
+                op1.setAttribute("selected", "selected");
+            break;
+            case 'username':
+                op2.setAttribute("selected", "selected");
+            break;
+            case 'commission_receiver':
+                op3.setAttribute("selected", "selected");
+            break;
+        }
+        select.setAttribute("id", "filter_"+num+"_f");
+        select.appendChild(op0);
+        select.appendChild(op1);
+        select.appendChild(op2);
+        select.appendChild(op3);
+        var input   = document.createElement("input");
+        input.setAttribute("type", "text");
+        input.setAttribute("id", "filter_"+num);
+        input.setAttribute("size", 18);
+        input.setAttribute("value", value);
+        var td1     = document.createElement("td");
+        var td2     = document.createElement("td");
+        var td3     = document.createElement("td");
+        td1.appendChild(select);
+        td2.appendChild(document.createTextNode(":"));
+        td3.appendChild(input);
+        var tr      = document.createElement("tr");
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        $("#filter_table")[0].appendChild(tr);
+        $("#filter_val")[0].value = ++num;
+    }
     function addFilter()
     {
         var num = parseInt($("#filter_val")[0].value);
@@ -92,6 +190,7 @@
         var input   = document.createElement("input");
         input.setAttribute("type", "text");
         input.setAttribute("id", "filter_"+num);
+        input.setAttribute("size", 18);
         var td1     = document.createElement("td");
         var td2     = document.createElement("td");
         var td3     = document.createElement("td");
