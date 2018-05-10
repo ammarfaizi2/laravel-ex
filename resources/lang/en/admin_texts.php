@@ -150,5 +150,7 @@ return array(
     "id" => "ID",
     "commission_receiver" => "Commission Receiver",
     "date" => "Date",
-    "filter_data" => "Filter Data"
+    "filter_data" => "Filter Data",
+    "add_more_filter" => "Add More Filter",
+    "no_result" => "No Result"
 );

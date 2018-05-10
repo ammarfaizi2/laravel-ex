@@ -130,33 +130,54 @@ class AdminSettingController extends Controller
                 ->orderBy("commission_fees.id", "desc");
 
             if (
-                isset($_GET["start_date"], $_GET["end_date"]) && 
-                !empty($_GET["start_date"]) &&
-                !empty($_GET["end_date"])
+                // Without end_date
+                !empty($_GET["start_date"]) && 
+                is_string($_GET["start_date"]) && 
+                empty($_GET["end_date"]) && 
+                is_int($_GET["start_date"] = @strtotime($_GET["start_date"]))
             ) {
-                if ($_GET["start_date"] === $_GET["end_date"]) {
-                    $cm = $cm
-                        ->where("commission_fees.created_at", ">=", $_GET["start_date"])
-                        ->where("commission_fees.created_at", "<", date("Y-m-d", strtotime($_GET["end_date"])+3600*24));
-                } else {
-                    $cm = $cm
-                        ->where("commission_fees.created_at", ">=", $_GET["start_date"])
-                        ->where("commission_fees.created_at", "<=", $_GET["end_date"]);
-                }
-            }
-// 
-            if (isset($_GET["username"]) && !empty($_GET["username"])) {
-                $cm = $cm->where("tb.username", "=", $_GET["username"]);
+                $cm = $cm->where("commission_fees.created_at", ">=", date("Y-m-d", $_GET["start_date"])." 00:00:00");
             }
 
-            if (isset($_GET["commission_receiver"]) && !empty($_GET["commission_receiver"])) {
-                $cm = $cm->where("tb.username", "=", $_GET["commission_receiver"]);
+            if (
+                // With start_date and end_date
+                !empty($_GET["start_date"]) && 
+                !empty($_GET["end_date"]) && 
+                is_string($_GET["start_date"]) && 
+                is_string($_GET["end_date"]) &&
+                is_int($_GET["start_date"] = @strtotime($_GET["start_date"])) &&
+                is_int($_GET["end_date"] = @strtotime($_GET["end_date"]))
+            ) {
+                $cm = $cm
+                    ->where("commission_fees.created_at", ">=", date("Y-m-d", $_GET["start_date"])." 00:00:00")
+                    ->where("commission_fees.created_at", "<=", date("Y-m-d", $_GET["end_date"])." 23:59:59");
             }
 
-            $total_page = $cm->select(
-                [
-                    DB::raw("COUNT(*) as b")
-                ]
+            if (!empty($_GET["id"]) && is_string($_GET["id"])) {
+                $cm = $cm->where(function ($cm) {
+                    foreach (explode(",", $_GET["id"]) as $v) {
+                        $cm = $cm->orWhere("commission_fees.id", "=", trim($v));
+                    }
+                });
+            }
+
+            if (!empty($_GET["username"]) && is_string($_GET["username"])) {
+                $cm = $cm->where(function ($cm) {
+                    foreach (explode(",", $_GET["username"]) as $v) {
+                        $cm = $cm->orWhere("tb.username", "like", trim($v));
+                    }
+                });
+            }
+
+            if (!empty($_GET["commission_receiver"]) && is_string($_GET["commission_receiver"])) {
+                $cm = $cm->where(function ($cm) {
+                    foreach (explode(",", $_GET["commission_receiver"]) as $v) {
+                        $cm = $cm->orWhere("ta.username", "like", trim($v));
+                    }
+                });
+            }
+
+            $total_page = $cm->select([DB::raw("COUNT(*) as b")]
             )->get();
 
             $cm = $cm->select(
