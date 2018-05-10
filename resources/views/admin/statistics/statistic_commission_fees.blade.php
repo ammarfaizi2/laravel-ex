@@ -118,7 +118,7 @@
                 http_query+="sr="+$("#sr")[0].value;
             }
         }
-        window.location = "?"+http_query;
+        window.location = "/admin/statistic/commission-fees?"+http_query;
 
     });
     function createFilter(field, value) {
