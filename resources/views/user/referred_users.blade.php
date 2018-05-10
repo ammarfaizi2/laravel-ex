@@ -68,7 +68,7 @@ $data = 'data:image/png;base64,'.base64_encode($data);
                 @if($latest_commission_fees)
                     @foreach($latest_commission_fees as $d)
                         <tr>
-                            <td>{{ $d->amount." ".$d->type }}</td>
+                            <td>{{ number_format($d->amount, 8)." ".$d->type }}</td>
                             <td>{{ substr($d->username, 0, 3).str_repeat("*", strlen($d->username) - 3) }}</td>
                             <td>{{ $d->created_at }}</td>
                         </tr>
