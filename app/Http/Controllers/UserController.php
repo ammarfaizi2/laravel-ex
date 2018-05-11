@@ -1468,7 +1468,7 @@ class UserController extends Controller
             break;
         case 'ip-whitelist':
             if (strpos(url()->current(), "settings") === false) {
-                return Redirect::to(route("whitelist_ip")."?p=".$_GET["p"]);
+                return Redirect::to(route("whitelist_ip", ["page" => $_GET["p"]]))  ;
             }
             if (! isset($_GET["p"])) {
                 abort(404);
