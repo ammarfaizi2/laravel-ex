@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 @section('content') 
 
-<h2>Add Market News</h2>
+<h2>{{ trans('admin_texts.add_coin_news') }}</h2>
 @if ( is_array(Session::get('error')) )
         <div class="alert alert-danger">{{ head(Session::get('error')) }}</div>
     @elseif ( Session::get('error') )

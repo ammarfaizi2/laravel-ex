@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 @section('content')	
 {{ HTML::script('assets/js/bootstrap-paginator.js') }}
-<h2>All Market News</h2>
+<h2>{{ trans('admin_texts.all_coin_news') }}</h2>
 @if ( is_array(Session::get('error')) )
         <div class="alert alert-danger">{{ head(Session::get('error')) }}</div>
     @elseif ( Session::get('error') )
@@ -14,7 +14,7 @@
     @if ( Session::get('notice') )
           <div class="alert">{{{ Session::get('notice') }}}</div>
     @endif
-<div><a href="{{URL::to('admin/content/add-coin-news')}}">Add Market News</a></div>
+<div><a href="{{URL::to('admin/content/add-coin-news')}}">{{ trans('admin_texts.add_coin_news') }}</a></div>
 <table class="table table-striped" id="list-fees">
 	<tr>
 	 	<th>ID</th>
