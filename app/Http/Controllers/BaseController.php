@@ -4,7 +4,10 @@
 namespace App\Http\Controllers;
 
 use DB;
+use App;
 use Config;
+use Cookie;
+use Request;
 use App\Models\News;
 use App\Models\Post;
 use App\Models\Role;

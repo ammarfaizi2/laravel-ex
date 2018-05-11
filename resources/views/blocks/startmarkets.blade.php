@@ -83,7 +83,9 @@
 						return $item2['volume'] <=> $item1['volume'];
 					}
 				});
-				$all_markets_top[0] = $all_markets[0];
+
+
+				$all_markets_top[0] = empty($all_markets) ? [] : $all_markets[0];;
 				$all_markets_top[0]['market_type'] = 'volume';
 				
 				
@@ -93,7 +95,7 @@
 						return $item2['market_change'] <=> $item1['market_change'];
 					}
 				});
-				$all_markets_top[1] = $all_markets[0];
+				$all_markets_top[1] = empty($all_markets) ? [] : $all_markets[0];;
 				$all_markets_top[1]['market_type'] = 'gain';
 				
 				//Get market with Biggest Loss
@@ -102,7 +104,7 @@
 						return $item1['market_change'] <=> $item2['market_change'];
 					}
 				});
-				$all_markets_top[2] = $all_markets[0];
+				$all_markets_top[2] = empty($all_markets) ? [] : $all_markets[0];;
 				$all_markets_top[2]['market_type'] = 'loss';
 				
 				
@@ -130,8 +132,7 @@
 				
 				//Sort Market by Volume
 				$volume_markets_ = array();
-				foreach ($all_markets as $key => $row)
-				{
+				foreach ($all_markets as $key => $row) {
 					$volume_markets_[$key] = $row['volume'] ;
 					//echo $volume_markets_[$key].' - ';
 				}

@@ -51,14 +51,13 @@ class PointsController extends Controller
     public static function getReferral($userId)
     {
         if ($user = DB::table("users")->select("referral")->where('id', '=', $userId)->first()) {
-            $username = $user->referral;
+            $id = $user->referral;
             $st = DB::table("users")
                 ->select("id")
-                ->where("username", "=", $username)
+                ->where("id", "=", $id)
                 ->first();
             if (isset($st->id)) {
                 return [
-                    "username" => $username,
                     "user_id" => $st->id
                 ];
             }

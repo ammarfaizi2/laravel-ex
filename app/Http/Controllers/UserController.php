@@ -171,7 +171,15 @@ class UserController extends Controller
         $data['question1s'] = SecurityQuestion::where('type', '=', '1')->get();
         $data['question2s'] = SecurityQuestion::where('type', '=', '2')->get();
         if ($referral!='') {
-            $data['referral'] =$referral;
+            $st = DB::table("users")
+                ->select(["id"])
+                ->where("username", "=", $referral)
+                ->first();
+            if (isset($st->id)) {
+                $data['referral'] = $st->id;
+            } else {
+                abort(404);
+            }
         }
         return view(
             //Config::get('confide::signup_form')
@@ -259,7 +267,7 @@ class UserController extends Controller
             $st = DB::table("referral")
             ->select(["referral.user_id", "referral.count"])
             ->join("users", "users.id", "=", "referral.user_id")
-            ->where("users.username", "=", $user->referral)
+            ->where("users.id", "=", $user->referral)
             ->first();
             if (isset($st->user_id)) {
                 DB::table("referral")
@@ -273,7 +281,7 @@ class UserController extends Controller
             } else {
                 $st = DB::table("users")
                     ->select("id")
-                    ->where("username", "=", $user->referral)
+                    ->where("id", "=", $user->referral)
                     ->first();
                 DB::table("referral")
                     ->insert(
@@ -1369,7 +1377,7 @@ class UserController extends Controller
         case 'dashboard':
             $data['referred_user'] = DB::table("users")
                 ->select([DB::raw("count(`username`) as c")])
-                ->where("referral", "=", $user->username)
+                ->where("referral", "=", $user->id)
                 ->get()[0]->c;
             $total_trades=Trade::where('seller_id', $user_id)->orwhere('buyer_id', $user_id)->get()->toArray();
             $data['total_trades']=count($total_trades);
@@ -1508,11 +1516,11 @@ class UserController extends Controller
         case 'referred-users':
             $data['referred_users'] = DB::table("users")
                 ->select(["username", "email", "created_at as joined_at"])
-                ->where("referral", "=", $user->username)
+                ->where("referral", "=", $user->id)
                 ->get();
             $data['referred_user'] = DB::table("users")
                 ->select([DB::raw("count(`username`) as c")])
-                ->where("referral", "=", $user->username)
+                ->where("referral", "=", $user->id)
                 ->get()[0]->c;
             $data['commission_fees'] = $this->buildCommissionFees($data['referred_user']);
             $data["latest_commission_fees"] = DB::table("commission_fees")
