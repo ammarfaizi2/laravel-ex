@@ -55,6 +55,7 @@
                     <th>{{{ trans('texts.total')}}}</th>
                     <th>{{{ trans('texts.remaining_amount')}}}</th>
                     <th>{{{ trans('texts.status')}}}</th>
+                    <th>{{ trans('texts.date') }}</th>
                     <th>{{{ trans('texts.action')}}}</th> 
                 </tr>
                 <?php
@@ -85,6 +86,7 @@
                         }
                             ?>
                         </td>
+                        <td>{{ $ordershistory->created_at }}</td>
                         <td>
 							@if(in_array($ordershistory->status,$active)) 
 								<button type="button" onclick="javascript:cancelOrder({{{$ordershistory->id}}});" class="btn btn-danger btn-xs">{{trans('texts.cancel')}}</button>
