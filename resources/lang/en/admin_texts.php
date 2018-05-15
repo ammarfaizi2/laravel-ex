@@ -152,5 +152,6 @@ return array(
     "date" => "Date",
     "filter_data" => "Filter Data",
     "add_more_filter" => "Add More Filter",
-    "no_result" => "No Result"
+    "no_result" => "No Result",
+    "total_commission" => "Total Commission"
 );

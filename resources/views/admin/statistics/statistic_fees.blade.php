@@ -21,6 +21,7 @@
 	 	<th>{{trans('admin_texts.sell_fee')}}</th>
 	 	<th>{{trans('admin_texts.buy_fee')}}</th>	 	
 	 	<th>{{trans('admin_texts.total_fees')}}</th>
+        <th>{{trans('admin_texts.total_commission')}}</th>
 	</tr> 	
 	<?php
     //var_dump($fees_maincoin);
@@ -28,7 +29,21 @@
     if (count($fees_maincoin) > 0) {?>
         @foreach($fees_maincoin as $fee)
         @if(isset($wallets[$fee->wallet_to]->type))
-            <tr><td><strong>{{$wallets[$fee->wallet_to]->type}}</strong></td><td>{{$wallets[$fee->wallet_to]->name}}</td><td>0</td><td>{{$fee->fee_sell}}</td><td><strong>{{$fee->fee_sell}} {{$wallets[$fee->wallet_to]->type}}</strong></td></tr>
+            <tr><td><strong>{{$wallets[$fee->wallet_to]->type}}</strong></td><td>{{$wallets[$fee->wallet_to]->name}}</td><td>0</td><td>{{$fee->fee_sell}}</td><td><strong>{{$fee->fee_sell}} {{$wallets[$fee->wallet_to]->type}}</strong></td><td><strong>
+<?php
+$st = DB::table("commission_fees")
+    ->select([DB::raw("SUM(`amount`) as jumlah")])
+    ->where("wallet_id", "=", $wallets[$fee->wallet_to]->id)
+    ->get();
+if (isset($st[0]->jumlah)) {
+    print number_format($st[0]->jumlah, 8);
+} else {
+    print 0;
+}
+print " ".$wallets[$fee->wallet_to]->type;
+?>
+
+            </strong></td></tr>
         @endif
         @endforeach 
     <?php
