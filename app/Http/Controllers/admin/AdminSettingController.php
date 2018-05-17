@@ -307,7 +307,9 @@ class AdminSettingController extends Controller
             $where = (empty($where)) ? ' WHERE mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL' : $where . ' AND mk.wallet_from IS NOT NULL  AND mk.wallet_to IS NOT NULL';
 
             $select_maincoin .= " ".$where." group by mk.wallet_to order by `created_at` desc";
+            // var_dump($select_maincoin);die;
             $fees_maincoin = DB::select($select_maincoin);
+            
             $data['fees_maincoin'] = $fees_maincoin;
             // echo "<pre>"; print_r($fees); echo "</pre>";
              $wallets_temp = Wallet::get();

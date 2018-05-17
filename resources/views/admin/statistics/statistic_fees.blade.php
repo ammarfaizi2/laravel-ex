@@ -29,7 +29,7 @@
     if (count($fees_maincoin) > 0) {?>
         @foreach($fees_maincoin as $fee)
         @if(isset($wallets[$fee->wallet_to]->type))
-            <tr><td><strong>{{$wallets[$fee->wallet_to]->type}}</strong></td><td>{{$wallets[$fee->wallet_to]->name}}</td><td>0</td><td>{{$fee->fee_sell}}</td><td><strong>{{$fee->fee_sell}} {{$wallets[$fee->wallet_to]->type}}</strong></td><td><strong>
+            <tr><td><strong>{{$wallets[$fee->wallet_to]->type}}</strong></td><td>{{$wallets[$fee->wallet_to]->name}}</td><td>{{number_format($fee->fee_sell, 8)}}</td><td>{{number_format($fee->fee_buy, 8)}}</td><td><strong>{{number_format($fee->fee_sell+$fee->fee_buy, 8)}} {{$wallets[$fee->wallet_to]->type}}</strong></td><td><strong>
 <?php
 $st = DB::table("commission_fees")
     ->select([DB::raw("SUM(`amount`) as jumlah")])
@@ -65,7 +65,7 @@ print " ".$wallets[$fee->wallet_to]->type;
     if (count($fees) > 0) {?>
         @foreach($fees as $fee)
         @if(isset($wallets[$fee->wallet_from]->type))
-        <tr><td><strong>{{$wallets[$fee->wallet_from]->type}}</strong></td><td>{{$wallets[$fee->wallet_from]->name}}</td><td>0</td><td>{{$fee->fee_buy}}</td><td><strong>{{$fee->fee_buy}} {{$wallets[$fee->wallet_to]->type}}</strong></td></tr>
+        <tr><td><strong>{{$wallets[$fee->wallet_from]->type}}</strong></td><td>{{$wallets[$fee->wallet_from]->name}}</td><td>{{number_format($fee->fee_sell, 8)}}</td><td>{{number_format($fee->fee_buy, 8)}}</td><td><strong>{{number_format($fee->fee_buy+$fee->fee_sell, 8)}} {{$wallets[$fee->wallet_to]->type}}</strong></td></tr>
         <?php /* <tr><td><strong>{{$wallets[$fee->wallet_from]->type}}</strong></td><td>{{$wallets[$fee->wallet_from]->name}}</td><td>0</td><td>{{$fee->fee_buy}}</td><td><strong>{{$fee->fee_buy}} {{$wallets[$fee->wallet_from]->type}}</strong></td></tr> */?>
         @endif
         @endforeach 
