@@ -67,11 +67,12 @@ class PointsController extends Controller
 
     public static function countReferredUser($userId)
     {
-        $st = DB::table("referral")
-            ->select("count")
-            ->where("user_id", "=", $userId)
-            ->first();
-        return isset($st->count) ? $st->count : 0;
+        $st = @DB::table("users")
+                ->select([DB::raw("count(`username`) as c")])
+                ->where("referral", "=", $user->id)
+                ->where("confirmed", "=", 1)
+                ->get()[0]->c;
+        return isset($st) ? $st : 0;
     }
 
     public static function createCommission($userId, $walletId, $amount, $ref_user_id)

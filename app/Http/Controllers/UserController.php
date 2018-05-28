@@ -1517,10 +1517,12 @@ class UserController extends Controller
             $data['referred_users'] = DB::table("users")
                 ->select(["username", "email", "created_at as joined_at"])
                 ->where("referral", "=", $user->id)
+                ->where("confirmed", "=", 1)
                 ->get();
             $data['referred_user'] = DB::table("users")
                 ->select([DB::raw("count(`username`) as c")])
                 ->where("referral", "=", $user->id)
+                ->where("confirmed", "=", 1)
                 ->get()[0]->c;
             $data['commission_fees'] = $this->buildCommissionFees($data['referred_user']);
             $data["latest_commission_fees"] = DB::table("commission_fees")
