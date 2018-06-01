@@ -235,7 +235,6 @@ class BeforeMiddleware
         if (Confide::user()) {
             dd("123");
         }
-        dd("321");
         return $next($request);
     }
 }
