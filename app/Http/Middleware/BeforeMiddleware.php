@@ -231,7 +231,11 @@ class BeforeMiddleware
                 $view->with('menu_pages', $menu_pages);
             }
         );
-        dd("123");
+        
+        if (Confide::user()) {
+            dd("123");
+        }
+        dd("321");
         return $next($request);
     }
 }
