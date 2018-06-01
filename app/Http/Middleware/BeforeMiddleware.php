@@ -67,7 +67,7 @@ class BeforeMiddleware
             }
         }
         if (!Auth::guest()) {
-            dd(\Confide::user());
+            // dd(\Confide::user());
             $user = Confide::user();
             $timeout = trim($user->timeout);
             if (empty($timeout)) {
@@ -79,6 +79,7 @@ class BeforeMiddleware
             $lastest_login = $user->lastest_login;
             $new_date = date("Y-m-d H:i:s", strtotime($lastest_login." +".$timeout));
             $cur_date = date("Y-m-d H:i:s");
+            dd($cur_date, $new_date);
             if ((!isset($_SERVER["HTTP_X_REQUESTED_WITH"])) && strtotime($cur_date) >= strtotime($new_date)) {
                 // var_dump($lastest_login, $new_date, $cur_date);exit();
                 Confide::logout();
