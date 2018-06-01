@@ -84,7 +84,7 @@ class BeforeMiddleware
                 // var_dump($lastest_login, $new_date, $cur_date);exit();
                 Confide::logout();
                 session(["google2fa" => null, "error" => trans("user_texts.session_expired")]);
-                dd("return");
+                // dd("return");
                 return Redirect::to('/login');
             } else {
                 if (! preg_match('/ajax/i', url()->current())) {
@@ -98,7 +98,7 @@ class BeforeMiddleware
             }
         }
 
-        dd("ni");
+        // dd("ni");
 
         View::composer(
             'layouts.default', function ($view) {
