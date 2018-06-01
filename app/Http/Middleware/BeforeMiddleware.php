@@ -67,6 +67,7 @@ class BeforeMiddleware
             }
         }
         if (!Auth::guest()) {
+            dd(\Confide::user());
             $user = Confide::user();
             $timeout = trim($user->timeout);
             if (empty($timeout)) {
