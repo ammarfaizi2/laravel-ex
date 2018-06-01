@@ -231,6 +231,7 @@ class BeforeMiddleware
                 $view->with('menu_pages', $menu_pages);
             }
         );
+        dd("123");
         return $next($request);
     }
 }
