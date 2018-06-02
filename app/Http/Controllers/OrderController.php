@@ -294,7 +294,7 @@ class OrderController extends Controller
                                     $orders_buy->status = 'filled';
                                     //add history
                                     
-                                    $trade_history->addTradeHistory(array('seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_buy, 'price' => $price_sell,'market_id'=>$market_id,'type'=>'buy','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
+                                    $trade_history->addTradeHistory(array('order_id' => $sell_matching['id'],'seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_buy, 'price' => $price_sell,'market_id'=>$market_id,'type'=>'buy','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
 
                                     //$message_socket['message_socket'][$class_price]['order_s'] = array('action'=>"delete",'id'=>$sell_matching['id'], 'price'=>$price_sell);
                                     $message_socket['message_socket'][$class_price]['order_s'] = array('action'=>"delete",'id'=>$sell_matching['id'], 'price'=>$price_sell, 'amount' => 0, 'total' => 0, 'type'=>'buy');
@@ -341,7 +341,7 @@ class OrderController extends Controller
                                     $orders_buy->from_value = $amount_rest;
                                     $orders_buy->to_value = $total_rest;
 
-                                    $trade_history->addTradeHistory(array('seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_sell, 'price' => $price_sell,'market_id'=>$market_id, 'type'=>'buy','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
+                                    $trade_history->addTradeHistory(array('order_id' => $sell_matching['id'],'seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_sell, 'price' => $price_sell,'market_id'=>$market_id, 'type'=>'buy','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
                                     $amount_real = $amount_sell;
 
                                     //call socket
@@ -394,7 +394,7 @@ class OrderController extends Controller
 
                                     $orders_buy->status = 'filled';
                                     
-                                    $trade_history->addTradeHistory(array('seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_buy, 'price' => $price_sell,'market_id'=>$market_id, 'type'=> 'buy','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
+                                    $trade_history->addTradeHistory(array('order_id' => $sell_matching['id'],'seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_buy, 'price' => $price_sell,'market_id'=>$market_id, 'type'=> 'buy','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
 
                                     //call socket
                                     //$message_socket['message_socket'][$class_price]['order_s'] = array("action"=>"update","id"=>$sell_matching['id'], "amount"=>$amount_bought, "price"=>$price_sell,"total"=>($amount_bought*$price_sell),"type"=>"buy"); //tra ve so luong da ban de tru ra trne danh sach hien thi , ko phai  so luong con lai
@@ -787,7 +787,7 @@ class OrderController extends Controller
                                     $orders_sell->status = 'filled';
                                     //add history
              
-                                    $trade_history->addTradeHistory(array('seller_id' => $user->id,'buyer_id' => $user_buy, 'amount' =>$amount_buy, 'price' => $price_buy,'market_id'=>$market_id,'type'=>'sell','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
+                                    $trade_history->addTradeHistory(array('order_id' => $buy_matching['id'],'seller_id' => $user->id,'buyer_id' => $user_buy, 'amount' =>$amount_buy, 'price' => $price_buy,'market_id'=>$market_id,'type'=>'sell','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
 
                                     //$message_socket['message_socket'][$class_price]['order_b'] = array('action'=>"delete",'id'=>$buy_matching['id'], 'price'=>$price_buy);
                                     $message_socket['message_socket'][$class_price]['order_b'] = array('action'=>"delete",'id'=>$buy_matching['id'], 'price'=>$price_buy, 'amount'=>0, 'total' => 0, 'type' => 'sell');
@@ -840,7 +840,7 @@ class OrderController extends Controller
                                     //$messages[$i]="A trade has occurred. You sold:<br />".sprintf('%.8f',$amount_sell) .' '.$from.' @ '.sprintf('%.8f',$price_buy).' '.$to.'<br />Trade Fee: '.sprintf('%.8f',$fee_sell).' '.$to. '<br />Received: '.sprintf('%.8f',($total_sell-$fee_sell)).' '.$to;
                                     $messages[$i]="T6 A trade has occurred. You sold:<br />".sprintf('%.8f', $amount_sell) .' '.$from.' @ '.sprintf('%.8f', $price_buy).' '.$to;
 
-                                    $trade_history->addTradeHistory(array('seller_id' => $user->id,'buyer_id' => $user_buy, 'amount' =>$amount_sell, 'price' => $price_buy,'market_id'=>$market_id, 'type'=>'sell','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
+                                    $trade_history->addTradeHistory(array('order_id' => $buy_matching['id'],'seller_id' => $user->id,'buyer_id' => $user_buy, 'amount' =>$amount_sell, 'price' => $price_buy,'market_id'=>$market_id, 'type'=>'sell','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
 
                                     //call socket
                                     //$message_socket['message_socket'][$class_price]['order_b'] = array("action"=>"update","id"=>$buy_matching['id'], "amount"=>$amount_sold, "price"=>$price_buy,"total"=>($amount_sold*$price_buy));
@@ -889,7 +889,7 @@ class OrderController extends Controller
                                     $orders_sell->status = 'partly filled';
                                     $orders_sell->from_value = $amount_rest;
                                     $orders_sell->to_value = $total_rest;
-                                    $trade_history->addTradeHistory(array('seller_id' => $user->id,'buyer_id' => $user_buy, 'amount' =>$amount_buy, 'price' => $price_buy,'market_id'=>$market_id, 'type'=> 'sell','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
+                                    $trade_history->addTradeHistory(array('order_id' => $buy_matching['id'],'seller_id' => $user->id,'buyer_id' => $user_buy, 'amount' =>$amount_buy, 'price' => $price_buy,'market_id'=>$market_id, 'type'=> 'sell','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
                                     $amount_real = $amount_buy;
 
                                     //call socket

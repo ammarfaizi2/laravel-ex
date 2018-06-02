@@ -212,6 +212,9 @@ return array(
 	"error" => "Error",
 	"success" => "Success",
 	"reset_password" => "Reset Password",
-	"remaining" => "Remaining"
+	"remaining" => "Remaining",
+    "details" => "Show Details",
+    "hide_details" => "Hide Details",
+    "id" => "ID"
 	
 );

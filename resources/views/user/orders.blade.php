@@ -14,6 +14,17 @@
             $query_string = "&".$query_string;
         }
         ?>
+        <script type="text/javascript">
+            function showOrderDetails(id) {
+                if ($("#order_details_"+id)[0].style.display == "none") {
+                    $("#order_details_"+id)[0].style.display = "";
+                    $("#button_show_details_"+id)[0].innerHTML = "{{ trans('texts.hide_details') }}";
+                } else {
+                    $("#order_details_"+id)[0].style.display = "none";
+                    $("#button_show_details_"+id)[0].innerHTML = "{{ trans('texts.details') }}";
+                }
+            }
+        </script>
         <div id="orders_history">
             <h2>{{{ trans('texts.orders_history')}}} @if(isset($current_coin)) {{' - '.$current_coin}} @endif</h2>
 
@@ -48,6 +59,7 @@
             <table class="table table-striped" id="marketOrders">
                 <tbody>
                 <tr>
+                    <th>{{{ trans('texts.id') }}}</th>
                     <th>{{{ trans('texts.market')}}}</th>
                     <th>{{{ trans('texts.type')}}}</th>
                     <th>{{{ trans('texts.price')}}}</th>
@@ -66,38 +78,71 @@
                 
                 ?>
                 @foreach($ordershistories as $ordershistory)
-                    <tr id="order_id_{{{$ordershistory->id}}}">
-                        <td>{{$markets[$ordershistory->market_id]['wallet_from'].'/'.$markets[$ordershistory->market_id]['wallet_to']}}</td>
-                        @if($ordershistory->type == 'sell')          
-                            <td><b style="color:red">{{ ucwords($ordershistory->type) }}</b></td>            
-                        @else          
-                            <td><b style="color:green">{{ ucwords($ordershistory->type) }}</b></td>
-                         @endif
-                        <td>{{sprintf('%.8f',$ordershistory->price)}}</td>
-                        <td>{{sprintf('%.8f',$ordershistory->amount)}}</td>
-                        <td>{{sprintf('%.8f',$ordershistory->to_value)}}</td>
-                         <td>{{sprintf('%.8f',$ordershistory->from_value)}}</td>
-                        <td><?php
-                            //str_replace(' ', '_', $ordershistory->status);
-                        if ($ordershistory->status =='partly_filled' || $ordershistory->status =='partly filled') {
-                            echo trans('texts.partially_filled');
-                        } else {
-                            echo trans('texts.'.$ordershistory->status);
-                        }
-                            ?>
-                        </td>
-                        <td>{{ $ordershistory->created_at }}</td>
-                        <td>
-							@if(in_array($ordershistory->status,$active)) 
-								<button type="button" onclick="javascript:cancelOrder({{{$ordershistory->id}}});" class="btn btn-danger btn-xs">{{trans('texts.cancel')}}</button>
-							@endif
-						</td>
-                    </tr>
+                    <?php $k = $ordershistory->id; ?>
+                    <tbody>
+                        <tr id="order_id_{{{$ordershistory->id}}}">
+                            <td>{{$k}}</td>
+                            <td>{{$markets[$ordershistory->market_id]['wallet_from'].'/'.$markets[$ordershistory->market_id]['wallet_to']}}</td>
+                            @if($ordershistory->type == 'sell')          
+                                <td><b style="color:red">{{ ucwords($ordershistory->type) }}</b></td>            
+                            @else          
+                                <td><b style="color:green">{{ ucwords($ordershistory->type) }}</b></td>
+                             @endif
+                            <td>{{sprintf('%.8f',$ordershistory->price)}}</td>
+                            <td>{{sprintf('%.8f',$ordershistory->amount)}}</td>
+                            <td>{{sprintf('%.8f',$ordershistory->to_value)}}</td>
+                             <td>{{sprintf('%.8f',$ordershistory->from_value)}}</td>
+                            <td><?php
+                                //str_replace(' ', '_', $ordershistory->status);
+                            if ($ordershistory->status =='partly_filled' || $ordershistory->status =='partly filled') {
+                                echo trans('texts.partially_filled');
+                            } else {
+                                echo trans('texts.'.$ordershistory->status);
+                            }
+                                ?>
+                            </td>
+                            <td>{{ $ordershistory->created_at }}</td>
+                            <td>
+    							@if(in_array($ordershistory->status,$active)) 
+    								<button type="button" onclick="javascript:cancelOrder({{{$ordershistory->id}}});" class="btn btn-danger btn-xs">{{trans('texts.cancel')}}</button>
+    							@endif
+                                <button id="button_show_details_{{$k}}" type="button" onclick="showOrderDetails('{{$k}}')" class="btn btn-primary btn-xs">{{trans('texts.details')}}</button>
+    						</td>
+                        </tr>
+                        </tbody>
+                    <tbody id="order_details_{{$k}}" style="display:none;" class="order_details">
+                        <?php
+                            $a = DB::table("trade_history")
+                                ->select("*")
+                                ->where("order_id", $k)
+                                ->get();
+
+                        ?>
+                        <tr><td colspan="10"><div class="dend"></div></td></tr>
+                        <tr><td colspan="10" align="center">Detail of Order #{{$k}}</td></tr>
+                         <tr><th align="center" colspan="2">Date</th><th align="center" colspan="2">Amount</th><th align="center" colspan="2">Price</th><th align="center" colspan="2">Fee Sell</th><th align="center" colspan="2">Fee Buy</th></tr>
+                        @foreach($a as $a)
+                            <tr><td colspan="2">{{$a->created_at}}</td><td colspan="2">{{$a->amount." ".$markets[$ordershistory->market_id]['wallet_from']}}</td><td colspan="2">{{number_format($a->price, 8)." ".$markets[$ordershistory->market_id]['wallet_to']}}</td><td colspan="2">{{number_format($a->fee_sell, 8)." ".$markets[$ordershistory->market_id]['wallet_to']}}</td><td colspan="2">{{number_format($a->fee_buy, 8)." ".$markets[$ordershistory->market_id]['wallet_to']}}</td></tr>
+                        @endforeach
+                        <tr><td colspan="10"><div class="dend se"></div></td></tr>
+                    </tbody>
                 @endforeach  
                 </tbody>
             </table>
             <div id="pager"></div>
         </div>
+        <style type="text/css">
+            .order_details {
+
+            }
+            .dend {
+                padding-bottom: 2px;
+                background-color: #000;
+            }
+            .se {
+                margin-bottom: 10px;
+            }
+        </style>
 
         <script type="text/javascript">
         function cancelOrder(order_id){

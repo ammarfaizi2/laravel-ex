@@ -17,6 +17,7 @@ class Trade extends Eloquent
                 $m->wallet_to, $trade_history['fee_buy'], $trade_history['fee_sell'], $trade_history['buyer_id'], $trade_history['seller_id']
             );
         }
+        $this->order_id = $trade_history["order_id"];
         $this->seller_id = $trade_history['seller_id'];
         $this->buyer_id = $trade_history['buyer_id'];
         $this->amount = $trade_history['amount'];
