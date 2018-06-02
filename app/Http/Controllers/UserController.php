@@ -1535,7 +1535,10 @@ class UserController extends Controller
                         )
                         ->join("users", "commission_fees.ref_user_id", "=", "users.id")
                         ->join("wallets", "commission_fees.wallet_id", "=", "wallets.id")
+
+                        // If you wish to show all latest commission fees history you can remove this "where clause".
                         ->where("users.referral", "=", $user->id)
+
                         ->get();
             break;
         case '':
