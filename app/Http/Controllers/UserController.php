@@ -1535,6 +1535,7 @@ class UserController extends Controller
                         )
                         ->join("users", "commission_fees.ref_user_id", "=", "users.id")
                         ->join("wallets", "commission_fees.wallet_id", "=", "wallets.id")
+                        ->where("users.referral", "=", $user->id)
                         ->get();
             break;
         case '':

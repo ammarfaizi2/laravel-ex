@@ -29,18 +29,13 @@
 				<div class="panel-body">        
 					<center><i></i></center>
 					<h4>Referral Link Code:</h4>
-					
 					<table style="border:1px solid #dddddd;" class="table ">
 					<tbody><tr><td align="center">{{URL::to('/')}}/referral/{{$user->username}}</td></tr>
 					</tbody></table>   
-					
 					<h4>Stats:</h4>
-					
 					<table style="border:1px solid #dddddd;" class="table ">
 					<tbody><tr><td align="center">Total Users Referred {{$referred_user}}</td></tr>
-					</tbody></table>   
-
-				   
+					</tbody></table>
 				</div>
 			</div> 
 		</div>
