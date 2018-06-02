@@ -212,6 +212,6 @@ return array(
 	"error" => "Error",
 	"success" => "Success",
 	"reset_password" => "Reset Password",
-	
+	"remaining" => "Remaining"
 	
 );

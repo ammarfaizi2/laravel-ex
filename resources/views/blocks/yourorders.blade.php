@@ -52,6 +52,7 @@
 							<th>{{{ trans('texts.price')}}} / {{{$coinmain}}}</th>
 							<th>{{{ trans('texts.amount')}}} {{{ $coinmain }}}</th>
 							<th>{{{ trans('texts.total')}}} {{{$coinsecond}}}</th>
+							<th>{{{ trans('texts.remaining') }}}</th>
 							<th>{{{ trans('texts.date')}}}</th>
 							<th>{{{ trans('texts.action')}}}</th>
 						  </tr> 
@@ -80,6 +81,7 @@
 										<td><span class="price">{{{sprintf('%.8f',$order->price)}}}</span></td>
 										<td><span class="amount">{{{sprintf('%.8f',$order->from_value)+0}}}</span></td>
 										<td><span class="total">{{{sprintf('%.8f',$order->to_value)}}}</span></td>
+										<td><span class="remaining">{{{sprintf('%.8f',$order->from_value)}}}</span></td>
 										<td><span class="date"><small>{{{date('Y-m-d H:m', strtotime($order->created_at))}}}</span></small></td><!-- title="26 sec. ago" -->
 										<td><button type="button" onclick="javascript:cancelOrder(this, {{{$order->id}}});" class="btn btn-danger btn-xs" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">{{trans('texts.cancel')}}</button></td>
 									  </tr>
@@ -133,19 +135,15 @@
 							<th>{{{ trans('texts.price')}}} / {{{$coinmain}}}</th>
 							<th>{{{ trans('texts.amount')}}} {{{ $coinmain }}}</th>
 							<th>{{{ trans('texts.total')}}} {{{$coinsecond}}}</th>
+							<th>{{{ trans('texts.remaining') }}}</th>
 							<th>{{{ trans('texts.date')}}}</th>
 							<th>{{{ trans('texts.action')}}}</th>
-							
 						  </tr> 
 						</thead>
-
-						
 					  </table>
-					  
 					  <div class="scrolltable  nano">
 					  <div class="nano-content">
-					
-						  <table class="table table-striped table-hover ">
+						  <table class="table table-striped table-hover">
 							<tbody>
 							  <?php 
 							  if($current_orders_user_count > 0) : ?>
@@ -156,16 +154,15 @@
 										$price = sprintf('%.8f',$order->price);
 										$class_price = str_replace(".", "-", $price);
 										$class_price = str_replace(",", "-", $class_price);
+										// dd($order);
 									  ?>
 									  <tr class="order order-{{$class_price}}" id="yourorder-{{$order->id}}">
 										<td><span class="price">{{{sprintf('%.8f',$order->price)}}}</span></td>
-										<td><span class="amount">{{{sprintf('%.8f',$order->from_value)+0}}}</span></td>
+										<td><span class="amount">{{{sprintf('%.8f',$order->amount)+0}}}</span></td>
 										<td><span class="total">{{{sprintf('%.8f',$order->to_value)}}}</span></td>
-										<td><span class="date"><small>{{{date('Y-m-d H:m', strtotime($order->created_at))}}}</span></small></td><!-- title="26 sec. ago" -->
+										<td><span class="remaining">{{{sprintf('%.8f',$order->from_value)}}}</span></td>
+										<td><span class="date"><small>{{{date('Y-m-d H:m', strtotime($order->created_at))}}}</span></small></td>
 										<td><button type="button" onclick="javascript:cancelOrder(this, {{{$order->id}}});" class="btn btn-danger btn-xs" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>">{{trans('texts.cancel')}}</button></td>
-										
-										
-										
 									  </tr>
 									@endif
 								@endforeach 
