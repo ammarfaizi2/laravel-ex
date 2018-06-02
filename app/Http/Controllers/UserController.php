@@ -1397,8 +1397,6 @@ class UserController extends Controller
             $deposit_pendings=Deposit::where('user_id', $user_id)->where('paid', 0)->get()->toArray();
             $data['deposit_pendings']=count($deposit_pendings);
 
-            $total_referred=User::where('referral', $user->username)->get()->toArray();
-            $data['total_referred']=count($total_referred);
             //echo "<pre>total_referred: "; print_r($total_referred); echo "</pre>";
             break;
         case "ecoinstraderpoint":

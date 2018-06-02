@@ -37,7 +37,7 @@
 					<h4>Stats:</h4>
 					
 					<table style="border:1px solid #dddddd;" class="table ">
-					<tbody><tr><td align="center">Total Users Referred {{$total_referred}}</td></tr>
+					<tbody><tr><td align="center">Total Users Referred {{$referred_user}}</td></tr>
 					</tbody></table>   
 
 				   

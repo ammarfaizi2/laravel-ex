@@ -71,7 +71,7 @@ class PointsController extends Controller
                 ->select([DB::raw("count(`username`) as c")])
                 ->where("referral", "=", $user->id)
                 ->where("confirmed", "=", 1)
-                ->get()[0]->c;
+                ->get()[0]->c;  
         return isset($st) ? $st : 0;
     }
 
