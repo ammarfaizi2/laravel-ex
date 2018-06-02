@@ -232,9 +232,9 @@ class BeforeMiddleware
             }
         );
         
-        if (Confide::user()) {
-            dd("123");
-        }
+        // if (Confide::user()) {
+        //     dd("123");
+        // }
         return $next($request);
     }
 }
