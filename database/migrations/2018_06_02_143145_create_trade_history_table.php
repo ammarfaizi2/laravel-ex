@@ -15,6 +15,7 @@ class CreateTradeHistoryTable extends Migration {
 		Schema::create('trade_history', function(Blueprint $table)
 		{
 			$table->integer('id', true);
+			$table->integer('order_id')->index('order_id');
 			$table->integer('market_id')->nullable()->index('market_id');
 			$table->integer('seller_id')->nullable();
 			$table->integer('buyer_id')->nullable();
