@@ -807,7 +807,6 @@ class UserController extends Controller
      */
     public function logout()
     {
-        dd(Confide::user());
         Confide::logout();
         session([
                     "google2fa" => null,
