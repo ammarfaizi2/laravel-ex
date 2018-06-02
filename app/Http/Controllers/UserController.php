@@ -1378,6 +1378,7 @@ class UserController extends Controller
             $data['referred_user'] = DB::table("users")
                 ->select([DB::raw("count(`username`) as c")])
                 ->where("referral", "=", $user->id)
+                ->where("confirmed", "=", 1)
                 ->get()[0]->c;
             $total_trades=Trade::where('seller_id', $user_id)->orwhere('buyer_id', $user_id)->get()->toArray();
             $data['total_trades']=count($total_trades);
