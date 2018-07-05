@@ -12,3 +12,5 @@ yarn-error.log
 .env
 *.swp
 sftp-config.json
+.php_cs.cache
+/.phpintel
