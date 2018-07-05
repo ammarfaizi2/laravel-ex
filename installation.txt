@@ -2,4 +2,6 @@
 2. Copy ".env.example" to ".env"
 3. Configure the .env file with your server environtment.
 4. Run "php artisan key:generate"
-5. Change your web server root directory to public folder.
+5. Run "php artisan migrate:fresh"
+6. Run "php aritsan db:seed"
+7. Change your web server root directory to public folder.

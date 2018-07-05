@@ -273,7 +273,12 @@ class OrderController extends Controller
                                 $balance->addMoney($amount_buy, $wallet_from, $user->id);//cong tien nguoi mua
                                         
 
-                                    Order::where('id', $sell_matching['id'])->update(array('status' => 'filled'));
+                                    Order::where('id', $sell_matching['id'])->update(
+                                        [
+                                            'status' => 'filled',
+                                            'from_value' => 0
+                                        ]
+                                    );
                                     DB::table("order_notification")
                                         ->where("order_id", "=", $sell_matching['id'])
                                         ->limit(1)
@@ -291,10 +296,10 @@ class OrderController extends Controller
                                                 "seller_id" => $user_sell,
                                                 "buyer_id" => $user->id,
                                                 "type" => "buy",
-                                                "amount" => $amount_sell,
-                                                "price" => $price_sell,
-                                                "fee_sell" => $fee_sell,
-                                                "fee_buy" => $fee_buy,
+                                                "amount" => $amount_buy,
+                                                "price" => $price_buy,
+                                                "fee_sell" => (($amount_buy * $price_buy)*($per_fee_sell/100)),
+                                                "fee_buy" => (($amount_buy * $price_buy)*($per_fee_buy/100)),
                                                 "created_at" => date("Y-m-d H:i:s")
                                             ]
                                         );
@@ -307,6 +312,7 @@ class OrderController extends Controller
 
                                     
                                     $orders_buy->status = 'filled';
+                                    $orders_buy->from_value = 0;
                                     //add history
                                     
                                     $trade_history->addTradeHistory(array('order_id' => $sell_matching['id'],'seller_id' => $user_sell,'buyer_id' => $user->id, 'amount' =>$amount_buy, 'price' => $price_sell,'market_id'=>$market_id,'type'=>'buy','fee_buy'=>$fee_buy,'fee_sell'=>$fee_sell));
@@ -325,7 +331,7 @@ class OrderController extends Controller
                                     //add coin for seller/buyer
                                     //$balance->addMoney($amount_sell-$fee_buy,$wallet_from,$user->id);
                                     //$balance->addMoney($total_sell-$fee_sell,$wallet_to,$user_sell);
-                                     $balance->addMoney($amount_sell, $wallet_from, $user->id);
+                                    $balance->addMoney($amount_sell, $wallet_from, $user->id);
                                     $balance->addMoney($total_sell, $wallet_to, $user_sell);
                                     
                                     
@@ -334,7 +340,12 @@ class OrderController extends Controller
 
                                     
                                     
-                                    Order::where('id', $sell_matching['id'])->update(array('status' => 'filled'));
+                                    Order::where('id', $sell_matching['id'])->update(
+                                        [
+                                            'from_value' => 0,
+                                            'status' => 'filled',
+                                        ]
+                                    );
                                     DB::table("order_notification")
                                         ->where("order_id", "=", $sell_matching['id'])
                                         ->limit(1)
@@ -352,10 +363,10 @@ class OrderController extends Controller
                                                 "seller_id" => $user_sell,
                                                 "buyer_id" => $user->id,
                                                 "type" => "buy",
-                                                "amount" => $amount_sell,
-                                                "price" => $price_sell,
-                                                "fee_sell" => $fee_sell,
-                                                "fee_buy" => $fee_buy,
+                                                "amount" => ($amount_buy - $amount_rest),
+                                                "price" => $price_buy,
+                                                "fee_sell" => ((($amount_buy - $amount_rest)* $price_buy)*($per_fee_sell/100)),
+                                                "fee_buy" => ((($amount_buy - $amount_rest) * $price_buy)*($per_fee_buy/100)),
                                                 "created_at" => date("Y-m-d H:i:s")
                                             ]
                                         );
@@ -423,10 +434,10 @@ class OrderController extends Controller
                                                 "seller_id" => $user_sell,
                                                 "buyer_id" => $user->id,
                                                 "type" => "buy",
-                                                "amount" => $amount_sell,
-                                                "price" => $price_sell,
-                                                "fee_sell" => $fee_sell,
-                                                "fee_buy" => $fee_buy,
+                                                "amount" => $amount_buy,
+                                                "price" => $price_buy,
+                                                "fee_sell" => (($amount_buy * $price_buy)*($per_fee_sell/100)),
+                                                "fee_buy" => (($amount_buy * $price_buy)*($per_fee_buy/100)),
                                                 "created_at" => date("Y-m-d H:i:s")
                                             ]
                                         );
@@ -828,7 +839,12 @@ class OrderController extends Controller
                                     $balance->addMoney($amount_buy, $wallet_from, $user_buy);
                                                                     
 
-                                    Order::where('id', $buy_matching['id'])->update(array('status' => 'filled'));
+                                    Order::where('id', $buy_matching['id'])->update(
+                                        [
+                                            'status' => 'filled',
+                                            'from_value' => 0
+                                        ]
+                                    );
                                     DB::table("order_notification")
                                         ->where("order_id", "=", $buy_matching['id'])
                                         ->limit(1)
@@ -959,7 +975,12 @@ class OrderController extends Controller
                                     
                                     
                                     
-                                    Order::where('id', $buy_matching['id'])->update(array('status' => 'filled'));
+                                    Order::where('id', $buy_matching['id'])->update(
+                                        [
+                                            'from_value' => 0,
+                                            'status' => 'filled'
+                                        ]
+                                    );
                                     DB::table("order_notification")
                                         ->where("order_id", "=", $buy_matching['id'])
                                         ->limit(1)

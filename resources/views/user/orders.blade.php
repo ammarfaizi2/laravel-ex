@@ -117,7 +117,6 @@
                                 ->where("order_id", $k)
                                 ->orderBy("created_at")
                                 ->get();
-
                         ?>
                         <tr><td colspan="10"><div class="dend"></div></td></tr>
                         <tr><td colspan="10" align="center">Detail of Order #{{$k}}</td></tr>
