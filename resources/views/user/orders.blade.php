@@ -112,7 +112,7 @@
                         </tbody>
                     <tbody id="order_details_{{$k}}" style="display:none;" class="order_details">
                         <?php
-                            $a = DB::table("trade_history")
+                            $a = DB::table("order_transactions")
                                 ->select("*")
                                 ->where("order_id", $k)
                                 ->get();

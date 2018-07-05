@@ -283,6 +283,21 @@ class OrderController extends Controller
                                                 "updated_at" => date("Y-m-d H:i:s")
                                             ]
                                         );
+
+                                    DB::table("order_transactions")
+                                        ->insert(
+                                            [
+                                                "order_id" => $sell_matching['id'],
+                                                "seller_id" => $user_sell,
+                                                "buyer_id" => $user->id,
+                                                "type" => "buy",
+                                                "amount" => $amount_sell,
+                                                "price" => $price_sell,
+                                                "fee_sell" => $fee_sell,
+                                                "fee_buy" => $fee_buy,
+                                                "created_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
                                     $status = 'success';
                                     $message1 .= '<p>'.Lang::get('messages.filled').' <br />Bought '.$amount_buy .' '.$from.' at price '.$price_sell.' Fee buy: '.$fee_buy.' '.$from.'. Received: '.($amount_buy-$fee_buy).' '.$from. ' - Total amount paid: '.($total_sell).' '.$to.'</p>';
                                     $message = array('message' => $message1, 'status' => 'success');
@@ -329,6 +344,22 @@ class OrderController extends Controller
                                                 "updated_at" => date("Y-m-d H:i:s")
                                             ]
                                         );
+
+                                    DB::table("order_transactions")
+                                        ->insert(
+                                            [
+                                                "order_id" => $sell_matching['id'],
+                                                "seller_id" => $user_sell,
+                                                "buyer_id" => $user->id,
+                                                "type" => "buy",
+                                                "amount" => $amount_sell,
+                                                "price" => $price_sell,
+                                                "fee_sell" => $fee_sell,
+                                                "fee_buy" => $fee_buy,
+                                                "created_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
+
                                     $status = 'success';
 
                                     $message1 .='<p>'.Lang::get('messages.partially_filled').' <br />Buy '.$amount_sell .' '.$from.' @  '.sprintf('%.8f', $price_sell).' Fee buy: '.$fee_buy.' '.$from.'. Received: '.($amount_sell-$fee_buy).' '.$from. ' - Total amount paid: : '.($total_sell).' '.$to.'</p>';
@@ -384,6 +415,22 @@ class OrderController extends Controller
                                                 "updated_at" => date("Y-m-d H:i:s")
                                             ]
                                         );
+
+                                    DB::table("order_transactions")
+                                        ->insert(
+                                            [
+                                                "order_id" => $sell_matching['id'],
+                                                "seller_id" => $user_sell,
+                                                "buyer_id" => $user->id,
+                                                "type" => "buy",
+                                                "amount" => $amount_sell,
+                                                "price" => $price_sell,
+                                                "fee_sell" => $fee_sell,
+                                                "fee_buy" => $fee_buy,
+                                                "created_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
+                                        
                                     $status = 'success';
                                     
                                     $message1 .= '<p>'.Lang::get('messages.filled').' : Bought '.$amount_buy .' '.$from.' at price '.$price_sell.' Fee buy: '.$fee_buy.' '.$from. ' - Total amount paid: : '.($total_sell).' '.$to.'</p>';
@@ -433,6 +480,22 @@ class OrderController extends Controller
                                 "created_at" => date("Y-m-d H:i:s")
                             ]
                         );
+
+                        DB::table("order_transactions")
+                                        ->insert(
+                                            [
+                                                "order_id" => $orders_buy->id,
+                                                "seller_id" => $user_sell,
+                                                "buyer_id" => $user->id,
+                                                "type" => "sell",
+                                                "amount" => $amount_sell,
+                                                "price" => $price_sell,
+                                                "fee_sell" => $fee_sell,
+                                                "fee_buy" => $fee_buy,
+                                                "created_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
+
                         $message_socket_user['user_orders'][$orders_buy->id]['order_b'] = array('action'=>"insert","id"=>$orders_buy->id,"amount"=>$amount_buy,"price"=>$price_buy,"total"=>$total_rest,'type'=>'buy','created_at'=>$orders_buy->created_at);
                         $message_socket['message_socket'][$orders_buy->id]['order_b'] = array('action'=>"insert","id"=>$orders_buy->id,"amount"=>$amount_buy,"price"=>$price_buy,"total"=>$total_rest,'type'=>'buy','created_at'=>$orders_buy->created_at);
                         /*
@@ -775,6 +838,20 @@ class OrderController extends Controller
                                                 "updated_at" => date("Y-m-d H:i:s")
                                             ]
                                         );
+                                    DB::table("order_transactions")
+                                        ->insert(
+                                            [
+                                                "order_id" => $buy_matching['id'],
+                                                "seller_id" => $user->id,
+                                                "buyer_id" => $user_buy,
+                                                "type" => "sell",
+                                                "amount" => $amount_sell,
+                                                "price" => $price_buy,
+                                                "fee_sell" => $fee_sell,
+                                                "fee_buy" => $fee_buy,
+                                                "created_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
                                     $status = 'success';
                                     //$message .= "\n".Lang::get('messages.filled').' : Fee buy: '.sprintf('%.8f',$fee_buy).' - Fee Sell: '.sprintf('%.8f',$fee_sell).' - Total buy: '.(sprintf('%.8f',$amount_buy)) . ' - Total sell: '.sprintf('%.8f',($total_sell-$fee_sell));
                                     $message1 .= '<p>'.Lang::get('messages.filled').' <br />Sold '.$amount_buy .' '.$from.' at price '.$price_buy.' Fee sell: '.$fee_sell.' '.$to. ' - Received: '.($total_sell-$fee_sell).' '.$to.'</p>';
@@ -797,6 +874,7 @@ class OrderController extends Controller
                                 $messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
                                 }*/
                             } elseif ($amount_buy > $amount_sell) {
+
                                 $total_sell = $amount_sell*$price_buy;//really total sell;
                                 $fee_buy = ($total_sell*$per_fee_buy)/100;
                                 $fee_sell = ($total_sell*$per_fee_sell)/100;
@@ -827,6 +905,21 @@ class OrderController extends Controller
                                             [
                                                 "status" => "pending",
                                                 "updated_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
+
+                                     DB::table("order_transactions")
+                                        ->insert(
+                                            [
+                                                "order_id" => $buy_matching['id'],
+                                                "seller_id" => $user->id,
+                                                "buyer_id" => $user_buy,
+                                                "type" => "sell",
+                                                "amount" => $amount_sell,
+                                                "price" => $price_buy,
+                                                "fee_sell" => $fee_sell,
+                                                "fee_buy" => $fee_buy,
+                                                "created_at" => date("Y-m-d H:i:s")
                                             ]
                                         );
                                     //Log::info('amount_buy > amount_sell Update sell orders: ', array('status' => 'partly filled', 'from_value'=>$amount_rest, 'to_value'=>$total_rest));
@@ -876,6 +969,22 @@ class OrderController extends Controller
                                                 "updated_at" => date("Y-m-d H:i:s")
                                             ]
                                         );
+
+                                    DB::table("order_transactions")
+                                        ->insert(
+                                            [
+                                                "order_id" => $buy_matching['id'],
+                                                "seller_id" => $user->id,
+                                                "buyer_id" => $user_buy,
+                                                "type" => "sell",
+                                                "amount" => $amount_buy,
+                                                "price" => $price_buy,
+                                                "fee_sell" => $fee_sell,
+                                                "fee_buy" => $fee_buy,
+                                                "created_at" => date("Y-m-d H:i:s")
+                                            ]
+                                        );
+
                                     $status = 'success';
                                     
                                     //$message .= "\n".Lang::get('messages.partially_filled').' : Fee buy: '.sprintf('%.8f',$fee_buy).' - Fee Sell: '.sprintf('%.8f',$fee_sell).' - Total buy: '.(sprintf('%.8f',$amount_buy)) . ' - Total sell: '.sprintf('%.8f',($total_sell-$fee_sell));
@@ -919,6 +1028,20 @@ class OrderController extends Controller
                     //Log::info('-------amount_sell final: '.$amount_sell);
                     if ($amount_sell>0) {
                         $orders_sell->save();
+                        DB::table("order_transactions")
+                        ->insert(
+                            [
+                                "order_id" => $orders_sell->id,
+                                "seller_id" => $user->id,
+                                "buyer_id" => $user_buy,
+                                "type" => "buy",
+                                "amount" => $amount_buy,
+                                "price" => $price_buy,
+                                "fee_sell" => $fee_sell,
+                                "fee_buy" => $fee_buy,
+                                "created_at" => date("Y-m-d H:i:s")
+                            ]
+                        );
                         // notif
                         DB::table("order_notification")->insert(
                             [
