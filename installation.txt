@@ -1,3 +1,4 @@
+# Installation
 1. Run "composer update"
 2. Copy ".env.example" to ".env"
 3. Configure the .env file with your server environtment.
@@ -5,3 +6,7 @@
 5. Run "php artisan migrate:fresh"
 6. Run "php aritsan db:seed"
 7. Change your web server root directory to public folder.
+
+# Default User
+Username: admin
+Password: admin123
