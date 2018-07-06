@@ -85,6 +85,7 @@ class ApiController extends Controller
     */
     public static function api($method = '')
     {
+        header("Content-Type: application/json");
         $setting = new Setting;
         $num_transaction_display = $setting->getSetting('num_transaction_display', 0);
 
@@ -281,7 +282,6 @@ class ApiController extends Controller
                 $output = json_encode(array('success' => 1,'return' => $getarray), JSON_PRETTY_PRINT);
             }
             echo $output;
-             
             //$json = file_get_contents('http://pubapi.cryptsy.com/api.php?method=marketdatav2');
             //$data = json_decode($json);
             //print_r ($data);
@@ -936,5 +936,6 @@ class ApiController extends Controller
                 exit;
             }
         }
+        exit;
     }
 }

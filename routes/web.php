@@ -54,7 +54,11 @@ Route::group(["prefix" => "page/api"], function () {
     Route::group(["prefix" => "v1.0"], function () {
         Route::get("/", function () {
             if (isset($_GET["method"])) {
-                $api_response = \App\Http\Controllers\ApiController::api($_GET["method"]);
+                return \App\Http\Controllers\ApiController::api($_GET["method"]);
+            } else {
+                return response([
+                    "message" => "Method parameter required!"
+                ], 400);
             }
         });
     });
