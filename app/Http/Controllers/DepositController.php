@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use DB;
 use Config;
 use Cookie;
+use Confide;
 use App\Models\News;
 use App\Models\Post;
 use App\Models\Role;
