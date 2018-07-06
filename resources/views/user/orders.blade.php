@@ -55,7 +55,11 @@
                 </select>
                 <button type="submit" class="btn btn-primary">{{trans('texts.filter')}}</button>
             </form>
-           
+           <style type="text/css">
+               td {
+                font-size: 11.5px;
+               }
+           </style>
             <table class="table table-striped" id="marketOrders">
                 <tbody>
                 <tr>
@@ -66,6 +70,7 @@
                     <th>{{{ trans('texts.amount')}}}</th>
                     <th>{{{ trans('texts.total')}}}</th>
                     <th>{{{ trans('texts.remaining_amount')}}}</th>
+                    <th>{{{ trans('texts.total_remaining')}}}</th>
                     <th>{{{ trans('texts.status')}}}</th>
                     <th>{{ trans('texts.date') }}</th>
                     <th>{{{ trans('texts.action')}}}</th> 
@@ -88,10 +93,11 @@
                             @else          
                                 <td><b style="color:green">{{ ucwords($ordershistory->type) }}</b></td>
                              @endif
-                            <td>{{sprintf('%.8f',$ordershistory->price)}}</td>
-                            <td>{{sprintf('%.8f',$ordershistory->amount)}}</td>
-                            <td>{{sprintf('%.8f',$ordershistory->to_value)}}</td>
-                             <td>{{sprintf('%.8f',$ordershistory->from_value)}}</td>
+                            <td>{{sprintf('%.8f',$ordershistory->price)." ".$markets[$ordershistory->market_id]['wallet_to']}}</td>
+                            <td>{{sprintf('%.8f',$ordershistory->amount)." ".$markets[$ordershistory->market_id]['wallet_from']}}</td>
+                            <td>{{sprintf('%.8f',$ordershistory->amount * $ordershistory->price)." ".$markets[$ordershistory->market_id]['wallet_to']}}</td>
+                            <td>{{sprintf('%.8f',$ordershistory->from_value)." ".$markets[$ordershistory->market_id]['wallet_from']}}</td>
+                            <td>{{sprintf('%.8f',$ordershistory->to_value)." ".$markets[$ordershistory->market_id]['wallet_to']}}</td>
                             <td><?php
                                 //str_replace(' ', '_', $ordershistory->status);
                             if ($ordershistory->status =='partly_filled' || $ordershistory->status =='partly filled') {
@@ -127,7 +133,6 @@
                         <tr><td colspan="10"><div class="dend se"></div></td></tr>
                     </tbody>
                 @endforeach  
-                </tbody>
             </table>
             <div id="pager"></div>
         </div>

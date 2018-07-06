@@ -44,6 +44,7 @@ return array(
     "remaining_amount" => "Remaining Amount",
     "price_per" => "Price per",
     "total" => "Total",
+    "total_remaining" => "Total Remaining",
     "fee" => "Fee",
     "fees" => "Fees",
     "click_order" => "Click to sum your order.",

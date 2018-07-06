@@ -276,6 +276,7 @@ class OrderController extends Controller
                                     Order::where('id', $sell_matching['id'])->update(
                                         [
                                             'status' => 'filled',
+                                            'to_value' => 0,
                                             'from_value' => 0
                                         ]
                                     );
@@ -343,6 +344,7 @@ class OrderController extends Controller
                                     Order::where('id', $sell_matching['id'])->update(
                                         [
                                             'from_value' => 0,
+                                            'to_value' => 0,
                                             'status' => 'filled',
                                         ]
                                     );
@@ -842,6 +844,7 @@ class OrderController extends Controller
                                     Order::where('id', $buy_matching['id'])->update(
                                         [
                                             'status' => 'filled',
+                                            'to_value' => 0,
                                             'from_value' => 0
                                         ]
                                     );
@@ -889,8 +892,7 @@ class OrderController extends Controller
                                 $message.= Lang::get('messages.balance_not_enought_for_fee');
                                 $messages[$i]=array(Lang::get('messages.balance_not_enought_for_fee'));
                                 }*/
-                            } elseif ($amount_buy > $amount_sell) {
-
+                            } elseif ($amount_buy > $amount_sell) {                                
                                 $total_sell = $amount_sell*$price_buy;//really total sell;
                                 $fee_buy = ($total_sell*$per_fee_buy)/100;
                                 $fee_sell = ($total_sell*$per_fee_sell)/100;
@@ -978,6 +980,7 @@ class OrderController extends Controller
                                     Order::where('id', $buy_matching['id'])->update(
                                         [
                                             'from_value' => 0,
+                                            'to_value' => 0,
                                             'status' => 'filled'
                                         ]
                                     );
