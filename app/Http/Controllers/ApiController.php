@@ -936,6 +936,39 @@ class ApiController extends Controller
                 exit;
             }
         }
+        if ($method == 'getcandles') {
+            $req = [
+                "market",
+                "period",
+                "count",
+                "lasthours"
+            ];
+            
+            $con = true;
+            foreach ($req as $v) {
+                if (!($con = $con && isset($_GET[$v]))) {
+                    $p = $v;
+                    break;
+                }
+            }
+
+            if ($con) {
+                $trade = new Trade();
+                $q = $trade->getDatasChart($_GET["market"], $_GET["period"]);
+
+                print $q;
+            } else {
+                print json_encode(
+                    [
+                        "message" => str_replace(
+                            [":method", ":param"], 
+                            ["getcandles", $p], 
+                            Lang::get("messages.parameter_required")
+                        )
+                    ]
+                );
+            }
+        }
         exit;
     }
 }
