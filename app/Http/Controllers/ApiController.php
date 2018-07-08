@@ -940,8 +940,6 @@ class ApiController extends Controller
             $req = [
                 "market",
                 "period",
-                "count",
-                "lasthours"
             ];
             
             $con = true;
