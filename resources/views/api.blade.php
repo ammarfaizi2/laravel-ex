@@ -28,7 +28,7 @@
 				Public Api methods do not require the use of an API key and can be accessed via the GET method. 
 				<br />
 				<br />
-			
+	
 				<strong>General Market Data (All Markets):</strong> <br />
 
 				<?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=allmarket <br /><br />
@@ -36,6 +36,11 @@
 				<strong>General Market Data (Single Market):</strong> <br />
 
 				<?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=singlemarket&marketid={MARKET ID} <br /><br />
+
+				<strong>Get Candles (Single Market):</strong> <br />
+
+				<?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=getcandles <br /><br />
+
 
 				<strong>Get last price (Single Market):</strong> <br />
 				<?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=lastprice&marketid={MARKET ID}  <br /><br />
