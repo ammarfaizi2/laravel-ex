@@ -1741,16 +1741,16 @@ class UserController extends Controller
         $user_id = $user->id;
         $data = array();
         if ($wallet_id=='') {
-            $wallet = Wallet::first();
+            abort(404);
         } else {
-            $wallet =Wallet::find($wallet_id);
+            $wallet = Wallet::where("type", "=", $wallet_id)->first();
         }
         $balance = new Balance();
         $order = new Order();
         $market = new Market();
 
         $data['page'] = 'withdraw';
-        $data['current_coin'] = $wallet->getType($wallet->id);
+        $data['current_coin'] = $wallet->type;
         $st = DB::table("whitelist_ip_state")
                 ->select("withdraw")
                 ->where("user_id", "=", $user->id)
