@@ -650,8 +650,7 @@ AND created_at >= '2015-08-01 23:37:53'
             $time_frame = (int) $time_frame;
         }
 
-      
-
+        $timeSpan = ((int) $timeSpan)." hours";
         //$setting->putSetting('price_open_start_chart',serialize(array('time'=>'02:30', 'open_previous'=>0,'close_previous'=> 0)));
         //if not reached to time frame and exist chart data from database, not update chart
         //$data_chart_bak = $setting->getSetting('datachart_market_'.$market_id,'');
