@@ -944,15 +944,48 @@ class ApiController extends Controller
             
             $con = true;
             foreach ($req as $v) {
-                if (!($con = $con && isset($_GET[$v]))) {
+                if (!($con = ($con && isset($_GET[$v])))) {
                     $p = $v;
                     break;
                 }
             }
 
             if ($con) {
+                $market_id = $_GET["market"];
+
+                if (! is_numeric($market_id)) {
+                    $success = 0;
+                    $a = explode('_', $market_id, 2);
+                    if (count($a) === 2) {
+                        $b = DB::table('wallets')
+                            ->select(['market.id', 'market.wallet_to'])
+                            ->join('market', 'market.wallet_from', '=', 'wallets.id')
+                            ->where('wallets.type', '=', strtoupper($a[0]))
+                            ->get();
+                        if ($b) {
+                            foreach ($b as $b) {
+                                $c = DB::table('wallets')
+                                ->select(['type'])
+                                ->where('id', '=', $b->wallet_to)
+                                ->first();
+                                if (isset($c->type) && strtoupper($a[1]) === $c->type) {
+                                    $market_id = $b->id;
+                                    $success = 1;
+                                    break;
+                                }
+                            }
+                            if (! $success) {
+                                abort(404);
+                            }
+                        } else {
+                            abort(404);
+                        }
+                    } else {
+                        abort(404);
+                    }
+                }
                 $trade = new Trade();
-                $q = $trade->getDatasChart($_GET["market"], $_GET["period"]);
+                $q = $trade->getCandles($market_id, $_GET["period"], isset($_GET["lasthours"]) ? $_GET["lasthours"] : "1 day");
 
                 print $q;
             } else {

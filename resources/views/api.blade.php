@@ -39,7 +39,7 @@
 
 				<strong>Get Candles (Single Market):</strong> <br />
 
-				<?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=getcandles <br /><br />
+				<?=url('/', $parameters = array(), $secure = null);?>/page/api/v1.0?method=getcandles&market={MARKET ID}&period={TIMEFRAME}&lasthours={LAST_HOURS} <br /><br />
 
 
 				<strong>Get last price (Single Market):</strong> <br />

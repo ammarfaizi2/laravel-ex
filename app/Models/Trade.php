@@ -633,12 +633,26 @@ AND created_at >= '2015-08-01 23:37:53'
     }
 
 
-    public function getcandles($market_id, $timeSpan = '1 day')
+    public function getcandles($market_id, $time_frame, $timeSpan = '1 day')
     {
         //$timeSpan='1 week';
         $setting = new Setting;
+
+        if (preg_match("/^\d{1,3}\s?h(ours?)?/Usi", $time_frame, $m)) {
+            $time_frame = ((int) $m[0]) * 60;
+        } elseif (preg_match("/^\d{1,3}\s?m(inutes?)?/Usi", $time_frame, $m)) {
+            $time_frame = (int) $m[0];
+        } elseif (preg_match("/^\d{1,3}\s?d(ays?)?/Usi", $time_frame, $m)) {
+            $time_frame = ((int) $m[0]) * 60 * 24;
+        } elseif (preg_match("/^\d{1,3}\s?w(eeks?)?/Usi", $time_frame, $m)) {
+            $time_frame = ((int) $m[0]) * 60 * 24 * 7;
+        } else {
+            $time_frame = (int) $time_frame;
+        }
+
+      
+
         //$setting->putSetting('price_open_start_chart',serialize(array('time'=>'02:30', 'open_previous'=>0,'close_previous'=> 0)));
-        $time_frame = $setting->getSetting('time_frame_chart', 30);
         //if not reached to time frame and exist chart data from database, not update chart
         //$data_chart_bak = $setting->getSetting('datachart_market_'.$market_id,'');
         
@@ -668,6 +682,7 @@ AND created_at >= '2015-08-01 23:37:53'
             ->where('created_at', '>=', $start_date)
             ->orderBy('price', 'desc')
             ->get();
+            
         $data = $trade_history->toArray();
         //echo "<pre>trade_history: "; print_r($data); echo "</pre>"; 
         $temp_time = 0;
@@ -676,23 +691,27 @@ AND created_at >= '2015-08-01 23:37:53'
         $new_date = $start_date;
         //$date_ = strtotime(date("Y-m-d")." ".date('H',strtotime($start_date)).":".date('i',strtotime($start_date)));
         $date_ = strtotime(date("Y-m-d H:i:s"));
+        // header("Content-Type: text/html");
+        // dd(date("Y-m-d H:i:s"));
         $end_date = date("Y-m-d H:i", $date_);
         $str = "\n"."new_date: ".$new_date."\n"."end_date: ".$end_date;
         //echo "new_date: ".$new_date."<br>";
         //echo "end_date: ".$end_date."<br>";
         //echo "str: ".$str;
         //echo "<pre>data 1: "; print_r($data); echo "</pre>";
+        // var_dump($end_date);die;
+        header("Content-Type: text/plain");
         while (strtotime($new_date) <= strtotime($end_date)) {
             if ($temp == 0) {
                 $temp_time = $start_time;
             }
-            $add_minute = strtotime($temp_time . " +30 minute");
+            $add_minute = strtotime($temp_time . " +".$time_frame." minutes");
             $temp_time_new = strftime("%H:%M", $add_minute);
 
             $old_date = $new_date;
             $date_temp_time=date("Y-m-d H:i", strtotime($old_date));
             $str .= "\n".$date_temp_time;
-            $new_date = date("Y-m-d H:i", strtotime($new_date." +30 minutes"));// condition for while
+            $new_date = date("Y-m-d H:i", strtotime($new_date." +".$time_frame." minutes"));// condition for while
              //echo "<br>------------------------------------------";
              //echo "<br>temp_time: ".$temp_time;
             // echo "<br>Old date: ".$old_date;
@@ -714,7 +733,10 @@ AND created_at >= '2015-08-01 23:37:53'
                 $high = isset($data_chart_this_time[0]['price']) ? $data_chart_this_time[0]['price']:0;
                 $low = isset($data_chart_this_time[count($data_chart_this_time)-1]['price']) ? $data_chart_this_time[count($data_chart_this_time)-1]['price']:0;
                 $volumn = array_sum(array_fetch($data_chart_this_time, 'amount'));
-
+                $basevol = 0;
+                foreach($data_chart_this_time as $q)  {
+                    $basevol += $q["amount"] * $q["price"];
+                }
                 //get close_price, open_price (sort array with created desc)
                 $cmp = function ($a, $b) {
                     return $b['created_at'] > $a['created_at'];
@@ -730,17 +752,17 @@ AND created_at >= '2015-08-01 23:37:53'
                 }
                 $ha_data = $this->getDataHACandlesticks(array('high'=>$high, 'low'=> $low, 'open' => $open_price, 'close' => $close_price), $close_previous);
                 //add data to chart
-                $datas_chart[] = array('date'=>$date_temp_time,'low'=>$ha_data['ha_low'],'open'=>$ha_data['ha_open'],'close'=>$ha_data['ha_close'],'high'=>$ha_data['ha_high'], 'exchange_volume'=>$volumn,'temp'=>'','close_previous'=>$close_previous);
+                $datas_chart[] = array('date'=>$date_temp_time,'low'=>$ha_data['ha_low'],'open'=>$ha_data['ha_open'],'close'=>$ha_data['ha_close'],'high'=>$ha_data['ha_high'], 'exchange_volume'=>$volumn,'base_volume' => number_format($basevol, 8), 'temp'=>'','close_previous'=>$close_previous);
             } else {
-                $datas_chart[] = array('date'=>$date_temp_time,'low'=>$close_previous,'open'=>$close_previous,'close'=>$close_previous,'high'=>$close_previous, 'exchange_volume'=>0,'temp'=>'','close_previous'=>$close_previous);
+                $datas_chart[] = array('date'=>$date_temp_time,'low'=>$close_previous,'open'=>$close_previous,'close'=>$close_previous,'high'=>$close_previous, 'exchange_volume'=>0,'base_volume' => 0, 'temp'=>'','close_previous'=>$close_previous);
             }
             $temp_time = $temp_time_new;
             $close_previous = isset($ha_data['ha_close']) ? $ha_data['ha_close'] : null;
             $temp++;
         }
         //echo $str;
-        $datas_chart[] = array('date'=>date("Y-m-d H:i"),'low'=>$close_previous,'open'=>$close_previous,'close'=>$close_previous,'high'=>$close_previous, 'exchange_volume'=>0,'temp'=>$str);
-        $result_data = json_encode($datas_chart);
+        // $datas_chart[] = array('date'=>date("Y-m-d H:i"),'low'=>$close_previous,'open'=>$close_previous,'close'=>$close_previous,'high'=>$close_previous, 'exchange_volume'=>0,'temp'=>$str);
+        $result_data = json_encode($datas_chart, 128);
         //$setting->putSetting('datachart_market_'.$market_id,serialize($datas_chart));
         return $result_data;
     }
