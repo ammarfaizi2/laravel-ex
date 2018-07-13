@@ -2236,4 +2236,12 @@ class UserController extends Controller
         }
         abort(404);
     }
+
+    public function getTransaction($k) {
+        return DB::table("order_transactions")
+                            ->select("*")
+                            ->where("order_id", $k)
+                            ->orderBy("created_at")
+                            ->get();
+    }
 }

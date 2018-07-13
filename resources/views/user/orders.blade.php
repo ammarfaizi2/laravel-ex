@@ -118,11 +118,7 @@
                         </tbody>
                     <tbody id="order_details_{{$k}}" style="display:none;" class="order_details">
                         <?php
-                            $a = DB::table("order_transactions")
-                                ->select("*")
-                                ->where("order_id", $k)
-                                ->orderBy("created_at")
-                                ->get();
+                            $a = $that->getTransaction($k);
                         ?>
                         <tr><td colspan="10"><div class="dend"></div></td></tr>
                         <tr><td colspan="10" align="center">Detail of Order #{{$k}}</td></tr>
