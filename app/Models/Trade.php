@@ -631,4 +631,117 @@ AND created_at >= '2015-08-01 23:37:53'
         
         return $data;
     }
+
+
+    public function getcandles($market_id, $timeSpan = '1 day')
+    {
+        //$timeSpan='1 week';
+        $setting = new Setting;
+        //$setting->putSetting('price_open_start_chart',serialize(array('time'=>'02:30', 'open_previous'=>0,'close_previous'=> 0)));
+        $time_frame = $setting->getSetting('time_frame_chart', 30);
+        //if not reached to time frame and exist chart data from database, not update chart
+        //$data_chart_bak = $setting->getSetting('datachart_market_'.$market_id,'');
+        
+        //echo var_dump($setting->getSetting('price_open_start_chart')); exit;
+        $price_open_variable = $setting->getSetting('price_open_start_chart_'.$market_id, '');
+        if (!empty($price_open_variable)) {
+            $price_open_variable = unserialize($price_open_variable);
+        }
+
+        //$open_previous = isset($price_open_variable['open_previous']) ? $price_open_variable['open_previous']:0;
+        //$close_previous = isset($price_open_variable['close_previous']) ? $price_open_variable['close_previous']:0;
+        //$price_open_start_chart_time = isset($price_open_variable['time']) ? $price_open_variable['time']:0;
+        //echo "<pre>price_open_variable: "; print_r($price_open_variable); echo "</pre>";  
+
+        //else get new data for chart
+        $get_date = $this->getStartTimeChart($time_frame, $timeSpan);
+        $start_time = $get_date['start_time'];
+        $start_date = $get_date['start_date'];
+
+        $closeprice=$this->getPreviousDataChart($market_id, $start_date, $time_frame);
+        //$open_previous = $prior_perior['open_price'];
+        $close_previous = $closeprice;
+        //echo "date: ".date("Y-m-d H:i:s")."<br>";
+        //echo "<pre>get_date: "; print_r($get_date); echo "</pre>";  
+        //echo "<pre>start_date: "; print_r($start_date); echo "</pre>";
+        $trade_history = Trade::where('market_id', '=', $market_id)
+            ->where('created_at', '>=', $start_date)
+            ->orderBy('price', 'desc')
+            ->get();
+        $data = $trade_history->toArray();
+        //echo "<pre>trade_history: "; print_r($data); echo "</pre>"; 
+        $temp_time = 0;
+        $temp = 0;
+        $datas_chart = array();
+        $new_date = $start_date;
+        //$date_ = strtotime(date("Y-m-d")." ".date('H',strtotime($start_date)).":".date('i',strtotime($start_date)));
+        $date_ = strtotime(date("Y-m-d H:i:s"));
+        $end_date = date("Y-m-d H:i", $date_);
+        $str = "\n"."new_date: ".$new_date."\n"."end_date: ".$end_date;
+        //echo "new_date: ".$new_date."<br>";
+        //echo "end_date: ".$end_date."<br>";
+        //echo "str: ".$str;
+        //echo "<pre>data 1: "; print_r($data); echo "</pre>";
+        while (strtotime($new_date) <= strtotime($end_date)) {
+            if ($temp == 0) {
+                $temp_time = $start_time;
+            }
+            $add_minute = strtotime($temp_time . " +30 minute");
+            $temp_time_new = strftime("%H:%M", $add_minute);
+
+            $old_date = $new_date;
+            $date_temp_time=date("Y-m-d H:i", strtotime($old_date));
+            $str .= "\n".$date_temp_time;
+            $new_date = date("Y-m-d H:i", strtotime($new_date." +30 minutes"));// condition for while
+             //echo "<br>------------------------------------------";
+             //echo "<br>temp_time: ".$temp_time;
+            // echo "<br>Old date: ".$old_date;
+            // echo "<br>new_date + 30minutes: ".$new_date;
+
+            //lay du lieu chart trong khung gio hien tai, du lieu nay dc sap xep theo gia tu cao den thap
+            // Get the chart data in the current time frame, this data is arranged in price from high to low
+            $data_chart_this_time = array_filter(
+                $data, function ($el) use ($old_date, $new_date) /*use ($temp_time, $temp_time_new)*/ {
+                    $created_at_time = strtotime($el['created_at']);
+                    return ( $created_at_time >= strtotime($old_date) && $created_at_time <= strtotime($new_date));
+                }
+            );
+            //echo "<pre>filtered 1: "; print_r($data_chart_this_time); echo "</pre>";
+            if (count($data_chart_this_time) > 0) {
+                $data_chart_this_time = array_values($data_chart_this_time);
+                
+                //get high & low ($data_chart_this_time is sort with price desc)
+                $high = isset($data_chart_this_time[0]['price']) ? $data_chart_this_time[0]['price']:0;
+                $low = isset($data_chart_this_time[count($data_chart_this_time)-1]['price']) ? $data_chart_this_time[count($data_chart_this_time)-1]['price']:0;
+                $volumn = array_sum(array_fetch($data_chart_this_time, 'amount'));
+
+                //get close_price, open_price (sort array with created desc)
+                $cmp = function ($a, $b) {
+                    return $b['created_at'] > $a['created_at'];
+                };
+                usort($data_chart_this_time, $cmp);
+
+                //echo "<pre>filtered eee: "; print_r($data_chart_this_time); echo "</pre>";
+                $open_price = isset($data_chart_this_time[count($data_chart_this_time)-1]['price']) ? $data_chart_this_time[count($data_chart_this_time)-1]['price']:0;
+                $close_price = isset($data_chart_this_time[0]['price']) ? $data_chart_this_time[0]['price']:0;
+
+                if ($close_previous == 0) {
+                    $close_previous = $close_price;
+                }
+                $ha_data = $this->getDataHACandlesticks(array('high'=>$high, 'low'=> $low, 'open' => $open_price, 'close' => $close_price), $close_previous);
+                //add data to chart
+                $datas_chart[] = array('date'=>$date_temp_time,'low'=>$ha_data['ha_low'],'open'=>$ha_data['ha_open'],'close'=>$ha_data['ha_close'],'high'=>$ha_data['ha_high'], 'exchange_volume'=>$volumn,'temp'=>'','close_previous'=>$close_previous);
+            } else {
+                $datas_chart[] = array('date'=>$date_temp_time,'low'=>$close_previous,'open'=>$close_previous,'close'=>$close_previous,'high'=>$close_previous, 'exchange_volume'=>0,'temp'=>'','close_previous'=>$close_previous);
+            }
+            $temp_time = $temp_time_new;
+            $close_previous = isset($ha_data['ha_close']) ? $ha_data['ha_close'] : null;
+            $temp++;
+        }
+        //echo $str;
+        $datas_chart[] = array('date'=>date("Y-m-d H:i"),'low'=>$close_previous,'open'=>$close_previous,'close'=>$close_previous,'high'=>$close_previous, 'exchange_volume'=>0,'temp'=>$str);
+        $result_data = json_encode($datas_chart);
+        //$setting->putSetting('datachart_market_'.$market_id,serialize($datas_chart));
+        return $result_data;
+    }
 }

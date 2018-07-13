@@ -85,6 +85,7 @@ class ApiController extends Controller
     */
     public static function api($method = '')
     {
+        header("Content-Type: application/json");
         $setting = new Setting;
         $num_transaction_display = $setting->getSetting('num_transaction_display', 0);
 
@@ -281,7 +282,6 @@ class ApiController extends Controller
                 $output = json_encode(array('success' => 1,'return' => $getarray), JSON_PRETTY_PRINT);
             }
             echo $output;
-             
             //$json = file_get_contents('http://pubapi.cryptsy.com/api.php?method=marketdatav2');
             //$data = json_decode($json);
             //print_r ($data);
@@ -936,5 +936,37 @@ class ApiController extends Controller
                 exit;
             }
         }
+        if ($method == 'getcandles') {
+            $req = [
+                "market",
+                "period",
+            ];
+            
+            $con = true;
+            foreach ($req as $v) {
+                if (!($con = $con && isset($_GET[$v]))) {
+                    $p = $v;
+                    break;
+                }
+            }
+
+            if ($con) {
+                $trade = new Trade();
+                $q = $trade->getDatasChart($_GET["market"], $_GET["period"]);
+
+                print $q;
+            } else {
+                print json_encode(
+                    [
+                        "message" => str_replace(
+                            [":method", ":param"], 
+                            ["getcandles", $p], 
+                            Lang::get("messages.parameter_required")
+                        )
+                    ]
+                );
+            }
+        }
+        exit;
     }
 }

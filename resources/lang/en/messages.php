@@ -63,5 +63,5 @@ return array(
     "cannot_connect"    => "Can not connect",
     "trading_is_disabled"   => "This market is disabled for trading!",
     "error_occured" => "Error occured, something went wrong, please try again.",
-    
+    "parameter_required" => "Error occured, :method method requires \":param\" parameter!"
 );
