@@ -17,7 +17,7 @@ class Wallet extends Eloquent
     private $jsonRPCclient;
     public function getType($wallet_id)
     {
-        $type = Wallet::where('id', '=', $wallet_id)->select('type')->first();
+        $type = Wallet::where('id', '=', $wallet_id)->orWhere('type', '=', $wallet_id)->select('type')->first();
         if (isset($type->type)) {
             return $type->type;
         } else {

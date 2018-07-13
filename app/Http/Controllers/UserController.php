@@ -1125,11 +1125,11 @@ class UserController extends Controller
 
             if ($filter!='') {
                 $data['current_coin'] = $wallet->getType($filter);
-                $deposits = $deposits->where('deposits.wallet_id', '=', $filter);
+                $deposits = $deposits->where('wallets.type', '=', $filter);
             }
 
 			if (isset($_POST['wallet']) && $_POST['wallet']!='') {
-				$deposits = $deposits->where('wallet_id', '=', $_POST['wallet']);
+				$deposits = $deposits->where('wallets.type', '=', $_POST['wallet']);
 			}
 			if (isset($_POST['status']) && $_POST['status']!='') {
 				$deposits = $deposits->where('paid', '=', $_POST['status']);
@@ -1175,11 +1175,11 @@ class UserController extends Controller
 
             if ($filter!='') {
                 $data['current_coin'] = $wallet->getType($filter);
-                $withdrawals = $withdrawals->where('withdraws.wallet_id', '=', $filter);
+                $withdrawals = $withdrawals->where('wallets.type', '=', $filter);
             }
 
 			if (isset($_POST['wallet']) && $_POST['wallet']!='') {
-				$withdrawals = $withdrawals->where('wallet_id', '=', $_POST['wallet']);
+				$withdrawals = $withdrawals->where('wallets.type', '=', $_POST['wallet']);
 			}
 			if (isset($_POST['status']) && $_POST['status']!='') {
 				$withdrawals = $withdrawals->where('status', '=', $_POST['status']);
