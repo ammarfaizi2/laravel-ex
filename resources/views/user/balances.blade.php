@@ -55,17 +55,17 @@
 										<li><span class="logo"><img width="32" height="32" src="{{asset('')}}/{{$balance['logo_coin']}}" /> <strong>{{$balance['name']}}</strong></span></li>
 									@endif
 									@if(strtoupper($balance['type'])!=strtoupper('ctp'))
-										<li><a href="{{{ URL::to('/user/deposit') }}}/{{$balance['id']}}">{{trans('texts.deposit')}} {{$balance['type']}}</a></li>
-										<li><a href="{{{ URL::to('/user/withdraw') }}}/{{$balance['id']}}">{{trans('texts.withdraw')}} {{$balance['type']}}</a></li>
+										<li><a href="{{{ URL::to('/user/deposit') }}}/{{$balance['type']}}">{{trans('texts.deposit')}} {{$balance['type']}}</a></li>
+										<li><a href="{{{ URL::to('/user/withdraw') }}}/{{$balance['type']}}">{{trans('texts.withdraw')}} {{$balance['type']}}</a></li>
 									@endif
 									@if(strtoupper($balance['type'])!=strtoupper('ctp'))
-									<li><a href="{{{ URL::to('/user/profile/deposits') }}}/{{$balance['id']}}">{{trans('texts.view_deposits_coin',array('coin'=>$balance['type']))}}</a></li>
+									<li><a href="{{{ URL::to('/user/profile/deposits') }}}/{{$balance['type']}}">{{trans('texts.view_deposits_coin',array('coin'=>$balance['type']))}}</a></li>
 									@else
-									 <li><a href="{{{ URL::to('/user/profile/deposits-point') }}}/{{$balance['id']}}">{{trans('texts.view_deposits_coin',array('coin'=>$balance['type']))}}</a></li>
+									 <li><a href="{{{ URL::to('/user/profile/deposits-point') }}}/{{$balance['type']}}">{{trans('texts.view_deposits_coin',array('coin'=>$balance['type']))}}</a></li>
 									@endif
-									<li><a href="{{{ URL::to('/user/profile/withdrawals') }}}/{{$balance['id']}}">{{trans('texts.view_withdrawals_coin',array('coin'=>$balance['type']))}}</a></li>
-									<li><a href="{{{ URL::to('/user/profile/orders') }}}/{{$balance['id']}}">{{trans('texts.view_orders_coin',array('coin'=>$balance['type']))}}</a></li>
-									<li><a href="{{{ URL::to('/user/profile/trade-history') }}}/{{$balance['id']}}">{{trans('texts.view_trades_coin',array('coin'=>$balance['type']))}}</a></li>
+									<li><a href="{{{ URL::to('/user/profile/withdrawals') }}}/{{$balance['type']}}">{{trans('texts.view_withdrawals_coin',array('coin'=>$balance['type']))}}</a></li>
+									<li><a href="{{{ URL::to('/user/profile/orders') }}}/{{$balance['type']}}">{{trans('texts.view_orders_coin',array('coin'=>$balance['type']))}}</a></li>
+									<li><a href="{{{ URL::to('/user/profile/trade-history') }}}/{{$balance['type']}}">{{trans('texts.view_trades_coin',array('coin'=>$balance['type']))}}</a></li>
 									@if(strtoupper($balance['type'])!=strtoupper('ctp') && !empty($balance['download_wallet_client']	))
 										<li><a href="{{{ $balance['download_wallet_client'] }}}" target="_blank">{{trans('texts.download_wallet',array('coin'=>$balance['type']))}}</a></li>
 									@endif

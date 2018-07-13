@@ -1684,12 +1684,14 @@ class UserController extends Controller
         $user = Confide::user();
         $user_id = $user->id;
         $data = array();
-        $wallet_id = (int)$wallet_id;
-        if ($wallet_id==0) {
-            $wallet = Wallet::first();
+        if (empty($wallet_id)) {
+            // $wallet = Wallet::first();
+            abort(404);
         } else {
-            $wallet =Wallet::find($wallet_id);
+            $wallet = Wallet::where("type", "=", $wallet_id)->first();
         }
+
+        // dd($wallet);
         $balance = new Balance();
         $order = new Order();
         $market = new Market();
@@ -1698,6 +1700,8 @@ class UserController extends Controller
         if (! isset($wallet->type)) {
             abort(404);
         }
+        $wallet_id = $wallet->id;
+        
         $data['current_coin'] = $wallet->type;//$wallet->getType($wallet_id);
         $data['name_coin'] = $wallet->name;
 
