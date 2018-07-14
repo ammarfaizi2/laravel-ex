@@ -635,6 +635,11 @@ AND created_at >= '2015-08-01 23:37:53'
 
     public function getcandles($market_id, $time_frame, $timeSpan = '1 day')
     {
+        $timeSpan = trim($timeSpan);
+        if (empty($timeSpan)) {
+            $timeSpan = "1 day";
+        }
+
         //$timeSpan='1 week';
         $setting = new Setting;
 
@@ -764,9 +769,9 @@ AND created_at >= '2015-08-01 23:37:53'
                 }
                 $ha_data = $this->getDataHACandlesticks(array('high'=>$high, 'low'=> $low, 'open' => $open_price, 'close' => $close_price), $close_previous);
                 //add data to chart
-                $datas_chart[] = array('date'=>$date_temp_time,'low'=>$ha_data['ha_low'],'open'=>$ha_data['ha_open'],'close'=>$ha_data['ha_close'],'high'=>$ha_data['ha_high'], 'exchange_volume'=>$volumn,'base_volume' => number_format($basevol, 8), 'temp'=>'','close_previous'=>$close_previous);
+                $datas_chart[] = array('date'=>$date_temp_time,'low'=>number_format($ha_data['ha_low'],8),'open'=>number_format($ha_data['ha_open'],8),'close'=>number_format($ha_data['ha_close'],8),'high'=>number_format($ha_data['ha_high'],8), 'exchange_volume'=>number_format($volumn,8),'base_volume' => number_format($basevol, 8), 'temp'=>'','close_previous'=>number_format($close_previous,8));
             } else {
-                $datas_chart[] = array('date'=>$date_temp_time,'low'=>$close_previous,'open'=>$close_previous,'close'=>$close_previous,'high'=>$close_previous, 'exchange_volume'=>0,'base_volume' => 0, 'temp'=>'','close_previous'=>$close_previous);
+                $datas_chart[] = array('date'=>$date_temp_time,'low'=>number_format($close_previous, 8),'open'=>number_format($close_previous, 8),'close'=>number_format($close_previous,8),'high'=>number_format($close_previous,8), 'exchange_volume'=>number_format(0,8),'base_volume' => number_format(0,8), 'temp'=>'','close_previous'=>number_format($close_previous, 8));
             }
             $temp_time = $temp_time_new;
             $close_previous = isset($ha_data['ha_close']) ? $ha_data['ha_close'] : null;
