@@ -951,6 +951,7 @@ class UserController extends Controller
                 //echo "<pre>getQueryLog: ".dd(DB::getQueryLog())."</pre>";
                 $wallets[$key]['held_order'] = sprintf('%.8f', $held_order);
             }
+            dd($wallets);
             //echo "<pre>ggg?: "; print_r($wallets); echo "</pre>";
             $data['balances'] = $wallets;
             break;

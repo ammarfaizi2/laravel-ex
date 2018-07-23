@@ -17,11 +17,12 @@ class Balance extends Eloquent
         $balance = 0;
         if (!Auth::guest()) {
             $user = Confide::user();
-            $balanceCoin = Balance::where('user_id', '=', $user->id)
+            foreach (Balance::where('user_id', '=', $user->id)
                         ->where('wallet_id', '=', $wallet_id)
-                        ->first();
-            if (isset($balanceCoin->amount)) {
-                $balance = $balanceCoin->amount;
+                        ->get() as $q) {
+                if (isset($q->amount)) {
+                    $balance += $q->amount;
+                }
             }
         }
         return $balance;
@@ -36,7 +37,7 @@ class Balance extends Eloquent
             $new_amount = $balanceCoin->amount + $amount;
             Log::info("Add Money ".$wallet_id." -- User: ".$user_id.": ".$new_amount.' -- amount: '.$amount);
             //echo "Add New ".$wallet_id.": ".$new_amount.' -- amount: '.$amount;
-            Balance::where('id', $balanceCoin->id)->update(array('amount' => $new_amount));
+            Balance::where('id', $balanceCoin->id)->limit(1)->update(array('amount' => $new_amount));
         } else { //insert balance
             Balance::insert(array('user_id' => $user_id, 'wallet_id' => $wallet_id, 'amount'=>$amount));
         }
