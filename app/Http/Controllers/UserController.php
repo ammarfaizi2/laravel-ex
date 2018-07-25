@@ -903,22 +903,27 @@ class UserController extends Controller
         $data['disable_points']=$setting->getSetting('disable_points', 0);
         switch ($page) {
         case 'balances':
-            $wallets = Wallet::orderBy('name')->get()->toArray();
-            foreach ($wallets as $value) {
+            $walletsz = Wallet::orderBy('name')->get()->toArray();
+            foreach ($walletsz as $value) {
                 $wallet_id = $value['id'];
+                if ($wallet_id == 0) {
+                    dd("123", $value);
+                }
                 //get balance
                 $balance_amount = $balance->getBalance($wallet_id);
-                $wallets[$key]['balance'] = sprintf('%.8f', $balance_amount);
+                $wallets[$wallet_id]["type"] = $value["type"];
+                $wallets[$wallet_id]["name"] = $value["name"];
+                $wallets[$wallet_id]['balance'] = sprintf('%.8f', $balance_amount);
                 //get PENDING DEPOSITS
                 $deposit_pendding = Deposit::where('user_id', '=', $user_id)
                                     ->where('wallet_id', '=', $wallet_id)
                                     ->where('paid', '=', 0)->sum('amount');
-                $wallets[$key]['deposit_pendding'] = sprintf('%.8f', $deposit_pendding);
+                $wallets[$wallet_id]['deposit_pendding'] = sprintf('%.8f', $deposit_pendding);
                 //get PENDING WITHDRAWALS
                 $withdraw_pendding = Withdraw::where('user_id', '=', $user_id)
                 ->where('wallet_id', '=', $wallet_id)
                 ->where('status', '=', 0)->sum('amount');
-                $wallets[$key]['withdraw_pendding'] = sprintf('%.8f', $withdraw_pendding);
+                $wallets[$wallet_id]['withdraw_pendding'] = sprintf('%.8f', $withdraw_pendding);
                 //get HELD FOR ORDERS
                 //giao dich ban se giam tien cua wallet hien tai, doi voi btc/ltc (dong tien trao doi) thi giao dich mua se giam tien no
                 //vi vay can xac dinh dau la btc/ltc, bang cach dua vao market, wallet_to trong market chinh la dong tien chinh de trao doi
@@ -953,7 +958,9 @@ class UserController extends Controller
                             DB::raw("orders.from_value * orders.to_value AS held_balance"),
                             "orders.type",
                             "orders.from_value",
-                            "orders.to_value"
+                            "orders.to_value",
+                            "market.wallet_from",
+                            "market.wallet_to"
                         ]
                     )
                     ->join("market", "market.id", "=", "orders.market_id")
@@ -967,17 +974,17 @@ class UserController extends Controller
                     ->get();
                     $amount = 0;
                     foreach ($held_order as $v) {
-                        if ($v["type"] === "sell") {
-                            if (isset($wallets[$v->from_value]['held_order'])) {
-                                $wallets[$v->from_value]['held_order'] += $v->held_balance;
+                        if ($v->type === "sell") {
+                            if (isset($wallets[$v->wallet_from]['held_order'])) {
+                                $wallets[$v->wallet_from]['held_order'] += $v->held_balance;
                             } else {
-                                $wallets[$v->from_value]['held_order'] = 0;
+                                $wallets[$v->wallet_from]['held_order'] = 0;
                             }
-                        } elseif ($v["type"] === "buy") {
-                             if (isset($wallets[$v->to_value]['held_order'])) {
-                                $wallets[$v->to_value]['held_order'] += $v->held_balance;
+                        } elseif ($v->type === "buy") {
+                             if (isset($wallets[$v->wallet_to]['held_order'])) {
+                                $wallets[$v->wallet_to]['held_order'] += $v->held_balance;
                             } else {
-                                $wallets[$v->to_value]['held_order'] = 0;
+                                $wallets[$v->wallet_to]['held_order'] = 0;
                             }
                         }
                     }
@@ -992,12 +999,14 @@ class UserController extends Controller
                 //}
                 //echo "<pre>getQueryLog: ".dd(DB::getQueryLog())."</pre>";
             }
-            foreach ($wallets as &$val) {
-                $val["held_order"] = sprintf('%.8f', $amount);
+
+            foreach ($wallets as $key => &$val) {
+                $val["held_order"] = sprintf('%.8f', isset($val["held_order"]) ? $val["held_order"] : 0);
             }
             unset($val);
             // dd($wallets);
             //echo "<pre>ggg?: "; print_r($wallets); echo "</pre>";
+            // dd($wallets);die;
             $data['balances'] = $wallets;
             break;
         case 'orders':
