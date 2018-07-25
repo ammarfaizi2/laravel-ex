@@ -1,8 +1,18 @@
+<!-- Box Header -->
+<div class="box-header with-border">
+  <h3 class="box-title">{{ trans('user_texts.login_history')}}</h3>
+
+  <div class="box-tools pull-right">
+	
+  </div>
+  <!-- /.box-tools -->
+</div>
+
+<!-- Box Content -->
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
         <div id="orders_history">
-            <h2>{{ trans('user_texts.login_history')}}</h2>
-            <table class="table table-striped" id="marketOrders">
+            <table class="table table-hover table-striped" id="marketOrders">
                 <tbody>
                 <tr>
                     <th>{{ trans('user_texts.login_history_id') }}</th>

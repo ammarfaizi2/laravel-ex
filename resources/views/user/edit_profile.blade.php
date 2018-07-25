@@ -1,8 +1,19 @@
+<!-- Box Header -->
+<div class="box-header with-border">
+  <h3 class="box-title">Account Profile</h3>
+
+  <div class="box-tools pull-right">
+	
+  </div>
+  <!-- /.box-tools -->
+</div>
+
+<!-- Box Content -->
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
 		<!-- Edit Profile -->
 		<div id="edit_profile">
-			<h2>Account Profile</h2> 
+			
 			@if ( Session::get('error') )
 				<div class="alert alert-error alert-danger">
 					@if ( is_array(Session::get('error')) )
@@ -140,4 +151,15 @@
 			</form>
 		</div>
 	</div>
+</div>
+
+<div class="box-footer no-padding">
+  <div class="mailbox-controls">
+
+	<div class="pull-right">
+	  <button type="submit" class="btn btn-primary">Update Profile2</button>
+	  <!-- /.btn-group -->
+	</div>
+	<!-- /.pull-right -->
+  </div>
 </div>

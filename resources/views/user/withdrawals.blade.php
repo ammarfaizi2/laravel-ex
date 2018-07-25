@@ -1,3 +1,14 @@
+<!-- Box Header -->
+<div class="box-header with-border">
+  <h3 class="box-title">{{{ trans('texts.coin_withdrawals')}}} @if(isset($current_coin)) {{' - '.$current_coin}} @endif</h3>
+  
+  <div class="box-tools pull-right">
+	
+  </div>
+  <!-- /.box-tools -->
+</div>
+
+<!-- Box Content -->
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
 		<!-- Withdrawals History -->
@@ -12,7 +23,7 @@
         ?>
 		
 		<div id="coin_deposits">
-			<h2>{{{ trans('texts.coin_withdrawals')}}} @if(isset($current_coin)) {{' - '.$current_coin}} @endif</h2> 
+			
 			@if ( Session::get('error') )
 				<div class="alert alert-error alert-danger">
 					<button type="button" class="close" data-dismiss="alert">×</button>
@@ -35,23 +46,34 @@
 			<span class="text-high">To make a new withdrawal, please visit the {{ HTML::link('user/profile/balances', trans('user_texts.balance')) }} page and select the Withdraw option under the actions menu for the coin.</span>
 			<br><br>
 			<form class="form-inline" method="POST" action="{{Request::url()}}">
-				<input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
-				@if($filter=='')
-					<label>{{{ trans('texts.coin')}}}</label>        
-					<select id="wallet" style="margin-right: 20px;" name="wallet" class="form-control">
-						<option value="" selected="selected">{{trans('texts.all')}}</option>
-						@foreach($wallets as $key=> $wallet)
-							<option value="{{$wallet['id']}}" @if(isset($_POST['wallet']) && $_POST['wallet']==$wallet['id']) selected @endif>{{$wallet->type}}</option>
-						@endforeach
-					</select>
-				@endif
-				<label>{{{ trans('texts.type')}}}</label>
-				<select id="type" name="status" style="margin-right: 20px;" class="form-control">
-					<option value="" selected="selected">{{trans('texts.all')}}</option>
-					<option value="0" @if(isset($_POST['status']) && $_POST['status'] == '0') selected @endif>{{trans('texts.pending')}}</option>
-					<option value="1" @if(isset($_POST['status']) && $_POST['status'] == '1') selected @endif>{{trans('texts.complete')}}</option>
-				</select>        
-				<button type="submit" class="btn btn-primary" >{{trans('texts.filter')}}</button>
+			
+				<div class="mailbox-controls">
+
+					<div class="btn-group">
+					  <input type="hidden" name="_token" id="_token" value="{{{ Session::token() }}}">
+						@if($filter=='')
+							<label>{{{ trans('texts.coin')}}}</label>        
+							<select id="wallet" style="margin-right: 20px;" name="wallet" class="form-control">
+								<option value="" selected="selected">{{trans('texts.all')}}</option>
+								@foreach($wallets as $key=> $wallet)
+									<option value="{{$wallet['id']}}" @if(isset($_POST['wallet']) && $_POST['wallet']==$wallet['id']) selected @endif>{{$wallet->type}}</option>
+								@endforeach
+							</select>
+						@endif
+						<label>{{{ trans('texts.type')}}}</label>
+						<select id="type" name="status" style="margin-right: 20px;" class="form-control">
+							<option value="" selected="selected">{{trans('texts.all')}}</option>
+							<option value="0" @if(isset($_POST['status']) && $_POST['status'] == '0') selected @endif>{{trans('texts.pending')}}</option>
+							<option value="1" @if(isset($_POST['status']) && $_POST['status'] == '1') selected @endif>{{trans('texts.complete')}}</option>
+						</select>        
+					</div>
+					<!-- /.btn-group -->
+					<button type="submit" class="btn btn-default btn-sm" >{{trans('texts.filter')}}</button>
+					
+                </div>
+			  
+				
+				
 			</form>
 			<table class="table table-striped">
 				<tbody>

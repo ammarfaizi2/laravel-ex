@@ -1,3 +1,16 @@
+<!-- Box Header -->
+<div class="box-header with-border">
+  <h3 class="box-title rty">{{ trans('user_texts.ip_whitelist_'.$type)}}</h3>
+  <div class="rty" style="margin-left: 10px;">
+                <span style="color:{!! $w_status ? "green" : "red" !!}">{!! $w_status ?  trans('user_texts.on') : trans('user_texts.off') !!}</span>
+ </div>
+  <div class="box-tools pull-right">
+	
+  </div>
+  <!-- /.box-tools -->
+</div>
+
+<!-- Box Content -->
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
         <div>
@@ -6,20 +19,19 @@
                     display: inline-block;
                 }
             </style>
-            <div class="rty">
-                <h2>{{ trans('user_texts.ip_whitelist_'.$type)}}</h2>
-            </div>
-            <div class="rty" style="margin-left: 10px;">
-                <h3 style="color:{!! $w_status ? "green" : "red" !!}">{!! $w_status ?  trans('user_texts.on') : trans('user_texts.off') !!}</h3>
-            </div>
-            <div style="margin-bottom: 5px;">
-                @if($w_status)
-                    <button onclick="turnOff();">{{ trans('user_texts.turn_off_whitelist', ["type" => ucwords($type)]) }}</button>
-                @else
-                    <button onclick="turnOn();">{{ trans('user_texts.turn_on_whitelist', ["type" => ucwords($type)]) }}</button>
-                @endif
-                <button id="new_ip">{{ trans('user_texts.add_ip') }}</button>
-            </div>
+
+			<div class="mailbox-controls">
+				<div class="btn-group">
+					@if($w_status)
+						<button onclick="turnOff();" class="btn btn-default btn-sm" >{{ trans('user_texts.turn_off_whitelist', ["type" => ucwords($type)]) }}</button>
+					@else
+						<button onclick="turnOn();" class="btn btn-default btn-sm">{{ trans('user_texts.turn_on_whitelist', ["type" => ucwords($type)]) }}</button>
+					@endif
+				</div>
+				<!-- /.btn-group -->
+				<button class="btn btn-default btn-sm" id="new_ip">{{ trans('user_texts.add_ip') }}</button>
+			</div>
+
             <table class="table table-striped">
                 <tbody>
                 <tr>

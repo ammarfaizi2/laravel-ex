@@ -1,3 +1,17 @@
+<!-- Box Header -->
+<div class="box-header with-border">
+  <h3 class="box-title">{{{ trans('texts.orders_history')}}} @if(isset($current_coin)) {{' - '.$current_coin}} @endif</h3>
+
+  <div class="box-tools pull-right">
+	<div class="has-feedback">
+	  <input class="form-control input-sm" placeholder="{{{trans('texts.search')}}}" type="text">
+	  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+	</div>
+  </div>
+  <!-- /.box-tools -->
+</div>
+
+<!-- Box Content -->
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
 
@@ -26,34 +40,45 @@
             }
         </script>
         <div id="orders_history">
-            <h2>{{{ trans('texts.orders_history')}}} @if(isset($current_coin)) {{' - '.$current_coin}} @endif</h2>
+            
 
             <form class="form-inline" method="GET" action="{{Request::url()}}">
-                <input type="hidden" name="_token" value="{{{ Session::token() }}}">
-                @if($filter=='')
-                    <label>{{{ trans('texts.market')}}}</label>        
-                    <select id="pair" style="margin-right: 20px;" name="market" class="form-control">
-                         <option value="" @if(isset($_GET['market']) == '') selected @endif>{{trans('texts.all')}}</option>
-                            @foreach($markets as $key=> $market)
-                                <option value="{{$market['id']}}" @if(isset($_GET['market']) && $_GET['market']==$market['id']) selected @endif>{{ strtoupper($market['wallet_from'].'/'.$market['wallet_to'])}}</option>
-                            @endforeach
-                    </select>
-                @endif
-                <label>{{{ trans('texts.type')}}}</label>
-                <select id="type" name="type" style="margin-right: 20px;" class="form-control">
-                    <option value="" @if(isset($_GET['type']) == '') selected @endif>{{trans('texts.all')}}</option>
-                        <option value="sell" @if(isset($_GET['type']) && $_GET['type'] == 'sell') selected @endif>{{trans('texts.sell')}}</option>
-                        <option value="buy" @if(isset($_GET['type']) && $_GET['type'] == 'buy') selected @endif>{{trans('texts.buy')}}</option>
-                </select>
-                <label>{{{ trans('texts.show')}}}</label>
-                <select id="view" name="status" class="form-control">
-                    <option value="" @if(isset($_GET['status']) == '') selected @endif>{{trans('texts.all')}}</option>
-                        <option value="active" @if(isset($_GET['status']) && $_GET['status'] == 'active') selected @endif>{{trans('texts.active')}}</option>
-                        <option value="filled" @if(isset($_GET['status']) && $_GET['status'] == 'filled') selected @endif>{{trans('texts.filled')}}</option>
-                        <option value="partly_filled" @if(isset($_GET['status']) && $_GET['status'] == 'partly_filled') selected @endif>{{trans('texts.partially_filled')}}</option>
+                
+				<div class="mailbox-controls">
 
-                </select>
-                <button type="submit" class="btn btn-primary">{{trans('texts.filter')}}</button>
+					<div class="btn-group">
+					  <input type="hidden" name="_token" value="{{{ Session::token() }}}">
+						@if($filter=='')
+							<label>{{{ trans('texts.market')}}}</label>        
+							<select id="pair" style="margin-right: 20px;" name="market" class="form-control">
+								 <option value="" @if(isset($_GET['market']) == '') selected @endif>{{trans('texts.all')}}</option>
+									@foreach($markets as $key=> $market)
+										<option value="{{$market['id']}}" @if(isset($_GET['market']) && $_GET['market']==$market['id']) selected @endif>{{ strtoupper($market['wallet_from'].'/'.$market['wallet_to'])}}</option>
+									@endforeach
+							</select>
+						@endif
+						<label>{{{ trans('texts.type')}}}</label>
+						<select id="type" name="type" style="margin-right: 20px;" class="form-control">
+							<option value="" @if(isset($_GET['type']) == '') selected @endif>{{trans('texts.all')}}</option>
+								<option value="sell" @if(isset($_GET['type']) && $_GET['type'] == 'sell') selected @endif>{{trans('texts.sell')}}</option>
+								<option value="buy" @if(isset($_GET['type']) && $_GET['type'] == 'buy') selected @endif>{{trans('texts.buy')}}</option>
+						</select>
+						<label>{{{ trans('texts.show')}}}</label>
+						<select id="view" name="status" class="form-control">
+							<option value="" @if(isset($_GET['status']) == '') selected @endif>{{trans('texts.all')}}</option>
+								<option value="active" @if(isset($_GET['status']) && $_GET['status'] == 'active') selected @endif>{{trans('texts.active')}}</option>
+								<option value="filled" @if(isset($_GET['status']) && $_GET['status'] == 'filled') selected @endif>{{trans('texts.filled')}}</option>
+								<option value="partly_filled" @if(isset($_GET['status']) && $_GET['status'] == 'partly_filled') selected @endif>{{trans('texts.partially_filled')}}</option>
+
+						</select>
+					</div>
+					<!-- /.btn-group -->
+					<button type="submit" class="btn btn-default btn-sm">{{trans('texts.filter')}}</button>
+					
+              </div>
+			  
+				
+                
             </form>
            <style type="text/css">
                td {
@@ -202,4 +227,15 @@
             $('#pager').find('ul').addClass('pagination');
         </script>
     </div>
+</div>
+
+<div class="box-footer no-padding">
+  <div class="mailbox-controls">
+
+	<div class="pull-right">
+	  <div class="pagination margin-none"><ul class="pagination"><li class="disabled"><a href="?page=1">«</a></li><li class="disabled"><a href="?page=0">»</a></li></ul></div>
+	  <!-- /.btn-group -->
+	</div>
+	<!-- /.pull-right -->
+  </div>
 </div>

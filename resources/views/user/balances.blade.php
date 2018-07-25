@@ -1,25 +1,52 @@
-	
+<!-- Box Header -->
+<div class="box-header with-border">
+  <h3 class="box-title">{{{ trans('texts.account_balances') }}}</h3>
+  
+  <div class="box-tools pull-right">
+	<div class="has-feedback">
+	  <input class="form-control input-sm" placeholder="{{{trans('texts.search')}}}" type="text">
+	  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+	</div>
+  </div>
+  <!-- /.box-tools -->
+</div>
+
+<!-- Box Content -->	
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
 
 		<!-- Balance page -->
 		<div id="balances">
-			<h2>{{{ trans('texts.account_balances') }}}</h2>
 			
 			
+			<div class="mailbox-controls">
+                <!-- Left Row -->
+                {{{ trans('texts.balance_buttons_tip') }}}
+				
+                <div class="pull-right">
+                  {{{ trans('texts.hide_zero_balance') }}}
+				  <div class="btn-group">
+					
+                    <div class="material-switch">
+						
+						<input tabindex="1" type="checkbox" name="filterCheckBox" id="filterCheckBox" value="1">
+						<label for="filterCheckBox" class="label-info"></label>
+					</div>
+                  </div>
+                  <!-- /.btn-group -->
+                </div>
+                <!-- /.pull-right -->
+            </div>
+			  
 			<p>
 			<div class="left">
-				{{{ trans('texts.balance_buttons_tip') }}}
+				
 			</div>
 			</p>
 			
 			<p>
 
-			 <div class="material-switch pull-right">
-				<span class="pull-left">{{{ trans('texts.hide_zero_balance') }}}</span>
-				<input tabindex="1" type="checkbox" name="filterCheckBox" id="filterCheckBox" value="1">
-				<label for="filterCheckBox" class="label-info"></label>
-			</div>
+			 
 
 			<!-- https://codepen.io/anon/pen/vdRWWW
 				https://codepen.io/anon/pen/vdRpmv

@@ -1,9 +1,20 @@
+<!-- Box Header -->
+<div class="box-header with-border">
+  <h3 class="box-title">{{{ trans('user_texts.dashboard') }}}</h3>
+  
+  <div class="box-tools pull-right">
+	
+  </div>
+  <!-- /.box-tools -->
+</div>
+
+<!-- Box Content -->
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
 
 		<!-- Edit Profile -->
 		<div id="dashboard">
-			<h2>{{{ trans('user_texts.dashboard') }}}</h2>
+			
 		   
 			<div class="panel panel-default panel-charts">
 			  <div class="panel-heading"> 

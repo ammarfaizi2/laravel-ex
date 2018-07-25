@@ -1,3 +1,14 @@
+<!-- Box Header -->
+<div class="box-header with-border">
+  <h3 class="box-title">{{{ trans('user_texts.trade_history')}}} @if(isset($current_coin)) {{' - '.$current_coin}} @endif</h3>
+  
+  <div class="box-tools pull-right">
+	
+  </div>
+  <!-- /.box-tools -->
+</div>
+
+<!-- Box Content -->
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
 
@@ -15,30 +26,45 @@
         }
         ?>
         <div id="trade_history">
-            <h2>{{{ trans('Trade history')}}} @if(isset($current_coin)) {{' - '.$current_coin}} @endif</h2>
+            
             <form class="form-inline" method="GET" action="{{Request::url()}}">
-                @if($filter=='')
-                    <label>{{{ trans('texts.market')}}}</label>        
-                    <select id="pair" style="margin-right: 20px;" name="market" class="form-control">
-                        <option value="" @if(isset($_GET['market']) == '') selected @endif>{{trans('texts.all')}}</option>
-                            @foreach($markets as $key=> $market)
-                                <option value="{{$market['id']}}" @if(isset($_GET['market']) && $_GET['market']==$market['id']) selected @endif>{{ strtoupper($market['wallet_from'].'/'.$market['wallet_to'])}}</option>
-                            @endforeach
-                    </select>
-                @endif
-                <label>{{{ trans('texts.type')}}}</label>
-                <select id="type" name="type" style="margin-right: 20px;" class="form-control">
-                    <option value="" @if(isset($_GET['type']) == '') selected @endif>{{trans('texts.all')}}</option>
-                        <option value="sell" @if(isset($_GET['type']) && $_GET['type'] == 'sell') selected @endif>{{trans('texts.sell')}}</option>
-                        <option value="buy" @if(isset($_GET['type']) && $_GET['type'] == 'buy') selected @endif>{{trans('texts.buy')}}</option>
-                </select>
-                <!-- <label>{{{ trans('texts.i_am')}}}</label>
-                <select id="type" name="i_am" style="margin-right: 20px;">
-                    <option value="" selected="selected">{{trans('texts.all')}}</option>
-                    <option value="seller_id">{{trans('texts.seller')}}</option>
-                    <option value="buyer_id">{{trans('texts.buyer')}}</option>
-                </select> -->
-                <button type="submit" class="btn btn-primary" >{{trans('texts.filter')}}</button>
+                <div class="mailbox-controls">
+
+					
+					<div class="btn-group">
+					  @if($filter=='')
+						<label>{{{ trans('texts.market')}}}</label>        
+						<select id="pair" style="margin-right: 20px;" name="market" class="form-control">
+							<option value="" @if(isset($_GET['market']) == '') selected @endif>{{trans('texts.all')}}</option>
+								@foreach($markets as $key=> $market)
+									<option value="{{$market['id']}}" @if(isset($_GET['market']) && $_GET['market']==$market['id']) selected @endif>{{ strtoupper($market['wallet_from'].'/'.$market['wallet_to'])}}</option>
+								@endforeach
+						</select>
+					  @endif
+					  
+					  <label>{{{ trans('texts.type')}}}</label>
+						<select id="type" name="type" style="margin-right: 20px;" class="form-control">
+							<option value="" @if(isset($_GET['type']) == '') selected @endif>{{trans('texts.all')}}</option>
+								<option value="sell" @if(isset($_GET['type']) && $_GET['type'] == 'sell') selected @endif>{{trans('texts.sell')}}</option>
+								<option value="buy" @if(isset($_GET['type']) && $_GET['type'] == 'buy') selected @endif>{{trans('texts.buy')}}</option>
+						</select>
+						<!-- <label>{{{ trans('texts.i_am')}}}</label>
+						<select id="type" name="i_am" style="margin-right: 20px;">
+							<option value="" selected="selected">{{trans('texts.all')}}</option>
+							<option value="seller_id">{{trans('texts.seller')}}</option>
+							<option value="buyer_id">{{trans('texts.buyer')}}</option>
+						</select> -->
+						
+						
+					</div>
+					<!-- /.btn-group -->
+					<button type="submit" class="btn btn-default btn-sm" >{{trans('texts.filter')}}</button>
+					
+              </div>
+			  
+				
+                
+                
             </form>
             <table class="table table-striped">
                 <thead>

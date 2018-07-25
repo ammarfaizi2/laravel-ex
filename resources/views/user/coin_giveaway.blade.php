@@ -1,3 +1,13 @@
+<!-- Box Header -->
+<div class="box-header with-border">
+  <h3 class="box-title rty">{{ trans('user_texts.coin_giveaway')}}</h3>
+  <div class="box-tools pull-right">
+	
+  </div>
+  <!-- /.box-tools -->
+</div>
+
+<!-- Box Content -->
 <div class="row">
 	<div class="col-12-xs col-sm-12 col-lg-12">
 
@@ -5,10 +15,9 @@
 		<!-- Giveaway -->
 		<div id="form_giveaway">
 			<div style="color:red">@if(isset($error_message)) {{$error_message}} @endif</div>
-			<h2>Coin Giveaway</h2> 
 
 		Here you can get FREE coins every 24hrs! (only valid to members with a trade history)
-		<BR><BR>
+		<br><br>
 		These FREE coins have either been donated or purchased by {{{ Config::get('config_custom.company_name') }}}. <BR><BR>
 		Cheating the system by using mulitiple accounts, to get more than your fair share of Free coins, will result in a lifetime ban,  and all your coins donated to the Giveaway pool.
 		<BR><BR>
