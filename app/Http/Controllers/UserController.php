@@ -955,7 +955,8 @@ class UserController extends Controller
                     ->select(
                         [
                             "orders.user_id",
-                            DB::raw("orders.from_value * orders.to_value AS held_balance"),
+                            "orders.price",
+                            "orders.to_value",
                             "orders.type",
                             "orders.from_value",
                             "orders.to_value",
@@ -976,13 +977,13 @@ class UserController extends Controller
                     foreach ($held_order as $v) {
                         if ($v->type === "sell") {
                             if (isset($wallets[$v->wallet_from]['held_order'])) {
-                                $wallets[$v->wallet_from]['held_order'] += $v->held_balance;
+                                $wallets[$v->wallet_from]['held_order'] += $v->from_value;
                             } else {
                                 $wallets[$v->wallet_from]['held_order'] = 0;
                             }
                         } elseif ($v->type === "buy") {
                              if (isset($wallets[$v->wallet_to]['held_order'])) {
-                                $wallets[$v->wallet_to]['held_order'] += $v->held_balance;
+                                $wallets[$v->wallet_to]['held_order'] += $v->to_value;
                             } else {
                                 $wallets[$v->wallet_to]['held_order'] = 0;
                             }
