@@ -904,7 +904,7 @@ class UserController extends Controller
         switch ($page) {
         case 'balances':
             $wallets = Wallet::orderBy('name')->get()->toArray();
-            foreach ($wallets as $key => $value) {
+            foreach ($wallets as $value) {
                 $wallet_id = $value['id'];
                 //get balance
                 $balance_amount = $balance->getBalance($wallet_id);
@@ -951,12 +951,14 @@ class UserController extends Controller
                         [
                             "orders.user_id",
                             DB::raw("orders.from_value * orders.to_value AS held_balance"),
-                            "orders.type"
+                            "orders.type",
+                            "orders.from_value",
+                            "orders.to_value"
                         ]
                     )
                     ->join("market", "market.id", "=", "orders.market_id")
                     ->where(function($sql) use ($wallet_id){
-                        // $sql->orWhere("wallet_from", "=", $wallet_id);
+                        $sql->orWhere("wallet_from", "=", $wallet_id);
                         $sql->orWhere("wallet_to", "=", $wallet_id);
                     })
                     ->where("orders.user_id", "=", $user->id)
@@ -965,7 +967,19 @@ class UserController extends Controller
                     ->get();
                     $amount = 0;
                     foreach ($held_order as $v) {
-                        $amount += $v->held_balance;
+                        if ($v["type"] === "sell") {
+                            if (isset($wallets[$v->from_value]['held_order'])) {
+                                $wallets[$v->from_value]['held_order'] += $v->held_balance;
+                            } else {
+                                $wallets[$v->from_value]['held_order'] = 0;
+                            }
+                        } elseif ($v["type"] === "buy") {
+                             if (isset($wallets[$v->to_value]['held_order'])) {
+                                $wallets[$v->to_value]['held_order'] += $v->held_balance;
+                            } else {
+                                $wallets[$v->to_value]['held_order'] = 0;
+                            }
+                        }
                     }
                     // $held_order = Order::leftJoin('market', 'orders.market_id', '=', 'market.id')
                     //             ->where('market.wallet_from', '=', $wallet_id)
@@ -977,9 +991,11 @@ class UserController extends Controller
                     // $held_order = Order::
                 //}
                 //echo "<pre>getQueryLog: ".dd(DB::getQueryLog())."</pre>";
-
-                $wallets[$key]['held_order'] = sprintf('%.8f', $amount);
             }
+            foreach ($wallets as &$val) {
+                $val["held_order"] = sprintf('%.8f', $amount);
+            }
+            unset($val);
             // dd($wallets);
             //echo "<pre>ggg?: "; print_r($wallets); echo "</pre>";
             $data['balances'] = $wallets;
