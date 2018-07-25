@@ -941,17 +941,46 @@ class UserController extends Controller
                                 ->whereIn('status', $status_active)
                                 ->sum('to_value');
                 }else{*/
-                    $held_order = Order::leftJoin('market', 'orders.market_id', '=', 'market.id')
-                                ->where('market.wallet_from', '=', $wallet_id)
-                                ->where('orders.user_id', '=', $user_id)
-                                ->where('type', '=', 'sell')
-                                ->whereIn('status', $status_active)
-                                ->sum('from_value');
+                    // "SELECT `orders`.`user_id`,(`orders`.`from_value` * `orders`.`to_value`) AS `held_balance` 
+                    // FROM `orders` INNER JOIN 
+                    // `market` ON `market`.`id`=`orders`.`market_id`
+                    // WHERE (`wallet_from` = 23 OR `wallet_to` = 23)
+                    // AND `orders`.`user_id`=197 AND `orders`.`from_value` > 0 AND `orders`.`to_value` > 0;";
+                    $held_order = DB::table("orders")
+                    ->select(
+                        [
+                            "orders.user_id",
+                            DB::raw("orders.from_value * orders.to_value AS held_balance"),
+                            "orders.type"
+                        ]
+                    )
+                    ->join("market", "market.id", "=", "orders.market_id")
+                    ->where(function($sql) use ($wallet_id){
+                        // $sql->orWhere("wallet_from", "=", $wallet_id);
+                        $sql->orWhere("wallet_to", "=", $wallet_id);
+                    })
+                    ->where("orders.user_id", "=", $user->id)
+                    ->where("orders.from_value", ">", 0)
+                    ->where("orders.to_value", ">", 0)
+                    ->get();
+                    $amount = 0;
+                    foreach ($held_order as $v) {
+                        $amount += $v->held_balance;
+                    }
+                    // $held_order = Order::leftJoin('market', 'orders.market_id', '=', 'market.id')
+                    //             ->where('market.wallet_from', '=', $wallet_id)
+                    //             ->where('orders.user_id', '=',   $user_id)
+                    //             ->where('type', '=', 'sell')
+                    //             ->whereIn('status', $status_active)
+                    //             // ->toSql();
+                    //             ->sum('from_value');
+                    // $held_order = Order::
                 //}
                 //echo "<pre>getQueryLog: ".dd(DB::getQueryLog())."</pre>";
-                $wallets[$key]['held_order'] = sprintf('%.8f', $held_order);
+
+                $wallets[$key]['held_order'] = sprintf('%.8f', $amount);
             }
-            dd($wallets);
+            // dd($wallets);
             //echo "<pre>ggg?: "; print_r($wallets); echo "</pre>";
             $data['balances'] = $wallets;
             break;
